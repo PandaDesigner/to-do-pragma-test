@@ -25,5 +25,5 @@
 
 - [x] 5.1 `jest.config.cjs` con thresholds 80/95/90/90.
 - [x] 5.2 `.github/workflows/verify.yml` con job `verify` según la propuesta CI, ejecutando `npm test -- --coverage` y build de producción.
-- [ ] 5.3 `verify-report.md` con evidencia real.
-- [ ] 5.4 PR `feature/app-base-2 → develop` abierto, sin fusionar ni archivar.
+- [x] 5.3 `verify-report.md` con evidencia real.
+- [x] 5.4 PR `feature/app-base-2 → develop` abierto, sin fusionar ni archivar.

@@ -23,6 +23,7 @@ src/environments/environment.prod.ts
 src/assets/firebase-config.json
 *.keystore
 *.jks
+pragmadev.jks
 *.p12
 *.mobileprovision
 *.log
