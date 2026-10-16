@@ -1,11 +1,12 @@
-import { Task, TaskStatus } from './task';
+import type { Task, TaskStatus } from './task';
 
 export type TaskFilter = {
   statuses: readonly TaskStatus[];
   categoryId?: string;
 };
 
-export type TaskSorter = { kind: 'dueAt' };
+export const TASK_SORT = { DUE_DATE: 'dueDate' } as const;
+export type TaskSorter = { kind: (typeof TASK_SORT)[keyof typeof TASK_SORT] };
 
 export function filterTasks(
   tasks: readonly Task[],
@@ -22,20 +23,11 @@ export function filterTasks(
   });
 }
 
-export function sortTasksByDueAt(
+export function sortTasksByDueDate(
   tasks: readonly Task[],
   _sorter: TaskSorter,
 ): Task[] {
   return [...tasks].sort((previous, current) => {
-    if (!previous.dueAt && !current.dueAt) {
-      return 0;
-    }
-    if (!previous.dueAt) {
-      return 1;
-    }
-    if (!current.dueAt) {
-      return -1;
-    }
-    return previous.dueAt.localeCompare(current.dueAt);
+    return previous.dueDate.localeCompare(current.dueDate);
   });
 }

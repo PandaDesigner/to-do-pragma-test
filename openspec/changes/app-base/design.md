@@ -6,12 +6,14 @@
 
 **Goals**: app funcional sobre el scaffolding, decoradores con tests, CI con cobertura por capa, README que responda a las 3 preguntas del PDF.
 
-**Non-Goals**: Remote Config contra un proyecto Firebase real, builds nativos firmados, sin plataformas Android/iOS.
+**Non-Goals**: publicar o fusionar la entrega sin aprobación de Pedro. La corrección de rumbo incorpora APK firmado e IPA; no basta documentar builds sin firma.
 
 ## Decisions
 
-- Los modelos viven en `src/app/domain/` y son tipos puros sin dependencias de Angular. Transiciones codificadas en `transitionTask` y validadas en el límite del dominio.
-- Las estrategias `filterTasks` y `sortTasksByDueAt` son funciones pure; los stores las componen sobre el estado actual.
+- Los modelos siguen `docs/PROMPT.md`: `dueDate`, timestamps, categoría nullable y kind `list`. El usuario aprobó reemplazar el modelo anterior sin migración de datos ni compatibilidad con `dueAt`/`default`.
+- Dominio contiene contratos State, reloj y errores puros, sin Angular ni dependencias de data. Las cuatro clases State y la máquina delegadora viven en `data/states/`. No se usa una tabla de destinos. `transitionTask({ task, event, clock })` es la entrada funcional en data.
+- Las nueve transiciones válidas actualizan `updatedAt`; RESCHEDULE utiliza el día local del reloj inyectado. EXPIRE con fecha igual o posterior a hoy lanza `InvalidTransitionError`. Las futuras cargas del store deberán comprobar el vencimiento antes de despachar EXPIRE.
+- Las estrategias `filterTasks` y `sortTasksByDueDate` son funciones puras; los stores las componen sobre el estado actual.
 - `TASK_REPOSITORY` y `CATEGORY_REPOSITORY` son `InjectionToken`; los repositorios se inyectan desde `core/di`. `IonicStorageTaskRepository` aplica `@Debounce(300)` a la persistencia para evitar escrituras repetitivas al generar 5.000 tareas.
 - Las páginas `tasks` y `categories` usan `cdk-virtual-scroll` desde 200 tareas. A partir de 200 ítems se renderiza con `cdkVirtualFor`; por debajo, con `@for`.
 - `RemoteConfigService` aplica una carrera entre `port.fetch()` y `setTimeout(3000)`. Si el fetch gana, devuelve su valor; si no, devuelve `true` por defecto.
@@ -27,7 +29,9 @@
 
 ## Migration Plan
 
-No hay datos que migrar. `init` deja la app en estado vacío. Cada fase agrega un commit y actualiza `tasks.md`.
+El usuario confirmó que no se requiere conservar datos del modelo anterior. Cada tarea completa actualiza `tasks.md` y tiene su commit convencional. La continuación autorizada usa `feature/app-base-2` desde `develop`, con un único PR hacia `develop`. No fusionar ni archivar; detenerse al finalizar cada fase.
+
+Para ejecutar la comprobación raíz con TypeScript 6 se retira `baseUrl`, se hacen relativos los `paths` y se declaran tipos Jest/Node en el tsconfig raíz. La configuración de app conserva `types: []`, sin introducir tipos de pruebas en el bundle.
 
 ## Open Questions
 

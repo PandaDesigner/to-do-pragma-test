@@ -6,6 +6,7 @@ import {
   TASK_REPOSITORY,
 } from './repository';
 import { Task } from './task';
+import { taskFixture } from '../testing/task.fixture';
 
 function makeTaskRepository(): TaskRepository & {
   state: Map<string, Task>;
@@ -54,8 +55,8 @@ describe('Repository tokens', () => {
 describe('Repository contract', () => {
   it('persists tasks in insertion order, then removes them', async () => {
     const repo = makeTaskRepository();
-    await repo.save({ id: 'a', title: 'A', status: 'pending' });
-    await repo.save({ id: 'b', title: 'B', status: 'completed' });
+    await repo.save(taskFixture({ id: 'a', title: 'A', status: 'pending' }));
+    await repo.save(taskFixture({ id: 'b', title: 'B', status: 'completed' }));
     const list = await repo.list();
     expect(list.map((task) => task.id)).toEqual(['a', 'b']);
     await repo.remove('a');
@@ -64,7 +65,13 @@ describe('Repository contract', () => {
 
   it('persists categories and removes them', async () => {
     const repo = makeCategoryRepository();
-    await repo.save({ id: 'c-1', name: 'Errands', kind: 'daily' });
+    await repo.save({
+      id: 'c-1',
+      name: 'Errands',
+      kind: 'daily',
+      icon: 'list',
+      colorToken: 'todo',
+    });
     await repo.remove('c-1');
     expect(await repo.list()).toEqual([]);
   });
