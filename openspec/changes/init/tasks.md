@@ -22,4 +22,4 @@
 ## 4. Entrega init
 
 - [x] 4.1 Documentar evidencia, comandos, versiones y límites sin presentar scaffolding como app base.
-- [ ] 4.2 Subir commits de init y crear PR feature/init hacia develop sin fusionar ni archivar.
+- [x] 4.2 Subir commits de init y crear PR feature/init hacia develop sin fusionar ni archivar.
