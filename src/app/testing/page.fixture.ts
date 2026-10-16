@@ -1,4 +1,8 @@
-import { signal } from '@angular/core';
+import {
+  signal,
+  type Provider,
+  type EnvironmentProviders,
+} from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import {
@@ -15,10 +19,13 @@ import { TaskStore } from '../store/task';
 import { CategoryStore } from '../store/category';
 import { DeletionConfirmation } from '../shared/services/deletion-confirmation';
 
-export function configurePageTesting() {
+export function configurePageTesting({
+  providers = [],
+}: { providers?: (Provider | EnvironmentProviders)[] } = {}) {
   const taskRepository = new InMemoryRepository<Task>();
   const categoryRepository = new InMemoryRepository<Category>();
   const enabled = signal(true);
+  const remoteError = signal<string | null>(null);
   const confirm = jest.fn().mockResolvedValue(true);
   let nextId = 0;
   TestBed.configureTestingModule({
@@ -37,18 +44,20 @@ export function configurePageTesting() {
         provide: RemoteConfigService,
         useValue: {
           categoriesEnabled: enabled.asReadonly(),
-          error: signal(null).asReadonly(),
+          error: remoteError.asReadonly(),
           loading: signal(false).asReadonly(),
           initialize: jest.fn().mockResolvedValue(undefined),
         },
       },
       { provide: DeletionConfirmation, useValue: { confirm } },
+      ...providers,
     ],
   });
   return {
     taskRepository,
     categoryRepository,
     enabled,
+    remoteError,
     confirm,
     tasks: TestBed.inject(TaskStore),
     categories: TestBed.inject(CategoryStore),

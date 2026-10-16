@@ -89,6 +89,14 @@ Validación: 21 suites y 136 pruebas, tipos/lint/formato/build correctos. Prueba
 
 Los estilos usan la paleta aprobada. No se acredita fidelidad visual de 2 px ni fuentes locales todavía. Shell y navegación inicial siguen pendientes de 4.2.
 
+### Tarea 4.2
+
+Shell con Ionic tabs y rail lateral de 27 px: Todas y Mis listas. Entrada raíz a /tabs/tasks y rutas lazy; home/tasks/categories mantienen redirecciones para sus URLs previas. El guard redirige /tabs/my cuando el flag es false. Un cambio posterior a false limpia el filtro de categoría y redirige si esa vista estaba abierta, sin borrar asignaciones.
+
+El selector y los chips ya respetan el flag en TaskPage. Shell muestra el valor solo lectura y ofrece el aviso/reintento remoto aprobados. Se prueban tab oculta, conservación de tareas, guard, redirección y reintento.
+
+Validación: 22 suites, 140 pruebas; tipos, lint y formato correctos. Build correcto. Chromium aislado a 375×812: entrada por raíz, navegación por Mis listas y página categorías correctas, sin errores. La captura detectó desplazamiento y recorte del rail: se corrigió y se comprobó nuevamente.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.
