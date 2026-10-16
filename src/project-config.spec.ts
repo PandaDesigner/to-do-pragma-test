@@ -6,13 +6,12 @@ function readProjectFile(relativePath: string): string {
 }
 
 const requiredDependencies = [
-  '@ngrx/signals',
   '@ionic/storage-angular',
   'localforage-cordovasqlitedriver',
   'firebase',
   '@angular/cdk',
 ];
-const layers = ['core', 'domain', 'data', 'store', 'pages', 'shared'];
+const layers = ['core', 'shared', 'layout', 'pages'];
 
 describe('INIT-01 / INIT-02 / INIT-04 project configuration', () => {
   it('builds without ignored private environment files', () => {

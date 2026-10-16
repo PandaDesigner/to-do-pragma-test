@@ -13,6 +13,7 @@
       "@data/*": ["src/app/data/*"],
       "@store/*": ["src/app/store/*"],
       "@pages/*": ["src/app/pages/*"],
+      "@layout/*": ["src/app/layout/*"],
       "@shared/*": ["src/app/shared/*"]
     },
     "noImplicitOverride": true,
