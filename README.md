@@ -37,12 +37,12 @@ npm run requirements           # cordova requirements --verbose (necesita SDK + 
 | Comprobar tipos                    | `npm run typecheck`                         |
 | Generar build de producción        | `npm run build`                             |
 | Generar APK + AAB firmados Android | `npm run ionic:build:android`               |
-| Generar APK debug Android         | `npm run build:android`                     |
-| Generar APK release Android       | `npm run build:android:release`             |
-| Generar IPA no firmado iOS        | `npm run build:ios`                         |
-| Comprobar requisitos Cordova      | `npm run requirements`                      |
-| Restaurar plataformas Cordova     | `npx cordova platform add android` y `ios`  |
-| Resetear `cordova.platforms`      | `npm run clean:platforms`                   |
+| Generar APK debug Android          | `npm run build:android`                     |
+| Generar APK release Android        | `npm run build:android:release`             |
+| Generar IPA no firmado iOS         | `npm run build:ios`                         |
+| Comprobar requisitos Cordova       | `npm run requirements`                      |
+| Restaurar plataformas Cordova      | `npx cordova platform add android` y `ios`  |
+| Resetear `cordova.platforms`       | `npm run clean:platforms`                   |
 
 ## Arquitectura
 
