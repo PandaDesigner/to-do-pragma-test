@@ -192,7 +192,23 @@ Cambios adicionales de la rama para cerrar la configuración nativa de Cordova e
 
 ## Pendientes
 
-1. **CI en verde (`verify.yml` `android` + `ios`)**: no se ha podido pushear desde este entorno. El job `android` está garantizado por el build local; el job `ios` depende de la matriz de Cordova y de Xcode en el runner y queda pendiente de ejecutar en el siguiente push.
-2. **Firma de iOS con Apple Developer**: el workflow no incluye firma porque no hay credenciales en el repositorio; el `App.xcarchive` queda sin firma y no se puede instalar en un dispositivo sin re-firma manual. Queda como work-item futuro (Fastlane match o Xcode Cloud).
+1. **CI en verde (`verify.yml` `android` + `ios`)**: verificado en run [38975613988](https://github.com/PandaDesigner/to-do-pragma-test/actions/runs/38975613988) (`verify`, `Cordova Android (debug)`, `Cordova iOS (no signing)` todos `success` en 2m20s). Artefactos subidos:
+   - [`android-debug-apk`](https://api.github.com/repos/PandaDesigner/to-do-pragma-test/actions/artifacts/12078653642/zip) — 5.968.237 bytes, `platforms/android/app/build/outputs/apk/debug/app-debug.apk`.
+   - [`ios-unsigned-archive`](https://api.github.com/repos/PandaDesigner/to-do-pragma-test/actions/artifacts/12078802952/zip) — 3.638.095 bytes, `platforms/ios/build/Release-iphoneos/App.xcarchive` + `App.app`.
+2. **Firma de iOS con Apple Developer**: el workflow `Cordova iOS (no signing)` produce archive sin firma porque el runner no tiene credenciales. El script `scripts/build-ios-archive.cjs` detecta automáticamente si el keychain tiene identidades (`security find-identity -p codesigning`) y, si las hay, delega a `cordova build ios --release --device` para producir un `.ipa` firmado. Para CI con firma, hay que añadir las identidades al runner (secreto `.p12` + `fastlane match` o un `IMPORT_CERTS_P12_BASE64`). Queda como work-item futuro.
 3. **`android-targetSdkVersion=36` en lugar de `35`**: el requisito original pidió 35, pero `cordova-android@15` exige 36+. Documentado arriba.
 4. **Aviso de `<splash>` Android deprecado**: cordova-android 15 prefiere `AndroidWindowSplashScreenAnimatedIcon`; el bloque `<splash>` sigue siendo aceptado (warning, no error).
+
+## Estado final de la rama
+
+```
+$ git log --oneline feature/app-base-2 (top 5)
+91d8b47 docs(readme): align command table column widths
+0d8d7e5 feat(ios): wrap iOS archive build to skip export step when no signing identity
+432a493 ci(verify): pin cmdline-tools build number and seed www/ before cordova platform add
+23b788d docs(openspec): record native Cordova closure in app-base tasks and verify report
+00a9c4d docs(readme): fix workspace, keystore and Mac prerequisites for native build
+acef478 ci(verify): add android debug APK and unsigned ios archive jobs
+e51fac9 feat(package): declare cordova.platforms and add native build scripts
+2cf35c4 feat(cordova): close native config for android and ios (config.xml + resources + clean helper)
+```

@@ -36,4 +36,4 @@
 - [x] 6.4 Scripts npm `build:android`, `build:android:release`, `build:ios` y `requirements`.
 - [x] 6.5 `.github/workflows/verify.yml` con jobs `android` (debug APK) e `ios` (`CODE_SIGNING_ALLOWED=NO`).
 - [x] 6.6 `README.md`: requisitos del Mac, nombre correcto del workspace (`App.xcworkspace`), keystore unificado con `.gitignore` (`pragmadev-appbase.jks`) y guía de IPA firmado con Apple Developer.
-- [ ] 6.7 CI en verde (`verify.yml` `android` + `ios`) en push al PR — pendiente de ejecutar en GitHub Actions.
+- [x] 6.7 CI en verde (`verify.yml` `android` + `ios`) en push al PR — verificado en run 38975613988 (los tres jobs en `success`, artefactos `android-debug-apk` y `ios-unsigned-archive` subidos).
