@@ -37,7 +37,7 @@ jobs:
           cache: npm
       - uses: android-actions/setup-android@v4
         with:
-          cmdline-tools-version: '13.0'
+          cmdline-tools-version: '13114758'
       - name: Cache Gradle
         uses: actions/cache@v4
         with:
@@ -47,6 +47,9 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('platforms/android/gradle/wrapper/gradle-wrapper.properties', 'platforms/android/build.gradle', 'platforms/android/app/build.gradle') }}
           restore-keys: gradle-${{ runner.os }}-
       - run: npm ci
+      - name: Build web bundle
+        # cordova platform add requires www/ to recognise the project root.
+        run: npm run build
       - name: Restore Cordova platforms
         run: npx --no-install cordova platform add android
       - name: Build debug APK
@@ -73,6 +76,9 @@ jobs:
       - run: npm ci
       - name: Install CocoaPods
         run: sudo gem install cocoapods --no-document
+      - name: Build web bundle
+        # cordova platform add requires www/ to recognise the project root.
+        run: npm run build
       - name: Restore Cordova platforms
         run: npx --no-install cordova platform add ios
       - name: Build unsigned iOS archive
