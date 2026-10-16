@@ -34,9 +34,9 @@ describe('IonicStorageTaskRepository', () => {
     await repository.init(stub.api as never);
 
     const task: Task = taskFixture({ id: 't-1' });
-    await repository.save(task);
+    const saving = repository.save(task);
     expect(stub.store.get('todo-notebook.tasks.v1')).toBeUndefined();
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    await saving;
     expect(stub.store.get('todo-notebook.tasks.v1')).toEqual([task]);
 
     const list = await repository.list();
@@ -57,15 +57,13 @@ describe('IonicStorageTaskRepository', () => {
       await original.call(stub.api, key, value);
     }) as never;
 
-    for (let index = 0; index < 3; index += 1) {
-      await repository.save(
-        taskFixture({
-          id: `t-${index}`,
-          title: `Task ${index}`,
-        }),
-      );
-    }
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    await Promise.all(
+      Array.from({ length: 3 }, (_, index) =>
+        repository.save(
+          taskFixture({ id: `t-${index}`, title: `Task ${index}` }),
+        ),
+      ),
+    );
     expect(writes).toBe(1);
     expect(await repository.list()).toHaveLength(3);
   });

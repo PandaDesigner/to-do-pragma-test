@@ -1,51 +1,52 @@
-type Timers = WeakMap<object, Map<string, ReturnType<typeof setTimeout>>>;
-
-const timers: Timers = new WeakMap();
-
-function getInstanceTimers(
-  target: object,
-): Map<string, ReturnType<typeof setTimeout>> {
-  let instanceTimers = timers.get(target);
-  if (!instanceTimers) {
-    instanceTimers = new Map();
-    timers.set(target, instanceTimers);
-  }
-  return instanceTimers;
+interface PendingCall {
+  promise: Promise<unknown>;
+  resolve: (value: unknown) => void;
+  reject: (reason: unknown) => void;
+  timer?: ReturnType<typeof setTimeout>;
 }
 
-export function debounce(waitMs: number) {
-  return <Args extends unknown[]>(
-    target: object,
-    propertyKey: string,
+function createPendingCall(): PendingCall {
+  let resolve!: PendingCall['resolve'];
+  let reject!: PendingCall['reject'];
+  const promise = new Promise<unknown>((onSuccess, onFailure) => {
+    resolve = onSuccess;
+    reject = onFailure;
+  });
+  return { promise, resolve, reject };
+}
+
+export function Debounce(waitMs: number) {
+  const pendingCalls = new WeakMap<object, PendingCall>();
+  const executions = new WeakMap<object, Promise<unknown>>();
+
+  return (
+    _target: object,
+    _propertyKey: string,
     descriptor: PropertyDescriptor,
   ): PropertyDescriptor => {
-    const original = descriptor.value as (...args: Args) => unknown;
-
+    const original = descriptor.value as (...args: unknown[]) => unknown;
     return {
-      configurable: descriptor.configurable,
-      enumerable: descriptor.enumerable,
-      get(this: object) {
-        return (...args: Args) => {
-          const instanceTimers = getInstanceTimers(this);
-          const previous = instanceTimers.get(propertyKey);
-          if (previous !== undefined) {
-            clearTimeout(previous);
-          }
-          const handle = setTimeout(() => {
-            instanceTimers.delete(propertyKey);
-            original.apply(this, args);
-          }, waitMs);
-          instanceTimers.set(propertyKey, handle);
-        };
-      },
-      set(this: object, value: unknown) {
-        Object.defineProperty(this, `${propertyKey}__debounced__`, {
-          value,
-          configurable: true,
-          enumerable: descriptor.enumerable,
-          writable: true,
-        });
+      ...descriptor,
+      value: function (this: object, ...args: unknown[]): Promise<unknown> {
+        const pending = pendingCalls.get(this) ?? createPendingCall();
+        if (pending.timer !== undefined) {
+          clearTimeout(pending.timer);
+        }
+        pendingCalls.set(this, pending);
+        pending.timer = setTimeout(() => {
+          pendingCalls.delete(this);
+          const invoke = () => original.apply(this, args);
+          const execution = Promise.resolve(executions.get(this)).then(
+            invoke,
+            invoke,
+          );
+          executions.set(this, execution);
+          execution.then(pending.resolve, pending.reject);
+        }, waitMs);
+        return pending.promise;
       },
     };
   };
 }
+
+export const debounce = Debounce;

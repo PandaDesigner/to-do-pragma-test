@@ -25,6 +25,7 @@
 - Cobertura por capa: el porcentaje de `domain` (95%) requiere tests para transiciones inválidas y estrategias en casos límite. Lo cubrimos en este cambio.
 - `cdk-virtual-scroll` exige importar `@angular/cdk/scrolling`, que ya está declarado en `package.json` por `init`.
 - `RemoteConfigService` necesita un `RemoteConfigPort`; lo inyecta el `core/di`.
+- Pedro aprobó que las llamadas agrupadas por `@Debounce(300)` esperen la escritura real y reciban su error. Las ejecuciones por instancia se serializan para impedir que una escritura antigua sobrescriba una nueva. El store mostrará el fallo y permitirá reintento manual; no habrá reintentos automáticos. Se conservan los exports lowercase de los decoradores por compatibilidad.
 - La persistencia usa `cordova-sqlite-storage` con `localforage`; en navegador el driver degradado a LocalStorage para que los tests funcionen sin entorno Cordova.
 
 ## Migration Plan

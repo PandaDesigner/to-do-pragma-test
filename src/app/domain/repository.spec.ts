@@ -18,12 +18,7 @@ async function storageTaskRepository(): Promise<TaskRepository> {
 }
 
 describe('APP-04 Repository contracts', () => {
-  beforeEach(() => jest.useFakeTimers());
-  afterEach(async () => {
-    await jest.runOnlyPendingTimersAsync();
-    jest.useRealTimers();
-    jest.restoreAllMocks();
-  });
+  afterEach(() => jest.restoreAllMocks());
 
   const first = taskFixture({ id: 'first' });
   const second = taskFixture({ id: 'second', status: TASK_STATUS.COMPLETED });

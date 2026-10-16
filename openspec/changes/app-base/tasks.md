@@ -12,7 +12,7 @@
 ## 3. Configuración y decoradores
 
 - [ ] 3.1 `RemoteConfigService` con flag `enable_categories` (timeout 3 s, default `true`).
-- [ ] 3.2 Decoradores `@Debounce` y `@LogAction` con tests unitarios.
+- [x] 3.2 Decoradores `@Debounce` y `@LogAction` con tests unitarios.
 
 ## 4. UI funcional
 

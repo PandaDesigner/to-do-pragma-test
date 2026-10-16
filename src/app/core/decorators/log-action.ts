@@ -1,30 +1,25 @@
 type ActionLogger = (entry: { name: string; args: unknown[] }) => void;
 
-let logger: ActionLogger = (entry) => {
-  logger = logger;
-  void entry;
-};
+let logger: ActionLogger = (entry) => console.info(entry);
 
 export function configureActionLogger(next: ActionLogger): void {
   logger = next;
 }
 
-export function logAction(
+export function LogAction(
   target: object,
   propertyKey: string,
   descriptor: PropertyDescriptor,
 ): PropertyDescriptor {
   const original = descriptor.value as (...args: unknown[]) => unknown;
-  const actionName = `${(target as { constructor: { name: string } }).constructor.name}.${propertyKey}`;
-
+  const actionName = `${target.constructor.name}.${propertyKey}`;
   return {
-    configurable: descriptor.configurable,
-    enumerable: descriptor.enumerable,
-    get() {
-      return (...args: unknown[]) => {
-        logger({ name: actionName, args });
-        return original.apply(this, args);
-      };
+    ...descriptor,
+    value: function (this: object, ...args: unknown[]): unknown {
+      logger({ name: actionName, args });
+      return original.apply(this, args);
     },
   };
 }
+
+export const logAction = LogAction;
