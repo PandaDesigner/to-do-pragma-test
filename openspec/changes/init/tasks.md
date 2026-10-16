@@ -23,3 +23,18 @@
 
 - [x] 4.1 Documentar evidencia, comandos, versiones y límites sin presentar scaffolding como app base.
 - [x] 4.2 Subir commits de init y crear PR feature/init hacia develop sin fusionar ni archivar.
+
+## 5. Ampliación funcional (in-app, no app base final)
+
+- [ ] 5.1 Modelos de dominio: Task, TaskStatus, Category, CategoryKind, transiciones permitidas y validación.
+- [ ] 5.2 Máquina de estados: estrategias pure para filtro y orden; pruebas con casos límite.
+- [ ] 5.3 Token y port de repositorios (InjectionTokens) para Task y Category con tests de contrato.
+- [ ] 5.4 Repositorios in-memory para tests; repositorio IonicStorageTaskRepository con persistencia y debounce 300 ms.
+- [ ] 5.5 Stores con @ngrx/signals para tasks y categories; efectos de persistencia por Signal.
+- [ ] 5.6 Core/config: RemoteConfigService con flag `enable_categories` (default true, timeout 3 s).
+- [ ] 5.7 Decoradores `@Debounce(300)` y `@LogAction`; cobertura de pruebas para cada uno.
+- [ ] 5.8 UI: páginas tasks y categories con container/presentational, OnPush, trackBy y virtual scroll desde 200.
+- [ ] 5.9 Feature flag: ocultar pestaña Mis listas, chips y selector cuando `enable_categories=false`.
+- [ ] 5.10 Botón debug que genera 5.000 tareas y mide primer render.
+- [ ] 5.11 Workflow `verify.yml` con umbrales de cobertura: 80% global, 95% domain, 90% data y store.
+- [ ] 5.12 README con respuestas del PDF, capturas y guía de build nativo (APK/IPA) sin firma.
