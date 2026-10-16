@@ -26,9 +26,10 @@
 
 ## 5. Ampliación funcional (in-app, no app base final)
 
-- [ ] 5.1 Modelos de dominio: Task, TaskStatus, Category, CategoryKind, transiciones permitidas y validación.
+- [x] 5.1 Modelos de dominio: Task, TaskStatus, Category, CategoryKind, transiciones permitidas y validación.
+- [x] 5.2 Máquina de estados: estrategias pure para filtro y orden; pruebas con casos límite.
+- [x] 5.3 Token y port de repositorios (InjectionTokens) para Task y Category con tests de contrato.
 - [ ] 5.2 Máquina de estados: estrategias pure para filtro y orden; pruebas con casos límite.
-- [ ] 5.3 Token y port de repositorios (InjectionTokens) para Task y Category con tests de contrato.
 - [ ] 5.4 Repositorios in-memory para tests; repositorio IonicStorageTaskRepository con persistencia y debounce 300 ms.
 - [ ] 5.5 Stores con @ngrx/signals para tasks y categories; efectos de persistencia por Signal.
 - [ ] 5.6 Core/config: RemoteConfigService con flag `enable_categories` (default true, timeout 3 s).

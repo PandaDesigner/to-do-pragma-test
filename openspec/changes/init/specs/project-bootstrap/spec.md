@@ -1,6 +1,45 @@
 ## ADDED Requirements
 
-### Requirement: INIT-01 Instalación reproducible
+### Requirement: INIT-06 Modelos y estado de dominio
+
+Los modelos `Task` y `Category` MUST definir tipos puros con campos mínimos (id, title/name, status, kind) y transiciones de estado explícitas para tareas. Los datos MUST validarse en el límite del dominio; las capas exteriores confían en esa validación. Las transiciones inválidas MUST lanzar un error con mensaje explícito.
+
+#### Scenario: INIT-06-A Estados de tarea
+
+- **GIVEN** una tarea con `status: pending`
+- **WHEN** se invoca `transitionTask(task, 'completed')`
+- **THEN** devuelve un objeto nuevo con `status: completed` y la transición se acepta.
+- **WHEN** se invoca `transitionTask(task, 'archived')`
+- **THEN** lanza `Invalid task transition: pending -> archived`.
+
+#### Scenario: INIT-06-B Categorías y kinds
+
+- **GIVEN** un valor desconocido, p. ej. `kind: 'work'`
+- **WHEN** se consulta `isCategoryKind`
+- **THEN** devuelve `false`.
+- **AND** los kinds permitidos son `daily`, `shopping`, `default`.
+
+### Requirement: INIT-07 Estrategias de tareas
+
+Las funciones puras de filtro y orden MUST vivir en `src/app/domain/` y depender solo de tipos del dominio. MUST permitir filtrar por un conjunto de estados y por id de categoría, y ordenar por `dueAt` con tareas sin fecha al final.
+
+#### Scenario: INIT-07-A Filtro y orden combinados
+
+- **GIVEN** una colección de tareas y un filtro `{ statuses: ['pending', 'overdue'], categoryId: 'cat-1' }`
+- **WHEN** se invoca `filterTasks`
+- **THEN** devuelve únicamente las tareas que cumplen el conjunto de estados y la categoría.
+- **WHEN** se invoca `sortTasksByDueAt` con `{ kind: 'dueAt' }`
+- **THEN** las tareas con `dueAt` se ordenan ascendente y las que no tienen fecha van al final.
+
+### Requirement: INIT-08 Puertos de repositorios
+
+`TASK_REPOSITORY` y `CATEGORY_REPOSITORY` MUST ser `InjectionToken` que exponen un contrato `list/save/remove`. Las implementaciones de dominio MUST satisfacer ese contrato; los repositorios de infraestructura no pueden saltárselo.
+
+#### Scenario: INIT-08-A Contrato satisfecho
+
+- **GIVEN** una implementación de prueba del contrato
+- **WHEN** se ejecuta `repository.spec.ts`
+- **THEN** las pruebas confirman `list` tras `save`, `remove` y distinción de tokens.
 
 El proyecto MUST usar Ionic 8, Angular standalone 18 o superior compatible con Node, TypeScript strict y un lockfile npm. MUST instalar SignalStore, Ionic Storage, driver SQLite, Firebase y CDK sin activar servicios externos. MUST conservar `docs/` y OpenSpec.
 
