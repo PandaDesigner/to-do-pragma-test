@@ -16,7 +16,7 @@
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.spec.json",
     "build:android": "ng build && cordova build android --debug",
     "build:android:release": "ng build --configuration production && cordova build android --release",
-    "build:ios": "cordova build ios --release --device --buildFlag=CODE_SIGNING_ALLOWED=NO",
+    "build:ios": "node scripts/build-ios-archive.cjs",
     "requirements": "cordova requirements --verbose",
     "ionic:serve": "ng serve",
     "ionic:build": "node scripts/ionic-build.cjs",
