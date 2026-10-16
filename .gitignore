@@ -28,5 +28,6 @@ src/assets/firebase-config.json
 *.mobileprovision
 pragmadev.jks
 pragmadev-appbase.jks
+build.json
 *.log
 .DS_Store

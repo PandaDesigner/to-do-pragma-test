@@ -1,0 +1,25 @@
+{
+  "android": {
+    "release": {
+      "keystore": "<ANDROID_KEYSTORE_PATH>",
+      "alias": "<ANDROID_KEY_ALIAS>",
+      "storePassword": "<ENV>",
+      "password": "<ENV>",
+      "packageType": "apk"
+    }
+  },
+  "ios": {
+    "debug": {
+      "developmentTeam": "<TEAM_ID>",
+      "codeSignIdentity": "Apple Development",
+      "automaticProvisioning": true,
+      "packageType": "development"
+    },
+    "release": {
+      "developmentTeam": "<TEAM_ID>",
+      "codeSignIdentity": "Apple Development",
+      "automaticProvisioning": true,
+      "packageType": "development"
+    }
+  }
+}
