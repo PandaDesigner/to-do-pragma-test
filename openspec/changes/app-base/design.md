@@ -16,7 +16,8 @@
 - Las estrategias `filterTasks` y `sortTasksByDueDate` son funciones puras; los stores las componen sobre el estado actual.
 - Los contratos `Repository<T>`, `TaskRepository` y `CategoryRepository` permanecen en domain sin Angular. `TASK_REPOSITORY` y `CATEGORY_REPOSITORY` son `InjectionToken` definidos en `core/di`; los repositorios se inyectan desde esa capa. El mismo contrato `list/save/remove` se verifica contra InMemory y Storage mock. `IonicStorageTaskRepository` aplica `@Debounce(300)` a la persistencia para evitar escrituras repetitivas al generar 5.000 tareas.
 - Las páginas `tasks` y `categories` usan `cdk-virtual-scroll` desde 200 tareas. A partir de 200 ítems se renderiza con `cdkVirtualFor`; por debajo, con `@for`.
-- `RemoteConfigService` aplica una carrera entre `port.fetch()` y `setTimeout(3000)`. Si el fetch gana, devuelve su valor; si no, devuelve `true` por defecto.
+- `RemoteConfigService` limita toda la consulta a 3000 ms, incluida la lectura del JSON y la carga diferida del SDK. Solo un false booleano deshabilita categorías. Pedro aprobó true ante fallo de red, con diagnóstico visible y reintento manual, sin reintentos automáticos. El resultado tardío no modifica el flag tras el timeout.
+- Pedro aprobó cargar la configuración desde `assets/firebase-config.json`, ignorado por Git, para conservar el build sin environments privados. Se versiona únicamente un ejemplo sin valores reales. El adaptador usa Firebase modular y fetchAndActivate, defaultConfig true e intervalos de 60 s en desarrollo y 1 h en producción. No se inicializa Analytics.
 - El workflow CI mantiene `verify` para PR a `develop` y `main`. La cobertura por capa se aplica con thresholds por path en `jest.config.cjs`.
 - El flag `enable_categories` oculta la pestaña "Mis listas" y los chips de categoría cuando es `false`. La pestaña principal "Todas" sigue mostrando todas las tareas.
 

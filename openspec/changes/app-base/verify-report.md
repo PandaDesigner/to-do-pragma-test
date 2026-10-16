@@ -71,6 +71,14 @@ La eliminación de categoría carga primero todas las tareas y persiste sus refe
 
 Validación: 16 suites, 105 pruebas; cobertura de los archivos ejecutados de store, data y domain al 100% en las cuatro métricas. Tipos, lint, formato y build correctos. Los umbrales permanentes siguen pendientes de 5.1; estos porcentajes no los sustituyen.
 
+### Tarea 3.1
+
+Puerto y servicio Remote Config implementados; bootstrap espera como máximo 3 segundos por la consulta completa. Se conserva true ante timeout, clave ausente o error y se expone diagnóstico para el aviso/reintento de la UI pendiente. Las respuestas tardías no cambian el flag resuelto.
+
+El adaptador usa el SDK Firebase instalado, carga diferida, fetchAndActivate, valores predeterminados e intervalos dev/prod requeridos. El JSON real recibido para to-do-pragma está solo en assets local y está ignorado; el ejemplo versionado no contiene valores reales. No se añadió Analytics.
+
+RED: las 10 pruebas del servicio fallaban por ausencia de servicio/puerto. GREEN: 18 suites y 126 pruebas con cobertura; tipos raíz y app/spec, lint, formato, build y diff-check correctos. Las pruebas del SDK son simuladas y no acreditan publicación ni cambio remoto del parámetro. La demo remota y las capturas siguen pendientes; la configuración web no autentica el MCP administrativo.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.

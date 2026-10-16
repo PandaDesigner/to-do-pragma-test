@@ -1,5 +1,10 @@
 import { InjectionToken } from '@angular/core';
 import type { Clock } from '../../domain/task-state';
+import type { RemoteConfigPort } from '../config/remote-config-port';
+
+export const REMOTE_CONFIG_PORT = new InjectionToken<RemoteConfigPort>(
+  'REMOTE_CONFIG_PORT',
+);
 import type {
   CategoryRepository,
   TaskRepository,

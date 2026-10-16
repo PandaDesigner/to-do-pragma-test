@@ -1,4 +1,8 @@
 import { bootstrapApplication } from '@angular/platform-browser';
+import { inject, provideAppInitializer } from '@angular/core';
+import { RemoteConfigService } from './app/core/config/remote-config';
+import { FirebaseRemoteConfigPort } from './app/core/config/firebase-remote-config-port';
+import { REMOTE_CONFIG_PORT } from './app/core/di/tokens';
 import {
   RouteReuseStrategy,
   provideRouter,
@@ -20,6 +24,8 @@ bootstrapApplication(AppComponent, {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideLocalRepositories(),
+    { provide: REMOTE_CONFIG_PORT, useExisting: FirebaseRemoteConfigPort },
+    provideAppInitializer(() => inject(RemoteConfigService).initialize()),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),

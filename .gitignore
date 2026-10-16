@@ -20,6 +20,7 @@ plugins/
 !.env.example
 src/environments/environment.ts
 src/environments/environment.prod.ts
+src/assets/firebase-config.json
 *.keystore
 *.jks
 *.p12
