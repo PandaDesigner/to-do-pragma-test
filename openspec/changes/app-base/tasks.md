@@ -7,7 +7,7 @@
 ## 2. Persistencia y stores
 
 - [x] 2.1 `IonicStorageTaskRepository` con persistencia y `@Debounce(300)` aplicado a `persist`.
-- [ ] 2.2 Stores con `@ngrx/signals` para tareas y categorías.
+- [x] 2.2 Stores con `@ngrx/signals` para tareas y categorías.
 
 ## 3. Configuración y decoradores
 

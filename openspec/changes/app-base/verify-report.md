@@ -63,6 +63,14 @@ RED: dos fallos por falta de persistencia de categorías y operaciones permitida
 
 Advertencias observadas: Browserslist y dependencias CommonJS del almacenamiento. npm indicó que la sesión usa Node 26 frente al Node 24 declarado y reportó vulnerabilidades; no se ejecutó una actualización forzada de dependencias.
 
+### Tarea 2.2
+
+SignalStore de tareas y categorías implementados con filtros, orden por fecha, refresh, upsert, borrado y operaciones en bloque. El reloj se inyecta; refresh expira únicamente tareas pending de días anteriores. Las transiciones delegan en la máquina State existente.
+
+La eliminación de categoría carga primero todas las tareas y persiste sus referencias a null antes de eliminar la categoría. Ante fallo se conserva la vista anterior, se muestra el mensaje en el estado del store y la operación puede reintentarse explícitamente. La integración visual del mensaje y botón de reintento corresponde a 4.1.
+
+Validación: 16 suites, 105 pruebas; cobertura de los archivos ejecutados de store, data y domain al 100% en las cuatro métricas. Tipos, lint, formato y build correctos. Los umbrales permanentes siguen pendientes de 5.1; estos porcentajes no los sustituyen.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.
