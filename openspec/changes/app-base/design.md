@@ -38,4 +38,4 @@ Para ejecutar la comprobación raíz con TypeScript 6 se retira `baseUrl`, se ha
 ## Open Questions
 
 - ¿Nombre y orden de las tabs? Decidido: "Todas" (Tasks) y "Mis listas" (Categories). Confirmar con el usuario antes del último commit.
-- ¿Generador de IDs para las tareas nuevas? Decidido: `nanoid` ligero con timestamp + random. Si prefieres UUID, se cambia en este cambio.
+- IDs opacos generados mediante `crypto.randomUUID`, inyectado por CREATE_ID; no se añade una dependencia nanoid. Los tests sustituyen la fábrica para hacer reproducibles las operaciones.

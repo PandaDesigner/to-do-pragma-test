@@ -26,6 +26,20 @@ describe('durable Storage collections', () => {
     return { storage, write };
   }
 
+  it('coalesces 5,000 saves into one durable write', async () => {
+    const { storage, write } = storageStub();
+    const repository = new IonicStorageTaskRepository();
+    await repository.init(storage);
+    const writes = Array.from({ length: 5000 }, (_, index) =>
+      repository.save(taskFixture({ id: String(index) })),
+    );
+    await jest.advanceTimersByTimeAsync(300);
+    await Promise.all(writes);
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(await repository.list()).toHaveLength(5000);
+    expect(write.mock.calls[0][1]).toHaveLength(5000);
+  });
+
   it('restores tasks and categories in new instances without mixing keys', async () => {
     const { storage, write } = storageStub();
     const tasks = new IonicStorageTaskRepository();

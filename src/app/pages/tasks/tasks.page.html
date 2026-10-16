@@ -49,6 +49,21 @@
       </button>
     </div>
     }
+    <details #debugPanel class="debug-panel">
+      <summary>Debug</summary>
+      <p>
+        Crea 5.000 tareas de prueba. Conserva las existentes y cambia a la vista
+        de pendientes sin filtro de categoría.
+      </p>
+      <button
+        type="button"
+        data-testid="generate-tasks"
+        (click)="debugPanel.open = false; generateFiveThousand()"
+        [disabled]="store.busy()"
+      >
+        Generar 5000 tareas
+      </button>
+    </details>
     <nav class="filter-row" aria-label="Estado de las tareas">
       @for (filter of filters; track filter.label) {
       <button

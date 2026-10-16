@@ -17,6 +17,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { IonContent } from '@ionic/angular/standalone';
 import { CLOCK, CREATE_ID } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
+import { LogAction } from '../../core/decorators/log-action';
 import {
   TASK_STATUS,
   TASK_STATUSES,
@@ -31,6 +32,7 @@ import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
+const DEBUG_TASK_COUNT = 5000;
 const STATUS_FILTERS = [
   { label: 'Pendientes', statuses: [TASK_STATUS.PENDING, TASK_STATUS.OVERDUE] },
   { label: 'Completadas', statuses: [TASK_STATUS.COMPLETED] },
@@ -93,6 +95,33 @@ export class TasksPage implements OnInit {
     void this.feedback.run(async () => {
       await Promise.all([this.store.refresh(), this.categories.refresh()]);
     });
+  }
+
+  @LogAction
+  async generateFiveThousand(): Promise<void> {
+    if (this.store.busy()) {
+      return;
+    }
+    await this.feedback.run(async () => {
+      const tasks = this.createDebugTasks();
+      this.store.setCategory(undefined);
+      this.store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
+      await this.store.upsertMany(tasks);
+    });
+  }
+
+  private createDebugTasks(): Task[] {
+    const now = this.clock.now();
+    const dueDate = this.clock.today();
+    return Array.from({ length: DEBUG_TASK_COUNT }, (_, index) => ({
+      id: this.createId(),
+      title: `Tarea de prueba ${index + 1}`,
+      status: TASK_STATUS.PENDING,
+      categoryId: null,
+      dueDate,
+      createdAt: now,
+      updatedAt: now,
+    }));
   }
 
   async saveTask(): Promise<void> {

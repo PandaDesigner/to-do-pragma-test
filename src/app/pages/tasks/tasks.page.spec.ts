@@ -16,6 +16,35 @@ describe('TasksPage', () => {
     return { ...dependencies, fixture, page: fixture.componentInstance };
   }
 
+  it('adds 5,000 debug tasks to five existing ones and activates bounded virtual rendering', async () => {
+    const log = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+    const { page, tasks, fixture } = await setup();
+    await tasks.upsertMany(
+      Array.from({ length: 5 }, (_, index) =>
+        taskFixture({ id: `existing-${index}`, dueDate: '2026-01-03' }),
+      ),
+    );
+    tasks.setStatuses([TASK_STATUS.COMPLETED]);
+    tasks.setCategory('missing');
+    await page.generateFiveThousand();
+    fixture.detectChanges();
+    expect(tasks.tasks()).toHaveLength(5005);
+    expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
+    expect(tasks.visibleTasks()).toHaveLength(5005);
+    expect(page.shouldVirtualize()).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
+    ).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item').length,
+    ).toBeLessThan(200);
+    expect(log).toHaveBeenCalledWith({
+      name: 'TasksPage.generateFiveThousand',
+      args: [],
+    });
+    log.mockRestore();
+  });
+
   it('validates, creates, edits, completes, restores and deletes tasks', async () => {
     const { fixture, page, tasks, taskRepository, confirm } = await setup();
     await page.saveTask();

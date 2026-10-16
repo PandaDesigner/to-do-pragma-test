@@ -97,6 +97,16 @@ El selector y los chips ya respetan el flag en TaskPage. Shell muestra el valor 
 
 Validación: 22 suites, 140 pruebas; tipos, lint y formato correctos. Build correcto. Chromium aislado a 375×812: entrada por raíz, navegación por Mis listas y página categorías correctas, sin errores. La captura detectó desplazamiento y recorte del rail: se corrigió y se comprobó nuevamente.
 
+### Tarea 4.3
+
+Botón Debug que añade 5.000 tareas en un solo upsertMany, conserva las anteriores y activa la vista pending/overdue sin filtro de categoría. IDs por crypto.randomUUID inyectado, sin dependencia adicional. LogAction registra la acción una vez, no cada tarea. El panel debug se cierra al generar para no ocupar el viewport.
+
+RED: faltaba generateFiveThousand. GREEN: 22 suites, 142 pruebas. El test de página acredita 5 tareas iniciales y 5.005 finales, IDs únicos y CDK activo. El test de Storage acredita una escritura para 5.000 saves. Tipos, lint, formato y build correctos.
+
+Chromium de escritorio en ventana 375×812, build de desarrollo, sesión aislada: una tarea inicial y 5.001 finales; 6 filas DOM inicialmente y máximo 8 durante scroll; una escritura real de la base IndexedDB de la app. Tras recargar permanecen 5.001 tareas. Se alcanzó Tarea de prueba 5000. Viewport de 134,61 px con borde inferior en 780 px, dentro de la pantalla de 812 px.
+
+Medición orientativa de 1.808 ms de scroll automatizado: 125 callbacks de animación, media 69 FPS, intervalo máximo 70 ms. No acredita 60 FPS estables en dispositivo. Heap observado antes/después del lote: 38.779.014 / 40.433.558 bytes; no es una medición de pico ni una comparación release. No hubo errores de página.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.
