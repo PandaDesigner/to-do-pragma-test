@@ -79,6 +79,16 @@ El adaptador usa el SDK Firebase instalado, carga diferida, fetchAndActivate, va
 
 RED: las 10 pruebas del servicio fallaban por ausencia de servicio/puerto. GREEN: 18 suites y 126 pruebas con cobertura; tipos raíz y app/spec, lint, formato, build y diff-check correctos. Las pruebas del SDK son simuladas y no acreditan publicación ni cambio remoto del parámetro. La demo remota y las capturas siguen pendientes; la configuración web no autentica el MCP administrativo.
 
+### Tarea 4.1
+
+Páginas tasks/categories generadas con CLI Ionic, standalone y OnPush. Formularios con validación, CRUD, asignación/filtro de categorías, acciones delegadas a State y confirmación de borrado. Componente TaskItem presentacional con inputs/outputs; servicio de feedback muestra errores sin promesas rechazadas sin manejar.
+
+Las listas usan @for por ID por debajo de 200 y CDK desde 200, con trackById y alturas fijas de 65/77 px. Se probaron 199/200, CRUD, flags apagados y recuperación de errores. Los nombres y recuentos de categorías se calculan una vez por cambio.
+
+Validación: 21 suites y 136 pruebas, tipos/lint/formato/build correctos. Prueba manual automatizada con Chromium, sesión aislada app-base-validation, en localhost:8117/tasks: crear una tarea por formulario, recargar y comprobar que sigue presente. Sin errores de página. El servicio Firebase devolvió enabled=true y error=null con la configuración real; esto no demuestra todavía la demo de false remoto.
+
+Los estilos usan la paleta aprobada. No se acredita fidelidad visual de 2 px ni fuentes locales todavía. Shell y navegación inicial siguen pendientes de 4.2.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.

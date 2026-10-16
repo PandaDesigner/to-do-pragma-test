@@ -10,6 +10,10 @@ import type {
   TaskRepository,
 } from '../../domain/repository';
 
+export const CREATE_ID = new InjectionToken<() => string>('CREATE_ID', {
+  factory: () => () => globalThis.crypto.randomUUID(),
+});
+
 export const CLOCK = new InjectionToken<Clock>('CLOCK', {
   factory: () => ({
     now: () => Date.now(),

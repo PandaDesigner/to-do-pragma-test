@@ -16,7 +16,7 @@
 
 ## 4. UI funcional
 
-- [ ] 4.1 Páginas `tasks` y `categories` con `OnPush`, `trackBy` y virtual scroll de CDK desde 200 tareas.
+- [x] 4.1 Páginas `tasks` y `categories` con `OnPush`, `trackBy` y virtual scroll de CDK desde 200 tareas.
 - [ ] 4.2 Shell con tabs y ocultación de "Mis listas" cuando `enable_categories=false`.
 - [ ] 4.3 Botón debug que genera 5.000 tareas.
 - [ ] 4.4 README con las tres respuestas del PDF, configuración de firma sin secretos y APK firmado e IPA generados.

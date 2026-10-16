@@ -1,0 +1,136 @@
+<ion-content [scrollY]="!shouldVirtualize()">
+  <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
+    <header class="page-header">
+      <p class="overline">Todo Notebook</p>
+      <h1>Tu día</h1>
+      <p class="muted">
+        {{ store.visibleTasks().length }} tareas en esta vista
+      </p>
+    </header>
+    <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor">
+      <h2>{{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}</h2>
+      <label
+        >Título<input
+          formControlName="title"
+          autocomplete="off"
+          maxlength="240"
+      /></label>
+      @if (form.controls.title.touched && form.controls.title.invalid) {
+      <p class="error" role="alert">Escribe un título.</p>
+      }
+      <div class="form-row">
+        <label
+          >Fecha<input type="date" formControlName="dueDate" required
+        /></label>
+        @if (flags.categoriesEnabled()) {
+        <label
+          >Categoría<select formControlName="categoryId">
+            <option value="">Sin categoría</option>
+            @for (category of categories.categories(); track category.id) {
+            <option [value]="category.id">{{ category.name }}</option>
+            }
+          </select></label
+        >
+        }
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="primary" [disabled]="store.busy()">
+          {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}
+        </button>
+        @if (editingId()) {
+        <button type="button" (click)="cancelEdit()">Cancelar</button> }
+      </div>
+    </form>
+    @if (feedback.error() || store.error()) {
+    <div class="error-notice" role="alert">
+      <p>{{ feedback.error() || store.error() }}</p>
+      <button type="button" (click)="retry()" [disabled]="store.busy()">
+        Reintentar
+      </button>
+    </div>
+    }
+    <nav class="filter-row" aria-label="Estado de las tareas">
+      @for (filter of filters; track filter.label) {
+      <button
+        type="button"
+        [class.selected]="store.statuses().join() === filter.statuses.join()"
+        [attr.aria-pressed]="store.statuses().join() === filter.statuses.join()"
+        (click)="store.setStatuses(filter.statuses)"
+      >
+        {{ filter.label }}
+      </button>
+      }
+    </nav>
+    @if (flags.categoriesEnabled()) {
+    <nav class="filter-row" aria-label="Filtrar por categoría">
+      <button
+        type="button"
+        [class.selected]="store.categoryId() === undefined"
+        (click)="store.setCategory(undefined)"
+      >
+        Todas las listas
+      </button>
+      <button
+        type="button"
+        [class.selected]="store.categoryId() === null"
+        (click)="store.setCategory(null)"
+      >
+        Sin categoría
+      </button>
+      @for (category of categories.categories(); track category.id) {
+      <button
+        type="button"
+        [class.selected]="store.categoryId() === category.id"
+        (click)="store.setCategory(category.id)"
+      >
+        {{ category.name }}
+      </button>
+      }
+    </nav>
+    } @if (store.busy()) {
+    <p class="muted" role="status">Guardando o cargando tareas…</p>
+    } @if (shouldVirtualize()) {
+    <cdk-virtual-scroll-viewport
+      [itemSize]="65"
+      class="task-viewport"
+      aria-label="Tareas"
+    >
+      <ng-container
+        *cdkVirtualFor="let task of store.visibleTasks(); trackBy: trackById"
+      >
+        <ng-container
+          [ngTemplateOutlet]="taskRow"
+          [ngTemplateOutletContext]="{ $implicit: task }"
+        />
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+    } @else {
+    <section aria-label="Tareas" class="task-list">
+      @for (task of store.visibleTasks(); track task.id) {
+      <ng-container
+        [ngTemplateOutlet]="taskRow"
+        [ngTemplateOutletContext]="{ $implicit: task }"
+      />
+      } @empty {
+      <div class="empty-state">
+        <h2>No hay tareas en esta vista</h2>
+        <p>Añade una tarea o cambia los filtros.</p>
+      </div>
+      }
+    </section>
+    }
+    <ng-template #taskRow let-task>
+      <app-task-item
+        [task]="task"
+        [actions]="store.actionsFor(task)"
+        [categoryName]="categoryNames().get(task.categoryId)"
+        [showCategories]="flags.categoriesEnabled()"
+        [disabled]="store.busy()"
+        (taskToggle)="toggleTask($event)"
+        (action)="dispatch($event)"
+        (edit)="editTask($event)"
+        (remove)="removeTask($event)"
+      />
+    </ng-template>
+  </main>
+</ion-content>

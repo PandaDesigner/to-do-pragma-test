@@ -1,0 +1,13 @@
+.task-viewport {
+  height: 100%;
+  min-height: 260px;
+  flex: 1;
+}
+.virtualized {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.task-list {
+  padding-bottom: 32px;
+}
