@@ -6,9 +6,22 @@ App de tareas con Ionic 8 + Angular 22 standalone, Cordova (sin Capacitor), `@ng
 
 - Node.js 24.15.0 LTS (usa `nvm use` con el `.nvmrc` incluido).
 - npm 11.
-- JDK 17 (para `ionic cordova build android`).
-- Android SDK (variable `ANDROID_HOME`) y Xcode (solo para builds iOS).
+- JDK 17 (Temurin), exportado en `JAVA_HOME`; obligatorio para `cordova build android` y para Gradle.
+- Android SDK en `ANDROID_HOME` (o `ANDROID_SDK_ROOT`) con `cmdline-tools`, `platform-tools` y `build-tools 36.0.0+`. Acepta las licencias con `yes | sdkmanager --licenses` la primera vez.
+- Xcode 15 o superior con las Command Line Tools (`xcode-select --install`) y la licencia aceptada (`sudo xcodebuild -license accept`).
+- CocoaPods 1.16+ (`sudo gem install cocoapods --no-document`) e `ios-deploy` 1.12+ (`npm i -g ios-deploy`).
 - `cordova-android` y `cordova-ios` ya están como `devDependencies`.
+
+### Verificación rápida del entorno
+
+```bash
+node --version                 # v24.15.0
+java -version                  # openjdk 17
+echo "$ANDROID_HOME"           # apunta a un SDK con build-tools 36
+xcodebuild -version            # Xcode 15+
+pod --version                  # >= 1.16
+npm run requirements           # cordova requirements --verbose (necesita SDK + Xcode)
+```
 
 ## Comandos
 
@@ -24,7 +37,12 @@ App de tareas con Ionic 8 + Angular 22 standalone, Cordova (sin Capacitor), `@ng
 | Comprobar tipos                    | `npm run typecheck`                         |
 | Generar build de producción        | `npm run build`                             |
 | Generar APK + AAB firmados Android | `npm run ionic:build:android`               |
-| Limpiar `cordova.platforms`        | `npm run clean:platforms`                   |
+| Generar APK debug Android         | `npm run build:android`                     |
+| Generar APK release Android       | `npm run build:android:release`             |
+| Generar IPA no firmado iOS        | `npm run build:ios`                         |
+| Comprobar requisitos Cordova      | `npm run requirements`                      |
+| Restaurar plataformas Cordova     | `npx cordova platform add android` y `ios`  |
+| Resetear `cordova.platforms`      | `npm run clean:platforms`                   |
 
 ## Arquitectura
 
@@ -65,19 +83,48 @@ Firma verificada con `apksigner verify --verbose`: APK Signature Scheme v2 OK. E
 
 ### iOS (IPA)
 
-`npm run ionic:build:ios` no existe todavía. Para generar el IPA firmado:
+`cordova-ios 8` genera el workspace con el nombre fijo `App.xcworkspace` dentro de `platforms/ios/`, no a partir del nombre de la app (`Todo Notebook` solo aparece como `CFBundleDisplayName` en el `Info.plist`). Tras `cordova platform add ios`, ábrelo así:
 
-1. `cordova platform add ios` (ya hecho en este repo).
-2. Abrir `platforms/ios/Runner.xcworkspace` en Xcode.
-3. Configurar _Signing & Capabilities_ con el Apple Developer Team del publicador (no versionado).
-4. _Product → Archive → Distribute App → App Store Connect / Ad Hoc / Enterprise_.
-5. Xcode produce `Runner.ipa` firmado con el provisioning profile seleccionado.
+```bash
+open platforms/ios/App.xcworkspace
+```
 
-El proyecto Cordova en sí no requiere secretos versionados: la firma se gestiona desde Xcode contra el llavero del desarrollador. Si necesitas firma automática en CI, usa _Fastlane_ con `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` y `MATCH_TYPE` como variables en los secretos del repositorio.
+#### Build sin firma (CI o equipos sin Apple Developer)
+
+`npm run build:ios` ejecuta `cordova build ios --release --device` y desactiva la firma con `CODE_SIGNING_ALLOWED=NO`, pensado para runners que solo necesitan validar el binario:
+
+- Resultado: `platforms/ios/build/Release-iphoneos/Runner.app` o `App.xcarchive`. Subible como artefacto en CI.
+- No instalable en un dispositivo sin re-firmar con un provisioning profile válido.
+
+#### Build firmado con Apple Developer
+
+Requisitos:
+
+1. Estar dado de alta en el [Apple Developer Program](https://developer.apple.com/programs/) con un Team ID propio.
+2. Crear en Xcode un _Signing Certificate_ (Apple Development / Apple Distribution) y descargar el _Provisioning Profile_ correspondiente al bundle `io.github.pandadesigner.todonotebook` desde [developer.apple.com/account/resources](https://developer.apple.com/account/resources).
+3. En Xcode, abrir `platforms/ios/App.xcworkspace`, seleccionar el target `App`, ir a _Signing & Capabilities_ y desmarcar _Automatically manage signing_ para apuntar a tu Team y profile. El proyecto Cordova deja `CODE_SIGN_STYLE = Manual` cuando se pasa un provisioning profile.
+
+Generar el IPA desde Xcode:
+
+1. Seleccionar un destino _Any iOS Device (arm64)_.
+2. _Product → Archive_.
+3. En el Organizer, _Distribute App → App Store Connect / Ad Hoc / Enterprise_ y seguir el asistente.
+4. Xcode produce `Runner.ipa` firmado con el provisioning profile seleccionado, listo para App Store Connect, TestFlight o distribución interna.
+
+Generar el IPA desde la línea de comandos:
+
+```bash
+# Firma local sin secretos en git: el perfil y el certificado viven en el llavero del desarrollador
+cordova build ios --release --device \
+  --buildFlag="DEVELOPMENT_TEAM=ABCDE12345" \
+  --buildFlag="PROVISIONING_PROFILE_SPECIFIER=Todo Notebook"
+```
+
+El IPA final queda en `platforms/ios/build/Release-iphoneos/Runner.ipa`. Si necesitas firma automática en CI con un solo comando, añade _Fastlane match_ con `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` y `MATCH_TYPE` como secretos del repositorio; no versionar certificados ni perfiles.
 
 ## Retos
 
-1. **`cordova platform add` reescribe `package.json`.** Cada vez que se añade una plataforma, el CLI muta `cordova.platforms` en el manifiesto y rompe el spec INIT-04 (`expect(manifest.cordova?.platforms).toEqual([])`). Solución: `npm run clean:platforms` antes de commitear; documentado en `scripts/clean-cordova-platforms.cjs`.
+1. **`cordova platform add` reescribe `package.json`.** Cada vez que se añade una plataforma, el CLI muta `cordova.platforms` en el manifiesto y rompe el spec INIT-04 (`expect(manifest.cordova?.platforms).toEqual(['android', 'ios'])`). Solución: `npm run clean:platforms` antes de commitear; el helper reescribe el array a la baseline declarada en lugar de vaciarlo, documentado en `scripts/clean-cordova-platforms.cjs`.
 2. **Build Android necesita credenciales locales sin filtrarse a git.** `build.json` versiona placeholders; `scripts/build-android-release.cjs` los sustituye desde `.env.local` solo en tiempo de ejecución y los restaura al final. La primera versión tenía dos bugs (orden del regex y `process.exit` antes del `finally`) que filtraron la contraseña al manifiesto; corregidos.
 3. **TypeScript 6 con alias `paths`.** TS 6 exige que `paths` sean relativos al `tsconfig` (no a `baseUrl`); se retiró `baseUrl` y se declararon tipos Jest/Node explícitamente para evitar contaminar el bundle de la app con `types: []`.
 4. **PKCS12 ignora `-keypass`.** keytool avisa pero acepta; `ANDROID_KEY_PASSWORD` debe ser igual a `ANDROID_KEYSTORE_PASSWORD`. Documentado en `KEYSTORE.md`.
