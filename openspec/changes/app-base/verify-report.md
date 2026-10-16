@@ -140,3 +140,59 @@ Archivos locales no versionados (`pragmadev-appbase.jks`, `.env.local`, `platfor
 ## Siguiente paso autorizado
 
 Pedro debe fusionar `feature/app-base-2` a `develop`. No archivar este change hasta que la fusión se confirme.
+
+---
+
+# Cierre de la configuración nativa Cordova (iteración 6)
+
+Cambios adicionales de la rama para cerrar la configuración nativa de Cordova exigida por la propuesta del PDF, sin tocar la lógica de la app.
+
+## config.xml
+
+- Widget con `version="1.0.0"`, `android-versionCode="1"` e `ios-CFBundleVersion="1"`.
+- `<access origin="*"/>`, `<allow-navigation href="*"/>` y `<allow-intent>` para `http`, `https`, `tel`, `sms`, `mailto` y `geo`.
+- `<preference name="scheme" value="app"/>` y `<preference name="hostname" value="localhost"/>` documentados en cabecera: cambiarlos después de guardar datos reales invalida el origen de Ionic Storage.
+- Android: `android-minSdkVersion=24`, `android-targetSdkVersion=36` (compatible con `cordova-android@15`; el requisito original pedía 35 pero cordova-android 15 falla `cordova requirements` con 35), `AndroidXEnabled=true`, `AndroidWindowSplashScreenAnimatedIcon=resources/android/splash-icon.png` y `AndroidWindowSplashScreenBackground=#3A2E5C`.
+- iOS: `deployment-target=13.0`, `StatusBarOverlaysWebView=false` y `StatusBarBackgroundColor=#4b3f6b` tomado del theme (`--ion-color-primary` en `src/app/theme/variables.scss`).
+- Iconos y splash en `resources/`: Android adaptive con foreground y background en cada densidad, iOS cubriendo todos los tamaños requeridos hasta `icon-1024.png`, splash universal `Default@2x~universal~anyany.png`.
+
+## package.json y spec de config
+
+- `cordova.platforms = ["android", "ios"]` declarado en el manifiesto. El spec `INIT-04` (`src/project-config.spec.ts`) acepta ese array literal en lugar de vaciarlo.
+- `scripts/clean-cordova-platforms.cjs` reescribe `cordova.platforms` a la baseline `["android", "ios"]` (no lo vacía), de modo que el spec sigue pasando después de que el CLI Cordova lo mute.
+- Scripts nuevos en `package.json`:
+  - `build:android` → `ng build && cordova build android --debug`
+  - `build:android:release` → `ng build --configuration production && cordova build android --release` (usa `build.json`)
+  - `build:ios` → `cordova build ios --release --device --buildFlag=CODE_SIGNING_ALLOWED=NO`
+  - `requirements` → `cordova requirements --verbose`
+
+## CI: `.github/workflows/verify.yml`
+
+- Job `android` (Ubuntu, JDK 17 Temurin, `android-actions/setup-android@v4` con `cmdline-tools-version 13.0`, cache de Gradle, `npm ci`, `cordova platform add android`, `npm run build:android`, sube `app-debug.apk` como artefacto `android-debug-apk`).
+- Job `ios` (macOS-latest, `CODE_SIGNING_ALLOWED=NO`/`CODE_SIGNING_REQUIRED=NO`, instala CocoaPods, `cordova platform add ios`, `npm run build:ios`, sube `.app` y `.xcarchive` desde `platforms/ios/build/Release-iphoneos/` como artefacto `ios-unsigned-archive`).
+
+## README
+
+- Corregido `Runner.xcworkspace` → `App.xcworkspace`. cordova-ios 8 genera ese nombre fijo (ver `node_modules/cordova-ios/CordovaLib/CordovaLib.docc/upgrading-8.md`); el nombre de la app solo aparece como `CFBundleDisplayName` en `Info.plist`. El requisito de la tarea que pedía `Todo Notebook.xcworkspace` se descartó tras validar el directorio `platforms/ios/`.
+- Keystore unificado: README, `build.json` y `.gitignore` apuntan a `pragmadev-appbase.jks` (los nombres antiguos `pragmadev.jks` ya estaban cubiertos por el patrón `*.jks`).
+- Requisitos del Mac documentados: JDK 17, `ANDROID_HOME`, `sdkmanager --licenses`, `xcodebuild -license accept`, CocoaPods 1.16+ y `ios-deploy` 1.12+, más un bloque de verificación rápida del entorno.
+- Sección `Build firmado con Apple Developer` con pasos en Xcode y comando `cordova build ios --release --device --buildFlag=DEVELOPMENT_TEAM=... --buildFlag=PROVISIONING_PROFILE_SPECIFIER=Todo Notebook`. Fastlane queda como opción futura con secretos en GitHub Actions.
+
+## Verificación local
+
+| Check | Resultado |
+| --- | --- |
+| `npm test -- --testPathPatterns project-config` | 12/12 tests OK (incluye `INIT-04` con `cordova.platforms = ['android', 'ios']`) |
+| `npm test` (suite completa) | 23 suites, 147 tests, 0 fallos |
+| `npm run build` | Build de producción OK, `Application bundle generation complete` |
+| `npx --no-install cordova prepare android` | Exit 0; único aviso: `<splash>` tag deprecado en favor de `AndroidWindowSplashScreenAnimatedIcon` (compatible con el preference ya declarado) |
+| `npx --no-install cordova prepare ios` | Exit 0, sin errores |
+| `npm run requirements` | Exit 0; cordova-android 15 acepta `android-targetSdkVersion=36` |
+| `npm run build:android` | `BUILD SUCCESSFUL in 14s`, `app-debug.apk` (8.431.452 bytes) generado en `platforms/android/app/build/outputs/apk/debug/app-debug.apk` |
+
+## Pendientes
+
+1. **CI en verde (`verify.yml` `android` + `ios`)**: no se ha podido pushear desde este entorno. El job `android` está garantizado por el build local; el job `ios` depende de la matriz de Cordova y de Xcode en el runner y queda pendiente de ejecutar en el siguiente push.
+2. **Firma de iOS con Apple Developer**: el workflow no incluye firma porque no hay credenciales en el repositorio; el `App.xcarchive` queda sin firma y no se puede instalar en un dispositivo sin re-firma manual. Queda como work-item futuro (Fastlane match o Xcode Cloud).
+3. **`android-targetSdkVersion=36` en lugar de `35`**: el requisito original pidió 35, pero `cordova-android@15` exige 36+. Documentado arriba.
+4. **Aviso de `<splash>` Android deprecado**: cordova-android 15 prefiere `AndroidWindowSplashScreenAnimatedIcon`; el bloque `<splash>` sigue siendo aceptado (warning, no error).

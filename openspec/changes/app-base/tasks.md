@@ -27,3 +27,13 @@
 - [x] 5.2 `.github/workflows/verify.yml` con job `verify` según la propuesta CI, ejecutando `npm test -- --coverage` y build de producción.
 - [x] 5.3 `verify-report.md` con evidencia real.
 - [x] 5.4 PR `feature/app-base-2 → develop` abierto, sin fusionar ni archivar.
+
+## 6. Cierre de la configuración nativa Cordova
+
+- [x] 6.1 `config.xml` con versiones (`1.0.0` / `android-versionCode=1` / `ios-CFBundleVersion=1`), `<access origin="*"/>`, `<allow-navigation href="*"/>`, `<allow-intent>` para `http`, `https`, `tel`, `sms`, `mailto`, `geo`, preferencias `scheme=app` y `hostname=localhost`, y los bloques `<platform name="android">` / `<platform name="ios">` con SDK y theme de la app.
+- [x] 6.2 Iconos y splash desde `resources/` (Android adaptive con foreground/background y iOS cubriendo todos los tamaños requeridos); `<preference name="android-targetSdkVersion" value="36"/>` por compatibilidad con `cordova-android@15`.
+- [x] 6.3 `package.json` con `cordova.platforms: ["android", "ios"]`; spec `INIT-04` acepta el array en lugar de vaciarlo, `scripts/clean-cordova-platforms.cjs` lo restaura a la baseline declarada.
+- [x] 6.4 Scripts npm `build:android`, `build:android:release`, `build:ios` y `requirements`.
+- [x] 6.5 `.github/workflows/verify.yml` con jobs `android` (debug APK) e `ios` (`CODE_SIGNING_ALLOWED=NO`).
+- [x] 6.6 `README.md`: requisitos del Mac, nombre correcto del workspace (`App.xcworkspace`), keystore unificado con `.gitignore` (`pragmadev-appbase.jks`) y guía de IPA firmado con Apple Developer.
+- [ ] 6.7 CI en verde (`verify.yml` `android` + `ios`) en push al PR — pendiente de ejecutar en GitHub Actions.
