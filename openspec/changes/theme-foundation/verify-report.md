@@ -1,0 +1,111 @@
+# theme-foundation: informe de bloqueo
+
+Fecha: 2026-10-16 18:16 COT.
+Estado: bloqueado antes de implementar. artifact_store = openspec.
+
+## Prerrequisitos ausentes
+
+No están disponibles `docs/workflow-mcp.md`, la rama `feature/theme-foundation` ni los artefactos aprobados `proposal.md`, `design.md`, `tasks.md` y `specs/` del cambio. No se pueden determinar las tareas ni aplicar la tabla de valores Figma sin inventarlos.
+
+## Comandos ejecutados y salida
+
+`pwd`:
+
+```text
+/Volumes/Disco Mac/Develop/ionic/pragma/to-do-pragma-test
+```
+
+`git status --short --branch` al iniciar:
+
+```text
+## develop...origin/develop
+?? openspec/changes/archive/
+?? openspec/changes/openspec-cleanup/
+?? openspec/specs/project-bootstrap/
+```
+
+`git branch --all`: ejecutado correctamente; rama activa `develop`, sin rama local ni referencia remota `feature/theme-foundation`.
+
+`git ls-remote --heads origin feature/theme-foundation`: terminó correctamente, sin salida; el remoto no anunció esa rama.
+
+`git worktree list`:
+
+```text
+/Volumes/Disco Mac/Develop/ionic/pragma/to-do-pragma-test fd4122d [develop]
+```
+
+Comprobación de existencia con `test -e`:
+
+```text
+AUSENTE docs/workflow-mcp.md
+AUSENTE openspec/changes/theme-foundation/proposal.md
+AUSENTE openspec/changes/theme-foundation/design.md
+AUSENTE openspec/changes/theme-foundation/tasks.md
+AUSENTE openspec/changes/theme-foundation/specs
+```
+
+La lectura de `docs/workflow-mcp.md` devolvió ENOENT.
+
+## Tareas y verificaciones
+
+Ninguna tarea marcada. Las tareas solicitadas 1.1 a 6.3 quedan pendientes porque falta `tasks.md` y el diseño obligatorio. No se ejecutaron ciclos RED/GREEN/REFACTOR ni se modificó código.
+
+Comandos no ejecutados durante la comprobación inicial por bloqueo previo a la implementación (ver ejecución posterior abajo):
+
+- `npx jest <ruta>`: falta la definición de cada tarea.
+- `npm test -- --coverage`
+- `npm run lint`
+- `npm run lint:styles`
+- `npm run format:check`
+- `npm run typecheck`
+- `npm run build -- --configuration production`
+
+No se generaron capturas de la aplicación ni de Figma. No hay evidencia visual ni resultados de validación que puedan declararse aprobados.
+
+## Seguimiento inicial (histórico)
+
+Inicio registrado mediante MCP Notion en C0.5, fila `3fbcb4419773815db397fe4678dec2f0`. Status quedó en Blocked y se añadió el motivo a Note, preservando el texto anterior.
+
+No se crearon commits ni PR. No se cambiaron plataformas, configuraciones, proposal, design o specs existentes. Los archivos no rastreados preexistentes se conservaron. Este informe es el único archivo creado por esta ejecución y queda sin commit sobre `develop`.
+
+Para continuar: hacer disponible la rama aprobada con sus artefactos y `docs/workflow-mcp.md` en este repositorio.
+
+## Revisión y comprobaciones posteriores
+
+Se reconfirmó la ausencia de la rama remota, workflow, design y tasks. Se revisó el único archivo creado por esta ejecución, este informe, con la guía general Sideroom cargada. No se introdujeron funciones, contratos ni código; la regla 20 (separación por intención) no requiere cambios. No se refactorizó código ajeno.
+
+Comprobaciones ejecutadas el 2026-10-16, aproximadamente 18:17 COT, sobre el estado existente de develop; no verifican la implementación pendiente de theme-foundation:
+
+| Comando                                                                                | Resultado real                                                                                                          | Log completo local                   |
+| -------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+| `npx --no-install prettier --check openspec/changes/theme-foundation/verify-report.md` | Exit 0: All matched files use Prettier code style!                                                                      | `/tmp/theme-foundation-check.EieYox` |
+| `npm run lint`                                                                         | Exit 0: All files pass linting.                                                                                         | `/tmp/theme-foundation-check.jqzvlz` |
+| `npm run lint:styles`                                                                  | Exit 1: Missing script: "lint:styles"                                                                                   | `/tmp/theme-foundation-check.L02rtt` |
+| `npm run format:check`                                                                 | Exit 0: All matched files use Prettier code style!                                                                      | `/tmp/theme-foundation-check.VW9aju` |
+| `npm run typecheck`                                                                    | Exit 0: ambos comandos tsc terminaron correctamente.                                                                    | `/tmp/theme-foundation-check.WsHn5Q` |
+| `npm test -- --coverage`                                                               | Exit 0: 23 suites y 147 tests pasaron; sin fallo de umbrales.                                                           | `/tmp/theme-foundation-check.brfGhr` |
+| `npm run build -- --configuration production`                                          | Exit 0: Application bundle generation complete. Advertencias CommonJS de localforage y localforage-cordovasqlitedriver. | `/tmp/theme-foundation-check.DKKNxW` |
+
+El script de estilos ausente es un bloqueo adicional, no una regresión introducida por este informe. Se observó también que el package.json existente declara cordova.platforms como android e ios, no como la lista vacía solicitada. Esta ejecución no modificó package.json ni plataformas. Ninguna tarea se marca como completada y no se abre PR.
+
+## Reanudación autorizada: artefactos creados
+
+El usuario autorizó crear los artefactos faltantes, ajustar la spec y después implementar, manteniendo Figma, docs/design.json y docs/design.md como fuentes obligatorias para colores, tamaños y tipografía.
+
+Se ejecutó `git switch -c feature/theme-foundation` correctamente desde develop. Los archivos no rastreados anteriores se conservaron. Se crearon proposal.md, design.md con CRC y Mapeo Figma → src/theme, specs/ui-shell/spec.md con UI-20 a UI-28 y tasks.md con 17 tareas aún sin marcar.
+
+Se consultaron `openspec instructions proposal`, `design`, `specs` y `tasks`, todos con `--change theme-foundation --json`, y las respuestas definieron las plantillas usadas. Se ejecutó Prettier sobre los cuatro artefactos, exit 0. Se ejecutó `openspec validate theme-foundation --strict`, exit 0, salida: `Change 'theme-foundation' is valid`. `openspec status --change theme-foundation --json` reportó los cuatro artefactos done. Ese estado solo acredita la estructura documental, no implementación ni verificación funcional.
+
+Se consultaron get_design_context y get_screenshot de Figma para 4:440 y 4:1560; ambas capturas reportaron 375x812. Las capturas todavía no se han descargado a evidence/ y no se declara evidencia visual terminada.
+
+Bloqueos en ese momento de la preparación: interlineado contradictorio (`100% (normal)` en JSON, 100 % en MD, metadatos 100 y código normal en respuesta Figma); medidas de implementación sin fuente visual; precedencia entre oscuro del sistema y clase del documento; workflow todavía ausente. Fuentes offline requieren procedencia/licencia verificadas antes de empaquetarse. No se implementó código ni se ejecutaron ciclos TDD nuevos durante esta preparación. Los resultados de tests anteriores no validan una implementación de theme-foundation.
+
+## Incorporación del workflow y auditoría disponibles posteriormente
+
+Se cargaron completos docs/workflow-mcp.md, docs/auditoria-figma.md, docs/plan-theme-foundation.md, docs/prompts/theme-foundation.md, docs/prompts/docs-workflow-mcp.md, docs/notion-mcp-pi.md y docs/config-yaml-rules.md. Ya no existe el bloqueo por ausencia de estos documentos. Las reglas YAML son instrucciones para un cambio documental separado y no se añadieron silenciosamente a config.yaml.
+
+Se incorporaron a la spec los hallazgos C0.5 de la auditoría, la excepción muted oscuro aceptada en Notion y la separación de hallazgos C1/C2/C3/C7. Se normalizaron escenarios UI-nn.m y se añadió matriz de trazabilidad de auditoría, nodos con enlaces y columna SCSS al mapeo del diseño. La lectura de Notion confirmó la decisión de mantener #6B6580 en oscuro pese al contraste aproximado 3:1; no se alteraron notas durante esta revisión.
+
+Se consultaron nuevamente get_variable_defs de 4:440 y 4:1560, y get_design_context/get_screenshot de 4:788 y 4:1267. Estos últimos confirman --fs-display-title como nombre Figma frente al --fs-title de la copia offline. Las correcciones de docs/design.json/md siguen pendientes; no se presentan como aplicadas. El usuario autorizó conservar medidas heredadas como tokens técnicos separados y mantener oscuro de sistema más clase que fuerza oscuro. El forzado claro body.light del plan requiere resolver la diferencia con esa decisión. Las consultas tipográficas 4:471/4:469 siguen devolviendo metadatos 100 y código normal, sin resolver unidades.
+
+Después de ajustar los artefactos se ejecutó Prettier --write y --check sobre proposal.md, design.md, specs/ui-shell/spec.md y tasks.md: exit 0, `All matched files use Prettier code style!`. `openspec validate theme-foundation --strict`: exit 0, `Change 'theme-foundation' is valid`. `git diff --check`: exit 0, sin salida. No se ejecutaron pruebas nuevas de código porque no se modificó la aplicación. El workflow requiere cerrar la fase A mediante PR documental borrador y revisión antes de fase B; todavía no existe ese PR ni se declara diseño completamente resuelto.

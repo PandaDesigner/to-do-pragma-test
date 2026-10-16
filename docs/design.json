@@ -196,7 +196,7 @@
       "size": 38,
       "letterSpacing": -0.3,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-date",
+      "cssVar": "--fs-display-date",
       "usage": "Fecha del día (23.Mon)"
     },
     {
@@ -256,7 +256,7 @@
       "size": 14,
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-regular",
+      "cssVar": "--fs-body",
       "usage": "Texto general y de ayuda"
     },
     {
@@ -5246,6 +5246,12 @@
     "Fila de chips de 311 de ancho con contenido de 328: Home queda cortado → scroll horizontal.",
     "NoteItem tiene alturas 77/78/74 por redondeo de Auto Layout; usar 77.",
     "NewTaskInput en my-notes mide 293x68 vs 295x69 en Todo.",
-    "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug)."
+    "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug).",
+    "Display/Date usaba cssVar --fs-date; corregido a --fs-display-date según Figma 4:440.",
+    "Body/Regular usaba cssVar --fs-regular; corregido a --fs-body según Figma 4:440.",
+    "Display/Title y Body/Note Title no aparecen como variables en Figma; cssVar --fs-title y --fs-note-title de la copia offline quedan pendientes de confirmación hasta una consulta con cuota o un plan superior.",
+    "Interlineado: la copia offline registra '100% (normal)'; Figma devuelve metadatos 100 y código leading-[normal]. Bloqueado: requiere consulta adicional a Figma o al cliente para fijar la unidad.",
+    "Radio round: Figma documenta 999; la copia offline y design.md registran 50 %. Decisión de C0.5: usar 50 % para elementos circulares sin exponer el radio como token; el valor 999 se documenta solo si una consulta posterior confirma el uso fuera de círculos.",
+    "Sheets 4:947 y 4:1365 faltan en screens[]; documentar como child de 4:869 y 4:1267 en una corrección posterior."
   ]
 }
