@@ -7,6 +7,10 @@ context: |
   Arquitectura: pages → store → domain ← data; core/di conecta implementaciones; shared solo input/output; SignalStore.
   Persistencia: Ionic Storage, SQLite nativo → IndexedDB → LocalStorage; Firebase Remote Config enable_categories.
   Calidad: SDD y TDD obligatorio RED-GREEN-REFACTOR; ESLint y Prettier; runner Jest aprobado.
+  Convención SDD: cuatro artefactos centrales por cambio: proposal.md, design.md, specs/<capacidad>/spec.md y tasks.md.
+  sdd-explore y sdd-verify son actividades repetibles; exploration.md y verify-report.md son documentos complementarios actualizables dentro de openspec/changes/<cambio>/, no nuevos artefactos del esquema.
+  Guardar exploration.md cuando se explore un cambio nombrado con sdd-explore; openspec-explore no exige ese documento. Registrar en verify-report.md la evidencia de cada verificación y distinguirla de resultados anteriores.
+  sdd-apply implementa código y pruebas por partes y actualiza el progreso en tasks.md; no genera apply.md. Si aparecen nuevas dudas, se puede volver a explorar, ajustar los artefactos afectados y continuar antes de verificar de nuevo.
   Gitflow aprobado: main, develop, feature/*, release/*, hotfix/*; Conventional Commits; PR funcional hacia develop.
   Destino público creado: PandaDesigner/to-do-pragma-test; conectar Git local mediante origin HTTPS.
   PR init incluye scaffolding Ionic con CLI, Cordova y preparación de pruebas; no incluye funcionalidades de la app base.
