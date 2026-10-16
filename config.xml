@@ -29,7 +29,7 @@
         <splash src="resources/splash.png" />
     </platform>
     <platform name="ios">
-        <preference name="deployment-target" value="13.0" />
+        <preference name="deployment-target" value="15.0" />
         <preference name="StatusBarOverlaysWebView" value="false" />
         <preference name="StatusBarBackgroundColor" value="#4b3f6b" />
         <preference name="BackgroundColor" value="#3A2E5C" />
