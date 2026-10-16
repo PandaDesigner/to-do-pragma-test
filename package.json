@@ -15,7 +15,7 @@
     "clean:platforms": "node scripts/clean-cordova-platforms.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.spec.json",
     "build:android": "ng build && cordova build android --debug",
-    "build:android:release": "ng build --configuration production && cordova build android --release",
+    "build:android:release": "ng build --configuration production && ionic cordova build android --release -- -- --keystore=$ANDROID_KEYSTORE_PATH --alias=$ANDROID_KEY_ALIAS --storePassword=$ANDROID_KEYSTORE_PASSWORD --password=$ANDROID_KEY_ALIAS_PASSWORD",
     "build:ios": "node scripts/build-ios-archive.cjs",
     "requirements": "cordova requirements --verbose",
     "ionic:serve": "ng serve",
