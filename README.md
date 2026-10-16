@@ -66,13 +66,26 @@ Patrones clave:
 
 ### Android (APK firmado + AAB)
 
-`npm run ionic:build:android` ejecuta `scripts/build-android-release.cjs`, que sustituye las credenciales de `.env.local` en `build.json` (placeholders en git), corre `ng build --configuration production`, `ionic cordova build android --release --device` y `./gradlew :app:assembleRelease`, y restaura `build.json` al final.
+`build.json` está fuera del repo (ver `.gitignore`); `build.example.json` contiene los placeholders. Los secretos llegan por variables de entorno, nunca commiteadas:
+
+- `ANDROID_KEYSTORE_PATH` — ruta al `.jks` (por ejemplo `pragmadev-appbase.jks`).
+- `ANDROID_KEY_ALIAS` — alias dentro del keystore.
+- `ANDROID_KEYSTORE_PASSWORD` — contraseña del keystore.
+- `ANDROID_KEY_ALIAS_PASSWORD` — contraseña del alias (en PKCS12 suele coincidir con la del keystore).
 
 Requisitos:
 
-1. Generar `pragmadev-appbase.jks` y `.env.local` siguiendo `KEYSTORE.md`.
+1. Generar `pragmadev-appbase.jks` y exportarlo en `.env.local` siguiendo `KEYSTORE.md`.
 2. JDK 17 y `ANDROID_HOME` apuntando a un Android SDK con build-tools 34+.
-3. Ejecutar `npm run ionic:build:android`.
+3. Ejecutar `npm run ionic:build:android`. Equivale a:
+   ```bash
+   ionic cordova build android --release -- -- \
+     --keystore=$ANDROID_KEYSTORE_PATH \
+     --alias=$ANDROID_KEY_ALIAS \
+     --storePassword=$ANDROID_KEYSTORE_PASSWORD \
+     --password=$ANDROID_KEY_ALIAS_PASSWORD
+   ```
+   El script `scripts/build-android-release.cjs` hace lo mismo leyendo `.env.local`, corre `ng build --configuration production`, el build de Cordova y `./gradlew :app:assembleRelease`.
 
 Artefactos:
 
@@ -89,38 +102,44 @@ Firma verificada con `apksigner verify --verbose`: APK Signature Scheme v2 OK. E
 open platforms/ios/App.xcworkspace
 ```
 
+El bundle identifier es `io.github.pandadesigner.todonotebook` (de `config.xml`).
+
+#### Team ID
+
+El Team ID aparece en el campo `OU` del subject del certificado de firma. Para extraerlo del Llavero:
+
+```bash
+security find-certificate -c "Apple Development: tu-correo@dominio" -p \
+  | openssl x509 -noout -subject
+# subject=UID=..., CN=Apple Development: tu-correo@dominio (XXXXXX), OU=TEAM_ID, O=..., C=...
+```
+
+Copia el valor de `OU=TEAM_ID` a tu `build.json` local (ignorado por git) bajo `ios.debug.developmentTeam` e `ios.release.developmentTeam`. `build.example.json` contiene los placeholders. No commitees el Team ID real ni el `build.json`.
+
+#### Firma automática y limitación de la cuenta Development
+
+Con `automaticProvisioning: true` y `developmentTeam` fijado en `build.json`, Xcode descarga y renueva los provisioning profiles desde tu cuenta Apple sin pasos manuales. Para que funcione, tu cuenta debe estar dada de alta en el [Apple Developer Program](https://developer.apple.com/programs/) (pago, no la Apple ID personal gratuita), tener al menos un dispositivo registrado y el App ID `io.github.pandadesigner.todonotebook` creado en _Certificates, Identifiers & Profiles_.
+
+Si la cuenta es la Apple ID personal sin pago del Developer Program, Xcode puede emitir el certificado `Apple Development` pero **no** crea provisioning profiles para distribución: `ionic cordova build ios --device --release` termina en `** ARCHIVE FAILED **` con `Your team has no devices from which to generate a provisioning profile` y `Xcode couldn't find any iOS App Development provisioning profiles matching 'io.github.pandadesigner.todonotebook'`. En ese caso, o bien te das de alta en el programa de pago, o bien firmas el `.app` manualmente en Xcode con un perfil Apple Distribution / Ad Hoc generado fuera del flujo automático.
+
 #### Build sin firma (CI o equipos sin Apple Developer)
 
 `npm run build:ios` ejecuta `cordova build ios --release --device` y desactiva la firma con `CODE_SIGNING_ALLOWED=NO`, pensado para runners que solo necesitan validar el binario:
 
-- Resultado: `platforms/ios/build/Release-iphoneos/Runner.app` o `App.xcarchive`. Subible como artefacto en CI.
+- Resultado: `platforms/ios/build/Release-iphoneos/Todo Notebook.app` o `App.xcarchive`. Subible como artefacto en CI.
 - No instalable en un dispositivo sin re-firmar con un provisioning profile válido.
 
-#### Build firmado con Apple Developer
+#### Build firmado desde la línea de comandos
 
-Requisitos:
-
-1. Estar dado de alta en el [Apple Developer Program](https://developer.apple.com/programs/) con un Team ID propio.
-2. Crear en Xcode un _Signing Certificate_ (Apple Development / Apple Distribution) y descargar el _Provisioning Profile_ correspondiente al bundle `io.github.pandadesigner.todonotebook` desde [developer.apple.com/account/resources](https://developer.apple.com/account/resources).
-3. En Xcode, abrir `platforms/ios/App.xcworkspace`, seleccionar el target `App`, ir a _Signing & Capabilities_ y desmarcar _Automatically manage signing_ para apuntar a tu Team y profile. El proyecto Cordova deja `CODE_SIGN_STYLE = Manual` cuando se pasa un provisioning profile.
-
-Generar el IPA desde Xcode:
-
-1. Seleccionar un destino _Any iOS Device (arm64)_.
-2. _Product → Archive_.
-3. En el Organizer, _Distribute App → App Store Connect / Ad Hoc / Enterprise_ y seguir el asistente.
-4. Xcode produce `Runner.ipa` firmado con el provisioning profile seleccionado, listo para App Store Connect, TestFlight o distribución interna.
-
-Generar el IPA desde la línea de comandos:
+Con firma automática y `build.json` local con `developmentTeam` rellenado:
 
 ```bash
-# Firma local sin secretos en git: el perfil y el certificado viven en el llavero del desarrollador
-cordova build ios --release --device \
-  --buildFlag="DEVELOPMENT_TEAM=ABCDE12345" \
-  --buildFlag="PROVISIONING_PROFILE_SPECIFIER=Todo Notebook"
+ionic cordova build ios --device --release
+# IPA firmado en platforms/ios/build/Release-iphoneos/Todo Notebook.ipa
+# (o .xcarchive para exportar después desde el Organizer)
 ```
 
-El IPA final queda en `platforms/ios/build/Release-iphoneos/Runner.ipa`. Si necesitas firma automática en CI con un solo comando, añade _Fastlane match_ con `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` y `MATCH_TYPE` como secretos del repositorio; no versionar certificados ni perfiles.
+Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcworkspace`, desmarca _Automatically manage signing_ en el target `App` y selecciona tu provisioning profile; exporta el `.ipa` desde el Organizer con _Distribute App → App Store Connect / Ad Hoc_. Si necesitas firma automática en CI con un solo comando, añade _Fastlane match_ con `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` y `MATCH_TYPE` como secretos del repositorio; no versionar certificados ni perfiles.
 
 ## Retos
 
