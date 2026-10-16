@@ -1,5 +1,15 @@
 node_modules/
+/todo-notebook-init/
+/.claude/
+/.codex/
+/.cursor/
+/.opencode/
+/.pi/
+/.trae/
+/.vscode/
 .angular/
+.ionic/
+out-tsc/
 coverage/
 dist/
 www/
