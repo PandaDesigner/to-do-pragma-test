@@ -59,13 +59,14 @@ La app MUST definir el modelo `Task` de `docs/PROMPT.md`: `dueDate` como día ca
 
 ### Requirement: APP-04 Puertos de repositorio
 
-`TASK_REPOSITORY` y `CATEGORY_REPOSITORY` MUST ser `InjectionToken` que exponen un contrato `list/save/remove`. Los repositorios de infraestructura MUST satisfacer ese contrato sin salteralo.
+`TASK_REPOSITORY` y `CATEGORY_REPOSITORY` MUST ser `InjectionToken` definidos en `core/di`, separados de los contratos puros `list/save/remove` de domain. Los repositorios de infraestructura MUST satisfacer el mismo contrato.
 
 #### Scenario: APP-04-A Contrato satisfecho
 
-- **GIVEN** una implementación in-memory
-- **WHEN** se ejecuta `repository.spec.ts`
-- **THEN** las pruebas confirman `list` tras `save`, `remove` y la distinción de tokens.
+- **GIVEN** repositorios in-memory de tareas/categorías y un repositorio de tareas Storage con almacenamiento simulado
+- **WHEN** se ejecuta la misma suite de contrato en `repository.spec.ts`
+- **THEN** confirma colección vacía, `save/list`, actualización sin duplicados, eliminación idempotente y snapshots de colección independientes.
+- **AND** `tokens.spec.ts` verifica que Angular resuelve cada repositorio con su propio token.
 
 ### Requirement: APP-05 Persistencia con debounce
 

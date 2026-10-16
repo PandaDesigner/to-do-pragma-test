@@ -8,7 +8,7 @@ Se adoptó el modelo de `docs/PROMPT.md` sin compatibilidad ni migración del mo
 
 Evidencia RED: el test State falló por ausencia del módulo requerido. El test de categoría también falló al esperar `list` y recibir `default`. Después de implementar, las 31 pruebas de la máquina pasaron. No se atribuye TDD retroactivo al código previo.
 
-Se adaptaron los fixtures y el ordenamiento al `dueDate` obligatorio aprobado. Los casos límite adicionales de estrategias y la extracción de tokens Angular corresponden a las tareas 1.2 y 1.3.
+Se adaptaron los fixtures y el ordenamiento al `dueDate` obligatorio aprobado. Los casos límite adicionales de estrategias y la extracción de tokens Angular se verifican por separado en las tareas 1.2 y 1.3, documentadas abajo.
 
 La comprobación raíz primero reprodujo TS5101. Se retiró `baseUrl`, se hicieron relativos los aliases y se eliminaron las supresiones de deprecaciones. Después se detectaron tipos Jest/Node ausentes en la configuración raíz con TS 6: se declararon explícitamente, manteniendo `types: []` para la app.
 
@@ -27,6 +27,25 @@ Comprobaciones ejecutadas:
 Se añadieron pruebas de colecciones vacías, filtro sin estados, categoría inexistente, filtro explícito `null`, fechas iguales y arrays/tareas congelados. La comprobación de tipos falló primero con TS2322 porque el filtro no admitía `categoryId: null`; se amplió ese contrato para distinguir tareas sin categoría de filtro omitido. Los demás casos verifican comportamiento ya existente, sin atribuirles un RED que no ocurrió.
 
 `npm test -- --runTestsByPath src/app/domain/task-strategy.spec.ts`: 6 pruebas correctas. `npx tsc --noEmit`, `npm run lint` y Prettier: correctos.
+
+## Tarea 1.3: contratos y tokens
+
+Los contratos `Repository<T>`, `TaskRepository` y `CategoryRepository` están en domain sin imports Angular. Los tokens viven en `core/di/tokens.ts`. Una prueba con `Injector.create` confirma la resolución independiente de ambos repositorios.
+
+La misma suite de cinco pruebas corre contra tareas InMemory, tareas Ionic Storage con almacenamiento simulado y categorías InMemory. Verifica colección vacía, guardado/listado, actualización sin duplicados, eliminación idempotente y snapshots independientes. No acredita aún el driver SQLite en dispositivo ni un repositorio de categorías persistente.
+
+RED real: 10 pruebas fallaron porque el repositorio InMemory generado no tenía `list/save/remove`; las cinco contra Storage mock ya pasaban. El test de inyección falló inicialmente por ausencia del módulo de tokens. Tras implementar, las 16 pruebas de contrato/inyección pasaron.
+
+Una ejecución previa falló por ENOSPC en el directorio temporal de macOS, no por el código. Se repitió usando `--cacheDirectory=node_modules/.cache/jest` en el volumen del proyecto, sin borrar archivos ajenos. La comprobación final con el comando normal también pasó.
+
+## Comprobación final de la fase 1 de tasks.md
+
+- `npm test -- --coverage`: 12 suites y 89 pruebas correctas. Cobertura de domain y State: 100% en las cuatro métricas. Cobertura global de archivos ejecutados: 97,87% statements, 94,11% branches, 96,36% functions y 97,75% lines. Esto no sustituye los thresholds permanentes ni la inclusión de archivos no ejecutados pendientes de 5.1.
+- `npx tsc --noEmit` y `npm run typecheck`: correctos.
+- `npm run lint` y `npm run format:check`: correctos.
+- `npx ionic build`: correcto, con la advertencia Browserslist ya indicada.
+
+Se revisaron los cambios contra la guía TypeScript, incluida la regla 20: la máquina delega en clases State; la suite de contrato se separa de las fábricas concretas. No se añadió una dependencia de infraestructura al dominio ni se cambió código ajeno a estas tareas. La fase termina con tareas 1.1, 1.2 y 1.3 completas. Esperar confirmación antes de persistencia y stores.
 
 ## Pendientes de entrega
 
