@@ -44,6 +44,18 @@ describe('Task strategies', () => {
     ]);
   });
 
+  it('returns a new array without mutating the input', () => {
+    const tasks: Task[] = [
+      makeTask('a', 'pending'),
+      makeTask('b', 'completed'),
+    ];
+    const original = tasks.map((task) => task.id);
+
+    const filtered = filterTasks(tasks, { statuses: ['pending'] });
+    expect(filtered).not.toBe(tasks);
+    expect(tasks.map((task) => task.id)).toEqual(original);
+  });
+
   it('sorts tasks by dueAt ascending, with tasks without dueAt last', () => {
     const tasks: Task[] = [
       makeTask('a', 'pending'),
