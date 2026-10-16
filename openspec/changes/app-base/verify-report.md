@@ -47,6 +47,22 @@ Una ejecución previa falló por ENOSPC en el directorio temporal de macOS, no p
 
 Se revisaron los cambios contra la guía TypeScript, incluida la regla 20: la máquina delega en clases State; la suite de contrato se separa de las fábricas concretas. No se añadió una dependencia de infraestructura al dominio ni se cambió código ajeno a estas tareas. La fase termina con tareas 1.1, 1.2 y 1.3 completas. Esperar confirmación antes de persistencia y stores.
 
+## Continuación autorizada para cierre completo
+
+Pedro autorizó completar todas las tareas sin las pausas entre fases anteriores y reconstruir la propuesta CI ausente. Se mantiene un solo change y rama hasta su cierre. No fusionar el PR; el archivado requiere primero la fusión por Pedro.
+
+### Tarea 3.2
+
+Commit `fe224da`. Los decoradores exponen los nombres requeridos y conservan los aliases anteriores. Debounce comparte la promesa entre llamadas agrupadas, espera el resultado, propaga errores y serializa lotes por instancia. RED: cuatro fallos de las seis pruebas de decoradores; GREEN: 92 pruebas totales, tipos y lint correctos. Se adaptaron los tests de Storage al contrato de confirmación aprobado.
+
+### Tarea 2.1
+
+Colección persistente compartida por tareas y categorías, claves separadas, operaciones por ID y error explícito antes de inicializar o ante contenido inválido. El arranque espera la plataforma y registra SQLite, con IndexedDB y LocalStorage como alternativas. Se añadió dependencia directa de `@ionic/storage` para sus constantes públicas.
+
+RED: dos fallos por falta de persistencia de categorías y operaciones permitidas antes de inicializar. GREEN: 14 suites, 97 pruebas; `npx tsc --noEmit`, typecheck, lint y formato correctos. Build web correcto. Se probaron recarga en nuevas instancias, aislamiento de claves, errores y reintento manual. La ejecución SQLite en dispositivo queda por demostrar en la entrega nativa 4.4; estos tests no la sustituyen.
+
+Advertencias observadas: Browserslist y dependencias CommonJS del almacenamiento. npm indicó que la sesión usa Node 26 frente al Node 24 declarado y reportó vulnerabilidades; no se ejecutó una actualización forzada de dependencias.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.

@@ -11,6 +11,7 @@ import {
   provideIonicAngular,
 } from '@ionic/angular/standalone';
 
+import { provideLocalRepositories } from './app/core/di/storage-initializer';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
@@ -18,6 +19,7 @@ bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
+    provideLocalRepositories(),
     provideRouter(
       routes,
       withPreloading(PreloadAllModules),
