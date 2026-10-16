@@ -19,11 +19,11 @@
 - [x] 4.1 Páginas `tasks` y `categories` con `OnPush`, `trackBy` y virtual scroll de CDK desde 200 tareas.
 - [x] 4.2 Shell con tabs y ocultación de "Mis listas" cuando `enable_categories=false`.
 - [x] 4.3 Botón debug que genera 5.000 tareas.
-- [ ] 4.4 README con las tres respuestas del PDF, configuración de firma sin secretos y APK firmado e IPA generados.
+- [x] 4.4 README con las tres respuestas del PDF, configuración de firma sin secretos y APK firmado e IPA generados.
 
 ## 5. Calidad y entrega
 
-- [ ] 5.1 `jest.config.cjs` con thresholds 80/95/90/90.
-- [ ] 5.2 `.github/workflows/verify.yml` con job `verify` según la propuesta CI, ejecutando `npm test -- --coverage` y build de producción.
+- [x] 5.1 `jest.config.cjs` con thresholds 80/95/90/90.
+- [x] 5.2 `.github/workflows/verify.yml` con job `verify` según la propuesta CI, ejecutando `npm test -- --coverage` y build de producción.
 - [ ] 5.3 `verify-report.md` con evidencia real.
 - [ ] 5.4 PR `feature/app-base-2 → develop` abierto, sin fusionar ni archivar.

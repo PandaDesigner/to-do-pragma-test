@@ -12,8 +12,11 @@
     "lint": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"*.{json,js,cjs}\" \".github/**/*.{yml,md}\" README.md",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"*.{json,js,cjs}\" \".github/**/*.{yml,md}\" README.md",
+    "clean:platforms": "node scripts/clean-cordova-platforms.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.spec.json",
-    "ionic:serve": "ng serve"
+    "ionic:serve": "ng serve",
+    "ionic:build": "node scripts/ionic-build.cjs",
+    "ionic:build:android": "node scripts/build-android-release.cjs"
   },
   "private": true,
   "engines": {
@@ -55,6 +58,8 @@
     "@types/node": "^24.19.2",
     "angular-eslint": "22.5.0",
     "cordova": "^13.0.0",
+    "cordova-android": "^15.1.0",
+    "cordova-ios": "^8.1.1",
     "cordova-sqlite-storage": "^7.0.0",
     "eslint": "^10.10.0",
     "jest": "^30.5.2",

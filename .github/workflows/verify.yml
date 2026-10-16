@@ -1,4 +1,4 @@
-name: CI
+name: verify
 
 on:
   pull_request:
@@ -16,7 +16,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: npm test
+      - run: npm test -- --coverage
       - run: npm run lint
       - run: npm run format:check
       - run: npm run typecheck
