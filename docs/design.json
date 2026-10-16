@@ -1,0 +1,5251 @@
+{
+  "meta": {
+    "name": "Todo Notebook — definición de diseño y arquitectura",
+    "version": "3.0.0",
+    "language": "es (textos de UI en inglés según Figma, salvo Eliminar/Cancelar/generar 5000 tareas)",
+    "source": {
+      "figmaUrl": "https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA",
+      "fileKey": "F6ztYiRO9b0xYZA38xSTIA",
+      "status": "APROBADO",
+      "pages": {
+        "Tokens & Components": "variables, 11 text styles, componentes con variantes",
+        "Screens": "13 frames 375x812 con Auto Layout (canvas 0:1)"
+      }
+    },
+    "canvas": {
+      "width": 375,
+      "height": 812,
+      "unit": "pt = px CSS",
+      "origin": "esquina superior izquierda del frame; todas las coordenadas de 'screens' son ABSOLUTAS respecto al frame"
+    },
+    "measurement": "Frames, tamaños, colores, tipografía y radios leídos de Figma (get_metadata / get_design_context / variables). Todo valor marcado 'estimado' NO se pudo leer de Figma y se infirió del PNG.",
+    "pdf": "Prueba técnica Desarrollador Mobile: Ionic+Angular, storage local, categorías CRUD+asignación+filtro, Cordova Android/iOS, Firebase Remote Config, optimización, APK/IPA, README, 3 preguntas."
+  },
+  "visualPrinciples": [
+    "Cuaderno físico: rail de separadores pastel de 27pt en el canto izquierdo; la pestaña activa es blanca y se funde con la hoja.",
+    "Fondo color/surface sin toolbar de Ionic visible.",
+    "Un único color de acción: color/primary.",
+    "Contraste tipográfico DM Serif Display (títulos) vs Inter (contenido).",
+    "Sombras solo en panel flotante (shadow/card) y FAB (shadow/fab).",
+    "Columna de contenido: x=64 absoluto (Content x=27 + padding-left 37), ancho 311, bordes de fila hasta x=375 (la fila toca el borde derecho)."
+  ],
+  "tokens": {
+    "collections": {
+      "Primitives": "valores hex crudos",
+      "Color · Light": "semánticos modo claro",
+      "Color · Dark": "semánticos modo oscuro (colección separada por límite del plan Starter: 1 modo por colección)",
+      "Dimension": "radios, espaciado, grid, strokes",
+      "Typography": "familias y tamaños"
+    },
+    "color": {
+      "light": {
+        "color/primary": "#4B3F6B",
+        "color/primary-dark": "#3A2E5C",
+        "color/text": "#2E2547",
+        "color/text-muted": "#6B6580",
+        "color/surface": "#FFFFFF",
+        "color/surface-muted": "#F2F2F4",
+        "color/border": "#E6E4EC",
+        "color/card-border": "#D9D6E2",
+        "color/check-empty": "#E4E1EE",
+        "color/accent-link": "#3AA8E0",
+        "color/on-primary": "#FFFFFF",
+        "color/danger": "#C5000F",
+        "color/scrim": "#00000066",
+        "tab/todo": "#B8CFA8",
+        "tab/routine": "#F28B8B",
+        "tab/event": "#9FC3CF",
+        "tab/my": "#E8E1B8",
+        "tab/more": "#C9C9C9",
+        "tab/filler": "#4B3F6B",
+        "shadow/card": "#2E254714",
+        "shadow/fab": "#4B3F6B59"
+      },
+      "dark": {
+        "color/primary": "#8B7FC0",
+        "color/primary-dark": "#EDEAF5",
+        "color/text": "#EDEAF5",
+        "color/text-muted": "#6B6580",
+        "color/surface": "#1E1A2B",
+        "color/surface-muted": "#2A2539",
+        "color/border": "#332D45",
+        "color/card-border": "#332D45",
+        "color/check-empty": "#E4E1EE",
+        "color/accent-link": "#3AA8E0",
+        "color/on-primary": "#FFFFFF",
+        "color/danger": "#C5000F",
+        "color/scrim": "#00000066",
+        "tab/todo": "#B8CFA8D9",
+        "tab/routine": "#F28B8BD9",
+        "tab/event": "#9FC3CFD9",
+        "tab/my": "#E8E1B8D9",
+        "tab/more": "#C9C9C9D9",
+        "tab/filler": "#4B3F6BD9",
+        "shadow/card": "#2E254714",
+        "shadow/fab": "#4B3F6B59"
+      },
+      "cssVar": {
+        "color/primary": "--color-primary",
+        "color/primary-dark": "--color-primary-dark",
+        "color/text": "--color-text",
+        "color/text-muted": "--color-text-muted",
+        "color/surface": "--color-surface",
+        "color/surface-muted": "--color-surface-muted",
+        "color/border": "--color-border",
+        "color/card-border": "--color-card-border",
+        "color/check-empty": "--color-check-empty",
+        "color/accent-link": "--color-accent-link",
+        "color/on-primary": "--color-on-primary",
+        "color/danger": "--ion-color-danger",
+        "color/scrim": "--ion-backdrop-color",
+        "tab/todo": "--tab-todo",
+        "tab/routine": "--tab-routine",
+        "tab/event": "--tab-event",
+        "tab/my": "--tab-my",
+        "tab/more": "--tab-more",
+        "tab/filler": "--tab-filler",
+        "shadow/card": "--shadow-card-color",
+        "shadow/fab": "--shadow-fab-color"
+      }
+    },
+    "radius": {
+      "badge": 2,
+      "checkbox": 3,
+      "button": 6,
+      "tab": 8,
+      "card": 10,
+      "input": 10,
+      "round": "50% (999 en Figma)",
+      "accentUnderline": 1.5,
+      "sheetTop": "estimado 16",
+      "handle": 2.5
+    },
+    "space": [
+      4,
+      8,
+      12,
+      16,
+      24,
+      32
+    ],
+    "gapsUsados": {
+      "headerOverlineToTitle": 3,
+      "titleToRule": 15,
+      "topActionsToOverline": 8,
+      "ruleToList": 16,
+      "ruleToListWithPanel": 83,
+      "listToNewInput": 24,
+      "checkToText": 13,
+      "chipGap": 8,
+      "pageHeaderToRule": 11
+    },
+    "grid": {
+      "railWidth": 27,
+      "contentPaddingLeft": 37,
+      "contentX": 64,
+      "contentWidth": 311,
+      "topPadding": 55,
+      "topActionsPaddingRight": 18,
+      "panelX": 62,
+      "panelWidth": 300,
+      "fab": {
+        "x": 292,
+        "y": 730,
+        "size": 68
+      }
+    },
+    "stroke": {
+      "checkbox": 1.5,
+      "divider": 1,
+      "icon": "estimado 1.5 (iconos tipo Lucide)"
+    },
+    "shadow": {
+      "card": "0 4px 16px 0 var(--shadow-card-color)",
+      "fab": "drop-shadow 0 8px 10px var(--shadow-fab-color)"
+    },
+    "font": {
+      "display": {
+        "family": "DM Serif Display",
+        "weights": [
+          400
+        ],
+        "note": "solo existe Regular",
+        "fallback": "Georgia, serif"
+      },
+      "body": {
+        "family": "Inter",
+        "weights": [
+          400,
+          600,
+          700
+        ],
+        "fallback": "-apple-system, Roboto, sans-serif"
+      }
+    },
+    "motion": {
+      "panelExpand": "estimado 200ms ease-out",
+      "sheet": "animación nativa ion-modal",
+      "swipeOption": "80pt"
+    }
+  },
+  "textStyles": [
+    {
+      "name": "Display/Date",
+      "family": "DM Serif Display",
+      "weight": 400,
+      "size": 38,
+      "letterSpacing": -0.3,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-date",
+      "usage": "Fecha del día (23.Mon)"
+    },
+    {
+      "name": "Display/Title",
+      "family": "DM Serif Display",
+      "weight": 400,
+      "size": 36,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-title",
+      "usage": "Títulos de página y de sheet"
+    },
+    {
+      "name": "Body/Overline",
+      "family": "Inter",
+      "weight": 600,
+      "size": 15,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-overline",
+      "usage": "Sobretítulo (July 4th, My notes, Settings)"
+    },
+    {
+      "name": "Body/Panel Title",
+      "family": "Inter",
+      "weight": 600,
+      "size": 15,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-panel-title",
+      "usage": "Título del panel, diálogo, Debug"
+    },
+    {
+      "name": "Body/Task Title",
+      "family": "Inter",
+      "weight": 700,
+      "size": 17,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-task-title",
+      "usage": "Título de TaskItem"
+    },
+    {
+      "name": "Body/Note Title",
+      "family": "Inter",
+      "weight": 700,
+      "size": 16,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-note-title",
+      "usage": "Título de NoteItem/CategoryRow/SettingRow"
+    },
+    {
+      "name": "Body/Regular",
+      "family": "Inter",
+      "weight": 400,
+      "size": 14,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-regular",
+      "usage": "Texto general y de ayuda"
+    },
+    {
+      "name": "Body/Meta",
+      "family": "Inter",
+      "weight": 400,
+      "size": 14,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-meta",
+      "usage": "Meta de tarea (hora, duración, recordatorio)"
+    },
+    {
+      "name": "Body/Button",
+      "family": "Inter",
+      "weight": 600,
+      "size": 14,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-button",
+      "usage": "Botones y labels de campo"
+    },
+    {
+      "name": "Body/Tab",
+      "family": "Inter",
+      "weight": 600,
+      "size": 13,
+      "letterSpacing": 0,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-tab",
+      "usage": "Etiquetas verticales del rail"
+    },
+    {
+      "name": "Body/Badge",
+      "family": "Inter",
+      "weight": 600,
+      "size": 11,
+      "letterSpacing": 0.4,
+      "lineHeight": "100% (normal)",
+      "cssVar": "--fs-badge",
+      "usage": "TODAY ›"
+    }
+  ],
+  "components": [
+    {
+      "name": "SideTabRail",
+      "type": "composite (presentacional)",
+      "angular": "shared/components/side-tab-rail",
+      "variants": {
+        "active": [
+          "Todo",
+          "Routine",
+          "Event",
+          "My",
+          "More"
+        ],
+        "categories": [
+          "On",
+          "Off"
+        ]
+      },
+      "inputs": {
+        "active": "TabId",
+        "tabs": "TabVm[] (filtradas por flag)"
+      },
+      "outputs": {
+        "select": "TabId"
+      },
+      "anatomy": "columna 27x812; Tab/Todo 185, Routine 126, Event 132, My 127, Filler 131 (sin texto), More 111; texto rotado -90°, padding-top 24; radio 0 8 8 0. Con categories=Off se elimina My y Filler mide 258."
+    },
+    {
+      "name": "TodayBadge",
+      "type": "presentacional",
+      "variants": {},
+      "anatomy": "63x21, borde 1 color/accent-link, radio 2, texto 'TODAY ›' Body/Badge color/accent-link",
+      "outputs": {
+        "tap": "void"
+      }
+    },
+    {
+      "name": "Checkbox",
+      "type": "presentacional",
+      "variants": {
+        "shape": [
+          "Square",
+          "Circle"
+        ],
+        "checked": [
+          true,
+          false
+        ]
+      },
+      "anatomy": "Square 29x29 borde 1.5 color/primary-dark radio 3 fondo surface (checked: estimado relleno primary con check blanco). Circle 26x26: off fill color/check-empty; on fill color/primary + icon/check 12 blanco."
+    },
+    {
+      "name": "TaskItem",
+      "type": "presentacional",
+      "variants": {
+        "state": [
+          "Default",
+          "Completed"
+        ],
+        "meta": [
+          "On",
+          "Off"
+        ]
+      },
+      "inputs": {
+        "task": "TaskVm",
+        "actions": "TaskAction[] (del State)"
+      },
+      "outputs": {
+        "toggle": "id",
+        "delete": "id",
+        "open": "id"
+      },
+      "anatomy": "311x65, borde inferior 1 color/border, padding-top 4, pl 1; Check slot (pt 4) + gap 13 + Text (col gap 4): título Body/Task Title color/primary-dark; Meta 18 de alto: icon/clock 15 + gap 6 + Body/Meta color/text. Completed: título line-through."
+    },
+    {
+      "name": "NoteItem",
+      "type": "presentacional",
+      "variants": {
+        "dot": [
+          true,
+          false
+        ]
+      },
+      "anatomy": "311x~77, checkbox Square 29 + título Body/Note Title + punto 4–6 estimado a la derecha (x≈C+282), borde inferior color/border"
+    },
+    {
+      "name": "NewTaskInput",
+      "type": "presentacional",
+      "variants": {
+        "size": [
+          "Task"
+        ]
+      },
+      "outputs": {
+        "submit": "string"
+      },
+      "anatomy": "Checkbox Square 29 + gap 13 + bloque 252x69 fill color/surface-muted radio 10 (placeholder sin texto en Figma)"
+    },
+    {
+      "name": "UncompletedTasksCard",
+      "type": "composite (contenedor ligero)",
+      "variants": {
+        "expanded": [
+          true,
+          false
+        ]
+      },
+      "inputs": {
+        "items": "TaskVm[]",
+        "expanded": "boolean"
+      },
+      "outputs": {
+        "toggleExpand": "void",
+        "toggleItem": "id",
+        "reschedule": "void"
+      },
+      "anatomy": "300 ancho, borde 1 color/card-border, radio 10, shadow/card. Header 60 alto px 25: 'Uncompleted tasks' Body/Panel Title + chevron 14. List pl 31 pr 34: Item 56 alto, Body/Regular + Checkbox Circle, separador color/border. Footer border-top, pt 19 pb 21 pl 29 pr 32: Button Primary 'Reschedule to Today'. Colapsado: solo header (62).",
+      "note": "Figma muestra chevron-down con panel abierto y chevron-up colapsado (se respeta)."
+    },
+    {
+      "name": "Button",
+      "type": "presentacional",
+      "variants": {
+        "variant": [
+          "Primary",
+          "Secondary",
+          "Danger"
+        ]
+      },
+      "anatomy": "alto 50, radio 6, px 16, Body/Button. Primary: fill primary, texto on-primary. Secondary: borde 1 color/primary-dark, texto primary-dark, fondo surface (estimado grosor borde). Danger: fill color/danger, texto blanco."
+    },
+    {
+      "name": "FAB",
+      "type": "presentacional",
+      "anatomy": "68x68 círculo color/primary, icon/plus 24 blanco, shadow/fab; fijo x=292 y=730",
+      "outputs": {
+        "tap": "void"
+      }
+    },
+    {
+      "name": "CategoryChip",
+      "type": "presentacional",
+      "variants": {
+        "selected": [
+          true,
+          false
+        ],
+        "dot": [
+          true,
+          false
+        ]
+      },
+      "anatomy": "seleccionado: fill color/primary, texto on-primary, alto 33. No seleccionado: borde 1 color/border, fondo surface, texto color/text, alto 35. Radio round. Dot 8 estimado con color de la categoría, Body/Regular.",
+      "outputs": {
+        "select": "id|null"
+      }
+    },
+    {
+      "name": "CategoryRow",
+      "type": "presentacional",
+      "anatomy": "311x77; swatch 27x27 (radio estimado 4) con emoji 14; texto: nombre Body/Note Title + contador Body/Meta color/text-muted (gap 4); acciones pencil y trash 18 (gap 16) en x+240",
+      "outputs": {
+        "edit": "id",
+        "delete": "id"
+      }
+    },
+    {
+      "name": "SettingRow",
+      "type": "presentacional",
+      "variants": {
+        "trailing": [
+          "toggle",
+          "chevron",
+          "value"
+        ]
+      },
+      "anatomy": "311x77, icono 18 + gap 14 + Body/Note Title; trailing: Toggle 51x31 | chevron-right 18 | valor Body/Regular text-muted; borde inferior color/border"
+    },
+    {
+      "name": "Toggle",
+      "type": "presentacional",
+      "variants": {
+        "state": [
+          "On",
+          "Off"
+        ]
+      },
+      "anatomy": "51x31 tipo iOS; Off: pista color/check-empty, knob blanco (estimado)"
+    },
+    {
+      "name": "FormField",
+      "type": "presentacional",
+      "anatomy": "label Body/Button color/primary-dark, gap 8, input 50 alto fill color/surface-muted radio 10 padding 16 Body/Regular"
+    },
+    {
+      "name": "ColorPicker",
+      "type": "presentacional",
+      "anatomy": "6 swatches circulares 32 con gap 16; seleccionado: borde color/primary-dark + icon/check 12",
+      "outputs": {
+        "change": "TokenName"
+      }
+    },
+    {
+      "name": "EmptyState",
+      "type": "presentacional",
+      "anatomy": "Illustration 68 círculo + icon/clipboard 32, título, ayuda centrada 240 ancho, CTA 239x50"
+    },
+    {
+      "name": "BottomSheet",
+      "type": "composite",
+      "angular": "ion-modal breakpoints [0, 0.6] initialBreakpoint 0.6",
+      "anatomy": "y=325, 375x487, handle 36x5, padding 24, título Display/Title, campos con gap 16, botón Primary 327x50 al final"
+    }
+  ],
+  "screens": [
+    {
+      "id": "4:440",
+      "name": "todo-day-panel-open",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-day-panel-open.png",
+      "description": "Vista del día con el panel 'Uncompleted tasks' desplegado flotando sobre la lista. Muestra 3 tareas pendientes de días anteriores con check circular y el botón 'Reschedule to Today'. Debajo asoma la lista real (Clean my flat) y el input de nueva tarea.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:454",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:469",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:471",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:473",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:476",
+          "name": "Task list (behind panel)",
+          "frame": {
+            "x": 64,
+            "y": 180,
+            "width": 311,
+            "height": 340
+          },
+          "note": "filas ocultas tras el panel"
+        },
+        {
+          "id": "4:480",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 528,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 617,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "id": "4:494",
+          "component": "UncompletedTasksCard",
+          "variant": {
+            "expanded": true
+          },
+          "frame": {
+            "x": 62,
+            "y": 187,
+            "width": 300,
+            "height": 321
+          },
+          "layer": "flota sobre la lista (position absolute, z sobre contenido)"
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:520",
+      "name": "todo-panel-closed",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-panel-closed.png",
+      "description": "Vista del día con el panel colapsado (62 de alto). La lista arranca en y=263 (gap 83 bajo la regla para dejar sitio al panel).",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:534",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:549",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:551",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:553",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:557",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 263,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:567",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Finish reports",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 328,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:577",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 393,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 482,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "id": "4:591",
+          "component": "UncompletedTasksCard",
+          "variant": {
+            "expanded": false
+          },
+          "frame": {
+            "x": 62,
+            "y": 187,
+            "width": 300,
+            "height": 62
+          },
+          "layer": "flota sobre la lista (position absolute, z sobre contenido)"
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:617",
+      "name": "my-notes-shopping",
+      "route": "/tabs/my/:categoryId",
+      "png": "mocks/my-notes-shopping.png",
+      "description": "Vista de una categoría (contexto Shopping). Pestaña My activa. Encabezado 'My notes' + icono + título 'Shopping' + lápiz para editar. Filas NoteItem sin meta, con punto indicador a la derecha.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "My",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "tab/todo",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "name": "Page header",
+          "frame": {
+            "x": 64,
+            "y": 82,
+            "width": 311,
+            "height": 61
+          },
+          "children": [
+            {
+              "name": "Overline",
+              "type": "text",
+              "text": "My notes",
+              "textStyle": "Body/Overline",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 82,
+                "width": 67,
+                "height": 18
+              }
+            },
+            {
+              "name": "Category icon",
+              "type": "text",
+              "text": "🛒",
+              "frame": {
+                "x": 65,
+                "y": 110.5,
+                "width": 25,
+                "height": 25
+              },
+              "note": "emoji; no se renderiza en el PNG exportado"
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "Shopping",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 100,
+                "y": 98.5,
+                "width": 151,
+                "height": 49
+              }
+            },
+            {
+              "name": "icon/pencil",
+              "frame": {
+                "x": 338,
+                "y": 114,
+                "width": 18,
+                "height": 18
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 154,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 156,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 154,
+                "width": 83,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "component": "NoteItem",
+          "variant": {
+            "dot": true
+          },
+          "props": {
+            "title": "Nitendo switch"
+          },
+          "frame": {
+            "x": 64,
+            "y": 157,
+            "width": 311,
+            "height": 77
+          }
+        },
+        {
+          "component": "NoteItem",
+          "variant": {
+            "dot": true
+          },
+          "props": {
+            "title": "Cat tower"
+          },
+          "frame": {
+            "x": 64,
+            "y": 234,
+            "width": 311,
+            "height": 78
+          }
+        },
+        {
+          "component": "NoteItem",
+          "variant": {
+            "dot": false
+          },
+          "props": {
+            "title": "Winter shoes for mom"
+          },
+          "frame": {
+            "x": 64,
+            "y": 312,
+            "width": 311,
+            "height": 74
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 410,
+            "width": 293,
+            "height": 68
+          }
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:664",
+      "name": "todo-completed-task",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-completed-task.png",
+      "description": "Vista del día sin panel; 'Clean my flat' en estado Completed (check relleno, título tachado).",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:678",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:693",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:695",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:697",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:701",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Completed",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 196,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:711",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Finish reports",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 261,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:721",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 326,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 415,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:788",
+      "name": "categories-list",
+      "route": "/tabs/my/categories",
+      "png": "mocks/categories-list.png",
+      "description": "CRUD de categorías: overline 'My notes', título 'Categories', 4 filas con swatch de color, nombre, contador y acciones editar/eliminar.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "My",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "tab/todo",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "name": "Page header",
+          "frame": {
+            "x": 64,
+            "y": 82,
+            "width": 311,
+            "height": 61
+          },
+          "children": [
+            {
+              "name": "Overline",
+              "type": "text",
+              "text": "My notes",
+              "textStyle": "Body/Overline",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 82,
+                "width": 67,
+                "height": 18
+              }
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "Categories",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 98.5,
+                "width": 170,
+                "height": 49
+              }
+            }
+          ]
+        },
+        {
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 154,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 156,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 154,
+                "width": 83,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Shopping",
+            "icon": "🛒",
+            "count": "3 tasks",
+            "color": "tab/my (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 157,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 181.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 175,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 186,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Work",
+            "icon": "💼",
+            "count": "5 tasks",
+            "color": "tab/event (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 234,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 258.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 252,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 263,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Home",
+            "icon": "🏠",
+            "count": "2 tasks",
+            "color": "tab/todo (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 311,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 335.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 329,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 340,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Health",
+            "icon": "🩺",
+            "count": "1 task",
+            "color": "tab/routine (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 388,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 412.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 406,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 417,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:869",
+      "name": "categories-form-sheet",
+      "route": "/tabs/my/categories (modal)",
+      "png": "mocks/categories-form-sheet.png",
+      "description": "Bottom sheet al 60% con scrim 40% sobre la lista de categorías. Formulario 'Edit category': Name, Icon, Color (6 swatches de 32 con el seleccionado marcado con check) y botón 'Save category'.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "My",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "tab/todo",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "name": "Page header",
+          "frame": {
+            "x": 64,
+            "y": 82,
+            "width": 311,
+            "height": 61
+          },
+          "children": [
+            {
+              "name": "Overline",
+              "type": "text",
+              "text": "My notes",
+              "textStyle": "Body/Overline",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 82,
+                "width": 67,
+                "height": 18
+              }
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "Categories",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 98.5,
+                "width": 170,
+                "height": 49
+              }
+            }
+          ]
+        },
+        {
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 154,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 156,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 154,
+                "width": 83,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Shopping",
+            "icon": "🛒",
+            "count": "3 tasks",
+            "color": "tab/my (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 157,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 181.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 175,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 186,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Work",
+            "icon": "💼",
+            "count": "5 tasks",
+            "color": "tab/event (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 234,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 258.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 252,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 263,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Home",
+            "icon": "🏠",
+            "count": "2 tasks",
+            "color": "tab/todo (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 311,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 335.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 329,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 340,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "component": "CategoryRow",
+          "props": {
+            "name": "Health",
+            "icon": "🩺",
+            "count": "1 task",
+            "color": "tab/routine (estimado: color inferido del PNG)"
+          },
+          "frame": {
+            "x": 64,
+            "y": 388,
+            "width": 311,
+            "height": 77
+          },
+          "children": [
+            {
+              "name": "Color swatch",
+              "frame": {
+                "x": 65,
+                "y": 412.5,
+                "width": 27,
+                "height": 27
+              },
+              "radius": "estimado 4"
+            },
+            {
+              "name": "Text",
+              "frame": {
+                "x": 106,
+                "y": 406,
+                "width": 184,
+                "height": 40
+              }
+            },
+            {
+              "name": "Actions",
+              "frame": {
+                "x": 304,
+                "y": 417,
+                "width": 52,
+                "height": 18
+              },
+              "children": [
+                "icon/pencil 18x18",
+                "icon/trash 18x18 (gap 16)"
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Scrim",
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 375,
+            "height": 812
+          },
+          "fill": "color/scrim (#000000 al 40%)"
+        },
+        {
+          "name": "Bottom sheet (breakpoint 0.6)",
+          "frame": {
+            "x": 0,
+            "y": 325,
+            "width": 375,
+            "height": 487
+          },
+          "fill": "color/surface",
+          "radius": "estimado 16 arriba",
+          "padding": "24 laterales",
+          "children": [
+            {
+              "name": "Handle",
+              "frame": {
+                "x": 169.5,
+                "y": 333,
+                "width": 36,
+                "height": 5
+              },
+              "fill": "color/border",
+              "radius": 2.5
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "Edit category",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 24,
+                "y": 354,
+                "width": 213,
+                "height": 49
+              }
+            },
+            {
+              "name": "Field/Name",
+              "frame": {
+                "x": 24,
+                "y": 419,
+                "width": 327,
+                "height": 76
+              },
+              "label": "Name",
+              "input": {
+                "frame": {
+                  "x": 24,
+                  "y": 445,
+                  "width": 327,
+                  "height": 50
+                },
+                "value": "Shopping",
+                "fill": "color/surface-muted",
+                "radius": "radius/input"
+              }
+            },
+            {
+              "name": "Field/Icon",
+              "frame": {
+                "x": 24,
+                "y": 511,
+                "width": 327,
+                "height": 76
+              },
+              "label": "Icon",
+              "input": {
+                "frame": {
+                  "x": 24,
+                  "y": 537,
+                  "width": 327,
+                  "height": 50
+                },
+                "value": "🛒 (no se ve en el PNG)"
+              }
+            },
+            {
+              "name": "Field/Color",
+              "frame": {
+                "x": 24,
+                "y": 603,
+                "width": 327,
+                "height": 62
+              },
+              "label": "Color",
+              "picker": {
+                "frame": {
+                  "x": 24,
+                  "y": 629,
+                  "width": 274,
+                  "height": 36
+                },
+                "swatch": "32x32 circulares, gap 16",
+                "options": [
+                  "tab/todo",
+                  "tab/routine",
+                  "tab/event",
+                  "tab/my (seleccionado: borde color/primary-dark + icon/check 12)",
+                  "tab/more",
+                  "tab/filler"
+                ]
+              }
+            },
+            {
+              "component": "Button",
+              "variant": {
+                "variant": "Primary"
+              },
+              "props": {
+                "label": "Save category"
+              },
+              "frame": {
+                "x": 24,
+                "y": 730,
+                "width": 327,
+                "height": 50
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:973",
+      "name": "todo-filtered-by-category",
+      "route": "/tabs/todo?category=shopping",
+      "png": "mocks/todo-filtered-by-category.png",
+      "description": "Vista del día con fila de chips de filtro (All, Shopping activo, Work, Home) con scroll horizontal; la lista muestra solo tareas de Shopping. Sin panel.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:987",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:1002",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:1004",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:1006",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:1010",
+          "name": "Category filter chips",
+          "frame": {
+            "x": 64,
+            "y": 196,
+            "width": 311,
+            "height": 35
+          },
+          "layout": "row gap 8, overflow-x scroll (Home se corta en el borde)",
+          "children": [
+            {
+              "component": "CategoryChip",
+              "variant": {
+                "selected": false,
+                "dot": false
+              },
+              "props": {
+                "label": "All"
+              },
+              "frame": {
+                "x": 64,
+                "y": 196,
+                "width": 43,
+                "height": 35
+              }
+            },
+            {
+              "component": "CategoryChip",
+              "variant": {
+                "selected": true,
+                "dot": true
+              },
+              "props": {
+                "label": "Shopping",
+                "dotColor": "tab/my"
+              },
+              "frame": {
+                "x": 115,
+                "y": 196,
+                "width": 103,
+                "height": 33
+              }
+            },
+            {
+              "component": "CategoryChip",
+              "variant": {
+                "selected": false,
+                "dot": true
+              },
+              "props": {
+                "label": "Work",
+                "dotColor": "tab/event"
+              },
+              "frame": {
+                "x": 226,
+                "y": 196,
+                "width": 76,
+                "height": 35
+              }
+            },
+            {
+              "component": "CategoryChip",
+              "variant": {
+                "selected": false,
+                "dot": true
+              },
+              "props": {
+                "label": "Home",
+                "dotColor": "tab/todo"
+              },
+              "frame": {
+                "x": 310,
+                "y": 196,
+                "width": 82,
+                "height": 35
+              }
+            }
+          ]
+        },
+        {
+          "id": "4:1024",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 239,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:1034",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Nitendo switch",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 304,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:1044",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Winter shoes for mom",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 369,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 458,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:1062",
+      "name": "todo-empty-state",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-empty-state.png",
+      "description": "Día sin tareas: título '24.Tue', ilustración circular de 68 con icono clipboard, título 'No tasks for today', texto de ayuda y CTA.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:1076",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:1091",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:1093",
+          "name": "Title",
+          "type": "text",
+          "text": "24.Tue",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 111,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:1095",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:1098",
+          "name": "Empty state",
+          "frame": {
+            "x": 64,
+            "y": 180,
+            "width": 311,
+            "height": 341
+          },
+          "layout": "column centrada",
+          "children": [
+            {
+              "name": "Illustration",
+              "frame": {
+                "x": 173.5,
+                "y": 276,
+                "width": 68,
+                "height": 68
+              },
+              "fill": "color/surface-muted (estimado)",
+              "radius": "50%",
+              "icon": "icon/clipboard 32"
+            },
+            {
+              "type": "text",
+              "text": "No tasks for today",
+              "textStyle": "Body/Note Title (estimado)",
+              "frame": {
+                "x": 131.5,
+                "y": 360,
+                "width": 152,
+                "height": 21
+              }
+            },
+            {
+              "type": "text",
+              "text": "Tap + or write in the field below to add your first task.",
+              "textStyle": "Body/Regular",
+              "color": "color/text-muted",
+              "align": "center",
+              "frame": {
+                "x": 87.5,
+                "y": 397,
+                "width": 240,
+                "height": 34
+              }
+            },
+            {
+              "id": "4:1107",
+              "component": "Button",
+              "name": "CTA",
+              "props": {
+                "label": "estimado: ver PNG"
+              },
+              "frame": {
+                "x": 88,
+                "y": 471,
+                "width": 239,
+                "height": 50
+              }
+            }
+          ]
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:1113",
+      "name": "todo-categories-flag-off",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-categories-flag-off.png",
+      "description": "enable_categories=false: desaparece la pestaña My (el Filler crece a 258) y no hay chips ni selector de categoría. Resto igual a todo-panel-closed.",
+      "featureFlag": {
+        "enable_categories": false
+      },
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "Off"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 258
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:1127",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:1142",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:1144",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:1146",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:1150",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 263,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:1160",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Finish reports",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 328,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:1170",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 393,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 482,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "id": "4:1184",
+          "component": "UncompletedTasksCard",
+          "variant": {
+            "expanded": false
+          },
+          "frame": {
+            "x": 62,
+            "y": 187,
+            "width": 300,
+            "height": 62
+          },
+          "layer": "flota sobre la lista (position absolute, z sobre contenido)"
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        }
+      ]
+    },
+    {
+      "id": "4:1267",
+      "name": "new-task-modal",
+      "route": "/tabs/todo (modal)",
+      "png": "mocks/new-task-modal.png",
+      "description": "Bottom sheet 'New task' sobre la vista del día: Title, fila de 3 campos (Time, Duration, Reminder; 101 de ancho, gap 12), selector de categoría con chips (Shopping, Work, Home, None) y botón 'Add task'.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:1281",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:1296",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:1298",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:1300",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": null,
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 263,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": null,
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Finish reports",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 328,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": null,
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 393,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 482,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "id": "4:1338",
+          "component": "UncompletedTasksCard",
+          "variant": {
+            "expanded": false
+          },
+          "frame": {
+            "x": 62,
+            "y": 187,
+            "width": 300,
+            "height": 62
+          },
+          "layer": "flota sobre la lista (position absolute, z sobre contenido)"
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        },
+        {
+          "name": "Scrim",
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 375,
+            "height": 812
+          },
+          "fill": "color/scrim (#000000 al 40%)"
+        },
+        {
+          "name": "Bottom sheet (breakpoint 0.6)",
+          "frame": {
+            "x": 0,
+            "y": 325,
+            "width": 375,
+            "height": 487
+          },
+          "fill": "color/surface",
+          "radius": "estimado 16 arriba",
+          "padding": "24 laterales",
+          "children": [
+            {
+              "name": "Handle",
+              "frame": {
+                "x": 169.5,
+                "y": 333,
+                "width": 36,
+                "height": 5
+              },
+              "fill": "color/border",
+              "radius": 2.5
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "New task",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 24,
+                "y": 354,
+                "width": 145,
+                "height": 49
+              }
+            },
+            {
+              "name": "Field/Title",
+              "frame": {
+                "x": 24,
+                "y": 419,
+                "width": 327,
+                "height": 76
+              },
+              "label": "Title",
+              "input": {
+                "frame": {
+                  "x": 24,
+                  "y": 445,
+                  "width": 327,
+                  "height": 50
+                },
+                "value": "Clean my flat"
+              }
+            },
+            {
+              "name": "Time row",
+              "frame": {
+                "x": 24,
+                "y": 511,
+                "width": 327,
+                "height": 76
+              },
+              "children": [
+                {
+                  "label": "Time",
+                  "value": "12:24",
+                  "frame": {
+                    "x": 24,
+                    "y": 511,
+                    "width": 101,
+                    "height": 76
+                  }
+                },
+                {
+                  "label": "Duration",
+                  "value": "30 mins",
+                  "frame": {
+                    "x": 137,
+                    "y": 511,
+                    "width": 101,
+                    "height": 76
+                  }
+                },
+                {
+                  "label": "Reminder",
+                  "value": "1 hour",
+                  "frame": {
+                    "x": 250,
+                    "y": 511,
+                    "width": 101,
+                    "height": 76
+                  }
+                }
+              ]
+            },
+            {
+              "name": "Field/Category",
+              "frame": {
+                "x": 24,
+                "y": 603,
+                "width": 327,
+                "height": 61
+              },
+              "label": "Category",
+              "featureFlag": "enable_categories",
+              "chips": [
+                "Shopping (selected, 103x33)",
+                "Work (76x35)",
+                "Home (82x35)",
+                "None (62x35)"
+              ]
+            },
+            {
+              "component": "Button",
+              "variant": {
+                "variant": "Primary"
+              },
+              "props": {
+                "label": "Add task"
+              },
+              "frame": {
+                "x": 24,
+                "y": 730,
+                "width": 327,
+                "height": 50
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:1404",
+      "name": "todo-swipe-delete-confirm",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-swipe-delete-confirm.png",
+      "description": "'Finish reports' deslizada 80pt a la izquierda mostrando la opción roja 'Eliminar'; encima scrim y diálogo de confirmación (ion-alert) con Cancelar / Eliminar.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "Todo",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "tab/more",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            }
+          ]
+        },
+        {
+          "id": "4:1418",
+          "name": "Top actions",
+          "frame": {
+            "x": 64,
+            "y": 55,
+            "width": 311,
+            "height": 26
+          },
+          "layout": "row, justify end, gap 14, paddingRight 18",
+          "children": [
+            {
+              "component": "TodayBadge",
+              "frame": {
+                "x": 256,
+                "y": 57.5,
+                "width": 63,
+                "height": 21
+              }
+            },
+            {
+              "name": "icon/calendar",
+              "frame": {
+                "x": 333,
+                "y": 56,
+                "width": 24,
+                "height": 24
+              },
+              "stroke": "color/primary-dark"
+            }
+          ]
+        },
+        {
+          "id": "4:1433",
+          "name": "Overline",
+          "type": "text",
+          "text": "July 4th",
+          "textStyle": "Body/Overline",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 89,
+            "width": 59,
+            "height": 18
+          }
+        },
+        {
+          "id": "4:1435",
+          "name": "Title",
+          "type": "text",
+          "text": "23.Mon",
+          "textStyle": "Display/Date",
+          "color": "color/primary-dark",
+          "frame": {
+            "x": 64,
+            "y": 110,
+            "width": 123,
+            "height": 52
+          }
+        },
+        {
+          "id": "4:1437",
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 177,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 179,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 177,
+                "width": 84,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "id": "4:1441",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "On"
+          },
+          "props": {
+            "title": "Clean my flat",
+            "meta": "12:24,  30 mins, 1 hour"
+          },
+          "frame": {
+            "x": 64,
+            "y": 196,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "id": "4:1451",
+          "name": "ItemSliding (swiped left)",
+          "frame": {
+            "x": 64,
+            "y": 261,
+            "width": 311,
+            "height": 65
+          },
+          "children": [
+            {
+              "name": "Option · Eliminar",
+              "frame": {
+                "x": 295,
+                "y": 261,
+                "width": 80,
+                "height": 65
+              },
+              "fill": "color/danger",
+              "children": [
+                {
+                  "name": "icon/trash",
+                  "frame": {
+                    "x": 326,
+                    "y": 274,
+                    "width": 18,
+                    "height": 18
+                  },
+                  "stroke": "color/on-primary"
+                },
+                {
+                  "type": "text",
+                  "text": "Eliminar",
+                  "color": "color/on-primary",
+                  "textStyle": "Body/Button (estimado)",
+                  "frame": {
+                    "x": 307.5,
+                    "y": 296,
+                    "width": 55,
+                    "height": 17
+                  }
+                }
+              ]
+            },
+            {
+              "component": "TaskItem",
+              "props": {
+                "title": "Finish reports"
+              },
+              "frame": {
+                "x": -16,
+                "y": 261,
+                "width": 311,
+                "height": 65
+              }
+            }
+          ]
+        },
+        {
+          "id": "4:1468",
+          "component": "TaskItem",
+          "variant": {
+            "state": "Default",
+            "meta": "Off"
+          },
+          "props": {
+            "title": "Buy groceries",
+            "meta": null
+          },
+          "frame": {
+            "x": 64,
+            "y": 326,
+            "width": 311,
+            "height": 65
+          }
+        },
+        {
+          "component": "NewTaskInput",
+          "frame": {
+            "x": 64,
+            "y": 415,
+            "width": 295,
+            "height": 69
+          }
+        },
+        {
+          "component": "FAB",
+          "frame": {
+            "x": 292,
+            "y": 730,
+            "width": 68,
+            "height": 68
+          }
+        },
+        {
+          "name": "Scrim",
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 375,
+            "height": 812
+          },
+          "fill": "color/scrim (#000000 al 40%)"
+        },
+        {
+          "id": "4:1487",
+          "name": "Confirm dialog (ion-alert)",
+          "frame": {
+            "x": 37,
+            "y": 316,
+            "width": 300,
+            "height": 190
+          },
+          "fill": "color/surface",
+          "radius": "radius/card (estimado)",
+          "padding": 24,
+          "children": [
+            {
+              "type": "text",
+              "text": "¿Eliminar tarea?",
+              "textStyle": "Body/Panel Title",
+              "frame": {
+                "x": 61,
+                "y": 340,
+                "width": 116,
+                "height": 18
+              }
+            },
+            {
+              "type": "text",
+              "text": "“Finish reports” se eliminará de forma permanente.",
+              "textStyle": "Body/Regular",
+              "color": "color/text-muted",
+              "frame": {
+                "x": 61,
+                "y": 366,
+                "width": 252,
+                "height": 34
+              }
+            },
+            {
+              "component": "Button",
+              "variant": {
+                "variant": "Secondary"
+              },
+              "props": {
+                "label": "Cancelar"
+              },
+              "frame": {
+                "x": 61,
+                "y": 432,
+                "width": 121.5,
+                "height": 50
+              }
+            },
+            {
+              "component": "Button",
+              "variant": {
+                "variant": "Danger"
+              },
+              "props": {
+                "label": "Eliminar"
+              },
+              "frame": {
+                "x": 194.5,
+                "y": 432,
+                "width": 118.5,
+                "height": 50
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:1496",
+      "name": "more-settings",
+      "route": "/tabs/more",
+      "png": "mocks/more-settings.png (exportado en v3)",
+      "description": "Ajustes: overline 'Settings', título 'More'. Filas: Dark mode con toggle, Categories con chevron (navega al CRUD), enable_categories con valor 'true' (solo lectura, viene de Remote Config). Sección Debug con texto y botón outline 'generar 5000 tareas'.",
+      "nodes": [
+        {
+          "component": "SideTabRail",
+          "variant": {
+            "active": "More",
+            "categories": "On"
+          },
+          "frame": {
+            "x": 0,
+            "y": 0,
+            "width": 27,
+            "height": 812
+          },
+          "children": [
+            {
+              "name": "Tab/Todo",
+              "frame": {
+                "x": 0,
+                "y": 0,
+                "width": 27,
+                "height": 185
+              },
+              "fill": "tab/todo",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Todo",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Routine",
+              "frame": {
+                "x": 0,
+                "y": 185,
+                "width": 27,
+                "height": 126
+              },
+              "fill": "tab/routine",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Routine",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Event",
+              "frame": {
+                "x": 0,
+                "y": 311,
+                "width": 27,
+                "height": 132
+              },
+              "fill": "tab/event",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "Event",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/My",
+              "frame": {
+                "x": 0,
+                "y": 443,
+                "width": 27,
+                "height": 127
+              },
+              "fill": "tab/my",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": {
+                "text": "My",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/Filler",
+              "frame": {
+                "x": 0,
+                "y": 570,
+                "width": 27,
+                "height": 131
+              },
+              "fill": "tab/filler",
+              "radius": "0 8 8 0 (radius/tab, solo esquinas derechas)",
+              "label": null,
+              "state": "inactive"
+            },
+            {
+              "name": "Tab/More",
+              "frame": {
+                "x": 0,
+                "y": 701,
+                "width": 27,
+                "height": 111
+              },
+              "fill": "color/surface",
+              "radius": "0",
+              "label": {
+                "text": "More",
+                "textStyle": "Body/Tab",
+                "color": "color/primary-dark",
+                "rotation": -90,
+                "paddingTop": 24
+              },
+              "state": "active (se funde con la hoja blanca)"
+            }
+          ]
+        },
+        {
+          "name": "Page header",
+          "frame": {
+            "x": 64,
+            "y": 82,
+            "width": 311,
+            "height": 61
+          },
+          "children": [
+            {
+              "name": "Overline",
+              "type": "text",
+              "text": "Settings",
+              "textStyle": "Body/Overline",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 82,
+                "width": 61,
+                "height": 18
+              }
+            },
+            {
+              "name": "Title",
+              "type": "text",
+              "text": "More",
+              "textStyle": "Display/Title",
+              "color": "color/primary-dark",
+              "frame": {
+                "x": 65,
+                "y": 98.5,
+                "width": 81,
+                "height": 49
+              }
+            }
+          ]
+        },
+        {
+          "name": "Header rule",
+          "frame": {
+            "x": 64,
+            "y": 154,
+            "width": 311,
+            "height": 3
+          },
+          "children": [
+            {
+              "name": "Divider",
+              "frame": {
+                "x": 64,
+                "y": 156,
+                "width": 311,
+                "height": 1
+              },
+              "fill": "color/border"
+            },
+            {
+              "name": "Accent underline",
+              "frame": {
+                "x": 64,
+                "y": 154,
+                "width": 83,
+                "height": 3
+              },
+              "fill": "color/primary",
+              "radius": 1.5
+            }
+          ]
+        },
+        {
+          "component": "SettingRow",
+          "variant": {
+            "trailing": "toggle"
+          },
+          "props": {
+            "icon": "moon",
+            "label": "Dark mode"
+          },
+          "frame": {
+            "x": 64,
+            "y": 157,
+            "width": 311,
+            "height": 77
+          },
+          "toggle": {
+            "frame": {
+              "x": 305,
+              "y": 179.5,
+              "width": 51,
+              "height": 31
+            },
+            "state": "Off"
+          }
+        },
+        {
+          "component": "SettingRow",
+          "variant": {
+            "trailing": "chevron"
+          },
+          "props": {
+            "icon": "tag",
+            "label": "Categories"
+          },
+          "frame": {
+            "x": 64,
+            "y": 234,
+            "width": 311,
+            "height": 77
+          },
+          "featureFlag": "enable_categories"
+        },
+        {
+          "component": "SettingRow",
+          "variant": {
+            "trailing": "value"
+          },
+          "props": {
+            "icon": "flag",
+            "label": "enable_categories",
+            "value": "true"
+          },
+          "frame": {
+            "x": 64,
+            "y": 311,
+            "width": 311,
+            "height": 77
+          }
+        },
+        {
+          "name": "Debug",
+          "frame": {
+            "x": 64,
+            "y": 420,
+            "width": 292,
+            "height": 134
+          },
+          "children": [
+            {
+              "name": "Debug title",
+              "icon": "bug 18",
+              "text": "Debug",
+              "textStyle": "Body/Panel Title",
+              "frame": {
+                "x": 65,
+                "y": 420,
+                "width": 74,
+                "height": 18
+              }
+            },
+            {
+              "type": "text",
+              "text": "Crea 5.000 tareas de prueba para medir el rendimiento (virtual scroll).",
+              "textStyle": "Body/Regular",
+              "color": "color/text-muted",
+              "frame": {
+                "x": 65,
+                "y": 446,
+                "width": 291,
+                "height": 34
+              }
+            },
+            {
+              "component": "Button",
+              "variant": {
+                "variant": "Secondary"
+              },
+              "props": {
+                "label": "generar 5000 tareas"
+              },
+              "frame": {
+                "x": 65,
+                "y": 504,
+                "width": 291,
+                "height": 50
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "4:1560",
+      "name": "todo-dark-mode",
+      "route": "/tabs/todo",
+      "png": "mocks/todo-dark-mode.png (exportado en v3)",
+      "description": "Mismo layout que todo-day-panel-open con la colección 'Color · Dark': superficie #1E1A2B, texto #EDEAF5, primario #8B7FC0, pestañas al 85% de opacidad.",
+      "theme": "dark",
+      "nodes": "Idéntico a 4:440 (mismas coordenadas) con tokens dark; node ids 4:1561..4:1592"
+    }
+  ],
+  "interactions": [
+    {
+      "trigger": "tap FAB / tap NewTaskInput",
+      "action": "abre new-task-modal (sheet 0.6)"
+    },
+    {
+      "trigger": "tap Checkbox de TaskItem",
+      "action": "TaskState.complete()/reopen(); TaskItem pasa a Completed"
+    },
+    {
+      "trigger": "swipe izquierda en TaskItem (80pt)",
+      "action": "muestra Option · Eliminar; tap -> ion-alert '¿Eliminar tarea?' Cancelar/Eliminar"
+    },
+    {
+      "trigger": "tap header del panel",
+      "action": "toggle expanded (321 ↔ 62)"
+    },
+    {
+      "trigger": "tap 'Reschedule to Today'",
+      "action": "mueve las tareas overdue marcadas a hoy (transición overdue→pending)"
+    },
+    {
+      "trigger": "tap chip",
+      "action": "aplica CategoryFilterStrategy; All = AllFilterStrategy"
+    },
+    {
+      "trigger": "tap pestaña rail",
+      "action": "navega a la tab; My abre el último contexto de categoría"
+    },
+    {
+      "trigger": "tap lápiz / pencil en CategoryRow",
+      "action": "abre categories-form-sheet en modo edición"
+    },
+    {
+      "trigger": "tap trash en CategoryRow",
+      "action": "confirmación; sus tareas pasan a 'Sin categoría'"
+    },
+    {
+      "trigger": "toggle Dark mode",
+      "action": "añade clase .ion-palette-dark al <html> y persiste preferencia"
+    },
+    {
+      "trigger": "tap 'generar 5000 tareas'",
+      "action": "seed de 5.000 tareas; el render cambia a VirtualRenderStrategy"
+    },
+    {
+      "trigger": "TODAY ›",
+      "action": "vuelve al día actual"
+    }
+  ],
+  "featureFlags": [
+    {
+      "key": "enable_categories",
+      "type": "boolean",
+      "default": true,
+      "source": "Firebase Remote Config",
+      "whenFalse": [
+        "Oculta Tab/My (Filler crece a 258)",
+        "Oculta chips de filtro",
+        "Oculta Field/Category del modal",
+        "Oculta SettingRow Categories",
+        "Las rutas /tabs/my/* quedan protegidas por guard"
+      ],
+      "demoScreen": "4:1113"
+    },
+    {
+      "key": "show_stats_banner",
+      "type": "boolean",
+      "default": false,
+      "status": "opcional, no diseñado en Figma"
+    }
+  ],
+  "architecture": {
+    "principles": {
+      "S": "Cada clase una razón de cambio: TaskRepository persiste, TasksStore orquesta, TaskStateMachine decide transiciones, componentes presentacionales solo pintan.",
+      "O": "Nuevos filtros/órdenes/estados/decoradores se agregan como clases nuevas registradas por DI, sin modificar las existentes.",
+      "L": "Toda implementación de TaskRepository (Storage, InMemory, decoradores) es sustituible sin romper a los consumidores; mismos contratos y errores.",
+      "I": "Interfaces pequeñas: ReadableRepository, WritableRepository, FilterStrategy, SortStrategy, RenderStrategy, FeatureFlagReader.",
+      "D": "Store y features dependen de abstracciones vía InjectionToken (TASK_REPOSITORY, FILTER_STRATEGIES, SORT_STRATEGY, FEATURE_FLAGS, CLOCK), nunca de clases concretas."
+    },
+    "folders": {
+      "src/app/core": [
+        "config/app.config.ts",
+        "config/firebase.config.ts",
+        "di/tokens.ts",
+        "di/repository.providers.ts",
+        "services/storage.service.ts",
+        "services/feature-flag.service.ts (RemoteConfigFeatureFlagService)",
+        "services/clock.service.ts",
+        "guards/categories-enabled.guard.ts",
+        "decorators/debounce.decorator.ts",
+        "decorators/log-action.decorator.ts"
+      ],
+      "src/app/domain": [
+        "models/task.model.ts",
+        "models/category.model.ts",
+        "models/task-status.ts",
+        "repositories/repository.interface.ts",
+        "repositories/task-repository.interface.ts",
+        "repositories/category-repository.interface.ts",
+        "strategies/filter.strategy.ts",
+        "strategies/sort.strategy.ts",
+        "strategies/render.strategy.ts",
+        "state/task-state.ts (interfaz + PendingState, CompletedState, OverdueState, ArchivedState)",
+        "state/task-state-machine.ts",
+        "state/category-view-state.ts (DailyViewState, ShoppingViewState, DefaultCategoryViewState)"
+      ],
+      "src/app/data": [
+        "repositories/storage-task.repository.ts",
+        "repositories/storage-category.repository.ts",
+        "repositories/in-memory-task.repository.ts",
+        "decorators/logging-task.repository.ts",
+        "decorators/cache-task.repository.ts",
+        "decorators/analytics-task.repository.ts",
+        "decorators/feature-flag-category.repository.ts",
+        "strategies/filters/*.ts",
+        "strategies/sorts/*.ts",
+        "strategies/render/*.ts"
+      ],
+      "src/app/state": [
+        "tasks.store.ts",
+        "categories.store.ts",
+        "ui.store.ts",
+        "pages/with-filtering.feature.ts",
+        "pages/with-persistence.feature.ts"
+      ],
+      "src/app/pages/tasks": [
+        "todo-day/todo-day.page.ts",
+        "new-task/new-task.modal.ts",
+        "components/task-list.component.ts",
+        "components/uncompleted-tasks-card.component.ts",
+        "tasks.routes.ts"
+      ],
+      "src/app/pages/categories": [
+        "my-notes/my-notes.page.ts",
+        "categories/categories.page.ts",
+        "category-form/category-form.modal.ts",
+        "components/category-row.component.ts",
+        "categories.routes.ts"
+      ],
+      "src/app/pages/settings": [
+        "more/more.page.ts",
+        "components/debug-panel.component.ts"
+      ],
+      "src/app/shared/components": [
+        "side-tab-rail",
+        "today-badge",
+        "checkbox",
+        "task-item",
+        "note-item",
+        "new-task-input",
+        "button",
+        "fab",
+        "category-chip",
+        "chip-group",
+        "setting-row",
+        "toggle",
+        "form-field",
+        "color-picker",
+        "empty-state",
+        "page-header",
+        "date-header"
+      ],
+      "src/theme": [
+        "tokens.light.scss",
+        "tokens.dark.scss",
+        "typography.scss",
+        "ionic-overrides.scss",
+        "variables.scss"
+      ]
+    },
+    "patterns": {
+      "Strategy": {
+        "FilterStrategy": [
+          "AllFilterStrategy",
+          "CategoryFilterStrategy",
+          "StatusFilterStrategy",
+          "TodayFilterStrategy"
+        ],
+        "SortStrategy": [
+          "ByTimeSort",
+          "ByCreatedSort",
+          "ByStatusSort"
+        ],
+        "PersistenceStrategy": [
+          "IonicStoragePersistence",
+          "InMemoryPersistence"
+        ],
+        "RenderStrategy": [
+          "NormalRenderStrategy (<200 items)",
+          "VirtualRenderStrategy (cdk-virtual-scroll, itemSize 65)"
+        ]
+      },
+      "Decorator": {
+        "chain": "StorageTaskRepository -> CacheTaskRepository -> LoggingTaskRepository -> AnalyticsTaskRepository (el más externo se inyecta como TASK_REPOSITORY)",
+        "classes": [
+          "LoggingTaskRepository",
+          "CacheTaskRepository",
+          "AnalyticsTaskRepository",
+          "FeatureFlagCategoryRepository (si enable_categories=false devuelve [] y bloquea escrituras)"
+        ],
+        "methodDecorators": [
+          "@Debounce(300) en persistencia",
+          "@LogAction('tasks') en métodos del store/servicios"
+        ]
+      },
+      "State": {
+        "TaskState": [
+          "PendingState",
+          "CompletedState",
+          "OverdueState",
+          "ArchivedState"
+        ],
+        "CategoryViewState": [
+          "DailyViewState (Todo del día: hora/duración/recordatorio, panel uncompleted, reschedule)",
+          "ShoppingViewState (lista simple NoteItem, sin hora, acción 'clear completed')",
+          "DefaultCategoryViewState"
+        ]
+      },
+      "PresentationalContainer": {
+        "containers": [
+          "TodoDayPage",
+          "MyNotesPage",
+          "CategoriesPage",
+          "MorePage",
+          "NewTaskModal",
+          "CategoryFormModal"
+        ],
+        "presentational": "todo shared/components + components/* con OnPush, solo input()/output()"
+      },
+      "Composite": {
+        "examples": [
+          "SideTabRail > Tab",
+          "UncompletedTasksCard > Header/List(Item)/Footer",
+          "ChipGroup > CategoryChip",
+          "FilterStrategy compuesta: CompositeFilterStrategy(AND de filtros)"
+        ]
+      },
+      "SignalStore": {
+        "TasksStore": "withState({tasks, filterId, sortId, loading}), withComputed(visibleTasks, uncompleted, overdue, renderMode), withMethods(add, toggle, remove, reschedule, seed), withHooks(onInit load)",
+        "CategoriesStore": "withState({categories, activeId}), withComputed(viewState), withMethods(CRUD)",
+        "UiStore": "darkMode, panelExpanded"
+      }
+    },
+    "stateMachine": {
+      "task": {
+        "initial": "pending",
+        "states": [
+          "pending",
+          "completed",
+          "overdue",
+          "archived"
+        ],
+        "transitions": [
+          {
+            "from": "pending",
+            "event": "COMPLETE",
+            "to": "completed"
+          },
+          {
+            "from": "pending",
+            "event": "EXPIRE",
+            "to": "overdue",
+            "guard": "dueDate < hoy"
+          },
+          {
+            "from": "pending",
+            "event": "ARCHIVE",
+            "to": "archived"
+          },
+          {
+            "from": "completed",
+            "event": "REOPEN",
+            "to": "pending"
+          },
+          {
+            "from": "completed",
+            "event": "ARCHIVE",
+            "to": "archived"
+          },
+          {
+            "from": "overdue",
+            "event": "COMPLETE",
+            "to": "completed"
+          },
+          {
+            "from": "overdue",
+            "event": "RESCHEDULE",
+            "to": "pending",
+            "effect": "dueDate = hoy"
+          },
+          {
+            "from": "overdue",
+            "event": "ARCHIVE",
+            "to": "archived"
+          },
+          {
+            "from": "archived",
+            "event": "RESTORE",
+            "to": "pending"
+          }
+        ],
+        "invalid": "cualquier otra combinación lanza InvalidTransitionError y no muta el store"
+      },
+      "categoryView": {
+        "states": {
+          "daily": {
+            "layout": "TaskItem con meta",
+            "actions": [
+              "add",
+              "complete",
+              "delete",
+              "reschedule",
+              "filterByCategory"
+            ],
+            "showsUncompletedPanel": true
+          },
+          "shopping": {
+            "layout": "NoteItem sin meta",
+            "actions": [
+              "add",
+              "check",
+              "delete",
+              "clearCompleted",
+              "editCategory"
+            ],
+            "showsUncompletedPanel": false
+          },
+          "default": {
+            "layout": "NoteItem",
+            "actions": [
+              "add",
+              "check",
+              "delete",
+              "editCategory"
+            ]
+          }
+        },
+        "resolver": "CategoryViewStateFactory según category.kind ('daily'|'shopping'|'list')"
+      }
+    },
+    "interfaces": [
+      "Repository<T> = ReadableRepository<T> & WritableRepository<T>",
+      "TaskRepository",
+      "CategoryRepository",
+      "FilterStrategy<T>",
+      "SortStrategy<T>",
+      "RenderStrategy",
+      "TaskState",
+      "CategoryViewState",
+      "FeatureFlagReader",
+      "Clock"
+    ],
+    "injectionTokens": [
+      "TASK_REPOSITORY",
+      "CATEGORY_REPOSITORY",
+      "FILTER_STRATEGIES",
+      "SORT_STRATEGY",
+      "RENDER_STRATEGY",
+      "FEATURE_FLAGS",
+      "CLOCK",
+      "STORAGE_PERSISTENCE"
+    ],
+    "ionicScaffolding": {
+      "cli": [
+        "ionic start todo-notebook blank --type=angular --standalone",
+        "ionic integrations enable cordova --add",
+        "ionic cordova platform add android",
+        "ionic cordova platform add ios",
+        "ionic g page pages/<feature>/<page> --standalone",
+        "ionic g component shared/components/<name> --standalone",
+        "ionic g service core/services/<name>"
+      ],
+      "root": [
+        "config.xml",
+        "ionic.config.json",
+        "angular.json",
+        "resources/",
+        "platforms/ (gitignore)",
+        "plugins/ (gitignore)",
+        "www/ (gitignore)",
+        "src/index.html",
+        "src/main.ts",
+        "src/global.scss",
+        "src/assets/",
+        "src/environments/",
+        "src/theme/variables.scss",
+        "src/theme/dark.scss"
+      ],
+      "app": {
+        "app.component.ts": "ion-app raíz",
+        "app.routes.ts": "rutas lazy",
+        "layout/shell": "rail lateral + ion-router-outlet (equivale a tabs/)",
+        "pages/": "páginas Ionic enrutables = contenedores (*.page.ts, *.modal.ts), una carpeta por página con .ts/.html/.scss/.spec.ts",
+        "shared/components/": "presentacionales y composite",
+        "shared/directives/": "*appFeature",
+        "core/": "servicios singleton, guards, decoradores TS, DI",
+        "domain/": "modelos e interfaces TS puras",
+        "data/": "repositorios, decoradores, strategies y estados concretos",
+        "store/": "SignalStores"
+      },
+      "rules": [
+        "Generar todo con el CLI de Ionic",
+        "Una feature nueva = carpeta en pages/ + routes lazy",
+        "Componentes de una sola feature en pages/<feature>/components/",
+        "Dependencias: pages → store → domain ← data"
+      ]
+    },
+    "persistence": {
+      "note": "AsyncStorage es de React Native; en Ionic se usa @ionic/storage-angular.",
+      "packages": [
+        "@ionic/storage-angular",
+        "localforage-cordovasqlitedriver",
+        "cordova-sqlite-storage (plugin Cordova)"
+      ],
+      "driverOrder": [
+        "CordovaSQLiteDriver (Android/iOS)",
+        "IndexedDB (navegador)",
+        "LocalStorage (fallback)"
+      ],
+      "dbName": "todo_notebook_db",
+      "keys": {
+        "schema_version": "number",
+        "tasks": "Task[]",
+        "categories": "Category[]",
+        "ui_prefs": "{ theme, lastFilter, lastCategoryId }"
+      },
+      "layers": {
+        "domain/repositories/key-value-store.interface.ts": "KeyValueStore (DIP)",
+        "core/services/storage.service.ts": "adaptador Ionic Storage, defineDriver + create en APP_INITIALIZER",
+        "data/repositories/ionic-storage-task.repository.ts": "TaskRepository sobre KeyValueStore",
+        "data/repositories/in-memory-task.repository.ts": "tests",
+        "data/decorators": "Logging(Cache(IonicStorageTaskRepository))"
+      },
+      "rules": [
+        "Una lectura al iniciar, luego memoria con signals",
+        "Escritura con debounce 300 ms y colección completa",
+        "Errores con toast y reintento, sin bloquear UI",
+        "Mostrar driver activo en More > Debug",
+        "Migraciones por schema_version"
+      ]
+    }
+  },
+  "implementationGuide": [
+    "1. ionic start (standalone, Angular) + ionic integrations enable cordova; agregar @ngrx/signals, @ionic/storage-angular, @angular/cdk, firebase.",
+    "2. Cargar DM Serif Display e Inter (400/600/700) localmente en assets/fonts (offline en Cordova).",
+    "3. Volcar tokens.color.light/dark a src/theme como CSS custom properties; dark con .ion-palette-dark.",
+    "4. Crear los 11 text styles como clases utilitarias (.t-display-date, ...).",
+    "5. Construir shared/components en este orden: Checkbox, Button, TodayBadge, TaskItem, NoteItem, NewTaskInput, CategoryChip, SideTabRail, UncompletedTasksCard, SettingRow, FormField, ColorPicker, EmptyState, FAB.",
+    "6. Layout raíz: ion-app sin ion-header; contenedor flex [rail 27][content flex:1 padding 55 0 0 37].",
+    "7. Implementar domain (modelos, interfaces, estados) y data (repos + decoradores) con tests.",
+    "8. Stores con SignalStore; containers inyectan stores y pasan VMs a presentacionales.",
+    "9. Remote Config y guard; demo flag-off.",
+    "10. Comparar cada pantalla con su PNG de mocks/ en Chrome 375x812; tolerancia 2px."
+  ],
+  "discrepancies": [
+    "Los emojis de categoría (🛒💼🏠🩺) existen en los nodos pero no se renderizan en los PNG exportados.",
+    "Chevron del panel: abajo cuando está abierto y arriba cuando está colapsado (invertido respecto a la convención); se respeta Figma.",
+    "Chip seleccionado mide 33 de alto y los no seleccionados 35 (el borde suma 2).",
+    "Fila de chips de 311 de ancho con contenido de 328: Home queda cortado → scroll horizontal.",
+    "NoteItem tiene alturas 77/78/74 por redondeo de Auto Layout; usar 77.",
+    "NewTaskInput en my-notes mide 293x68 vs 295x69 en Todo.",
+    "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug)."
+  ]
+}

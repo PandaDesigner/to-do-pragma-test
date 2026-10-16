@@ -1,0 +1,38 @@
+schema: spec-driven
+
+context: |
+  Proyecto: Todo Notebook; actualmente solo documentación, sin app ni tests ejecutables.
+  Fuentes: docs/PROMPT.md, docs/design.json, docs/design.md y docs/mocks/; PDF original no localizado.
+  Stack requerido, aún no instalado: Ionic 8, Angular 18+ standalone, TypeScript strict, Cordova; no Capacitor.
+  Arquitectura: pages → store → domain ← data; core/di conecta implementaciones; shared solo input/output; SignalStore.
+  Persistencia: Ionic Storage, SQLite nativo → IndexedDB → LocalStorage; Firebase Remote Config enable_categories.
+  Calidad: SDD y TDD obligatorio RED-GREEN-REFACTOR; ESLint y Prettier; runner Jest aprobado.
+  Gitflow aprobado: main, develop, feature/*, release/*, hotfix/*; Conventional Commits; PR funcional hacia develop.
+  Destino público creado: PandaDesigner/to-do-pragma-test; conectar Git local mediante origin HTTPS.
+  PR init incluye scaffolding Ionic con CLI, Cordova y preparación de pruebas; no incluye funcionalidades de la app base.
+  Las instrucciones del usuario sustituyen rama única y tests al final de PROMPT.md; esperar confirmación entre fases.
+
+rules:
+  proposal:
+    - Leer docs/PROMPT.md y las fuentes visuales antes de proponer cambios; no inventar requisitos del PDF ausente.
+    - Identificar alcance, exclusiones, módulos afectados, cambio OpenSpec, rama de origen y destino del PR.
+    - Mantener un cambio OpenSpec por PR de implementación; excepciones y PR de release deben referenciar sus cambios.
+    - Empezar por init; separar app base, UI, categorías, patrones, Firebase, rendimiento y builds/documentación según dependencias.
+    - No crear ni publicar recursos fuera del repositorio público autorizado; nunca publicar credenciales.
+  specs:
+    - Escribir requisitos verificables con MUST/SHALL/SHOULD y escenarios Given/When/Then.
+    - Asignar identificadores estables para relacionar requisitos, escenarios, tests y descripción del PR.
+    - No crear specs vacías; conservar specs activas en changes hasta verificarlas y sincronizarlas mediante archivo.
+    - Incluir éxito y errores relevantes; distinguir scaffolding de app base funcional y de entrega firmada.
+  design:
+    - Reutilizar las capas y convenciones Ionic de docs/PROMPT.md; generar artefactos mediante CLI.
+    - Verificar compatibilidad de versiones antes de instalar; no dar por instaladas las tecnologías requeridas.
+    - Resolver explícitamente el runner de pruebas y las decisiones arquitectónicas abiertas antes de implementar.
+    - Documentar riesgos y reversión para cambios de persistencia, configuración o dependencias; diagramar flujos complejos.
+  tasks:
+    - Agrupar por fases con numeración jerárquica y tareas pequeñas; pedir confirmación antes de avanzar de fase.
+    - Para cada comportamiento escribir primero un test, ejecutarlo y comprobar fallo por el comportamiento ausente (RED).
+    - Implementar lo mínimo para pasar (GREEN), refactorizar y repetir pruebas; registrar comandos y resultados reales en verificación.
+    - No posponer tests a la fase final; scaffolding generado se valida con pruebas de configuración y arranque, sin alegar TDD retroactivo.
+    - Antes del PR ejecutar tests, lint, formato, tipos y build aplicables; registrar bloqueos, sin declarar verificaciones no ejecutadas.
+    - Incluir en el PR cambio OpenSpec, requisitos, escenarios, tests y evidencia; no archivar ni fusionar cambios incompletos.
