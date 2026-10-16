@@ -1,21 +1,21 @@
 #!/usr/bin/env node
-// Resolves signing credentials from .env.local, substitutes them into
-// `build.json`, runs `ng build` and `ionic cordova build android --release
-// --device`, then restores the original `build.json`. The committed file
-// keeps env-var placeholders so secrets never enter git.
+// Reads signing credentials from .env.local and passes them to
+// `ionic cordova build android --release --device` as CLI flags, then runs
+// `./gradlew :app:assembleRelease`. `build.json` stays in the repo only as
+// placeholders; secrets never enter git.
 
 const { spawnSync } = require('node:child_process');
-const { readFileSync, writeFileSync } = require('node:fs');
+const { readFileSync } = require('node:fs');
 const { resolve } = require('node:path');
 
 const projectRoot = resolve(__dirname, '..');
 const envFile = resolve(projectRoot, '.env.local');
-const buildJsonPath = resolve(projectRoot, 'build.json');
 
-const PLACEHOLDERS = [
-  'ANDROID_KEY_ALIAS_PASSWORD',
-  'ANDROID_KEYSTORE_PASSWORD',
+const REQUIRED_ENV_VARS = [
+  'ANDROID_KEYSTORE_PATH',
   'ANDROID_KEY_ALIAS',
+  'ANDROID_KEYSTORE_PASSWORD',
+  'ANDROID_KEY_ALIAS_PASSWORD',
 ];
 
 function loadEnv(filePath) {
@@ -37,46 +37,56 @@ function loadEnv(filePath) {
   return entries;
 }
 
+function runWebBuild() {
+  return spawnSync('npx', ['ng', 'build', '--configuration', 'production'], {
+    stdio: 'inherit',
+    cwd: projectRoot,
+  });
+}
+
+function runBundleBuild(env) {
+  return spawnSync(
+    'npx',
+    [
+      'ionic',
+      'cordova',
+      'build',
+      'android',
+      '--release',
+      '--device',
+      '--',
+      '--',
+      `--keystore=${env.ANDROID_KEYSTORE_PATH}`,
+      `--alias=${env.ANDROID_KEY_ALIAS}`,
+      `--storePassword=${env.ANDROID_KEYSTORE_PASSWORD}`,
+      `--password=${env.ANDROID_KEY_ALIAS_PASSWORD}`,
+    ],
+    { stdio: 'inherit', cwd: projectRoot },
+  );
+}
+
+function runAssembleRelease() {
+  return spawnSync('./gradlew', [':app:assembleRelease'], {
+    stdio: 'inherit',
+    cwd: resolve(projectRoot, 'platforms/android'),
+  });
+}
+
 const env = loadEnv(envFile);
-const missing = PLACEHOLDERS.filter((name) => !env[name]);
+const missing = REQUIRED_ENV_VARS.filter((name) => !env[name]);
 if (missing.length > 0) {
   console.error(`Missing in ${envFile}: ${missing.join(', ')}`);
   process.exit(1);
 }
 
-const placeholderPattern = new RegExp(PLACEHOLDERS.join('|'), 'g');
-const original = readFileSync(buildJsonPath, 'utf8');
-const resolved = original.replace(placeholderPattern, (name) => env[name]);
-
-let exitCode = 0;
-try {
-  writeFileSync(buildJsonPath, resolved);
-  const web = spawnSync('npx', ['ng', 'build', '--configuration', 'production'], {
-    stdio: 'inherit',
-    cwd: projectRoot,
-  });
-  if (web.status !== 0) {
-    exitCode = web.status ?? 1;
-  } else {
-    const bundle = spawnSync(
-      'npx',
-      ['ionic', 'cordova', 'build', 'android', '--release', '--device'],
-      { stdio: 'inherit', cwd: projectRoot },
-    );
-    exitCode = bundle.status ?? 1;
-    if (exitCode === 0) {
-      const apk = spawnSync(
-        './gradlew',
-        [':app:assembleRelease'],
-        {
-          stdio: 'inherit',
-          cwd: resolve(projectRoot, 'platforms/android'),
-        },
-      );
-      exitCode = apk.status ?? 1;
-    }
-  }
-} finally {
-  writeFileSync(buildJsonPath, original);
+const web = runWebBuild();
+if (web.status !== 0) {
+  process.exit(web.status ?? 1);
 }
-process.exit(exitCode);
+
+const bundle = runBundleBuild(env);
+if (bundle.status !== 0) {
+  process.exit(bundle.status ?? 1);
+}
+
+process.exit(runAssembleRelease().status ?? 1);
