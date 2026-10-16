@@ -2,7 +2,7 @@ import type { Task, TaskStatus } from './task';
 
 export type TaskFilter = {
   statuses: readonly TaskStatus[];
-  categoryId?: string;
+  categoryId?: string | null;
 };
 
 export const TASK_SORT = { DUE_DATE: 'dueDate' } as const;

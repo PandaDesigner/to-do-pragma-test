@@ -43,7 +43,7 @@ La app MUST definir el modelo `Task` de `docs/PROMPT.md`: `dueDate` como día ca
 
 ### Requirement: APP-03 Estrategias de tareas
 
-`filterTasks` y `sortTasksByDueDate` MUST ser funciones puras en `src/app/domain/`. `filterTasks` MUST aceptar un conjunto de estados y un `categoryId` opcional. `sortTasksByDueDate` MUST ordenar por `dueDate` ascendente sin modificar la entrada; todas las tareas tienen fecha según el modelo canónico.
+`filterTasks` y `sortTasksByDueDate` MUST ser funciones puras en `src/app/domain/`. `filterTasks` MUST aceptar un conjunto de estados y un `categoryId` opcional: omitido no filtra por categoría, `null` selecciona tareas sin categoría. Entradas vacías, estados vacíos y categorías inexistentes MUST devolver una colección vacía sin mutar la entrada. `sortTasksByDueDate` MUST ordenar por `dueDate` ascendente sin modificar la entrada; todas las tareas tienen fecha según el modelo canónico.
 
 #### Scenario: APP-03-A Filtro combinado
 

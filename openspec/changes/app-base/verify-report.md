@@ -22,6 +22,12 @@ Comprobaciones ejecutadas:
 - `npx ionic build`: correcto; 484,58 kB iniciales. Advierte navegadores antiguos no soportados en Browserslist; no se cambió esa configuración.
 - Prettier aplicado a los archivos modificados; `git diff --check`: correcto.
 
+## Tarea 1.2: estrategias
+
+Se añadieron pruebas de colecciones vacías, filtro sin estados, categoría inexistente, filtro explícito `null`, fechas iguales y arrays/tareas congelados. La comprobación de tipos falló primero con TS2322 porque el filtro no admitía `categoryId: null`; se amplió ese contrato para distinguir tareas sin categoría de filtro omitido. Los demás casos verifican comportamiento ya existente, sin atribuirles un RED que no ocurrió.
+
+`npm test -- --runTestsByPath src/app/domain/task-strategy.spec.ts`: 6 pruebas correctas. `npx tsc --noEmit`, `npm run lint` y Prettier: correctos.
+
 ## Pendientes de entrega
 
 Stores, persistencia completa, Remote Config, UI, generación masiva, thresholds permanentes, CI, documentación final y APK firmado/IPA siguen sujetos a sus tareas. No se ha abierto ni fusionado un PR en esta continuación.

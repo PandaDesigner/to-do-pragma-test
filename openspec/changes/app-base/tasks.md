@@ -1,7 +1,7 @@
 ## 1. Dominio y estrategias
 
 - [x] 1.1 Modelos canónicos de PROMPT (`dueDate`, timestamps, categoría nullable y kind `list`), máquina con clases State en `data/states/`, seis eventos, guard e `InvalidTransitionError`; tests RED→GREEN de las nueve transiciones válidas y todas las inválidas.
-- [ ] 1.2 Estrategias puras `filterTasks` y `sortTasksByDueDate` con tests de casos límite.
+- [x] 1.2 Estrategias puras `filterTasks` y `sortTasksByDueDate` con tests de casos límite.
 - [ ] 1.3 Contratos puros en domain y tokens `TASK_REPOSITORY` y `CATEGORY_REPOSITORY` en core/di, con tests de inyección y contrato.
 
 ## 2. Persistencia y stores
