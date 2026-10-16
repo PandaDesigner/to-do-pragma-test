@@ -1,9 +1,5 @@
 import { isTaskStatus, Task, TaskStatus, transitionTask } from './task';
 
-function transition(task: Task, next: TaskStatus): Task {
-  return transitionTask(task, next);
-}
-
 describe('Task model', () => {
   it('recognises the supported statuses and rejects unknown ones', () => {
     expect(isTaskStatus('pending')).toBe(true);
@@ -13,18 +9,30 @@ describe('Task model', () => {
     expect(isTaskStatus('done')).toBe(false);
   });
 
-  it('allows the documented transitions and rejects the rest', () => {
+  it('allows documented transitions and rejects the rest', () => {
     const task: Task = { id: 't-1', title: 'Demo', status: 'pending' };
-    expect(() => transition(task, 'completed')).not.toThrow();
-    expect(() => transition(task, 'overdue')).not.toThrow();
+    expect(() => transitionTask(task, 'completed')).not.toThrow();
+    expect(() => transitionTask(task, 'overdue')).not.toThrow();
     expect(() =>
-      transition({ ...task, status: 'pending' }, 'archived'),
-    ).toThrow(/Invalid task transition/);
+      transitionTask({ ...task, status: 'pending' }, 'archived'),
+    ).toThrow(/Invalid task transition: pending -> archived/);
     expect(() =>
       transition({ ...task, status: 'overdue' }, 'archived'),
     ).not.toThrow();
     expect(() =>
       transition({ ...task, status: 'archived' }, 'completed'),
-    ).toThrow(/Invalid task transition/);
+    ).toThrow(/Invalid task transition: archived -> completed/);
+  });
+
+  it('returns a new task instance without mutating the input', () => {
+    const task: Task = { id: 't-1', title: 'Demo', status: 'pending' };
+    const next = transitionTask(task, 'completed');
+    expect(next).not.toBe(task);
+    expect(task.status).toBe('pending');
+    expect(next.status).toBe('completed');
   });
 });
+
+function transition(task: Task, next: TaskStatus): Task {
+  return transitionTask(task, next);
+}

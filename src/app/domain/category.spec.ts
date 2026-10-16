@@ -12,6 +12,8 @@ describe('Category model', () => {
     expect(isCategoryKind('shopping')).toBe(true);
     expect(isCategoryKind('default')).toBe(true);
     expect(isCategoryKind('work')).toBe(false);
+    expect(isCategoryKind(42)).toBe(false);
+    expect(isCategoryKind(null)).toBe(false);
   });
 
   it('keeps the required identifiers and labels in the shape', () => {
