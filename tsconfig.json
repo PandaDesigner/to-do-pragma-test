@@ -6,13 +6,14 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "strict": true,
+    "baseUrl": ".",
     "paths": {
-      "@core/*": ["./src/app/core/*"],
-      "@domain/*": ["./src/app/domain/*"],
-      "@data/*": ["./src/app/data/*"],
-      "@store/*": ["./src/app/store/*"],
-      "@pages/*": ["./src/app/pages/*"],
-      "@shared/*": ["./src/app/shared/*"]
+      "@core/*": ["src/app/core/*"],
+      "@domain/*": ["src/app/domain/*"],
+      "@data/*": ["src/app/data/*"],
+      "@store/*": ["src/app/store/*"],
+      "@pages/*": ["src/app/pages/*"],
+      "@shared/*": ["src/app/shared/*"]
     },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
