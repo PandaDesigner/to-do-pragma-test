@@ -21,3 +21,67 @@ jobs:
       - run: npm run format:check
       - run: npm run typecheck
       - run: npm run build -- --configuration production
+
+  android:
+    name: Cordova Android (debug)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: android-actions/setup-android@v4
+        with:
+          cmdline-tools-version: '13.0'
+      - name: Cache Gradle
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('platforms/android/gradle/wrapper/gradle-wrapper.properties', 'platforms/android/build.gradle', 'platforms/android/app/build.gradle') }}
+          restore-keys: gradle-${{ runner.os }}-
+      - run: npm ci
+      - name: Restore Cordova platforms
+        run: npx --no-install cordova platform add android
+      - name: Build debug APK
+        run: npm run build:android
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-debug-apk
+          path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+
+  ios:
+    name: Cordova iOS (no signing)
+    runs-on: macos-latest
+    env:
+      CODE_SIGNING_ALLOWED: 'NO'
+      CODE_SIGNING_REQUIRED: 'NO'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Install CocoaPods
+        run: sudo gem install cocoapods --no-document
+      - name: Restore Cordova platforms
+        run: npx --no-install cordova platform add ios
+      - name: Build unsigned iOS archive
+        run: npm run build:ios
+      - name: Upload iOS build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-archive
+          path: |
+            platforms/ios/build/Release-iphoneos/*.app
+            platforms/ios/build/Release-iphoneos/*.xcarchive
+          if-no-files-found: error
