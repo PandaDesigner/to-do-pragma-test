@@ -34,7 +34,7 @@
     "@angular/forms": "22.2.3",
     "@angular/platform-browser": "22.2.3",
     "@angular/router": "22.2.3",
-    "@ionic/angular": "^8.0.0",
+    "@ionic/angular": "8.8.19",
     "@ionic/storage-angular": "^4.0.0",
     "@ngrx/signals": "^22.0.1",
     "firebase": "^13.0.0",

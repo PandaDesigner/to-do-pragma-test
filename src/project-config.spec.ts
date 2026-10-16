@@ -54,13 +54,15 @@ describe('INIT-01 / INIT-02 / INIT-04 project configuration', () => {
     ).toBe(false);
   });
 
-  it('uses the approved application identifier and web entry point', () => {
+  it('uses the approved application identifier, entry point and platforms', () => {
     const configuration = readProjectFile('config.xml');
     expect(configuration).toContain(
       'id="io.github.pandadesigner.todonotebook"',
     );
     expect(configuration).toContain('<name>Todo Notebook</name>');
     expect(configuration).toContain('<content src="index.html"');
+    expect(configuration).toContain('<platform name="android"');
+    expect(configuration).toContain('<platform name="ios"');
   });
 
   it.each(layers)('provides the %s layer and alias', (layer) => {

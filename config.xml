@@ -4,4 +4,6 @@
   <name>Todo Notebook</name>
   <description>Scaffolding de Todo Notebook</description>
   <content src="index.html" />
+  <platform name="android" />
+  <platform name="ios" />
 </widget>
