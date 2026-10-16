@@ -20,13 +20,17 @@ describe('INIT-03 AppComponent', () => {
   it('redirects the initial route to a lazily loaded standalone page', async () => {
     expect(routes.find((route) => route.path === '')).toEqual({
       path: '',
-      redirectTo: 'home',
+      redirectTo: '/tabs/tasks',
       pathMatch: 'full',
     });
-    const homeRoute = routes.find((route) => route.path === 'home');
-    expect(homeRoute?.loadComponent).toEqual(expect.any(Function));
-    const loaded = await homeRoute?.loadComponent?.();
-    expect(loaded).toBeDefined();
+    const tabsRoute = routes.find((route) => route.path === 'tabs');
+    expect(tabsRoute?.loadComponent).toEqual(expect.any(Function));
+    expect(await tabsRoute?.loadComponent?.()).toBeDefined();
+    for (const child of tabsRoute?.children ?? []) {
+      if (child.loadComponent) {
+        expect(await child.loadComponent()).toBeDefined();
+      }
+    }
   });
 
   it('uses standalone OnPush change detection', () => {

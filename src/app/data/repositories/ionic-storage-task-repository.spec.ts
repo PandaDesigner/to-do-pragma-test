@@ -1,5 +1,6 @@
 import { IonicStorageTaskRepository } from './ionic-storage-task-repository';
 import { Task } from '../../domain/task';
+import { taskFixture } from '../../testing/task.fixture';
 
 function makeStorageStub(): {
   store: Map<string, unknown>;
@@ -32,10 +33,10 @@ describe('IonicStorageTaskRepository', () => {
     const repository = new IonicStorageTaskRepository();
     await repository.init(stub.api as never);
 
-    const task: Task = { id: 't-1', title: 'Demo', status: 'pending' };
-    await repository.save(task);
+    const task: Task = taskFixture({ id: 't-1' });
+    const saving = repository.save(task);
     expect(stub.store.get('todo-notebook.tasks.v1')).toBeUndefined();
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    await saving;
     expect(stub.store.get('todo-notebook.tasks.v1')).toEqual([task]);
 
     const list = await repository.list();
@@ -56,14 +57,13 @@ describe('IonicStorageTaskRepository', () => {
       await original.call(stub.api, key, value);
     }) as never;
 
-    for (let index = 0; index < 3; index += 1) {
-      await repository.save({
-        id: `t-${index}`,
-        title: `Task ${index}`,
-        status: 'pending',
-      });
-    }
-    await new Promise((resolve) => setTimeout(resolve, 350));
+    await Promise.all(
+      Array.from({ length: 3 }, (_, index) =>
+        repository.save(
+          taskFixture({ id: `t-${index}`, title: `Task ${index}` }),
+        ),
+      ),
+    );
     expect(writes).toBe(1);
     expect(await repository.list()).toHaveLength(3);
   });
@@ -73,7 +73,7 @@ describe('IonicStorageTaskRepository', () => {
     const repository = new IonicStorageTaskRepository();
     await repository.init(stub.api as never);
 
-    const task: Task = { id: 't-1', title: 'Demo', status: 'pending' };
+    const task: Task = taskFixture({ id: 't-1' });
     await repository.save(task);
     await new Promise((resolve) => setTimeout(resolve, 350));
 

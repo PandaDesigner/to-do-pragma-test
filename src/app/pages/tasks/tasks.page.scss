@@ -1,0 +1,24 @@
+.task-viewport {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+}
+.virtualized {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.debug-panel {
+  flex-shrink: 0;
+  margin-bottom: 10px;
+  font-size: 13px;
+}
+summary {
+  min-height: 44px;
+  padding-top: 12px;
+  cursor: pointer;
+}
+
+.task-list {
+  padding-bottom: 32px;
+}

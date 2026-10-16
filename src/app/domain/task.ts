@@ -1,11 +1,12 @@
-export const TASK_STATUSES = [
-  'pending',
-  'completed',
-  'overdue',
-  'archived',
-] as const;
+export const TASK_STATUS = {
+  PENDING: 'pending',
+  COMPLETED: 'completed',
+  OVERDUE: 'overdue',
+  ARCHIVED: 'archived',
+} as const;
 
-export type TaskStatus = (typeof TASK_STATUSES)[number];
+export type TaskStatus = (typeof TASK_STATUS)[keyof typeof TASK_STATUS];
+export const TASK_STATUSES = Object.values(TASK_STATUS);
 
 export function isTaskStatus(value: unknown): value is TaskStatus {
   return (
@@ -14,24 +15,15 @@ export function isTaskStatus(value: unknown): value is TaskStatus {
   );
 }
 
-export type Task = {
+export interface Task {
   id: string;
   title: string;
   status: TaskStatus;
-  categoryId?: string;
-  dueAt?: string;
-};
-
-const ALLOWED_TRANSITIONS: Record<TaskStatus, readonly TaskStatus[]> = {
-  pending: ['completed', 'overdue'],
-  completed: ['pending'],
-  overdue: ['pending', 'completed', 'archived'],
-  archived: [],
-};
-
-export function transitionTask(task: Task, next: TaskStatus): Task {
-  if (!ALLOWED_TRANSITIONS[task.status].includes(next)) {
-    throw new Error(`Invalid task transition: ${task.status} -> ${next}`);
-  }
-  return { ...task, status: next };
+  categoryId: string | null;
+  dueDate: string;
+  time?: string;
+  durationMin?: number;
+  reminderMin?: number;
+  createdAt: number;
+  updatedAt: number;
 }

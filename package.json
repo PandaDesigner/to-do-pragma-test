@@ -12,8 +12,15 @@
     "lint": "ng lint",
     "format": "prettier --write \"src/**/*.{ts,html,scss}\" \"*.{json,js,cjs}\" \".github/**/*.{yml,md}\" README.md",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss}\" \"*.{json,js,cjs}\" \".github/**/*.{yml,md}\" README.md",
+    "clean:platforms": "node scripts/clean-cordova-platforms.cjs",
     "typecheck": "tsc --noEmit -p tsconfig.app.json && tsc --noEmit -p tsconfig.spec.json",
-    "ionic:serve": "ionic serve --no-open"
+    "build:android": "ng build && cordova build android --debug",
+    "build:android:release": "ng build --configuration production && cordova build android --release",
+    "build:ios": "node scripts/build-ios-archive.cjs",
+    "requirements": "cordova requirements --verbose",
+    "ionic:serve": "ng serve",
+    "ionic:build": "node scripts/ionic-build.cjs",
+    "ionic:build:android": "node scripts/build-android-release.cjs"
   },
   "private": true,
   "engines": {
@@ -21,10 +28,13 @@
     "npm": ">=11 <12"
   },
   "cordova": {
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "plugins": {
       "cordova-sqlite-storage": {}
-    },
-    "platforms": []
+    }
   },
   "dependencies": {
     "@angular/cdk": "^22.2.3",
@@ -35,6 +45,7 @@
     "@angular/platform-browser": "22.2.3",
     "@angular/router": "22.2.3",
     "@ionic/angular": "8.8.19",
+    "@ionic/storage": "4.0.0",
     "@ionic/storage-angular": "^4.0.0",
     "@ngrx/signals": "^22.0.1",
     "firebase": "^13.0.0",
@@ -54,6 +65,8 @@
     "@types/node": "^24.19.2",
     "angular-eslint": "22.5.0",
     "cordova": "^13.0.0",
+    "cordova-android": "^15.1.0",
+    "cordova-ios": "^8.1.1",
     "cordova-sqlite-storage": "^7.0.0",
     "eslint": "^10.10.0",
     "jest": "^30.5.2",

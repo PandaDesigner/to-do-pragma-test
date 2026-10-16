@@ -6,15 +6,15 @@
     "forceConsistentCasingInFileNames": true,
     "esModuleInterop": true,
     "strict": true,
-    "baseUrl": ".",
+    "types": ["jest", "node"],
     "paths": {
-      "@core/*": ["src/app/core/*"],
-      "@domain/*": ["src/app/domain/*"],
-      "@data/*": ["src/app/data/*"],
-      "@store/*": ["src/app/store/*"],
-      "@pages/*": ["src/app/pages/*"],
-      "@layout/*": ["src/app/layout/*"],
-      "@shared/*": ["src/app/shared/*"]
+      "@core/*": ["./src/app/core/*"],
+      "@domain/*": ["./src/app/domain/*"],
+      "@data/*": ["./src/app/data/*"],
+      "@store/*": ["./src/app/store/*"],
+      "@pages/*": ["./src/app/pages/*"],
+      "@layout/*": ["./src/app/layout/*"],
+      "@shared/*": ["./src/app/shared/*"]
     },
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,

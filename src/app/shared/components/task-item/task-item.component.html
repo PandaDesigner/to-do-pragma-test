@@ -1,0 +1,49 @@
+<article class="task-row" [class.completed]="task().status === 'completed'">
+  <label class="task-check">
+    <input
+      type="checkbox"
+      [checked]="task().status === 'completed'"
+      [disabled]="disabled() || !canToggle()"
+      [attr.aria-label]="'Completar o reabrir ' + task().title"
+      (change)="taskToggle.emit(task().id)"
+    />
+  </label>
+  <div class="task-copy">
+    <strong>{{ task().title }}</strong>
+    <small
+      >{{ task().dueDate }}
+      @if (showCategories() && categoryName()) {
+        <span class="category-chip">{{ categoryName() }}</span>
+      }
+    </small>
+  </div>
+  <div class="task-actions">
+    <button
+      type="button"
+      [disabled]="disabled()"
+      [attr.aria-label]="'Editar ' + task().title"
+      (click)="edit.emit(task())"
+    >
+      <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
+    </button>
+    @for (event of extraActions(); track event) {
+      <button
+        type="button"
+        [disabled]="disabled()"
+        [attr.aria-label]="labels[event] + ': ' + task().title"
+        (click)="action.emit({ id: task().id, event })"
+      >
+        <ion-icon [icon]="actionIcons[event]" aria-hidden="true" />
+      </button>
+    }
+    <button
+      type="button"
+      class="danger"
+      [disabled]="disabled()"
+      [attr.aria-label]="'Eliminar ' + task().title"
+      (click)="remove.emit(task().id)"
+    >
+      <ion-icon [icon]="icons.trashOutline" aria-hidden="true" />
+    </button>
+  </div>
+</article>

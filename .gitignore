@@ -7,6 +7,7 @@ node_modules/
 /.pi/
 /.trae/
 /.vscode/
+/.idea/
 .angular/
 .ionic/
 out-tsc/
@@ -20,9 +21,12 @@ plugins/
 !.env.example
 src/environments/environment.ts
 src/environments/environment.prod.ts
+src/assets/firebase-config.json
 *.keystore
 *.jks
 *.p12
 *.mobileprovision
+pragmadev.jks
+pragmadev-appbase.jks
 *.log
 .DS_Store

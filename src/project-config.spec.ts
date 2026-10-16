@@ -44,7 +44,7 @@ describe('INIT-01 / INIT-02 / INIT-04 project configuration', () => {
     expect(manifest.devDependencies['@ionic/cli']).toEqual(expect.any(String));
     expect(manifest.devDependencies['cordova']).toEqual(expect.any(String));
     expect(manifest.cordova?.plugins).toHaveProperty('cordova-sqlite-storage');
-    expect(manifest.cordova?.platforms).toEqual([]);
+    expect(manifest.cordova?.platforms).toEqual(['android', 'ios']);
     expect(
       [
         ...Object.keys(manifest.dependencies),

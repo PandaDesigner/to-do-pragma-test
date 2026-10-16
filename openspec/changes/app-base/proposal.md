@@ -14,7 +14,7 @@
 - Páginas `tasks` y `categories` con `OnPush`, `trackBy` y `cdk-virtual-scroll` desde 200 tareas.
 - Botón debug que genera 5.000 tareas.
 - Workflow CI con umbrales de cobertura: 80% global, 95% `domain`, 90% `data` y `store`.
-- README con las 3 respuestas del PDF (retos, optimizaciones, calidad y mantenibilidad) y guía de build nativo (APK / IPA sin firma).
+- README con las 3 respuestas del PDF (retos, optimizaciones, calidad y mantenibilidad) y guía de build nativo y generación de APK firmado e IPA, sin versionar secretos.
 
 ## Capabilities
 
@@ -29,6 +29,6 @@
 
 ## Impact
 
-- Ramas: `feature/app-base` desde `develop`, PR hacia `develop`.
+- Continuación autorizada: `feature/app-base-2` desde `develop`, un PR hacia `develop` sin fusionar ni archivar. Pedro aprueba el avance entre fases.
 - Módulos afectados: `src/app/domain`, `src/app/data`, `src/app/store`, `src/app/pages`, `src/app/layout`, `src/app/core/config`, `src/app/core/decorators`, `src/app/core/di`, `.github/workflows`, `README.md`, `docs/ci-cd-propuesta.md`, `docs/plan-maximo-puntaje-pi.md`.
-- Excluido de app-base: builds nativos firmados, Firebase en producción, Remote Config activo conectado a un proyecto real, builds APK/IPA automatizados.
+- La corrección de rumbo incorpora la máquina State de `docs/PROMPT.md`, APK firmado e IPA. Sigue excluido el despliegue de Firebase en producción. No publicar secretos ni sustituir la entrega de binarios por instrucciones sin firma.

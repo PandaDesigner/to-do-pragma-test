@@ -2,34 +2,48 @@
 
 ### Requirement: APP-01 Modelos y transiciones de tareas
 
-La app MUST definir `Task` con `TaskStatus` (`pending`, `completed`, `overdue`, `archived`) y transiciones explícitas en `transitionTask`. Transiciones inválidas MUST lanzar error con mensaje claro.
+La app MUST definir el modelo `Task` de `docs/PROMPT.md`: `dueDate` como día calendario, `categoryId: string | null`, `createdAt`, `updatedAt` y metadatos opcionales de hora, duración y recordatorio. `TaskStatus` MUST soportar `pending`, `completed`, `overdue` y `archived`. Los contratos y `InvalidTransitionError` MUST vivir en dominio puro; las clases State y `TaskStateMachine` MUST vivir en `data/states/`, sin tabla de destinos. `transitionTask` MUST recibir `{ task, event, clock }` y delegar en la máquina. No se requiere compatibilidad con `dueAt` ni datos del modelo anterior.
 
 #### Scenario: APP-01-A Transición válida
 
 - **GIVEN** una tarea con `status: 'pending'`
-- **WHEN** se invoca `transitionTask(task, 'completed')`
-- **THEN** devuelve un objeto nuevo con `status: 'completed'`.
+- **WHEN** se invoca `transitionTask({ task, event: 'COMPLETE', clock })`
+- **THEN** devuelve un objeto nuevo con `status: 'completed'` y `updatedAt = clock.now()`, sin mutar la tarea original.
 
 #### Scenario: APP-01-B Transición inválida
 
 - **GIVEN** una tarea con `status: 'archived'`
-- **WHEN** se invoca `transitionTask(task, 'completed')`
-- **THEN** lanza `Invalid task transition: archived -> completed`.
+- **WHEN** se invoca `transitionTask({ task, event: 'COMPLETE', clock })`
+- **THEN** lanza `InvalidTransitionError` con mensaje `Invalid task transition: archived + COMPLETE`, sin mutar la tarea.
+
+#### Scenario: APP-01-C Todas las transiciones documentadas
+
+- **GIVEN** los cuatro estados y los seis eventos COMPLETE, EXPIRE, ARCHIVE, REOPEN, RESCHEDULE y RESTORE
+- **WHEN** se prueban las 24 combinaciones
+- **THEN** solo se permiten las nueve transiciones de `docs/PROMPT.md`, incluidas pending/completed a archived y archived a pending.
+- **AND** cada transición válida devuelve un objeto nuevo y actualiza `updatedAt` con el reloj inyectado.
+
+#### Scenario: APP-01-D Guard de vencimiento y reprogramación
+
+- **GIVEN** una tarea pending con `dueDate` igual o posterior a `clock.today()`
+- **WHEN** se despacha EXPIRE
+- **THEN** lanza `InvalidTransitionError`; solo puede expirar cuando `dueDate < clock.today()`.
+- **AND** RESCHEDULE desde overdue cambia `dueDate` al día local del reloj y el estado a pending.
 
 ### Requirement: APP-02 Categorías con kinds
 
-`Category` MUST exponer `CategoryKind` (`daily`, `shopping`, `default`) y validar con `isCategoryKind`. Valores desconocidos MUST devolver `false`.
+`Category` MUST incluir `icon` y `colorToken`, exponer `CategoryKind` (`daily`, `shopping`, `list`) y validar con `isCategoryKind`. Valores desconocidos MUST devolver `false`.
 
 #### Scenario: APP-02-A Kinds soportados
 
-- **GIVEN** un valor `kind: 'daily' | 'shopping' | 'default'`
+- **GIVEN** un valor `kind: 'daily' | 'shopping' | 'list'`
 - **WHEN** se consulta `isCategoryKind`
 - **THEN** devuelve `true`.
 - **AND** un valor desconocido devuelve `false`.
 
 ### Requirement: APP-03 Estrategias de tareas
 
-`filterTasks` y `sortTasksByDueAt` MUST ser funciones pure en `src/app/domain/`. `filterTasks` MUST aceptar un conjunto de estados y un `categoryId` opcional. `sortTasksByDueAt` MUST ordenar por `dueAt` ascendente y colocar al final las tareas sin fecha.
+`filterTasks` y `sortTasksByDueDate` MUST ser funciones puras en `src/app/domain/`. `filterTasks` MUST aceptar un conjunto de estados y un `categoryId` opcional: omitido no filtra por categoría, `null` selecciona tareas sin categoría. Entradas vacías, estados vacíos y categorías inexistentes MUST devolver una colección vacía sin mutar la entrada. `sortTasksByDueDate` MUST ordenar por `dueDate` ascendente sin modificar la entrada; todas las tareas tienen fecha según el modelo canónico.
 
 #### Scenario: APP-03-A Filtro combinado
 
@@ -39,19 +53,20 @@ La app MUST definir `Task` con `TaskStatus` (`pending`, `completed`, `overdue`, 
 
 #### Scenario: APP-03-B Orden por fecha
 
-- **GIVEN** tareas con y sin `dueAt`
-- **WHEN** se invoca `sortTasksByDueAt` con `{ kind: 'dueAt' }`
-- **THEN** ordena por `dueAt` ascendente y deja al final las tareas sin fecha.
+- **GIVEN** tareas con `dueDate`
+- **WHEN** se invoca `sortTasksByDueDate` con `{ kind: 'dueDate' }`
+- **THEN** ordena por `dueDate` ascendente y mantiene el orden relativo entre fechas iguales.
 
 ### Requirement: APP-04 Puertos de repositorio
 
-`TASK_REPOSITORY` y `CATEGORY_REPOSITORY` MUST ser `InjectionToken` que exponen un contrato `list/save/remove`. Los repositorios de infraestructura MUST satisfacer ese contrato sin salteralo.
+`TASK_REPOSITORY` y `CATEGORY_REPOSITORY` MUST ser `InjectionToken` definidos en `core/di`, separados de los contratos puros `list/save/remove` de domain. Los repositorios de infraestructura MUST satisfacer el mismo contrato.
 
 #### Scenario: APP-04-A Contrato satisfecho
 
-- **GIVEN** una implementación in-memory
-- **WHEN** se ejecuta `repository.spec.ts`
-- **THEN** las pruebas confirman `list` tras `save`, `remove` y la distinción de tokens.
+- **GIVEN** repositorios in-memory de tareas/categorías y un repositorio de tareas Storage con almacenamiento simulado
+- **WHEN** se ejecuta la misma suite de contrato en `repository.spec.ts`
+- **THEN** confirma colección vacía, `save/list`, actualización sin duplicados, eliminación idempotente y snapshots de colección independientes.
+- **AND** `tokens.spec.ts` verifica que Angular resuelve cada repositorio con su propio token.
 
 ### Requirement: APP-05 Persistencia con debounce
 
@@ -151,7 +166,7 @@ La página `tasks` MUST exponer un botón que genera 5.000 tareas pendientes en 
 
 ### Requirement: APP-13 README con respuestas del PDF y guía nativa
 
-`README.md` MUST responder a las 3 preguntas del PDF: retos encontrados, optimizaciones de rendimiento aplicadas, y decisiones de calidad/mantenibilidad. MUST incluir una sección de build nativo para APK e IPA con los comandos exactos, documentando la ausencia de firma.
+`README.md` MUST responder a las 3 preguntas del PDF: retos encontrados, optimizaciones de rendimiento aplicadas, y decisiones de calidad/mantenibilidad. MUST incluir una sección de build nativo para APK firmado e IPA con los comandos exactos y la configuración de firma sin secretos versionados. La entrega MUST producir ambos artefactos; la documentación no sustituye su generación.
 
 #### Scenario: APP-13-A README verificable
 

@@ -1,71 +1,56 @@
-import { Category } from './category';
-import {
-  CATEGORY_REPOSITORY,
-  CategoryRepository,
-  TaskRepository,
-  TASK_REPOSITORY,
-} from './repository';
-import { Task } from './task';
+import { Storage } from '@ionic/storage-angular';
+import { CATEGORY_KIND, type Category } from './category';
+import { TASK_STATUS, type Task } from './task';
+import type { TaskRepository } from './repository';
+import { taskFixture } from '../testing/task.fixture';
+import { repositoryContract } from '../testing/repository.contract';
+import { InMemoryRepository } from '../data/repositories/in-memory-repository';
+import { IonicStorageTaskRepository } from '../data/repositories/ionic-storage-task-repository';
 
-function makeTaskRepository(): TaskRepository & {
-  state: Map<string, Task>;
-} {
-  const state = new Map<string, Task>();
-  return {
-    state,
-    async list() {
-      return [...state.values()];
-    },
-    async save(task) {
-      state.set(task.id, task);
-    },
-    async remove(id) {
-      state.delete(id);
-    },
-  };
+async function storageTaskRepository(): Promise<TaskRepository> {
+  const storage = new Storage();
+  jest.spyOn(storage, 'create').mockResolvedValue(storage);
+  jest.spyOn(storage, 'get').mockResolvedValue(null);
+  jest.spyOn(storage, 'set').mockResolvedValue(undefined);
+  const repository = new IonicStorageTaskRepository();
+  await repository.init(storage);
+  return repository;
 }
 
-function makeCategoryRepository(): CategoryRepository & {
-  state: Map<string, Category>;
-} {
-  const state = new Map<string, Category>();
-  return {
-    state,
-    async list() {
-      return [...state.values()];
-    },
-    async save(category) {
-      state.set(category.id, category);
-    },
-    async remove(id) {
-      state.delete(id);
-    },
+describe('APP-04 Repository contracts', () => {
+  afterEach(() => jest.restoreAllMocks());
+
+  const first = taskFixture({ id: 'first' });
+  const second = taskFixture({ id: 'second', status: TASK_STATUS.COMPLETED });
+  const updatedFirst = { ...first, title: 'Updated' };
+
+  repositoryContract<Task>({
+    name: 'InMemory task repository',
+    createRepository: async () => new InMemoryRepository<Task>(),
+    first,
+    second,
+    updatedFirst,
+  });
+  repositoryContract<Task>({
+    name: 'Ionic Storage task repository with mocked storage',
+    createRepository: storageTaskRepository,
+    first,
+    second,
+    updatedFirst,
+  });
+
+  const category: Category = {
+    id: 'daily',
+    name: 'Daily',
+    kind: CATEGORY_KIND.DAILY,
+    icon: 'list',
+    colorToken: 'todo',
   };
-}
-
-describe('Repository tokens', () => {
-  it('expose distinct tokens for tasks and categories', () => {
-    expect(TASK_REPOSITORY).toBeDefined();
-    expect(CATEGORY_REPOSITORY).toBeDefined();
-    expect(TASK_REPOSITORY.toString()).not.toBe(CATEGORY_REPOSITORY.toString());
-  });
-});
-
-describe('Repository contract', () => {
-  it('persists tasks in insertion order, then removes them', async () => {
-    const repo = makeTaskRepository();
-    await repo.save({ id: 'a', title: 'A', status: 'pending' });
-    await repo.save({ id: 'b', title: 'B', status: 'completed' });
-    const list = await repo.list();
-    expect(list.map((task) => task.id)).toEqual(['a', 'b']);
-    await repo.remove('a');
-    expect((await repo.list()).map((task) => task.id)).toEqual(['b']);
-  });
-
-  it('persists categories and removes them', async () => {
-    const repo = makeCategoryRepository();
-    await repo.save({ id: 'c-1', name: 'Errands', kind: 'daily' });
-    await repo.remove('c-1');
-    expect(await repo.list()).toEqual([]);
+  repositoryContract<Category>({
+    name: 'InMemory category repository',
+    createRepository: async () => new InMemoryRepository<Category>(),
+    first: category,
+    second: { ...category, id: 'shopping', kind: CATEGORY_KIND.SHOPPING },
+    updatedFirst: { ...category, name: 'Renamed' },
   });
 });

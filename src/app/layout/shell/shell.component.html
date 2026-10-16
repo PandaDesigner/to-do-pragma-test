@@ -1,0 +1,27 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom" aria-label="Secciones">
+    <ion-tab-button tab="tasks" [href]="links.TASKS" class="tasks-tab"
+      ><ion-label>Todas</ion-label></ion-tab-button
+    >
+    @if (flags.categoriesEnabled()) {
+      <ion-tab-button tab="my" [href]="links.CATEGORIES" class="categories-tab"
+        ><ion-label>Mis listas</ion-label></ion-tab-button
+      >
+    }
+  </ion-tab-bar>
+</ion-tabs>
+<aside class="remote-status" aria-label="Configuración remota">
+  <small>enable_categories: {{ flags.categoriesEnabled() }}</small>
+  @if (flags.error() || feedback.error()) {
+    <div class="remote-error" role="status">
+      <p>{{ flags.error() || feedback.error() }}</p>
+      <button
+        type="button"
+        (click)="flags.initialize()"
+        [disabled]="flags.loading()"
+      >
+        Reintentar configuración
+      </button>
+    </div>
+  }
+</aside>
