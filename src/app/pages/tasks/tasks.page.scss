@@ -1,4 +1,7 @@
 main.notebook-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding-top: var(--app-content-day-top);
 }
 
@@ -107,31 +110,75 @@ main.notebook-page {
   min-height: 0;
   flex: 1;
 }
-.virtualized {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.debug-panel {
-  flex-shrink: 0;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-summary {
-  min-height: 44px;
-  padding-top: 12px;
-  cursor: pointer;
-}
 
 .task-list {
-  padding-bottom: 32px;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.pager {
+  position: fixed;
+  inset: auto 0 0;
+  display: flex;
+  justify-content: center;
+  gap: var(--app-space-4);
+  padding: var(--app-space-12) var(--app-space-8);
+  background: var(--app-surface);
+  z-index: 1;
+}
+
+.pager__btn {
+  flex: none;
+  min-width: var(--app-touch-target);
+  min-height: var(--app-touch-target);
+  padding: 0 var(--app-space-8);
+  border: 0;
+  background: transparent;
+  color: var(--app-text);
+  border-radius: var(--app-radius-input);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &--active {
+    background: var(--app-primary);
+    color: var(--app-on-primary);
+  }
+}
+
+.pager__ellipsis {
+  padding: 0 var(--app-space-4);
+  color: var(--app-text-muted);
+}
+
+ion-fab.fab-new-task {
+  position: fixed;
+  right: 50px;
+  bottom: calc(
+    var(--app-pager-height) + var(--app-space-16) +
+      env(safe-area-inset-bottom, 0px)
+  );
+  width: var(--app-fab-size);
+  height: var(--app-fab-size);
+  --background: var(--app-primary);
+  --color: var(--app-on-primary);
+  --box-shadow: var(--app-shadow-fab);
+
+  ion-icon {
+    color: var(--app-on-primary);
+    fill: var(--app-on-primary);
+  }
 }
 
 .chips {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--app-space-8);
-  overflow-x: auto;
 }
 
 .today-badge {
@@ -165,24 +212,21 @@ summary {
   color: var(--app-text);
 }
 
-ion-fab {
-  position: absolute;
-  left: calc(320px - var(--app-rail-width));
-  bottom: 50px;
-  width: 68px;
-  height: 68px;
-}
-
-ion-fab-button {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+ion-fab.fab-new-task {
+  // slot="fixed" handles viewport positioning.
   --background: var(--app-primary);
   --color: var(--app-on-primary);
   --box-shadow: var(--app-shadow-fab);
+
+  ion-fab-button {
+    width: var(--app-fab-size);
+    height: var(--app-fab-size);
+  }
+
   ion-icon {
-    width: 64px;
-    height: 64px;
-    font-size: 64px;
+    width: calc(var(--app-fab-size) - var(--app-space-16));
+    height: calc(var(--app-fab-size) - var(--app-space-16));
+    color: var(--app-on-primary);
+    fill: var(--app-on-primary);
   }
 }

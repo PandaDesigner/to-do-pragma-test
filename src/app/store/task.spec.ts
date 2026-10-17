@@ -269,4 +269,40 @@ describe('TaskStore', () => {
     expect(store.tasks()).toEqual([]);
     expect(await repository.list()).toEqual([]);
   });
+
+  it('TSK-17.3 setCategory/setStatuses/setSection reset pageCount to 1', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 60 }, (_, index) => ({
+      ...future,
+      id: `c-${index}`,
+    }));
+    await store.upsertMany(many);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    expect(store.pageCount()).toBe(2);
+    store.setCategory('work');
+    expect(store.pageCount()).toBe(1);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    store.setStatuses([TASK_STATUS.OVERDUE]);
+    expect(store.pageCount()).toBe(1);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    store.setSection('routine');
+    expect(store.pageCount()).toBe(1);
+  });
+
+  it('TSK-17.4 removing the last task on the last page steps back one page', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 21 }, (_, index) => ({
+      ...future,
+      id: `t-${index}`,
+    }));
+    await store.upsertMany(many);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    expect(store.visibleTasks().length).toBe(1);
+    expect(store.visibleTasks()[0].id).toBe('t-20');
+    const lastId = store.visibleTasks()[0].id;
+    await store.remove(lastId);
+    expect(store.pageCount()).toBe(1);
+    expect(store.tasks()).toHaveLength(20);
+    expect(store.hasMoreTasks()).toBe(false);
+  });
 });

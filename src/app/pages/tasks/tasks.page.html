@@ -1,5 +1,5 @@
-<ion-content [scrollY]="!shouldVirtualize()">
-  <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
+<ion-content [fullscreen]="false">
+  <main class="notebook-page">
     <div class="top-actions">
       <span class="today-badge">{{ 'todo.today' | translate }}</span>
     </div>
@@ -60,22 +60,7 @@
         Reintentar
       </button>
     </div>
-    } @if (shouldVirtualize()) {
-    <cdk-virtual-scroll-viewport
-      [itemSize]="65"
-      class="task-viewport"
-      aria-label="Tareas"
-    >
-      <ng-container
-        *cdkVirtualFor="let task of store.visibleTasks(); trackBy: trackById"
-      >
-        <ng-container
-          [ngTemplateOutlet]="taskRow"
-          [ngTemplateOutletContext]="{ $implicit: task }"
-        />
-      </ng-container>
-    </cdk-virtual-scroll-viewport>
-    } @else {
+    }
     <section
       aria-label="Tareas"
       class="task-list"
@@ -96,22 +81,8 @@
         [illustrated]="true"
         (action)="openSheet()"
       />
-      } @if (store.hasMoreTasks()) {
-      <button type="button" class="link load-more" (click)="loadMore()">
-        Cargar más
-      </button>
       }
     </section>
-    }
-    <app-new-task-input
-      [label]="'todo.quickAdd' | translate"
-      (submitted)="addQuickTask($event)"
-    />
-    <ion-fab vertical="bottom" horizontal="end">
-      <ion-fab-button (click)="openSheet()" aria-label="Nueva tarea">
-        +
-      </ion-fab-button>
-    </ion-fab>
     <ng-template #taskRow let-task>
       <app-task-item
         [task]="task"
@@ -129,6 +100,51 @@
     </ng-template>
   </main>
 </ion-content>
+
+@if (totalPages() > 1) {
+<nav class="pager" [attr.aria-label]="'tasks.pager.label' | translate">
+  <button
+    type="button"
+    class="pager__btn"
+    [disabled]="currentPage() === 1"
+    (click)="goToPage(currentPage() - 1)"
+    [attr.aria-label]="'tasks.pager.prev' | translate"
+  >
+    ‹
+  </button>
+  @for (item of pageNumbers(); track item) { @if (item === 'ellipsis') {
+  <span class="pager__ellipsis" aria-hidden="true">…</span>
+  } @else {
+  <button
+    type="button"
+    class="pager__btn"
+    [class.pager__btn--active]="item === currentPage()"
+    (click)="goToPage(item)"
+    [attr.aria-current]="item === currentPage() ? 'page' : null"
+  >
+    {{ item }}
+  </button>
+  } }
+  <button
+    type="button"
+    class="pager__btn"
+    [disabled]="currentPage() === totalPages()"
+    (click)="goToPage(currentPage() + 1)"
+    [attr.aria-label]="'tasks.pager.next' | translate"
+  >
+    ›
+  </button>
+</nav>
+}
+
+<ion-fab class="fab-new-task" vertical="bottom" horizontal="end">
+  <ion-fab-button
+    (click)="openSheet()"
+    [attr.aria-label]="'tasks.fab.new' | translate"
+  >
+    <ion-icon name="add" aria-hidden="true"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 <ion-modal
   [isOpen]="sheetOpen()"
   (didDismiss)="closeSheet()"

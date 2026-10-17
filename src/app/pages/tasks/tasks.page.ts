@@ -7,18 +7,18 @@ import {
   signal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonIcon,
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -37,13 +37,11 @@ import { TaskItemComponent } from '../../shared/components/task-item/task-item.c
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ChipComponent } from '../../shared/components/chip/chip.component';
-import { NewTaskInputComponent } from '../../shared/components/new-task-input/new-task-input.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
 import { taskBelongsToSection } from './section-helpers';
-
-const VIRTUAL_SCROLL_THRESHOLD = 200;
+import { pageCount } from '../../domain/pagination';
 
 const DURATION_PRESETS = [15, 30, 45, 60, 75, 90, 105, 120] as const;
 const VIEW_STATUSES = [
@@ -69,15 +67,14 @@ export const PENDING_PANEL = {
     IonModal,
     IonFab,
     IonFabButton,
+    IonIcon,
     ReactiveFormsModule,
-    ScrollingModule,
     NgTemplateOutlet,
     TranslatePipe,
     TaskItemComponent,
     PageHeaderComponent,
     EmptyStateComponent,
     ChipComponent,
-    NewTaskInputComponent,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -166,8 +163,12 @@ export class TasksPage implements OnInit {
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
-  readonly shouldVirtualize = computed(
-    () => this.store.visibleTasks().length >= VIRTUAL_SCROLL_THRESHOLD,
+  readonly totalPages = computed(() =>
+    pageCount(this.store.tasks().length, this.store.pageSize()),
+  );
+  readonly currentPage = computed(() => this.store.pageCount());
+  readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
+    buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
 
@@ -194,25 +195,6 @@ export class TasksPage implements OnInit {
   closeSheet(): void {
     this.sheetOpen.set(false);
     this.cancelEdit();
-  }
-
-  async addQuickTask(title: string): Promise<void> {
-    if (this.store.busy() || !this.canCreate()) {
-      return;
-    }
-    const now = this.clock.now();
-    const categoryId = this.firstAvailableCategoryId();
-    await this.feedback.run(() =>
-      this.store.upsert({
-        id: this.createId(),
-        title,
-        status: TASK_STATUS.PENDING,
-        categoryId,
-        dueDate: this.clock.today(),
-        createdAt: now,
-        updatedAt: now,
-      }),
-    );
   }
 
   async rescheduleEarlier(): Promise<void> {
@@ -332,10 +314,16 @@ export class TasksPage implements OnInit {
     await this.feedback.run(() => this.store.retry());
   }
 
-  async loadMore(): Promise<void> {
-    await this.feedback.run(async () => {
-      this.store.loadMore();
-    });
+  goToPage(page: number): void {
+    this.store.setPage(page);
+    queueMicrotask(() => this.scrollListToTop());
+  }
+
+  scrollListToTop(): void {
+    const list = document.querySelector<HTMLElement>('app-tasks .task-list');
+    if (list) {
+      list.scrollTop = 0;
+    }
   }
 
   private firstAvailableCategoryId(): string | null {
@@ -384,4 +372,30 @@ export class TasksPage implements OnInit {
     }
     await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
+}
+
+function buildPagerNumbers(
+  current: number,
+  total: number,
+): readonly (number | 'ellipsis')[] {
+  if (total <= 1) {
+    return [];
+  }
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  // Ventana hacia adelante: hasta 3 numeros empezando en `current`, luego
+  // ellipsis + last si hay huecos entre el segmento y total.
+  const safeCurrent = Math.min(Math.max(1, current), total);
+  const range: (number | 'ellipsis')[] = [safeCurrent];
+  if (safeCurrent + 1 <= total) {
+    range.push(safeCurrent + 1);
+  }
+  if (safeCurrent + 2 <= total && safeCurrent + 2 !== total) {
+    range.push(safeCurrent + 2);
+  }
+  if ((range[range.length - 1] as number) < total) {
+    range.push('ellipsis', total);
+  }
+  return range;
 }

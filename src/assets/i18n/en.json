@@ -29,5 +29,15 @@
     "emptyHint": "Tap + or write in the field below to add your first task.",
     "emptyAction": "Add a task",
     "quickAdd": "Add task"
+  },
+  "tasks": {
+    "fab": {
+      "new": "New task"
+    },
+    "pager": {
+      "label": "Task pagination",
+      "prev": "Previous page",
+      "next": "Next page"
+    }
   }
 }

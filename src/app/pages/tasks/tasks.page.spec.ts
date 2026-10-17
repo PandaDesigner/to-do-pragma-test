@@ -152,7 +152,7 @@ describe('TasksPage', () => {
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
   });
 
-  it('adds 5,000 debug tasks to five existing ones and activates bounded virtual rendering', async () => {
+  it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {
     const log = jest.spyOn(console, 'info').mockImplementation(() => undefined);
     const { page, tasks, fixture } = await setup();
     await tasks.upsertMany(
@@ -166,26 +166,25 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     expect(tasks.tasks()).toHaveLength(5005);
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
-    expect(tasks.visibleTasks()).toHaveLength(8);
-    while (tasks.visibleTasks().length < tasks.tasks().length) {
-      tasks.loadMore();
-    }
+    expect(tasks.visibleTasks()).toHaveLength(20);
+    expect(page.totalPages()).toBe(251);
+    page.goToPage(251);
+    expect(page.currentPage()).toBe(251);
+    expect(tasks.visibleTasks().length).toBe(5);
+    expect(tasks.hasMoreTasks()).toBe(false);
     fixture.detectChanges();
-    expect(tasks.visibleTasks()).toHaveLength(5005);
-    expect(page.shouldVirtualize()).toBe(true);
     expect(
       fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
-    ).not.toBeNull();
-    expect(
-      fixture.nativeElement.querySelectorAll('app-task-item').length,
-    ).toBeLessThan(200);
+    ).toBeNull();
+    expect(fixture.nativeElement.querySelector('.task-list')).not.toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-item').length).toBe(
+      5,
+    );
+    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',
       args: [],
     });
-    expect(
-      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
-    ).toBeNull();
     log.mockRestore();
   });
 
@@ -365,20 +364,16 @@ describe('TasksPage', () => {
     expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
   });
 
-  it('[TODO-06.1] creates a task for today from the quick input', async () => {
-    const { fixture, tasks } = await setup();
-    const input: HTMLInputElement = fixture.nativeElement.querySelector(
-      'app-new-task-input input',
-    );
-    input.value = 'Clean my flat';
-    input.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
+  it('[TODO-06.1] creates a task for today from the new-task sheet opened via the FAB', async () => {
+    const { fixture, page, tasks } = await setup();
     (
-      fixture.nativeElement.querySelector(
-        'app-new-task-input button',
-      ) as HTMLButtonElement
+      fixture.nativeElement.querySelector('ion-fab-button') as HTMLButtonElement
     ).click();
-    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(page.sheetOpen()).toBe(true);
+    page.form.patchValue({ title: 'Clean my flat' });
+    await page.saveTask();
+    fixture.detectChanges();
     expect(tasks.tasks()[0]).toMatchObject({
       title: 'Clean my flat',
       dueDate: '2026-01-02',
