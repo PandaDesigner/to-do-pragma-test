@@ -114,6 +114,7 @@
         [actions]="store.actionsFor(task)"
         [categoryName]="categoryNames().get(task.categoryId)"
         [categoryIcon]="categoryIcons().get(task.categoryId)"
+        [categoryColorToken]="categoryColors().get(task.categoryId)"
         [showCategories]="flags.categoriesEnabled()"
         [disabled]="store.busy()"
         (taskToggle)="toggleTask($event)"

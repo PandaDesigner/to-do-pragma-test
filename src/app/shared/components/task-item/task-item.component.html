@@ -5,6 +5,7 @@
       [checked]="task().status === 'completed'"
       [disabled]="disabled() || !canToggle()"
       [attr.aria-label]="'Completar o reabrir ' + task().title"
+      [style.--app-category-tint]="resolvedCategoryColor()"
       (change)="taskToggle.emit(task().id)"
     />
   </label>
@@ -13,7 +14,11 @@
     <div class="task-meta">
       <span class="task-due" [attr.title]="task().dueDate">{{ task().dueDate }}</span>
       @if (showCategories() && categoryName()) {
-        <span class="category-chip" [attr.title]="categoryName()">
+        <span
+          class="category-chip"
+          [style.--app-category-tint]="resolvedCategoryColor()"
+          [attr.title]="categoryName()"
+        >
           @if (resolvedCategoryIcon(); as icon) {
             <ion-icon class="category-chip__icon" [icon]="icon" aria-hidden="true"></ion-icon>
           }
