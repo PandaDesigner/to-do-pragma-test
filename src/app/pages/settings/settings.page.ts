@@ -88,6 +88,10 @@ export class SettingsPage {
   async generateFiveThousand(): Promise<void> {
     await this.feedback.run(() => this.seed.generateFiveThousand());
   }
+
+  async removeAllTasks(): Promise<void> {
+    await this.feedback.run(() => this.seed.removeAllTasks());
+  }
 }
 
 function readToggleChecked(event: Event): boolean {

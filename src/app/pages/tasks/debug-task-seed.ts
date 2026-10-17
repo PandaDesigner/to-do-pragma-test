@@ -22,6 +22,14 @@ export class DebugTaskSeed {
     await this.store.upsertMany(this.createDebugTasks());
   }
 
+  @LogAction
+  async removeAllTasks(): Promise<void> {
+    if (this.store.busy()) {
+      return;
+    }
+    await this.store.removeAll();
+  }
+
   private createDebugTasks(): Task[] {
     const now = this.clock.now();
     const dueDate = this.clock.today();

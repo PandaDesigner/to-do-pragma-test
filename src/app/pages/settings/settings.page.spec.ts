@@ -45,6 +45,7 @@ describe('SettingsPage', () => {
           provide: DebugTaskSeed,
           useValue: {
             generateFiveThousand: jest.fn().mockResolvedValue(undefined),
+            removeAllTasks: jest.fn().mockResolvedValue(undefined),
           },
         },
         {
@@ -101,10 +102,13 @@ describe('SettingsPage', () => {
     expect(preferences.setTheme).toHaveBeenCalledWith(THEME_PREFERENCE.DARK);
   });
 
-  it('[SET-02.1] shows the debug button on settings', () => {
+  it('[SET-02.1] shows the debug buttons on settings', () => {
     const { fixture } = setup();
     expect(
       fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
     ).not.toBeNull();
   });
 
@@ -112,6 +116,9 @@ describe('SettingsPage', () => {
     const { fixture } = setup({ debugActionsEnabled: false });
     expect(
       fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
     ).toBeNull();
     expect(fixture.nativeElement.querySelector('.debug')).toBeNull();
   });

@@ -43,6 +43,14 @@
       >
         {{ 'settings.debugAction' | translate }}
       </button>
+      <button
+        type="button"
+        class="danger"
+        data-testid="delete-tasks"
+        (click)="removeAllTasks()"
+      >
+        {{ 'settings.debugDelete' | translate }}
+      </button>
     </section>
     }
   </main>
