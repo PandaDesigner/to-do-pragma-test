@@ -71,14 +71,26 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/input\s*\{[^}]*padding:\s*0;/);
   });
 
-  it('[TODO-02.1] compensates absolute panel and FAB coordinates for the rail conforme a Figma 4:440', () => {
+  it('[TSK-16.1] anchors the FAB at right of the notebook column, never with left', () => {
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
-    expect(styles).toMatch(/left:\s*calc\(320px - var\(--app-rail-width\)\);/);
+    expect(styles).toMatch(/right:\s*50px;/);
+    expect(styles).not.toMatch(/ion-fab\.fab-new-task\s*\{[^}]*left:\s*\d/);
     expect(styles).toMatch(
-      /margin-left:\s*calc\(0px - var\(--app-rail-width\)\);/,
+      /bottom:\s*calc\(\s*var\(--app-pager-height\) \+\s*var\(--app-space-16\)\s*\+\s*env\(safe-area-inset-bottom/,
     );
-    expect(styles).toMatch(/ion-fab-button\s*\{[^}]*width:\s*100%;/);
-    expect(styles).toMatch(/ion-fab-button\s*\{[^}]*height:\s*100%;/);
+    expect(styles).toMatch(/width:\s*var\(--app-fab-size\);/);
+    expect(styles).toMatch(/height:\s*var\(--app-fab-size\);/);
+  });
+
+  it('[TSK-18.1] only .task-list scrolls: header and pager stay put', () => {
+    const styles = readAppStyles('pages/tasks/tasks.page.scss');
+    expect(styles).toMatch(/main\.notebook-page\s*\{[^}]*display:\s*flex;/);
+    expect(styles).toMatch(/\.task-list\s*\{[^}]*flex:\s*1\s*1\s*auto;/);
+    expect(styles).toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
+    expect(styles).toMatch(/\.pager\s*\{[^}]*position:\s*sticky;/);
+    expect(styles).toMatch(
+      /\.pager\s*\{[^}]*background:\s*var\(--app-surface\);/,
+    );
   });
 
   it('[TODO-04.1] uses the on-primary text token for the selected category conforme a Figma 4:973', () => {

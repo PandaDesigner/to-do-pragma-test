@@ -29,5 +29,15 @@
     "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
     "emptyAction": "Añadir tarea",
     "quickAdd": "Añadir tarea"
+  },
+  "tasks": {
+    "fab": {
+      "new": "Nueva tarea"
+    },
+    "pager": {
+      "label": "Paginación de tareas",
+      "prev": "Página anterior",
+      "next": "Página siguiente"
+    }
   }
 }

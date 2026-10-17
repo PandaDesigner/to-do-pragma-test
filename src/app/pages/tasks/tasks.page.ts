@@ -7,18 +7,18 @@ import {
   signal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonIcon,
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -42,8 +42,7 @@ import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
 import { taskBelongsToSection } from './section-helpers';
-
-const VIRTUAL_SCROLL_THRESHOLD = 200;
+import { pageCount } from '../../domain/pagination';
 
 const DURATION_PRESETS = [15, 30, 45, 60, 75, 90, 105, 120] as const;
 const VIEW_STATUSES = [
@@ -69,8 +68,8 @@ export const PENDING_PANEL = {
     IonModal,
     IonFab,
     IonFabButton,
+    IonIcon,
     ReactiveFormsModule,
-    ScrollingModule,
     NgTemplateOutlet,
     TranslatePipe,
     TaskItemComponent,
@@ -166,8 +165,12 @@ export class TasksPage implements OnInit {
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
-  readonly shouldVirtualize = computed(
-    () => this.store.visibleTasks().length >= VIRTUAL_SCROLL_THRESHOLD,
+  readonly totalPages = computed(() =>
+    pageCount(this.store.tasks().length, this.store.pageSize()),
+  );
+  readonly currentPage = computed(() => this.store.pageCount());
+  readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
+    buildPagerNumbers(this.currentPage(), this.totalPages(), 2),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
 
@@ -332,10 +335,16 @@ export class TasksPage implements OnInit {
     await this.feedback.run(() => this.store.retry());
   }
 
-  async loadMore(): Promise<void> {
-    await this.feedback.run(async () => {
-      this.store.loadMore();
-    });
+  goToPage(page: number): void {
+    this.store.setPage(page);
+    queueMicrotask(() => this.scrollListToTop());
+  }
+
+  scrollListToTop(): void {
+    const list = document.querySelector<HTMLElement>('app-tasks .task-list');
+    if (list) {
+      list.scrollTop = 0;
+    }
   }
 
   private firstAvailableCategoryId(): string | null {
@@ -384,4 +393,28 @@ export class TasksPage implements OnInit {
     }
     await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
+}
+
+function buildPagerNumbers(
+  current: number,
+  total: number,
+  window: number,
+): readonly (number | 'ellipsis')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  const range: (number | 'ellipsis')[] = [1];
+  const start = Math.max(2, current - window);
+  const end = Math.min(total - 1, current + window);
+  if (start > 2) {
+    range.push('ellipsis');
+  }
+  for (let page = start; page <= end; page++) {
+    range.push(page);
+  }
+  if (end < total - 1) {
+    range.push('ellipsis');
+  }
+  range.push(total);
+  return range;
 }
