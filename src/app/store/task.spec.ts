@@ -114,4 +114,28 @@ describe('TaskStore', () => {
     await store.clearCategory('missing');
     expect(store.tasks()).toHaveLength(2);
   });
+
+  it('runs an end-to-end create, complete, filter-by-category and clear-filter flow', async () => {
+    const { store } = setup();
+    await store.upsertMany([
+      { ...future, id: 'work-task', categoryId: 'work', dueDate: '2026-01-10' },
+      { ...future, id: 'home-task', categoryId: 'home', dueDate: '2026-01-04' },
+    ]);
+    expect(store.tasks()).toHaveLength(2);
+
+    await store.dispatch('work-task', TASK_EVENT.COMPLETE);
+    expect(store.tasks().find((task) => task.id === 'work-task')?.status).toBe(
+      TASK_STATUS.COMPLETED,
+    );
+
+    store.setStatuses([TASK_STATUS.COMPLETED]);
+    store.setCategory('work');
+    expect(store.visibleTasks().map((task) => task.id)).toEqual(['work-task']);
+
+    store.setCategory('home');
+    expect(store.visibleTasks().map((task) => task.id)).toEqual([]);
+
+    store.setCategory(undefined);
+    expect(store.visibleTasks().map((task) => task.id)).toEqual(['work-task']);
+  });
 });

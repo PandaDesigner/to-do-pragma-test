@@ -24,4 +24,18 @@ describe('APP-01 Task model', () => {
       updatedAt: 1,
     });
   });
+
+  it('keeps ids unique across a list of tasks', () => {
+    const ids = new Set([
+      taskFixture({ id: 'a' }).id,
+      taskFixture({ id: 'b' }).id,
+      taskFixture({ id: 'c' }).id,
+    ]);
+    expect(ids.size).toBe(3);
+  });
+
+  it('defaults categoryId to null when not provided', () => {
+    const fixture = taskFixture({ categoryId: undefined as unknown as null });
+    expect(fixture.categoryId).toBeUndefined();
+  });
 });
