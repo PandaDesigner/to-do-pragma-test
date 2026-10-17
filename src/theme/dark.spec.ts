@@ -17,7 +17,7 @@ function compileTheme(): { css: string } {
 describe('UI-22 Paleta oscura verificable', () => {
   const css = compileTheme().css;
 
-  it('exposes the Figma 4:1560 dark palette under prefers-color-scheme: dark', () => {
+  it('[UI-22.2] exposes the Figma 4:1560 dark palette under prefers-color-scheme: dark', () => {
     expect(css).toMatch(/@media\s*\(prefers-color-scheme:\s*dark\)/);
     expect(css).toMatch(/--app-primary:\s*#8b7fc0/);
     expect(css).toMatch(/--app-primary-dark:\s*#edeaf5/);

@@ -26,7 +26,7 @@ describe('UI-22 theme preference', () => {
     expect(root.classList.contains(LIGHT_PALETTE_CLASS)).toBe(true);
   });
 
-  it('rejects an unknown stored preference', () => {
+  it('[UI-22.3] rejects an unknown stored preference', () => {
     expect(() => parseThemePreference('sepia')).toThrow(
       'Preferencia de tema desconocida: sepia',
     );
