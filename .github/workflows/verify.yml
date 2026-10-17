@@ -21,6 +21,7 @@ jobs:
       - run: npm run lint:styles
       - run: npm run format:check
       - run: npm run typecheck
+      - run: npm run trace:check
       - run: npm run build -- --configuration production
 
   android:

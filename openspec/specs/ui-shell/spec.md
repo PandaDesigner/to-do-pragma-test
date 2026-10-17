@@ -1,7 +1,7 @@
 # ui-shell Specification
 
 ## Purpose
-TBD - created by archiving change theme-foundation. Update Purpose after archive.
+Sistema visual centralizado de Todo Notebook: tokens de Figma, tipografía, modo claro y oscuro, y estilos compartidos del cuaderno. No incluye las pantallas funcionales ni sus componentes.
 ## Requirements
 ### Requirement: UI-20 Tokens trazables y centralizados
 

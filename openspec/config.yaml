@@ -1,9 +1,9 @@
 schema: spec-driven
 
 context: |
-  Proyecto: Todo Notebook; actualmente solo documentación, sin app ni tests ejecutables.
-  Fuentes: docs/PROMPT.md, docs/design.json, docs/design.md y docs/mocks/; PDF original no localizado.
-  Stack requerido, aún no instalado: Ionic 8, Angular 18+ standalone, TypeScript strict, Cordova; no Capacitor.
+  Proyecto: Todo Notebook; la app, las pruebas y el tema ya existen en develop.
+  Fuentes: docs/prueba-tecnica.pdf, docs/PROMPT.md, docs/design.json, docs/design.md y docs/mocks/.
+  Stack instalado: Ionic 8, Angular 22 standalone, TypeScript strict, Cordova y Jest; no Capacitor.
   Arquitectura: pages → store → domain ← data; core/di conecta implementaciones; shared solo input/output; SignalStore.
   Persistencia: Ionic Storage, SQLite nativo → IndexedDB → LocalStorage; Firebase Remote Config enable_categories.
   Calidad: SDD y TDD obligatorio RED-GREEN-REFACTOR; ESLint y Prettier; runner Jest aprobado.
@@ -14,7 +14,7 @@ context: |
   Gitflow aprobado: main, develop, feature/*, release/*, hotfix/*; Conventional Commits; PR funcional hacia develop.
   Destino público creado: PandaDesigner/to-do-pragma-test; conectar Git local mediante origin HTTPS.
   PR init incluye scaffolding Ionic con CLI, Cordova y preparación de pruebas; no incluye funcionalidades de la app base.
-  Las instrucciones del usuario sustituyen rama única y tests al final de PROMPT.md; esperar confirmación entre fases.
+  Las instrucciones vigentes están en AGENTS.md. El avance entre fases es autónomo cuando se cumplen sus reglas y paradas.
 
 rules:
   proposal:
@@ -23,20 +23,28 @@ rules:
     - Mantener un cambio OpenSpec por PR de implementación; excepciones y PR de release deben referenciar sus cambios.
     - Empezar por init; separar app base, UI, categorías, patrones, Firebase, rendimiento y builds/documentación según dependencias.
     - No crear ni publicar recursos fuera del repositorio público autorizado; nunca publicar credenciales.
+    - Si el cambio toca UI, declararlo en Impact, citar los nodos de Figma y seguir docs/workflow-mcp.md.
+    - Indicar o crear la fila Notion del cambio según docs/workflow-mcp.md.
   specs:
     - Escribir requisitos verificables con MUST/SHALL/SHOULD y escenarios Given/When/Then.
     - Asignar identificadores estables para relacionar requisitos, escenarios, tests y descripción del PR.
     - No crear specs vacías; conservar specs activas en changes hasta verificarlas y sincronizarlas mediante archivo.
     - Incluir éxito y errores relevantes; distinguir scaffolding de app base funcional y de entrega firmada.
+    - Cada requisito UI cita su nodo y cada escenario UI dice que es conforme a ese nodo de Figma.
   design:
     - Reutilizar las capas y convenciones Ionic de docs/PROMPT.md; generar artefactos mediante CLI.
     - Verificar compatibilidad de versiones antes de instalar; no dar por instaladas las tecnologías requeridas.
     - Resolver explícitamente el runner de pruebas y las decisiones arquitectónicas abiertas antes de implementar.
     - Documentar riesgos y reversión para cambios de persistencia, configuración o dependencias; diagramar flujos complejos.
+    - En cambios UI, consultar Figma antes de escribir design.md e incluir Fuente Figma y el mapeo hacia src/theme.
+    - Si Figma y docs/design.json discrepan, prevalece Figma y se actualiza design.json en el mismo cambio.
   tasks:
-    - Agrupar por fases con numeración jerárquica y tareas pequeñas; pedir confirmación antes de avanzar de fase.
+    - Agrupar por fases con numeración jerárquica y tareas pequeñas. Avanzar sin confirmación intermedia salvo una parada de AGENTS.md.
     - Para cada comportamiento escribir primero un test, ejecutarlo y comprobar fallo por el comportamiento ausente (RED).
     - Implementar lo mínimo para pasar (GREEN), refactorizar y repetir pruebas; registrar comandos y resultados reales en verificación.
     - No posponer tests a la fase final; scaffolding generado se valida con pruebas de configuración y arranque, sin alegar TDD retroactivo.
     - Antes del PR ejecutar tests, lint, formato, tipos y build aplicables; registrar bloqueos, sin declarar verificaciones no ejecutadas.
-    - Incluir en el PR cambio OpenSpec, requisitos, escenarios, tests y evidencia; no archivar ni fusionar cambios incompletos.
+    - Incluir en el PR cambio OpenSpec, requisitos, escenarios, tests, evidencia y sección Reutilización.
+    - Cambios UI incluyen capturas de 375x812 en light y dark, enlazadas en verify-report.md.
+    - Todo cambio actualiza su fila Notion al iniciar, abrir PR, terminar, bloquearse o crearla si falta.
+    - No archivar ni fusionar cambios incompletos; el archivo ocurre después del merge en su PR separado.
