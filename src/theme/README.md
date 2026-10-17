@@ -42,6 +42,30 @@ Las variables `--app-*` siguen el mapeo definido en `openspec/changes/theme-foun
 
 Las espaciados, radios, strokes y tamaños tipográficos siguen la tabla de design.md. Los `var(--app-space-*)`, `var(--app-radius-*)`, `var(--app-font-size-*)` y `var(--app-stroke-*)` se generan desde `_tokens.scss`.
 
+## Tabla de tokens técnicos heredados
+
+Tokens que viven en el SCSS pero no son Figma. Mantienen el comportamiento actual; serán auditados o migrados en C1/C2.
+
+| Token                      | Valor     | Origen        | Uso                  |
+| -------------------------- | --------- | ------------- | -------------------- |
+| `$color-primary`           | #4b3f6b   | notebook.scss | primary brand        |
+| `$color-primary-dark`      | #3a2e5c   | notebook.scss | primary shade        |
+| `$color-accent-link`       | #3aa8e0   | notebook.scss | links                |
+| `$color-danger`            | #c5000f   | Ionic palette | destructive state    |
+| `$color-scrim`             | #00000066 | notebook.scss | backdrop scrim       |
+| `$shadow-card-color`       | #2e254714 | notebook.scss | card shadow          |
+| `$shadow-fab-color`        | #4b3f6b59 | notebook.scss | fab shadow           |
+| `$tab-todo`                | #b8cfa8   | notebook.scss | category color       |
+| `$tab-filler`              | #4b3f6b   | notebook.scss | category filler      |
+| `$space-4`                 | 4px       | notebook.scss | spacing scale        |
+| `$space-32`                | 32px      | notebook.scss | spacing scale        |
+| `$radius-button`           | 6px       | notebook.scss | button radius        |
+| `$radius-card`             | 10px      | notebook.scss | card radius          |
+| `$radius-accent-underline` | 1.5px     | notebook.scss | page-header accent   |
+| `$stroke-checkbox`         | 1.5px     | notebook.scss | checkbox border      |
+| `$primary-shade`           | #3a2e5c   | notebook.scss | derived from primary |
+| `$primary-tint`            | #5d527a   | notebook.scss | derived from primary |
+
 ## Verificación
 
 - `npx jest src/theme` valida la compilación Sass y los pares WCAG AA de UI-21.3.
