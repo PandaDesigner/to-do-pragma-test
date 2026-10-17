@@ -120,14 +120,7 @@
       "sheetTop": "estimado 16",
       "handle": 2.5
     },
-    "space": [
-      4,
-      8,
-      12,
-      16,
-      24,
-      32
-    ],
+    "space": [4, 8, 12, 16, 24, 32],
     "gapsUsados": {
       "headerOverlineToTitle": 3,
       "titleToRule": 15,
@@ -166,19 +159,13 @@
     "font": {
       "display": {
         "family": "DM Serif Display",
-        "weights": [
-          400
-        ],
+        "weights": [400],
         "note": "solo existe Regular",
         "fallback": "Georgia, serif"
       },
       "body": {
         "family": "Inter",
-        "weights": [
-          400,
-          600,
-          700
-        ],
+        "weights": [400, 600, 700],
         "fallback": "-apple-system, Roboto, sans-serif"
       }
     },
@@ -307,17 +294,8 @@
       "type": "composite (presentacional)",
       "angular": "shared/components/side-tab-rail",
       "variants": {
-        "active": [
-          "Todo",
-          "Routine",
-          "Event",
-          "My",
-          "More"
-        ],
-        "categories": [
-          "On",
-          "Off"
-        ]
+        "active": ["Todo", "Routine", "Event", "My", "More"],
+        "categories": ["On", "Off"]
       },
       "inputs": {
         "active": "TabId",
@@ -341,14 +319,8 @@
       "name": "Checkbox",
       "type": "presentacional",
       "variants": {
-        "shape": [
-          "Square",
-          "Circle"
-        ],
-        "checked": [
-          true,
-          false
-        ]
+        "shape": ["Square", "Circle"],
+        "checked": [true, false]
       },
       "anatomy": "Square 29x29 borde 1.5 color/primary-dark radio 3 fondo surface (checked: estimado relleno primary con check blanco). Circle 26x26: off fill color/check-empty; on fill color/primary + icon/check 12 blanco."
     },
@@ -356,14 +328,8 @@
       "name": "TaskItem",
       "type": "presentacional",
       "variants": {
-        "state": [
-          "Default",
-          "Completed"
-        ],
-        "meta": [
-          "On",
-          "Off"
-        ]
+        "state": ["Default", "Completed"],
+        "meta": ["On", "Off"]
       },
       "inputs": {
         "task": "TaskVm",
@@ -380,10 +346,7 @@
       "name": "NoteItem",
       "type": "presentacional",
       "variants": {
-        "dot": [
-          true,
-          false
-        ]
+        "dot": [true, false]
       },
       "anatomy": "311x~77, checkbox Square 29 + título Body/Note Title + punto 4–6 estimado a la derecha (x≈C+282), borde inferior color/border"
     },
@@ -391,9 +354,7 @@
       "name": "NewTaskInput",
       "type": "presentacional",
       "variants": {
-        "size": [
-          "Task"
-        ]
+        "size": ["Task"]
       },
       "outputs": {
         "submit": "string"
@@ -404,10 +365,7 @@
       "name": "UncompletedTasksCard",
       "type": "composite (contenedor ligero)",
       "variants": {
-        "expanded": [
-          true,
-          false
-        ]
+        "expanded": [true, false]
       },
       "inputs": {
         "items": "TaskVm[]",
@@ -425,11 +383,7 @@
       "name": "Button",
       "type": "presentacional",
       "variants": {
-        "variant": [
-          "Primary",
-          "Secondary",
-          "Danger"
-        ]
+        "variant": ["Primary", "Secondary", "Danger"]
       },
       "anatomy": "alto 50, radio 6, px 16, Body/Button. Primary: fill primary, texto on-primary. Secondary: borde 1 color/primary-dark, texto primary-dark, fondo surface (estimado grosor borde). Danger: fill color/danger, texto blanco."
     },
@@ -445,14 +399,8 @@
       "name": "CategoryChip",
       "type": "presentacional",
       "variants": {
-        "selected": [
-          true,
-          false
-        ],
-        "dot": [
-          true,
-          false
-        ]
+        "selected": [true, false],
+        "dot": [true, false]
       },
       "anatomy": "seleccionado: fill color/primary, texto on-primary, alto 33. No seleccionado: borde 1 color/border, fondo surface, texto color/text, alto 35. Radio round. Dot 8 estimado con color de la categoría, Body/Regular.",
       "outputs": {
@@ -472,11 +420,7 @@
       "name": "SettingRow",
       "type": "presentacional",
       "variants": {
-        "trailing": [
-          "toggle",
-          "chevron",
-          "value"
-        ]
+        "trailing": ["toggle", "chevron", "value"]
       },
       "anatomy": "311x77, icono 18 + gap 14 + Body/Note Title; trailing: Toggle 51x31 | chevron-right 18 | valor Body/Regular text-muted; borde inferior color/border"
     },
@@ -484,10 +428,7 @@
       "name": "Toggle",
       "type": "presentacional",
       "variants": {
-        "state": [
-          "On",
-          "Off"
-        ]
+        "state": ["On", "Off"]
       },
       "anatomy": "51x31 tipo iOS; Off: pista color/check-empty, knob blanco (estimado)"
     },
@@ -1938,10 +1879,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -1987,10 +1925,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2036,10 +1971,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2085,10 +2017,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2344,10 +2273,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2393,10 +2319,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2442,10 +2365,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2491,10 +2411,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -4964,11 +4881,7 @@
           "StatusFilterStrategy",
           "TodayFilterStrategy"
         ],
-        "SortStrategy": [
-          "ByTimeSort",
-          "ByCreatedSort",
-          "ByStatusSort"
-        ],
+        "SortStrategy": ["ByTimeSort", "ByCreatedSort", "ByStatusSort"],
         "PersistenceStrategy": [
           "IonicStoragePersistence",
           "InMemoryPersistence"
@@ -5032,12 +4945,7 @@
     "stateMachine": {
       "task": {
         "initial": "pending",
-        "states": [
-          "pending",
-          "completed",
-          "overdue",
-          "archived"
-        ],
+        "states": ["pending", "completed", "overdue", "archived"],
         "transitions": [
           {
             "from": "pending",
@@ -5115,12 +5023,7 @@
           },
           "default": {
             "layout": "NoteItem",
-            "actions": [
-              "add",
-              "check",
-              "delete",
-              "editCategory"
-            ]
+            "actions": ["add", "check", "delete", "editCategory"]
           }
         },
         "resolver": "CategoryViewStateFactory según category.kind ('daily'|'shopping'|'list')"
