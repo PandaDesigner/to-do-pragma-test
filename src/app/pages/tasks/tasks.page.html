@@ -97,9 +97,19 @@
         (action)="openSheet()"
       />
       } @if (store.hasMoreTasks()) {
-      <button type="button" class="link load-more" (click)="loadMore()">
-        Cargar más
-      </button>
+      <footer class="pagination-footer">
+        <span class="pagination-count">
+          {{ store.visibleTasks().length }} / {{ store.tasks().length }}
+        </span>
+        <div class="pagination-actions">
+          <button type="button" class="link" (click)="loadMore()">
+            {{ 'todo.loadMore' | translate }}
+          </button>
+          <button type="button" class="link" (click)="loadAll()">
+            {{ 'todo.loadAll' | translate }}
+          </button>
+        </div>
+      </footer>
       }
     </section>
     }

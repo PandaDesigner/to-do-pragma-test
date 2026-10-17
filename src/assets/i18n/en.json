@@ -28,6 +28,8 @@
     "emptyTitle": "No tasks for today",
     "emptyHint": "Tap + or write in the field below to add your first task.",
     "emptyAction": "Add a task",
-    "quickAdd": "Add task"
+    "quickAdd": "Add task",
+    "loadMore": "Load more",
+    "loadAll": "Load all"
   }
 }

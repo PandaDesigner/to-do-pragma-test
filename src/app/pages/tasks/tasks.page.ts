@@ -338,6 +338,12 @@ export class TasksPage implements OnInit {
     });
   }
 
+  async loadAll(): Promise<void> {
+    await this.feedback.run(async () => {
+      this.store.loadAllTasks();
+    });
+  }
+
   private firstAvailableCategoryId(): string | null {
     const available = this.availableCategories();
     if (available.length === 0) {

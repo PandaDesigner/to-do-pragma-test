@@ -171,6 +171,15 @@ export const TaskStore = signalStore(
         loadMore(): void {
           patchState(store, { pageCount: store.pageCount() + 1 });
         },
+        loadAllTasks(): void {
+          const total = store.tasks().length;
+          if (total === 0) {
+            patchState(store, { pageCount: 1 });
+            return;
+          }
+          const size = store.pageSize();
+          patchState(store, { pageCount: Math.ceil(total / size) });
+        },
         setSection(section: CategorySection): void {
           patchState(store, { section, categoryId: undefined });
         },
