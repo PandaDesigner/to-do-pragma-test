@@ -41,7 +41,7 @@
 .filler {
   display: block;
   width: var(--app-rail-width);
-  height: 100%;
+  flex: 1 1 auto;
   background: var(--app-category-filler);
   border-radius: 0 var(--app-radius-tab) var(--app-radius-tab) 0;
 }
