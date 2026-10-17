@@ -35,13 +35,20 @@ export function filterTasksBySection(
   if (section === CATEGORY_SECTION.GENERAL) {
     const generalCategoryIds = new Set(
       categories
-        .filter((category) => getCategorySection(category.section) === CATEGORY_SECTION.GENERAL)
+        .filter(
+          (category) =>
+            getCategorySection(category.section) === CATEGORY_SECTION.GENERAL,
+        )
         .map((category) => category.id),
     );
     return tasks.filter(
-      (task) => task.categoryId === null || generalCategoryIds.has(task.categoryId),
+      (task) =>
+        task.categoryId === null || generalCategoryIds.has(task.categoryId),
     );
   }
-  const ids = indexCategoriesBySection(categories).get(section) ?? new Set<string>();
-  return tasks.filter((task) => task.categoryId !== null && ids.has(task.categoryId));
+  const ids =
+    indexCategoriesBySection(categories).get(section) ?? new Set<string>();
+  return tasks.filter(
+    (task) => task.categoryId !== null && ids.has(task.categoryId),
+  );
 }

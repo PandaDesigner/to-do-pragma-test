@@ -109,9 +109,7 @@ export class TasksPage implements OnInit {
   });
   readonly section = this.readSection();
   readonly availableCategories = this.store.availableCategories;
-  readonly sectionLabel = computed(
-    () => 'section.' + this.store.section(),
-  );
+  readonly sectionLabel = computed(() => 'section.' + this.store.section());
   readonly emptyStateTitle = computed(
     () => 'todo.sections.' + this.store.section() + '.emptyTitle',
   );

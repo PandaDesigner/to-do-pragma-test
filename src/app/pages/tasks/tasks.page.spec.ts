@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import type { EnvironmentProviders, Provider } from '@angular/core';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { CATEGORY_SECTION, type CategorySection } from '../../domain/category';
 import { ROUTE_DATA } from '../../core/di/tokens';
@@ -14,7 +15,10 @@ import en from '../../../assets/i18n/en.json';
 
 describe('TasksPage', () => {
   async function setup(
-    options: { providers?: (Provider | EnvironmentProviders)[]; routeData?: Record<string, unknown> } = {},
+    options: {
+      providers?: (Provider | EnvironmentProviders)[];
+      routeData?: Record<string, unknown>;
+    } = {},
   ) {
     const routeData = options.routeData ?? {};
     const extras = options.providers ?? [];
@@ -38,7 +42,9 @@ describe('TasksPage', () => {
   }
 
   async function setupSection(section?: CategorySection) {
-    const dependencies = await setup({ routeData: { categorySection: section } });
+    const dependencies = await setup({
+      routeData: { categorySection: section },
+    });
     await dependencies.categories.upsert({
       id: 'g-cat',
       name: 'General category',
@@ -63,8 +69,16 @@ describe('TasksPage', () => {
       section: CATEGORY_SECTION.EVENT,
     });
     await dependencies.tasks.upsertMany([
-      taskFixture({ id: 'general', categoryId: 'g-cat', dueDate: '2026-02-23' }),
-      taskFixture({ id: 'routine', categoryId: 'r-cat', dueDate: '2026-02-23' }),
+      taskFixture({
+        id: 'general',
+        categoryId: 'g-cat',
+        dueDate: '2026-02-23',
+      }),
+      taskFixture({
+        id: 'routine',
+        categoryId: 'r-cat',
+        dueDate: '2026-02-23',
+      }),
       taskFixture({ id: 'event', categoryId: 'e-cat', dueDate: '2026-02-23' }),
       taskFixture({
         id: 'done',
@@ -91,7 +105,9 @@ describe('TasksPage', () => {
     '[TODO-07.1] filters section %s without using category colors conforme a Figma 4:440',
     async (section, expected) => {
       const { page, fixture } = await setupSection(section);
-      expect(page.store.visibleTasks().map((task) => task.id)).toEqual([...expected]);
+      expect(page.store.visibleTasks().map((task) => task.id)).toEqual([
+        ...expected,
+      ]);
       const labels = [
         ...fixture.nativeElement.querySelectorAll('app-chip button'),
       ].map((chip: HTMLElement) => chip.textContent?.trim());
@@ -106,15 +122,22 @@ describe('TasksPage', () => {
 
   it('[TODO-07.3] shows every general category and uncategorized tasks in Todo conforme a Figma 4:440', async () => {
     const { page } = await setupSection();
-    expect(page.store.visibleTasks().map((task) => task.id)).toEqual(['general', 'loose']);
+    expect(page.store.visibleTasks().map((task) => task.id)).toEqual([
+      'general',
+      'loose',
+    ]);
   });
 
   it('[TODO-07.4] keeps completed tasks visible until archived conforme a Figma 4:664', async () => {
     const { page } = await setupSection(CATEGORY_SECTION.ROUTINE);
     await page.toggleTask('routine');
-    expect(page.store.visibleTasks().map((task) => task.id)).toContain('routine');
+    expect(page.store.visibleTasks().map((task) => task.id)).toContain(
+      'routine',
+    );
     await page.dispatch({ id: 'routine', event: TASK_EVENT.ARCHIVE });
-    expect(page.store.visibleTasks().map((task) => task.id)).not.toContain('routine');
+    expect(page.store.visibleTasks().map((task) => task.id)).not.toContain(
+      'routine',
+    );
   });
 
   it('[TODO-07.5] limits the earlier panel to its section conforme a Figma 4:440', async () => {

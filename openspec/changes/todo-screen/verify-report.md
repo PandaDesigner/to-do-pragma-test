@@ -26,15 +26,15 @@ No se cambian rutas, almacenamiento, reglas de tareas, virtualización ni los es
 
 Chrome headless local, con perfil de prueba separado. Se realizaron clics mediante eventos del navegador, no solo llamadas a los manejadores de Angular.
 
-| Comprobación | Resultado |
-| --- | --- |
-| Rail visible y no cubierto | Pasa a 375×812 y 427×952 |
-| More abre `/tabs/settings` | Pasa en ambos tamaños |
-| My abre `/tabs/my` | Pasa en ambos tamaños |
-| Alta rápida crea una tarea de hoy | Pasa en ambos tamaños |
-| Checkbox visible de 29×29 | Pasa en ambos tamaños |
-| Fecha de 38 px, columna en x=64 | Pasa en ambos tamaños |
-| FAB de 68×68, x=292, y=730 | Pasa en ambos tamaños |
+| Comprobación                      | Resultado                |
+| --------------------------------- | ------------------------ |
+| Rail visible y no cubierto        | Pasa a 375×812 y 427×952 |
+| More abre `/tabs/settings`        | Pasa en ambos tamaños    |
+| My abre `/tabs/my`                | Pasa en ambos tamaños    |
+| Alta rápida crea una tarea de hoy | Pasa en ambos tamaños    |
+| Checkbox visible de 29×29         | Pasa en ambos tamaños    |
+| Fecha de 38 px, columna en x=64   | Pasa en ambos tamaños    |
+| FAB de 68×68, x=292, y=730        | Pasa en ambos tamaños    |
 
 Capturas a 375×812, modo oscuro y español, con tareas sintéticas:
 

@@ -20,7 +20,10 @@ export const routes: Routes = [
       {
         path: 'tasks',
         providers: [
-          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.GENERAL } },
+          {
+            provide: ROUTE_DATA,
+            useValue: { categorySection: CATEGORY_SECTION.GENERAL },
+          },
         ],
         loadComponent: loadTasksPage,
       },
@@ -29,7 +32,10 @@ export const routes: Routes = [
         canMatch: [categoriesEnabledGuard],
         data: { categorySection: CATEGORY_SECTION.ROUTINE },
         providers: [
-          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.ROUTINE } },
+          {
+            provide: ROUTE_DATA,
+            useValue: { categorySection: CATEGORY_SECTION.ROUTINE },
+          },
         ],
         loadComponent: loadTasksPage,
       },
@@ -38,7 +44,10 @@ export const routes: Routes = [
         canMatch: [categoriesEnabledGuard],
         data: { categorySection: CATEGORY_SECTION.EVENT },
         providers: [
-          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.EVENT } },
+          {
+            provide: ROUTE_DATA,
+            useValue: { categorySection: CATEGORY_SECTION.EVENT },
+          },
         ],
         loadComponent: loadTasksPage,
       },

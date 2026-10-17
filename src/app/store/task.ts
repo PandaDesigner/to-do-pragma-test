@@ -16,7 +16,10 @@ import {
 } from '../domain/task-strategy';
 import { filterTasksBySection } from '../domain/category/filter-by-section';
 import { sectionContainsCategory } from './category/section';
-import { CATEGORY_SECTION, type CategorySection } from '../domain/category/category-section';
+import {
+  CATEGORY_SECTION,
+  type CategorySection,
+} from '../domain/category/category-section';
 import type { Category } from '../domain/category';
 import { TaskStateMachine } from '../data/states/task-state-machine';
 import {
@@ -49,7 +52,10 @@ export const TaskStore = signalStore(
     visibleTasks: computed(() =>
       sortTasksByDueDate(
         filterTasksBySection(
-          filterTasks(store.tasks(), { statuses: store.statuses(), categoryId: store.categoryId() }),
+          filterTasks(store.tasks(), {
+            statuses: store.statuses(),
+            categoryId: store.categoryId(),
+          }),
           store.categories(),
           store.section(),
         ),
@@ -57,7 +63,11 @@ export const TaskStore = signalStore(
       ),
     ),
     availableCategories: computed(() =>
-      store.categories().filter((category) => sectionContainsCategory(store.section(), category)),
+      store
+        .categories()
+        .filter((category) =>
+          sectionContainsCategory(store.section(), category),
+        ),
     ),
   })),
   withMethods(

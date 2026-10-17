@@ -26,6 +26,8 @@ export function parseCategorySection(value: unknown): CategorySection {
   return value;
 }
 
-export function getCategorySection(value: CategorySection | undefined): CategorySection {
+export function getCategorySection(
+  value: CategorySection | undefined,
+): CategorySection {
   return value ?? DEFAULT_CATEGORY_SECTION;
 }

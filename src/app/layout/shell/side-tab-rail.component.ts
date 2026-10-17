@@ -99,7 +99,10 @@ export class SideTabRailComponent {
     if (tab.disabled) {
       return true;
     }
-    if (!this.sectionsEnabled() && (tab.id === RAIL_TAB.ROUTINE || tab.id === RAIL_TAB.EVENT)) {
+    if (
+      !this.sectionsEnabled() &&
+      (tab.id === RAIL_TAB.ROUTINE || tab.id === RAIL_TAB.EVENT)
+    ) {
       return true;
     }
     return false;
