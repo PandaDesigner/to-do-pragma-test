@@ -49,6 +49,6 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 6. Documentación y entrega (fase B, comprobación no-TDD)
 
-- [ ] 6.1 `npx jest src/theme/docs.spec.ts` que comprueba que cada token de `_tokens.scss` aparece en `src/theme/README.md` con origen, valores claros/oscuros y uso, diferenciando técnicos de Figma (UI-28.3).
-- [ ] 6.2 Guardar comandos y salidas reales en `verify-report.md`; enlazar capturas 375x812 light/dark junto a `get_screenshot` de 4:440 y 4:1560 (UI-28.1).
-- [ ] 6.3 Crear commits Conventional Commits con IDs; abrir PR borrador de `feature/theme-foundation` hacia `develop` con cambio OpenSpec, nodos Figma, tests y evidencia; actualizar Notion C0.5 solo en `Status`/`Note`, conservando texto y añadiendo URL, conteo real y hash; no archivar, fusionar, force-push ni marcar listo (UI-28.1). El PR se referenciará por URL en Notion.
+- [x] 6.1 (UI-27) `npm test -- --coverage`, `npm run lint`, `npm run lint:styles`, `npm run format:check`, `npm run typecheck` y `npm run build -- --configuration production` ejecutados. Salida real 2026-10-17 00:53 COT: 28 suites y 160 tests en verde; typecheck y lint pasan; lint:styles exit 0; format:check exit 0; build production OK con la advertencia CommonJS esperada.
+- [x] 6.2 Comandos y salidas reales registradas en `verify-report.md`; capturas 375x812 light/dark enlazadas junto a `get_screenshot` de 4:440 y 4:1560 en `openspec/changes/theme-foundation/evidence/` (commit 5b90cc5) (UI-28.1).
+- [x] 6.3 Commits Conventional Commits con IDs publicados; PR borrador #6 de `feature/theme-foundation` hacia `develop` con cambio OpenSpec, nodos Figma, tests y evidencia; Notion C0.5 actualizado en `Status`/`Note`, conservando texto y con URL, conteo real y hash; no se archiva, fusiona, force-push ni marca listo (UI-28.1). PR: https://github.com/PandaDesigner/to-do-pragma-test/pull/6.
