@@ -177,3 +177,11 @@ El sheet MUST incluir el campo Sección como cuarta fila con tres chips General/
 ### Requirement: CAT-SEC-01 Sección explícita de categoría
 
 El selector de Sección MUST ofrecerse en el sheet `CategorySheetComponent` en lugar de en un `<select>` inline de `CategoriesPage`. El comportamiento de la sección (independencia del nombre, tipo y color; persistencia; compatibilidad con General; rechazo de valores desconocidos) MUST mantenerse idéntico. Figma: 4:869.
+
+#### Scenario: CAT-SEC-01.5 Selector de Sección dentro del sheet
+
+- **GIVEN** el sheet de categoría abierto en modo `Edit` con una categoría persistida con sección Routine
+- **WHEN** se renderiza el campo Section
+- **THEN** aparecen tres chips General/Routine/Event
+- **AND** el chip Routine está activo
+- **AND** al guardar con la sección cambiada a Event, la nueva sección se persiste y las tareas de la categoría se muestran en Event sin reescribir sus identificadores.
