@@ -29,7 +29,8 @@
             @for (entry of icons; track entry.key) {
             <app-icon-option
               [icon]="entry.key"
-              [glyph]="entry.label"
+              [iconName]="entry.icon"
+              [label]="entry.label"
               [selected]="icon() === entry.key"
               (choose)="chooseIcon(entry.key)"
             />
@@ -72,9 +73,7 @@
             [colorToken]="colorToken() === 'primary' ? 'primary' : colorToken() === 'more-gray' ? 'more' : colorToken()"
             [selected]="false"
           >
-            <span appChipIcon>{{
-              icons[$any(icons).findIndex ? 0 : 0].label
-            }}</span>
+            <ion-icon appChipIcon [icon]="selectedIconName()" aria-hidden="true"></ion-icon>
           </app-chip>
         </div>
 

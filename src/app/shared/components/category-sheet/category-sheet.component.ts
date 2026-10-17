@@ -8,7 +8,21 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { IonContent, IonModal } from '@ionic/angular/standalone';
+import { IonContent, IonIcon, IonModal } from '@ionic/angular/standalone';
+import {
+  airplaneOutline,
+  barbellOutline,
+  bookOutline,
+  briefcaseOutline,
+  cartOutline,
+  cashOutline,
+  heartOutline,
+  homeOutline,
+  musicalNotesOutline,
+  pawOutline,
+  restaurantOutline,
+  starOutline,
+} from 'ionicons/icons';
 import {
   CATEGORY_SECTION,
   type Category,
@@ -17,19 +31,19 @@ import {
 import { CategoryStore } from '../../../store/category';
 import { ChipComponent } from '../chip/chip.component';
 
-const CATEGORY_ICONS: readonly { key: string; label: string }[] = [
-  { key: 'cart', label: 'Cart' },
-  { key: 'home', label: 'Home' },
-  { key: 'briefcase', label: 'Brief' },
-  { key: 'heart', label: 'Heart' },
-  { key: 'book', label: 'Book' },
-  { key: 'plane', label: 'Plane' },
-  { key: 'fork', label: 'Fork' },
-  { key: 'muscle', label: 'Gym' },
-  { key: 'music', label: 'Music' },
-  { key: 'paw', label: 'Pet' },
-  { key: 'money', label: 'Cash' },
-  { key: 'star', label: 'Star' },
+const CATEGORY_ICONS: readonly { key: string; label: string; icon: string }[] = [
+  { key: 'cart', label: 'Cart', icon: cartOutline },
+  { key: 'home', label: 'Home', icon: homeOutline },
+  { key: 'briefcase', label: 'Briefcase', icon: briefcaseOutline },
+  { key: 'heart', label: 'Heart', icon: heartOutline },
+  { key: 'book', label: 'Book', icon: bookOutline },
+  { key: 'plane', label: 'Plane', icon: airplaneOutline },
+  { key: 'fork', label: 'Dining', icon: restaurantOutline },
+  { key: 'muscle', label: 'Fitness', icon: barbellOutline },
+  { key: 'music', label: 'Music', icon: musicalNotesOutline },
+  { key: 'paw', label: 'Pets', icon: pawOutline },
+  { key: 'money', label: 'Money', icon: cashOutline },
+  { key: 'star', label: 'Star', icon: starOutline },
 ];
 
 export type CategoryIconKey = (typeof CATEGORY_ICONS)[number]['key'];
@@ -54,16 +68,18 @@ const SECTION_LABELS: readonly { key: CategorySection; label: string }[] = [
 @Component({
   selector: 'app-icon-option',
   standalone: true,
+  imports: [IonIcon],
   template: `
     <button
       type="button"
       class="icon-option"
       [class.selected]="selected()"
       [attr.aria-pressed]="selected()"
+      [attr.aria-label]="label()"
       [attr.data-icon]="icon()"
       (click)="choose.emit()"
     >
-      <span class="icon-option__glyph" aria-hidden="true">{{ glyph() }}</span>
+      <ion-icon [icon]="iconName()" aria-hidden="true"></ion-icon>
     </button>
   `,
   styles: [
@@ -83,14 +99,13 @@ const SECTION_LABELS: readonly { key: CategorySection; label: string }[] = [
         justify-content: center;
         cursor: pointer;
         padding: 0;
+        color: var(--app-text);
       }
       .icon-option.selected {
         border-color: var(--app-primary);
       }
-      .icon-option__glyph {
-        font-size: 13px;
-        font-weight: 600;
-        line-height: 1;
+      .icon-option ion-icon {
+        font-size: 22px;
       }
     `,
   ],
@@ -99,7 +114,8 @@ const SECTION_LABELS: readonly { key: CategorySection; label: string }[] = [
 export class IconOptionComponent {
   readonly icon = input.required<CategoryIconKey>();
   readonly selected = input(false);
-  readonly glyph = input.required<string>();
+  readonly label = input.required<string>();
+  readonly iconName = input.required<string>();
   readonly choose = output<void>();
 }
 
@@ -188,6 +204,7 @@ const COLOR_FILL: Record<CategoryColorKey, string> = {
   imports: [
     IonModal,
     IonContent,
+    IonIcon,
     ChipComponent,
     IconOptionComponent,
     ColorSwatchComponent,
@@ -235,6 +252,11 @@ export class CategorySheetComponent {
 
   fillColor(key: CategoryColorKey): string {
     return COLOR_FILL[key];
+  }
+
+  selectedIconName(): string {
+    const current = this.icons.find((entry) => entry.key === this.icon());
+    return current?.icon ?? this.icons[0].icon;
   }
 
   onName(value: string): void {
