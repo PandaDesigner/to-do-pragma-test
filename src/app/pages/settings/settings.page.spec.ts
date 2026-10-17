@@ -56,6 +56,29 @@ describe('SettingsPage', () => {
     return { fixture, preferences };
   }
 
+  it.each([
+    [APP_LANGUAGE.EN, 'English'],
+    [APP_LANGUAGE.ES, 'Español'],
+  ] as const)(
+    '[I18N-01.1] keeps %s visibly selected after remounting Settings',
+    async (language, label) => {
+      const { fixture, preferences } = setup();
+      await fixture.componentInstance.setLanguage(language);
+      fixture.destroy();
+      const returned = TestBed.createComponent(SettingsPage);
+      returned.detectChanges();
+      await returned.whenStable();
+      returned.detectChanges();
+      const select = returned.nativeElement.querySelector(
+        'select',
+      ) as HTMLSelectElement;
+      expect(preferences.language()).toBe(language);
+      expect(select.value).toBe(language);
+      expect(select.selectedOptions[0]?.textContent?.trim()).toBe(label);
+      returned.destroy();
+    },
+  );
+
   it('[SET-01.1] shows the dark mode control and language selector', () => {
     const { fixture } = setup();
     const page: HTMLElement = fixture.nativeElement;
