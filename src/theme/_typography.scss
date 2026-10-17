@@ -75,46 +75,46 @@ h1,
 }
 
 .overline {
-  font: 600 15px/1 var(--app-font-body);
+  font: 600 15px/normal var(--app-font-body);
 }
 
 .title {
-  font: 400 36px/1 var(--app-font-display);
+  font: 400 36px/normal var(--app-font-display);
   letter-spacing: 0;
 }
 
 .date {
-  font: 400 38px/1 var(--app-font-display);
+  font: 400 38px/normal var(--app-font-display);
   letter-spacing: -0.3px;
 }
 
 .task-title {
-  font: 700 17px/1 var(--app-font-body);
+  font: 700 17px/normal var(--app-font-body);
 }
 
 .note-title {
-  font: 700 16px/1 var(--app-font-body);
+  font: 700 16px/normal var(--app-font-body);
 }
 
 .body,
 .meta,
 .muted {
-  font: 400 14px/1 var(--app-font-body);
+  font: 400 14px/normal var(--app-font-body);
 }
 
 .panel-title {
-  font: 600 15px/1 var(--app-font-body);
+  font: 600 15px/normal var(--app-font-body);
 }
 
 .button {
-  font: 600 14px/1 var(--app-font-body);
+  font: 600 14px/normal var(--app-font-body);
 }
 
 .tab {
-  font: 600 13px/1 var(--app-font-body);
+  font: 600 13px/normal var(--app-font-body);
 }
 
 .badge {
-  font: 600 11px/1 var(--app-font-body);
+  font: 600 11px/normal var(--app-font-body);
   letter-spacing: 0.4px;
 }

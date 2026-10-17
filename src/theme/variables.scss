@@ -31,6 +31,7 @@
   --app-radius-card: #{t.$radius-card};
   --app-radius-input: #{t.$radius-input};
   --app-radius-accent-underline: #{t.$radius-accent-underline};
+  --app-radius-round: 50%;
 
   --app-stroke-checkbox: #{t.$stroke-checkbox};
   --app-stroke-divider: #{t.$stroke-divider};
@@ -42,7 +43,17 @@
   --tab-event: #{t.$tab-event};
   --tab-my: #{t.$tab-my};
   --tab-more: #{t.$tab-more};
-  --color-tab-label: #{t.$color-primary-dark};
+  --tab-filler: #{t.$tab-filler};
+  --app-category-1: #{t.$tab-todo};
+  --app-category-2: #{t.$tab-routine};
+  --app-category-3: #{t.$tab-event};
+  --app-category-4: #{t.$tab-my};
+  --app-category-5: #{t.$tab-more};
+  --app-category-filler: #{t.$tab-filler};
+  --app-tab-label: #{t.$color-primary-dark};
+  --app-shadow-card: 0 4px 16px 0 #{t.$shadow-card-color};
+  --app-shadow-fab: 0 8px 10px #{t.$shadow-fab-color};
+  --ion-backdrop-color: #{t.$color-scrim};
 
   // Puente Ionic: primary, danger y referencias a surface y text.
   --ion-color-primary: #{t.$color-primary};

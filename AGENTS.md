@@ -9,6 +9,7 @@ Reglas permanentes para agentes. Si una instrucción de una fase las contradice,
 - Stack actual: Ionic 8, Angular 22 standalone, TypeScript estricto, Cordova, Jest y `@ngrx/signals`. Sin Capacitor.
 - Idiomas: español e inglés con `@ngx-translate/core`, archivos `src/assets/i18n/{es,en}.json`, idioma del dispositivo y respaldo inglés.
 - WIP=1: un change OpenSpec a la vez. Se fusiona y archiva antes de abrir el siguiente.
+- Ninguna funcionalidad nueva entra sin un change OpenSpec activo. En `fix/*` solo van correcciones.
 
 ## Flujo
 

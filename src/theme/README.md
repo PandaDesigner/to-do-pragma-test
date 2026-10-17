@@ -17,7 +17,7 @@ Origen único de los tokens visuales de la app. Los consumidores importan solo `
 - Los consumidores **no importan** parciales de `src/theme` directamente. Solo declaran `var(--app-*)` o `var(--ion-*)` en su SCSS.
 - El Sass propio usa `@use`/`@forward`. Los `@import` restantes son CSS de Ionic, no Sass propio.
 - `dark.system.css` está desactivado; `_dark.scss` es la única fuente de paleta oscura.
-- `body.light` y forzado claro manual están fuera de alcance (decisión del usuario).
+- Sin preferencia guardada, el oscuro sigue al sistema. La preferencia guardada usa `.ion-palette-dark`.
 - El radio `round` se mantiene en 50 % para elementos circulares; el valor Figma 999 se documenta para referencia futura.
 
 ## Tabla de tokens (origen Figma)

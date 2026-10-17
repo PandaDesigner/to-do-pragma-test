@@ -1,17 +1,35 @@
-// Paleta oscura: única fuente de valores para `prefers-color-scheme: dark`.
-// Sustituye a `dark.system.css` de Ionic (tarea 3.2) y a los overrides en
-// `variables.scss` para evitar dos orígenes de paleta.
+// Paleta oscura compartida por el sistema y por la clase guardada.
+
+@mixin dark-palette {
+  --app-primary: #8b7fc0;
+  --app-primary-dark: #edeaf5;
+  --app-text: #edeaf5;
+  --app-text-muted: #6b6580;
+  --app-surface: #1e1a2b;
+  --app-surface-muted: #2a2539;
+  --app-border: #332d45;
+  --app-card-border: #332d45;
+  --app-category-1: #b8cfa8d9;
+  --app-category-2: #f28b8bd9;
+  --app-category-3: #9fc3cfd9;
+  --app-category-4: #e8e1b8d9;
+  --app-category-5: #c9c9c9d9;
+  --app-category-filler: #4b3f6bd9;
+  --tab-todo: #b8cfa8d9;
+  --tab-routine: #f28b8bd9;
+  --tab-event: #9fc3cfd9;
+  --tab-my: #e8e1b8d9;
+  --tab-more: #c9c9c9d9;
+  --tab-filler: #4b3f6bd9;
+  --ion-color-primary: #8b7fc0;
+}
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --app-primary: #8b7fc0;
-    --app-primary-dark: #edeaf5;
-    --app-text: #edeaf5;
-    --app-text-muted: #6b6580;
-    --app-surface: #1e1a2b;
-    --app-surface-muted: #2a2539;
-    --app-border: #332d45;
-    --app-card-border: #332d45;
-    --ion-color-primary: #8b7fc0;
+  :root:not(.ion-palette-light) {
+    @include dark-palette;
   }
+}
+
+.ion-palette-dark {
+  @include dark-palette;
 }

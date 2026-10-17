@@ -1,17 +1,17 @@
 ion-content {
-  --background: var(--color-surface);
-  --color: var(--color-text);
+  --background: var(--app-surface);
+  --color: var(--app-text);
 }
 
 .notebook-page {
   max-width: 880px;
   margin: 0 auto;
   padding: 55px 18px 32px 37px;
-  color: var(--color-text);
+  color: var(--app-text);
   .page-header {
     margin-bottom: 20px;
     padding-bottom: 15px;
-    border-bottom: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--app-border);
     position: relative;
   }
   .page-header::after {
@@ -21,7 +21,7 @@ ion-content {
     left: 0;
     height: 3px;
     width: 84px;
-    background: var(--color-primary);
+    background: var(--app-primary);
     border-radius: 1.5px;
   }
   h1 {
@@ -41,13 +41,13 @@ ion-content {
     margin: 0;
   }
   .muted {
-    color: var(--color-text-muted);
+    color: var(--app-text-muted);
     font-size: 13px;
   }
   .editor {
     margin-bottom: 18px;
     padding: 16px;
-    background: var(--color-surface-muted);
+    background: var(--app-surface-muted);
     border-radius: 10px;
   }
   label {
@@ -60,10 +60,10 @@ ion-content {
   select {
     width: 100%;
     min-height: 44px;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--app-border);
     border-radius: 6px;
-    background: var(--color-surface);
-    color: var(--color-text);
+    background: var(--app-surface);
+    color: var(--app-text);
     padding: 8px;
     font-size: 14px;
   }
@@ -84,12 +84,12 @@ ion-content {
     padding: 8px 14px;
     border-radius: 6px;
     background: transparent;
-    color: var(--color-primary);
+    color: var(--app-primary);
     cursor: pointer;
   }
   .primary {
-    background: var(--color-primary);
-    color: var(--color-surface);
+    background: var(--app-primary);
+    color: var(--app-surface);
     font-weight: 600;
   }
   .filter-row {
@@ -101,17 +101,17 @@ ion-content {
   }
   .filter-row button {
     white-space: nowrap;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--app-border);
     border-radius: 24px;
     font-size: 12px;
   }
   .selected {
-    background: var(--color-primary);
-    color: var(--color-surface);
+    background: var(--app-primary);
+    color: var(--app-surface);
   }
   .error-notice {
     border-left: 3px solid var(--ion-color-danger);
-    background: var(--color-surface-muted);
+    background: var(--app-surface-muted);
     padding: 12px;
     margin-bottom: 12px;
     font-size: 14px;
@@ -122,14 +122,14 @@ ion-content {
   }
   .empty-state {
     padding: 40px 0;
-    color: var(--color-text-muted);
+    color: var(--app-text-muted);
   }
   button:disabled {
     opacity: 0.4;
     cursor: default;
   }
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--app-primary);
     outline-offset: 2px;
   }
 }

@@ -13,7 +13,7 @@
   gap: 12px;
   height: 77px;
   align-items: center;
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--app-border);
 }
 .swatch {
   display: grid;
@@ -50,14 +50,14 @@ strong {
   font-size: 16px;
 }
 small {
-  color: var(--color-text-muted);
+  color: var(--app-text-muted);
   margin-top: 4px;
 }
 button {
   min-width: 44px;
   min-height: 44px;
   background: transparent;
-  color: var(--color-primary);
+  color: var(--app-primary);
 }
 .danger {
   color: var(--ion-color-danger);
