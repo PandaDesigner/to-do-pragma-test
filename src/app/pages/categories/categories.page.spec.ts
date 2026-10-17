@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import en from '../../../assets/i18n/en.json';
 import { taskFixture } from '../../testing/task.fixture';
+import { add } from 'ionicons/icons';
 import { CategoriesPage } from './categories.page';
 import { configurePageTesting } from '../../testing/page.fixture';
 
@@ -24,6 +25,24 @@ describe('CategoriesPage', () => {
   it('[SHEET-01.1] opens the sheet in Create mode from the FAB', async () => {
     const { page, categories } = await setup();
     page.openCreateSheet();
+    expect(categories.sheetRequest()).toEqual({ mode: 'create' });
+  });
+
+  it('[SHEET-01.1] uses the shared FAB with the plus icon and opens the sheet', async () => {
+    const { fixture, categories } = await setup();
+    const fab = fixture.nativeElement.querySelector(
+      'app-fab-button ion-fab-button',
+    ) as HTMLElement;
+    const icon = fab.querySelector('ion-icon') as HTMLElement & {
+      icon?: string;
+    };
+    // ion-fab-button hereda aria-label al <button> interno al hidratarse.
+    const label =
+      fab.shadowRoot?.querySelector('button')?.getAttribute('aria-label') ??
+      fab.getAttribute('aria-label');
+    expect(label).toBe('Nueva categoría');
+    expect(icon.icon).toBe(add);
+    fab.click();
     expect(categories.sheetRequest()).toEqual({ mode: 'create' });
   });
 

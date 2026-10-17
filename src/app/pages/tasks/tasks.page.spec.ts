@@ -12,6 +12,8 @@ import { CLOCK } from '../../core/di/tokens';
 import { TASK_STATUS, TASK_STATUSES } from '../../domain/task';
 import { TASK_EVENT } from '../../domain/task-state';
 import en from '../../../assets/i18n/en.json';
+import { add } from 'ionicons/icons';
+import { clipboardCheck } from '../../shared/icons/app-icons';
 
 describe('TasksPage', () => {
   async function setup(
@@ -362,6 +364,24 @@ describe('TasksPage', () => {
     expect(action.style.width).toBe('239px');
     expect(action.style.height).toBe('50px');
     expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
+  });
+
+  it('[TODO-06.1] renders the shared FAB with the plus icon', async () => {
+    const { fixture } = await setup();
+    const icon = fixture.nativeElement.querySelector(
+      'app-fab-button ion-fab-button ion-icon',
+    ) as HTMLElement & { icon?: string };
+    expect(icon).not.toBeNull();
+    expect(icon.icon).toBe(add);
+  });
+
+  it('[TODO-05.1] renders the clipboard icon inside the empty-state illustration', async () => {
+    const { fixture } = await setup();
+    const icon = fixture.nativeElement.querySelector(
+      '.empty-state .illustration ion-icon',
+    ) as (HTMLElement & { icon?: string }) | null;
+    expect(icon).not.toBeNull();
+    expect(icon?.icon).toBe(clipboardCheck);
   });
 
   it('[TODO-06.1] creates a task for today from the new-task sheet opened via the FAB', async () => {

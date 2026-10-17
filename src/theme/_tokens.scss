@@ -43,7 +43,14 @@ $chip-height: 35px;
 $chip-selected-height: 33px;
 $touch-target: 44px;
 $pager-height: 56px;
-$fab-size: 56px;
+// FAB Figma 4:1109: 68 de diámetro e icono 24. Posición por decisión TSK-16
+// (Pedro, 17-oct), igual en todas las páginas: 50 al borde derecho (Figma 15)
+// y por encima del pager anclado (Figma 14 al borde inferior). Las páginas sin
+// pager usan el mismo offset para que el FAB no salte al cambiar de pestaña.
+$fab-size: 68px;
+$fab-icon-size: 24px;
+$fab-inset-end: 50px;
+$fab-inset-bottom: $pager-height + $space-16;
 
 $radius-badge: 2px;
 $radius-checkbox: 3px;

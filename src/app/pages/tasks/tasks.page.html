@@ -137,14 +137,10 @@
 </nav>
 }
 
-<ion-fab class="fab-new-task" vertical="bottom" horizontal="end">
-  <ion-fab-button
-    (click)="openSheet()"
-    [attr.aria-label]="'tasks.fab.new' | translate"
-  >
-    <ion-icon name="add" aria-hidden="true"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
+<app-fab-button
+  [ariaLabel]="'tasks.fab.new' | translate"
+  (pressed)="openSheet()"
+/>
 <ion-modal
   [isOpen]="sheetOpen()"
   (didDismiss)="closeSheet()"
@@ -225,15 +221,17 @@
             </p>
           </div>
           @if (flags.categoriesEnabled()) {
-          <label class="form-field">
-            <span class="form-field__label">Categoría</span>
-            <select formControlName="categoryId">
-              <option value="">Sin categoría</option>
-              @for (category of availableCategories(); track category.id) {
-              <option [value]="category.id">{{ category.name }}</option>
-              }
-            </select>
-          </label>
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label">Categoría</span>
+              <select formControlName="categoryId">
+                <option value="">Sin categoría</option>
+                @for (category of availableCategories(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </label>
+          </div>
           } @if (flags.categoriesEnabled()) {
           <button
             type="button"

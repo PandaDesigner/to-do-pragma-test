@@ -14,13 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-  IonModal,
-} from '@ionic/angular/standalone';
+import { IonContent, IonModal } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
@@ -37,6 +31,7 @@ import { TaskItemComponent } from '../../shared/components/task-item/task-item.c
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ChipComponent } from '../../shared/components/chip/chip.component';
+import { FabButtonComponent } from '../../shared/components/fab-button/fab-button.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
@@ -65,9 +60,7 @@ export const PENDING_PANEL = {
   imports: [
     IonContent,
     IonModal,
-    IonFab,
-    IonFabButton,
-    IonIcon,
+    FabButtonComponent,
     ReactiveFormsModule,
     NgTemplateOutlet,
     TranslatePipe,

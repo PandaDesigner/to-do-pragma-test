@@ -7,12 +7,7 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import {
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonIcon,
-} from '@ionic/angular/standalone';
+import { IonContent, IonIcon } from '@ionic/angular/standalone';
 import { createOutline } from 'ionicons/icons';
 import { resolveCategoryIcon } from '../../domain/category-icons';
 import { RemoteConfigService } from '../../core/config/remote-config';
@@ -21,6 +16,7 @@ import { CategoryStore } from '../../store/category';
 import { TaskStore } from '../../store/task';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { FabButtonComponent } from '../../shared/components/fab-button/fab-button.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
@@ -31,9 +27,8 @@ const VIRTUAL_SCROLL_THRESHOLD = 200;
   styleUrl: './categories.page.scss',
   imports: [
     IonContent,
-    IonFab,
-    IonFabButton,
     IonIcon,
+    FabButtonComponent,
     PageHeaderComponent,
     EmptyStateComponent,
     ScrollingModule,

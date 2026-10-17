@@ -40,6 +40,17 @@ Las variables `--app-*` siguen el mapeo definido en `openspec/changes/theme-foun
 | `--app-category-1..5`   | #B8CFA8, #F28B8B, #9FC3CF, #E8E1B8, #C9C9C9 | mismo hex con alfa D9 (--tab-*) | tab/*                                            |
 | `--app-category-filler` | #4B3F6B                                     | #4B3F6BD9                       | tab/filler (independiente del primary en oscuro) |
 
+FAB (Figma 4:1109), en `_tokens.scss` y consumidos por `app-fab-button`:
+
+| Variable                 | Valor | Figma                                                                    |
+| ------------------------ | ----- | ------------------------------------------------------------------------ |
+| `--app-fab-size`         | 68px  | FAB 68x68                                                                |
+| `--app-fab-icon-size`    | 24px  | icon/plus 24                                                             |
+| `--app-fab-inset-end`    | 50px  | TSK-16 (Figma: 15, x 292 en frame 375)                                   |
+| `--app-fab-inset-bottom` | 72px  | TSK-16: `$pager-height` 56 + `$space-16` (Figma: 14, y 730 en frame 812) |
+
+La posición del FAB se desvía de Figma a propósito (decisión de Pedro, 17-oct, TSK-16): queda a 50 del borde derecho y por encima del pager anclado. Es la misma en todas las páginas, también en Categorías aunque no tenga pager, y vive en los defaults de `app-fab-button`, así que ninguna página la sobrescribe.
+
 Las espaciados, radios, strokes y tamaños tipográficos siguen la tabla de design.md. Los `var(--app-space-*)`, `var(--app-radius-*)`, `var(--app-font-size-*)` y `var(--app-stroke-*)` se generan desde `_tokens.scss`.
 
 ## Tabla de tokens técnicos heredados

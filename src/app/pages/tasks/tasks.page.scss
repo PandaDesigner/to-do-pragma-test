@@ -88,6 +88,7 @@ main.notebook-page {
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236b6580' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
   background-position: right var(--app-space-12) center;
+  background-size: 12px 8px;
   padding-right: var(--app-space-32);
 }
 
@@ -155,25 +156,6 @@ main.notebook-page {
   color: var(--app-text-muted);
 }
 
-ion-fab.fab-new-task {
-  position: fixed;
-  right: 50px;
-  bottom: calc(
-    var(--app-pager-height) + var(--app-space-16) +
-      env(safe-area-inset-bottom, 0px)
-  );
-  width: var(--app-fab-size);
-  height: var(--app-fab-size);
-  --background: var(--app-primary);
-  --color: var(--app-on-primary);
-  --box-shadow: var(--app-shadow-fab);
-
-  ion-icon {
-    color: var(--app-on-primary);
-    fill: var(--app-on-primary);
-  }
-}
-
 .chips {
   display: flex;
   flex-wrap: wrap;
@@ -210,23 +192,4 @@ ion-fab.fab-new-task {
   border: 0;
   background: transparent;
   color: var(--app-text);
-}
-
-ion-fab.fab-new-task {
-  // slot="fixed" handles viewport positioning.
-  --background: var(--app-primary);
-  --color: var(--app-on-primary);
-  --box-shadow: var(--app-shadow-fab);
-
-  ion-fab-button {
-    width: var(--app-fab-size);
-    height: var(--app-fab-size);
-  }
-
-  ion-icon {
-    width: calc(var(--app-fab-size) - var(--app-space-16));
-    height: calc(var(--app-fab-size) - var(--app-space-16));
-    color: var(--app-on-primary);
-    fill: var(--app-on-primary);
-  }
 }

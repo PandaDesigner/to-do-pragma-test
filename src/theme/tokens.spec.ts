@@ -61,6 +61,18 @@ describe('UI-20 Tokens trazables y centralizados', () => {
   });
 });
 
+describe('FAB-01 Geometría del FAB', () => {
+  it('exposes the Figma 4:1109 FAB geometry as CSS custom properties', () => {
+    const compiled = compileTheme().css;
+    expect(compiled).toMatch(/--app-fab-size:\s*68px/);
+    expect(compiled).toMatch(/--app-fab-icon-size:\s*24px/);
+    // TSK-16: 50 al borde derecho (Figma 15) y por encima del pager
+    // (pager 56 + space-16 = 72; Figma 14) en todas las páginas.
+    expect(compiled).toMatch(/--app-fab-inset-end:\s*50px/);
+    expect(compiled).toMatch(/--app-fab-inset-bottom:\s*72px/);
+  });
+});
+
 describe('UI-21 Puente Ionic', () => {
   it('maps primary to Ionic variables with derived rgb and contrast', () => {
     const compiled = compileTheme().css;
