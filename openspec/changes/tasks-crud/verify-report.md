@@ -2,7 +2,7 @@
 
 ## Resultado
 
-13/14 tareas completadas. Cobertura, pruebas y documentación verificadas; pendiente registrar la entrega actualizada en PR y Notion. Sin cambios de código productivo ni dependencias. El cambio no está archivado ni fusionado.
+14/14 tareas completadas. Cobertura, pruebas, documentación y entrega verificadas. Sin cambios de código productivo ni dependencias. El cambio no está archivado ni fusionado.
 
 ## Estado al reanudar
 
@@ -65,4 +65,8 @@ Fuente: `coverage/coverage-summary.json` generado por Jest. Ya existía cobertur
 
 ## Entrega
 
-Pendiente publicar los commits de esta sesión, actualizar la descripción del PR #7 y añadir a `Status`/`Note` de la página Notion autorizada el enlace, conteo real y hash, sin sustituir el texto previo. El PR debe seguir en borrador hacia `develop`. No archivar, fusionar, hacer force-push ni marcar listo sin revisión.
+- Commit de pruebas y verificación publicado: `ebf20ea` (`test(tasks-crud): verify TSK-1 through TSK-10 contracts`). Solo incluye los siete archivos de C1.
+- PR #7 actualizado y comprobado como borrador hacia `develop`: https://github.com/PandaDesigner/to-do-pragma-test/pull/7.
+- Notion actualizado en la página autorizada `3fbcb4419773815db397fe4678dec2f0`, solo en `Status` y `Note`, añadiendo la sección C1 al texto existente. Incluye enlace, conteo real, pruebas y hash. Estado `In progress` porque falta revisión; el texto de C0.5 se conserva.
+- Este cierre documental completa el checklist de C1. La nota final de Notion y el PR referencian el hash publicado del cierre.
+- No se archivó el cambio, no se fusionó el PR, no se hizo force-push ni se marcó listo. La revisión sigue pendiente.

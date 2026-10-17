@@ -36,4 +36,4 @@
 
 ## 5. Entrega
 
-- [ ] 5.1 Commits Conventional Commits con IDs; abrir PR borrador de `feature/tasks-crud` hacia `develop` con el cambio OpenSpec, la spec, los tests y el reporte de verificación. Actualizar Notion C1 solo en `Status`/`Note`, conservando texto y añadiendo URL, conteo real y hash; no archivar, fusionar, force-push ni marcar listo hasta revisión.
+- [x] 5.1 Commits Conventional Commits con IDs; abrir PR borrador de `feature/tasks-crud` hacia `develop` con el cambio OpenSpec, la spec, los tests y el reporte de verificación. Actualizar Notion C1 solo en `Status`/`Note`, conservando texto y añadiendo URL, conteo real y hash; no archivar, fusionar, force-push ni marcar listo hasta revisión.
