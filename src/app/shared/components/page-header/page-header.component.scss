@@ -8,6 +8,7 @@ h1 {
   font-weight: 400;
 }
 
-.date {
+h1.date {
+  font-size: var(--app-font-size-date);
   letter-spacing: -0.3px;
 }

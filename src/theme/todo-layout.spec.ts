@@ -32,7 +32,9 @@ describe('Todo layout regression contracts', () => {
   it('[TODO-02.1] compensates absolute panel and FAB coordinates for the rail conforme a Figma 4:440', () => {
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
     expect(styles).toMatch(/left:\s*calc\(292px - var\(--app-rail-width\)\);/);
-    expect(styles).toMatch(/margin-left:\s*calc\(0px - var\(--app-rail-width\)\);/);
+    expect(styles).toMatch(
+      /margin-left:\s*calc\(0px - var\(--app-rail-width\)\);/,
+    );
     expect(styles).toMatch(/ion-fab-button\s*\{[^}]*width:\s*100%;/);
     expect(styles).toMatch(/ion-fab-button\s*\{[^}]*height:\s*100%;/);
   });
