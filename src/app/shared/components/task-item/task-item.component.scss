@@ -43,7 +43,7 @@ input:checked {
   -webkit-line-clamp: 2;
   line-clamp: 2;
   overflow: hidden;
-  word-break: break-word;
+  overflow-wrap: break-word;
   font-size: var(--app-font-size-task-title);
   font-weight: 700;
   color: var(--app-text);
