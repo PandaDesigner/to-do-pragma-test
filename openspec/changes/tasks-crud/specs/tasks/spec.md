@@ -6,7 +6,7 @@
 
 `TaskStore.upsert(task)` MUST añadir una tarea nueva al estado y al repositorio.
 
-#### Scenario: Persistir una tarea nueva
+#### Scenario: TSK-1.1 Persistir una tarea nueva
 
 - **GIVEN** una tarea con `id` que no existe en el estado
 - **WHEN** se llama `upsert`
@@ -17,25 +17,25 @@
 
 `TaskStore.upsert(task)` con un `id` existente MUST reemplazar la versión anterior sin duplicar.
 
-#### Scenario: Actualizar campos sin duplicar
+#### Scenario: TSK-2.1 Actualizar campos sin duplicar
 
 - **GIVEN** una tarea con `id` ya presente en el estado
 - **WHEN** se llama `upsert` con ese `id`
 - **THEN** los campos se reemplazan
 - **AND** solo hay una entrada en `store.tasks()`
-- **AND** `updatedAt` pasa al reloj inyectado
+- **AND** `updatedAt` conserva el valor entregado por el llamador; `upsert` no lo genera
 
 ### Requirement: TSK-3 Completar tarea
 
 `TaskStore.dispatch(id, TASK_EVENT.COMPLETE)` MUST cambiar el estado a `COMPLETED` cuando la tarea está en `PENDING` u `OVERDUE`.
 
-#### Scenario: Completar tarea pendiente o vencida
+#### Scenario: TSK-3.1 Completar tarea pendiente o vencida
 
 - **GIVEN** una tarea en `PENDING` o `OVERDUE`
 - **WHEN** se llama `dispatch` con `TASK_EVENT.COMPLETE`
 - **THEN** la tarea pasa a `COMPLETED`
 
-#### Scenario: Rechazar completar tarea ya completada o archivada
+#### Scenario: TSK-3.2 Rechazar completar tarea ya completada o archivada
 
 - **GIVEN** una tarea en `COMPLETED` o `ARCHIVED`
 - **WHEN** se llama `dispatch` con `TASK_EVENT.COMPLETE`
@@ -45,13 +45,13 @@
 
 `TaskStore.dispatch(id, TASK_EVENT.ARCHIVE)` MUST cambiar el estado a `ARCHIVED` cuando la tarea está en `COMPLETED`.
 
-#### Scenario: Archivar tarea completada
+#### Scenario: TSK-4.1 Archivar tarea completada
 
 - **GIVEN** una tarea en `COMPLETED`
 - **WHEN** se llama `dispatch` con `TASK_EVENT.ARCHIVE`
 - **THEN** la tarea pasa a `ARCHIVED`
 
-#### Scenario: Rechazar archivar tarea ya archivada
+#### Scenario: TSK-4.2 Rechazar archivar tarea ya archivada
 
 - **GIVEN** una tarea en `ARCHIVED`
 - **WHEN** se llama `dispatch` con `TASK_EVENT.ARCHIVE`
@@ -61,14 +61,14 @@
 
 `TaskStore.remove(id)` MUST borrar la tarea del estado y del repositorio cuando existe.
 
-#### Scenario: Eliminar tarea existente
+#### Scenario: TSK-5.1 Eliminar tarea existente
 
 - **GIVEN** una tarea con `id` presente en el estado
 - **WHEN** se llama `remove`
 - **THEN** la tarea no aparece en `store.tasks()`
 - **AND** el repositorio no la contiene
 
-#### Scenario: Eliminar tarea inexistente sin lanzar
+#### Scenario: TSK-5.2 Eliminar tarea inexistente sin lanzar
 
 - **GIVEN** un `id` que no existe en el estado
 - **WHEN** se llama `remove`
@@ -79,13 +79,13 @@
 
 Una tarea MUST llevar `categoryId` y SHALL poder desasignarse masivamente por categoría.
 
-#### Scenario: Mantener categoría al persistir
+#### Scenario: TSK-6.1 Mantener categoría al persistir
 
 - **GIVEN** una tarea con `categoryId` no nulo
 - **WHEN** se llama `upsert`
 - **THEN** la tarea persistida mantiene ese `categoryId`
 
-#### Scenario: Limpiar categoría de un conjunto
+#### Scenario: TSK-6.2 Limpiar categoría de un conjunto
 
 - **GIVEN** tareas con varias categorías, incluida `'c1'`
 - **WHEN** se llama `clearCategory('c1')`
@@ -96,35 +96,41 @@ Una tarea MUST llevar `categoryId` y SHALL poder desasignarse masivamente por ca
 
 `TaskStore.setCategory(categoryId)` MUST limitar `visibleTasks` a esa categoría.
 
-#### Scenario: Filtrar por categoría concreta
+#### Scenario: TSK-7.1 Filtrar por categoría concreta
 
 - **GIVEN** tareas con categorías `'work'` y `'home'`
 - **WHEN** se llama `setCategory('work')`
 - **THEN** `store.visibleTasks()` solo contiene tareas con `categoryId === 'work'`
 
-#### Scenario: Quitar el filtro
+#### Scenario: TSK-7.2 Quitar el filtro
 
 - **GIVEN** un filtro de categoría activo
-- **WHEN** se llama `setCategory(null)` o `setCategory(undefined)`
+- **WHEN** se llama `setCategory(undefined)`
 - **THEN** `store.visibleTasks()` contiene todas las tareas que pasan el resto de filtros
+
+#### Scenario: TSK-7.3 Filtrar tareas sin categoría
+
+- **GIVEN** tareas con categoría y tareas con `categoryId = null`
+- **WHEN** se llama `setCategory(null)`
+- **THEN** `store.visibleTasks()` solo contiene tareas sin categoría que pasan el resto de filtros
 
 ### Requirement: TSK-8 Persistencia
 
 Las tareas MUST guardarse y cargarse a través de `TASK_REPOSITORY`.
 
-#### Scenario: Guardar al crear o actualizar
+#### Scenario: TSK-8.1 Guardar al crear o actualizar
 
 - **GIVEN** el repositorio inyectado
 - **WHEN** se llama `upsert` o `upsertMany`
 - **THEN** el repositorio recibe las tareas con `save`
 
-#### Scenario: Borrar del repositorio
+#### Scenario: TSK-8.2 Borrar del repositorio
 
 - **GIVEN** una tarea existente
 - **WHEN** se llama `remove`
 - **THEN** el repositorio recibe la orden de borrado por id
 
-#### Scenario: Refrescar y expirar pendientes
+#### Scenario: TSK-8.3 Refrescar y expirar pendientes
 
 - **GIVEN** el repositorio con tareas, algunas `PENDING` con `dueDate < clock.today()`
 - **WHEN** se llama `refresh`
@@ -136,13 +142,13 @@ Las tareas MUST guardarse y cargarse a través de `TASK_REPOSITORY`.
 
 `TaskStore.setStatuses(statuses)` y `sortTasksByDueDate` MUST actuar sobre `visibleTasks`.
 
-#### Scenario: Filtrar por estado
+#### Scenario: TSK-9.1 Filtrar por estado
 
 - **GIVEN** tareas en varios estados
 - **WHEN** se llama `setStatuses([COMPLETED])`
 - **THEN** `store.visibleTasks()` solo contiene tareas en `COMPLETED`
 
-#### Scenario: Ordenación por fecha de vencimiento
+#### Scenario: TSK-9.2 Ordenación por fecha de vencimiento
 
 - **GIVEN** tareas con `dueDate` distintas
 - **WHEN** se consultan sin filtro adicional
@@ -150,9 +156,9 @@ Las tareas MUST guardarse y cargarse a través de `TASK_REPOSITORY`.
 
 ### Requirement: TSK-10 Manejo de errores
 
-Los fallos del repositorio MUST exponerse sin alterar el estado ni perder la última operación.
+Los fallos del repositorio MUST exponerse sin alterar `store.tasks()` y MUST permitir reintentar la última operación fallida. No se garantiza una transacción de repositorio en operaciones de varias escrituras: una escritura anterior puede haber terminado antes del fallo de otra.
 
-#### Scenario: Error de persistencia no altera el estado
+#### Scenario: TSK-10.1 Error de persistencia no altera el estado
 
 - **GIVEN** el repositorio que lanza al guardar
 - **WHEN** se llama `upsert`
@@ -160,7 +166,7 @@ Los fallos del repositorio MUST exponerse sin alterar el estado ni perder la úl
 - **AND** `store.tasks()` no cambia
 - **AND** `store.busy()` vuelve a `false`
 
-#### Scenario: Retry limpia el error
+#### Scenario: TSK-10.2 Retry limpia el error
 
 - **GIVEN** un error pendiente en el store
 - **WHEN** se llama `store.retry()` y la operación tiene éxito
@@ -171,7 +177,10 @@ Los fallos del repositorio MUST exponerse sin alterar el estado ni perder la úl
 Cubierto en `src/app/store/task.spec.ts` con `InMemoryRepository<Task>` y `CLOCK` fijos:
 
 1. Crear dos tareas: una con `categoryId = 'work'`, otra con `categoryId = 'home'`.
-2. Completar la de `work`.
-3. Filtrar por `work`: solo aparece la completada.
-4. Filtrar por `home`: solo aparece la pendiente.
-5. Quitar el filtro: aparecen las dos, ordenadas por `dueDate`.
+2. Completar la de `work` y comprobar su persistencia.
+3. Habilitar los estados `PENDING` y `COMPLETED`, pues el filtro inicial excluye completadas.
+4. Filtrar por `work`: solo aparece la completada.
+5. Filtrar por `home`: solo aparece la pendiente.
+6. Quitar el filtro con `setCategory(undefined)`: aparecen las dos, ordenadas por `dueDate`.
+
+Es un escenario integrado de store, dominio y repositorio en memoria; no una prueba de navegador ni del driver nativo.

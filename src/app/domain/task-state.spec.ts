@@ -1,151 +1,126 @@
-import { TASK_STATUS, type Task } from './task';
+import { TASK_STATUS, type TaskStatus } from './task';
 import {
   TASK_EVENT,
   updateTaskStatus,
   InvalidTransitionError,
   type Clock,
+  type TaskEvent,
+  type TaskState,
 } from './task-state';
-import { TaskStateMachine } from '../data/states/task-state-machine';
+import { ArchivedState } from '../data/states/archived.state';
+import { CompletedState } from '../data/states/completed.state';
+import { OverdueState } from '../data/states/overdue.state';
+import { PendingState } from '../data/states/pending.state';
+import { taskFixture } from '../testing/task.fixture';
 
-const FIXED_CLOCK: Clock = {
-  today: () => '2026-01-15',
-  now: () => 1_700_000_000_000,
-};
+const clock: Clock = { today: () => '2026-01-02', now: () => 100 };
 
-function makeTask(overrides: Partial<Task> = {}): Task {
-  return {
-    id: 'task-1',
-    title: 'Sample',
-    status: TASK_STATUS.PENDING,
-    categoryId: null,
-    dueDate: '2026-01-20',
-    createdAt: 0,
-    updatedAt: 0,
-    ...overrides,
-  };
+interface TransitionCase {
+  event: TaskEvent;
+  status: TaskStatus;
 }
 
-describe('updateTaskStatus', () => {
-  it('returns a new task with the requested status and updated updatedAt', () => {
-    const task = makeTask();
+interface StateCase {
+  state: TaskState;
+  status: TaskStatus;
+  actions: readonly TaskEvent[];
+  transitions: readonly TransitionCase[];
+}
+
+const states: readonly StateCase[] = [
+  {
+    state: new PendingState(),
+    status: TASK_STATUS.PENDING,
+    actions: [TASK_EVENT.COMPLETE, TASK_EVENT.ARCHIVE],
+    transitions: [
+      { event: TASK_EVENT.COMPLETE, status: TASK_STATUS.COMPLETED },
+      { event: TASK_EVENT.EXPIRE, status: TASK_STATUS.OVERDUE },
+      { event: TASK_EVENT.ARCHIVE, status: TASK_STATUS.ARCHIVED },
+    ],
+  },
+  {
+    state: new CompletedState(),
+    status: TASK_STATUS.COMPLETED,
+    actions: [TASK_EVENT.REOPEN, TASK_EVENT.ARCHIVE],
+    transitions: [
+      { event: TASK_EVENT.REOPEN, status: TASK_STATUS.PENDING },
+      { event: TASK_EVENT.ARCHIVE, status: TASK_STATUS.ARCHIVED },
+    ],
+  },
+  {
+    state: new OverdueState(),
+    status: TASK_STATUS.OVERDUE,
+    actions: [TASK_EVENT.COMPLETE, TASK_EVENT.RESCHEDULE, TASK_EVENT.ARCHIVE],
+    transitions: [
+      { event: TASK_EVENT.COMPLETE, status: TASK_STATUS.COMPLETED },
+      { event: TASK_EVENT.RESCHEDULE, status: TASK_STATUS.PENDING },
+      { event: TASK_EVENT.ARCHIVE, status: TASK_STATUS.ARCHIVED },
+    ],
+  },
+  {
+    state: new ArchivedState(),
+    status: TASK_STATUS.ARCHIVED,
+    actions: [TASK_EVENT.RESTORE],
+    transitions: [{ event: TASK_EVENT.RESTORE, status: TASK_STATUS.PENDING }],
+  },
+];
+
+describe('C1 updateTaskStatus', () => {
+  it('updates only status and updatedAt without mutating the task', () => {
+    const task = Object.freeze(
+      taskFixture({ time: '09:30', durationMin: 20, reminderMin: 5 }),
+    );
     const updated = updateTaskStatus({
       task,
       status: TASK_STATUS.COMPLETED,
-      clock: FIXED_CLOCK,
+      clock,
     });
-    expect(updated.status).toBe(TASK_STATUS.COMPLETED);
-    expect(updated.updatedAt).toBe(FIXED_CLOCK.now());
-    expect(updated.id).toBe(task.id);
-    expect(updated.title).toBe(task.title);
+    expect(updated).not.toBe(task);
+    expect(updated).toEqual({
+      ...task,
+      status: TASK_STATUS.COMPLETED,
+      updatedAt: clock.now(),
+    });
+    expect(task.status).toBe(TASK_STATUS.PENDING);
+    expect(task.updatedAt).toBe(1);
   });
 });
 
-describe('TaskStateMachine', () => {
-  const machine = new TaskStateMachine();
-
-  describe('PENDING', () => {
-    const pending = makeTask();
-
-    it('exposes COMPLETE and ARCHIVE', () => {
-      expect(machine.actionsFor(pending)).toEqual([
-        TASK_EVENT.COMPLETE,
-        TASK_EVENT.ARCHIVE,
-      ]);
+describe.each(states)(
+  'C1 TaskState $status',
+  ({ state, status, actions, transitions }) => {
+    it('declares its status and only its available user actions', () => {
+      expect(state.status).toBe(status);
+      expect(state.availableActions).toEqual(actions);
+      expect(Object.isFrozen(state.availableActions)).toBe(true);
     });
 
-    it('transitions to COMPLETED on COMPLETE', () => {
-      const next = machine.transition({
-        task: pending,
-        event: TASK_EVENT.COMPLETE,
-        clock: FIXED_CLOCK,
-      });
-      expect(next.status).toBe(TASK_STATUS.COMPLETED);
+    it.each(transitions)(
+      'handles $event as $status',
+      ({ event, status: nextStatus }) => {
+        const task = Object.freeze(taskFixture({ status }));
+        const next = state.handle({ task, event, clock });
+        expect(next).not.toBe(task);
+        expect(next).toEqual({
+          ...task,
+          status: nextStatus,
+          updatedAt: clock.now(),
+          dueDate:
+            event === TASK_EVENT.RESCHEDULE ? clock.today() : task.dueDate,
+        });
+        expect(task).toEqual(taskFixture({ status }));
+      },
+    );
+
+    const invalidEvents = Object.values(TASK_EVENT).filter(
+      (event) => !transitions.some((transition) => transition.event === event),
+    );
+    it.each(invalidEvents)('rejects %s without mutating the task', (event) => {
+      const task = Object.freeze(taskFixture({ status }));
+      expect(() => state.handle({ task, event, clock })).toThrow(
+        new InvalidTransitionError(status, event),
+      );
+      expect(task).toEqual(taskFixture({ status }));
     });
-
-    it('transitions to ARCHIVED on ARCHIVE', () => {
-      const next = machine.transition({
-        task: pending,
-        event: TASK_EVENT.ARCHIVE,
-        clock: FIXED_CLOCK,
-      });
-      expect(next.status).toBe(TASK_STATUS.ARCHIVED);
-    });
-
-    it('rejects RESTORE', () => {
-      expect(() =>
-        machine.transition({
-          task: pending,
-          event: TASK_EVENT.RESTORE,
-          clock: FIXED_CLOCK,
-        }),
-      ).toThrow(InvalidTransitionError);
-    });
-  });
-
-  describe('COMPLETED', () => {
-    const completed = makeTask({ status: TASK_STATUS.COMPLETED });
-
-    it('exposes REOPEN and ARCHIVE', () => {
-      expect(machine.actionsFor(completed)).toEqual([
-        TASK_EVENT.REOPEN,
-        TASK_EVENT.ARCHIVE,
-      ]);
-    });
-
-    it('rejects COMPLETE', () => {
-      expect(() =>
-        machine.transition({
-          task: completed,
-          event: TASK_EVENT.COMPLETE,
-          clock: FIXED_CLOCK,
-        }),
-      ).toThrow(InvalidTransitionError);
-    });
-  });
-
-  describe('OVERDUE', () => {
-    const overdue = makeTask({ status: TASK_STATUS.OVERDUE });
-
-    it('exposes COMPLETE, RESCHEDULE and ARCHIVE', () => {
-      expect(machine.actionsFor(overdue)).toEqual([
-        TASK_EVENT.COMPLETE,
-        TASK_EVENT.RESCHEDULE,
-        TASK_EVENT.ARCHIVE,
-      ]);
-    });
-
-    it('transitions to COMPLETED on COMPLETE', () => {
-      const next = machine.transition({
-        task: overdue,
-        event: TASK_EVENT.COMPLETE,
-        clock: FIXED_CLOCK,
-      });
-      expect(next.status).toBe(TASK_STATUS.COMPLETED);
-    });
-  });
-
-  describe('ARCHIVED', () => {
-    const archived = makeTask({ status: TASK_STATUS.ARCHIVED });
-
-    it('exposes RESTORE only', () => {
-      expect(machine.actionsFor(archived)).toEqual([TASK_EVENT.RESTORE]);
-    });
-
-    it('rejects COMPLETE and ARCHIVE', () => {
-      expect(() =>
-        machine.transition({
-          task: archived,
-          event: TASK_EVENT.COMPLETE,
-          clock: FIXED_CLOCK,
-        }),
-      ).toThrow(InvalidTransitionError);
-      expect(() =>
-        machine.transition({
-          task: archived,
-          event: TASK_EVENT.ARCHIVE,
-          clock: FIXED_CLOCK,
-        }),
-      ).toThrow(InvalidTransitionError);
-    });
-  });
-});
+  },
+);
