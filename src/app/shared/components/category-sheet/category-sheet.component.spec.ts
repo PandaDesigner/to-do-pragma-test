@@ -201,4 +201,59 @@ describe('CategorySheetComponent', () => {
     expect(fixture.componentInstance.sectionLabels).toHaveLength(3);
     expect(fixture.componentInstance.section()).toBe('routine');
   });
+
+  it('dismisses the sheet and resets internal state', async () => {
+    const { store, fixture } = await setup();
+    store.openCategorySheet({ mode: 'create' });
+    fixture.detectChanges();
+    fixture.componentInstance.onName('Temporal');
+    fixture.componentInstance.chooseIcon('star');
+    fixture.componentInstance.chooseColor('my');
+    fixture.componentInstance.chooseSection('event');
+    fixture.componentInstance.dismiss();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.name()).toBe('');
+    expect(fixture.componentInstance.icon()).toBe('cart');
+    expect(fixture.componentInstance.colorToken()).toBe('routine');
+    expect(fixture.componentInstance.section()).toBe('general');
+    expect(fixture.componentInstance.editingId()).toBeNull();
+  });
+
+  it('preserves the existing kind when editing a stored category', async () => {
+    const { store, fixture } = await setup();
+    const stored = {
+      id: 'c1',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'daily' as const,
+      section: 'routine' as const,
+    };
+    await store.upsert(stored);
+    store.openCategorySheet({ mode: 'edit', draft: stored });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => (resolve as (v: void) => void)(undefined));
+    fixture.detectChanges();
+    const save = jest.spyOn(fixture.componentInstance.save, 'emit');
+    fixture.componentInstance.submit();
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'c1', kind: 'daily' }),
+    );
+  });
+
+  it('exposes a fill colour for every sheet key', async () => {
+    const { fixture } = await setup();
+    const component = fixture.componentInstance;
+    for (const key of [
+      'routine',
+      'event',
+      'my',
+      'more',
+      'more-gray',
+      'primary',
+    ]) {
+      expect(component.fillColor(key as never)).toMatch(/var\(--app-category-/);
+    }
+  });
 });
