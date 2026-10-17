@@ -94,7 +94,7 @@ summary {
 
 ion-fab {
   position: absolute;
-  left: calc(292px - var(--app-rail-width));
+  left: calc(320px - var(--app-rail-width));
   bottom: 50px;
   width: 68px;
   height: 68px;
@@ -108,8 +108,8 @@ ion-fab-button {
   --color: var(--app-on-primary);
   --box-shadow: var(--app-shadow-fab);
   ion-icon {
-    width: 48px;
-    height: 48px;
-    font-size: 48px;
+    width: 64px;
+    height: 64px;
+    font-size: 64px;
   }
 }
