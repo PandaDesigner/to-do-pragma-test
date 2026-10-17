@@ -120,14 +120,7 @@
       "sheetTop": "estimado 16",
       "handle": 2.5
     },
-    "space": [
-      4,
-      8,
-      12,
-      16,
-      24,
-      32
-    ],
+    "space": [4, 8, 12, 16, 24, 32],
     "gapsUsados": {
       "headerOverlineToTitle": 3,
       "titleToRule": 15,
@@ -166,19 +159,13 @@
     "font": {
       "display": {
         "family": "DM Serif Display",
-        "weights": [
-          400
-        ],
+        "weights": [400],
         "note": "solo existe Regular",
         "fallback": "Georgia, serif"
       },
       "body": {
         "family": "Inter",
-        "weights": [
-          400,
-          600,
-          700
-        ],
+        "weights": [400, 600, 700],
         "fallback": "-apple-system, Roboto, sans-serif"
       }
     },
@@ -196,7 +183,7 @@
       "size": 38,
       "letterSpacing": -0.3,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-date",
+      "cssVar": "--fs-display-date",
       "usage": "Fecha del día (23.Mon)"
     },
     {
@@ -206,7 +193,7 @@
       "size": 36,
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-title",
+      "cssVar": "--fs-display-title",
       "usage": "Títulos de página y de sheet"
     },
     {
@@ -247,7 +234,8 @@
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
       "cssVar": "--fs-note-title",
-      "usage": "Título de NoteItem/CategoryRow/SettingRow"
+      "usage": "Título de NoteItem/CategoryRow/SettingRow",
+      "figmaNote": "Nombre Figma confirmado en 4:788."
     },
     {
       "name": "Body/Regular",
@@ -256,7 +244,7 @@
       "size": 14,
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-regular",
+      "cssVar": "--fs-body",
       "usage": "Texto general y de ayuda"
     },
     {
@@ -306,17 +294,8 @@
       "type": "composite (presentacional)",
       "angular": "shared/components/side-tab-rail",
       "variants": {
-        "active": [
-          "Todo",
-          "Routine",
-          "Event",
-          "My",
-          "More"
-        ],
-        "categories": [
-          "On",
-          "Off"
-        ]
+        "active": ["Todo", "Routine", "Event", "My", "More"],
+        "categories": ["On", "Off"]
       },
       "inputs": {
         "active": "TabId",
@@ -340,14 +319,8 @@
       "name": "Checkbox",
       "type": "presentacional",
       "variants": {
-        "shape": [
-          "Square",
-          "Circle"
-        ],
-        "checked": [
-          true,
-          false
-        ]
+        "shape": ["Square", "Circle"],
+        "checked": [true, false]
       },
       "anatomy": "Square 29x29 borde 1.5 color/primary-dark radio 3 fondo surface (checked: estimado relleno primary con check blanco). Circle 26x26: off fill color/check-empty; on fill color/primary + icon/check 12 blanco."
     },
@@ -355,14 +328,8 @@
       "name": "TaskItem",
       "type": "presentacional",
       "variants": {
-        "state": [
-          "Default",
-          "Completed"
-        ],
-        "meta": [
-          "On",
-          "Off"
-        ]
+        "state": ["Default", "Completed"],
+        "meta": ["On", "Off"]
       },
       "inputs": {
         "task": "TaskVm",
@@ -379,10 +346,7 @@
       "name": "NoteItem",
       "type": "presentacional",
       "variants": {
-        "dot": [
-          true,
-          false
-        ]
+        "dot": [true, false]
       },
       "anatomy": "311x~77, checkbox Square 29 + título Body/Note Title + punto 4–6 estimado a la derecha (x≈C+282), borde inferior color/border"
     },
@@ -390,9 +354,7 @@
       "name": "NewTaskInput",
       "type": "presentacional",
       "variants": {
-        "size": [
-          "Task"
-        ]
+        "size": ["Task"]
       },
       "outputs": {
         "submit": "string"
@@ -403,10 +365,7 @@
       "name": "UncompletedTasksCard",
       "type": "composite (contenedor ligero)",
       "variants": {
-        "expanded": [
-          true,
-          false
-        ]
+        "expanded": [true, false]
       },
       "inputs": {
         "items": "TaskVm[]",
@@ -424,11 +383,7 @@
       "name": "Button",
       "type": "presentacional",
       "variants": {
-        "variant": [
-          "Primary",
-          "Secondary",
-          "Danger"
-        ]
+        "variant": ["Primary", "Secondary", "Danger"]
       },
       "anatomy": "alto 50, radio 6, px 16, Body/Button. Primary: fill primary, texto on-primary. Secondary: borde 1 color/primary-dark, texto primary-dark, fondo surface (estimado grosor borde). Danger: fill color/danger, texto blanco."
     },
@@ -444,14 +399,8 @@
       "name": "CategoryChip",
       "type": "presentacional",
       "variants": {
-        "selected": [
-          true,
-          false
-        ],
-        "dot": [
-          true,
-          false
-        ]
+        "selected": [true, false],
+        "dot": [true, false]
       },
       "anatomy": "seleccionado: fill color/primary, texto on-primary, alto 33. No seleccionado: borde 1 color/border, fondo surface, texto color/text, alto 35. Radio round. Dot 8 estimado con color de la categoría, Body/Regular.",
       "outputs": {
@@ -471,11 +420,7 @@
       "name": "SettingRow",
       "type": "presentacional",
       "variants": {
-        "trailing": [
-          "toggle",
-          "chevron",
-          "value"
-        ]
+        "trailing": ["toggle", "chevron", "value"]
       },
       "anatomy": "311x77, icono 18 + gap 14 + Body/Note Title; trailing: Toggle 51x31 | chevron-right 18 | valor Body/Regular text-muted; borde inferior color/border"
     },
@@ -483,10 +428,7 @@
       "name": "Toggle",
       "type": "presentacional",
       "variants": {
-        "state": [
-          "On",
-          "Off"
-        ]
+        "state": ["On", "Off"]
       },
       "anatomy": "51x31 tipo iOS; Off: pista color/check-empty, knob blanco (estimado)"
     },
@@ -1937,10 +1879,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -1986,10 +1925,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2035,10 +1971,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2084,10 +2017,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2343,10 +2273,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2392,10 +2319,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2441,10 +2365,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -2490,10 +2411,7 @@
                 "width": 52,
                 "height": 18
               },
-              "children": [
-                "icon/pencil 18x18",
-                "icon/trash 18x18 (gap 16)"
-              ]
+              "children": ["icon/pencil 18x18", "icon/trash 18x18 (gap 16)"]
             }
           ]
         },
@@ -4963,11 +4881,7 @@
           "StatusFilterStrategy",
           "TodayFilterStrategy"
         ],
-        "SortStrategy": [
-          "ByTimeSort",
-          "ByCreatedSort",
-          "ByStatusSort"
-        ],
+        "SortStrategy": ["ByTimeSort", "ByCreatedSort", "ByStatusSort"],
         "PersistenceStrategy": [
           "IonicStoragePersistence",
           "InMemoryPersistence"
@@ -5031,12 +4945,7 @@
     "stateMachine": {
       "task": {
         "initial": "pending",
-        "states": [
-          "pending",
-          "completed",
-          "overdue",
-          "archived"
-        ],
+        "states": ["pending", "completed", "overdue", "archived"],
         "transitions": [
           {
             "from": "pending",
@@ -5114,12 +5023,7 @@
           },
           "default": {
             "layout": "NoteItem",
-            "actions": [
-              "add",
-              "check",
-              "delete",
-              "editCategory"
-            ]
+            "actions": ["add", "check", "delete", "editCategory"]
           }
         },
         "resolver": "CategoryViewStateFactory según category.kind ('daily'|'shopping'|'list')"
@@ -5246,6 +5150,12 @@
     "Fila de chips de 311 de ancho con contenido de 328: Home queda cortado → scroll horizontal.",
     "NoteItem tiene alturas 77/78/74 por redondeo de Auto Layout; usar 77.",
     "NewTaskInput en my-notes mide 293x68 vs 295x69 en Todo.",
-    "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug)."
+    "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug).",
+    "Display/Date usaba cssVar --fs-date; corregido a --fs-display-date según Figma 4:440.",
+    "Body/Regular usaba cssVar --fs-regular; corregido a --fs-body según Figma 4:440.",
+    "Display/Title usaba cssVar --fs-title; corregido a --fs-display-title según Figma 4:788 y 4:1267.",
+    "Interlineado: la copia offline registra '100% (normal)'; Figma devuelve metadatos 100 y código leading-[normal]. La consulta reiterada en 4:440, 4:788 y 4:1267 confirma que Figma exporta el valor como 100 y CSS como 'normal'. Para C0.5 se documenta la unidad CSS normal como referencia, sin fijar un cierre de pixel exacto: el navegador aplica 'normal' según la fuente y el tamaño. Verificado contra 4:440/4:788/4:1267.",
+    "Radio round: Figma documenta 999; la copia offline y design.md registran 50 %. Decisión de C0.5: usar 50 % para elementos circulares sin exponer el radio como token; el valor 999 se documenta solo si una consulta posterior confirma el uso fuera de círculos.",
+    "Sheets 4:947 y 4:1365 faltan en screens[]; documentar como child de 4:869 y 4:1267 en una corrección posterior. En 4:1267 el sheet es 4:1365 con altura 487, padding lateral 24, handle 36x5 y radius 10; el color 50% de Figma coincide con el token round 50 % cerrado en C0.5."
   ]
 }

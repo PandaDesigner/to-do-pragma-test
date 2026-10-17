@@ -1,0 +1,51 @@
+// Fuentes locales (Cordova offline), según Figma: Inter 400/600/700 y DM Serif Display 400.
+// Archivos y licencias SIL OFL 1.1 en src/assets/fonts (ver README-fonts.md).
+
+$font-body:
+  'Inter',
+  -apple-system,
+  BlinkMacSystemFont,
+  'Segoe UI',
+  Roboto,
+  system-ui,
+  sans-serif;
+// DM Serif Display solo existe en 400: al usarla, aplicar `font-weight: 400; font-synthesis: none;`
+// para que el navegador no sintetice una negrita falsa.
+$font-display: 'DM Serif Display', Georgia, serif;
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/DMSerifDisplay-Regular.woff2') format('woff2');
+}
+
+:root {
+  --app-font-body: #{$font-body};
+  --app-font-display: #{$font-display};
+}

@@ -1,36 +1,57 @@
+@use 'tokens' as t;
+
+// Paleta Figma 4:440 y 4:1560 expuesta como variables --app-* y --ion-*. El
+// partial tokens no emite CSS; este archivo es el único punto de salida.
 :root {
-  --color-primary: #4b3f6b;
-  --color-primary-dark: #3a2e5c;
-  --color-text: #2e2547;
-  --color-text-muted: #6b6580;
-  --color-surface: #fff;
-  --color-surface-muted: #f2f2f4;
-  --color-border: #e6e4ec;
-  --color-tab-label: #3a2e5c;
-  --tab-todo: #b8cfa8;
-  --tab-routine: #f28b8b;
-  --tab-event: #9fc3cf;
-  --tab-my: #e8e1b8;
-  --tab-more: #c9c9c9;
-  --ion-color-primary: #4b3f6b;
-  --ion-color-primary-rgb: 75, 63, 107;
-  --ion-color-primary-contrast: #fff;
-  --ion-color-primary-shade: #3a2e5c;
-  --ion-color-primary-tint: #5d527a;
-  --ion-color-danger: #c5000f;
-  --ion-background-color: var(--color-surface);
-  --ion-text-color: var(--color-text);
-  --ion-font-family: 'Inter', system-ui, sans-serif;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: #8b7fc0;
-    --color-primary-dark: #edeaf5;
-    --color-text: #edeaf5;
-    --color-text-muted: #b4aec5;
-    --color-surface: #1e1a2b;
-    --color-surface-muted: #2a2539;
-    --color-border: #332d45;
-    --ion-color-primary: #8b7fc0;
-  }
+  --app-primary: #{t.$color-primary};
+  --app-primary-dark: #{t.$color-primary-dark};
+  --app-on-primary: #{t.$color-on-primary};
+  --app-text: #{t.$color-text};
+  --app-text-muted: #{t.$color-text-muted};
+  --app-surface: #{t.$color-surface};
+  --app-surface-muted: #{t.$color-surface-muted};
+  --app-border: #{t.$color-border};
+  --app-card-border: #{t.$color-card-border};
+  --app-check-empty: #{t.$color-check-empty};
+  --app-accent-link: #{t.$color-accent-link};
+  --app-danger: #{t.$color-danger};
+  --app-scrim: #{t.$color-scrim};
+
+  --app-space-4: #{t.$space-4};
+  --app-space-8: #{t.$space-8};
+  --app-space-12: #{t.$space-12};
+  --app-space-16: #{t.$space-16};
+  --app-space-24: #{t.$space-24};
+  --app-space-32: #{t.$space-32};
+
+  --app-radius-badge: #{t.$radius-badge};
+  --app-radius-checkbox: #{t.$radius-checkbox};
+  --app-radius-button: #{t.$radius-button};
+  --app-radius-tab: #{t.$radius-tab};
+  --app-radius-card: #{t.$radius-card};
+  --app-radius-input: #{t.$radius-input};
+  --app-radius-accent-underline: #{t.$radius-accent-underline};
+
+  --app-stroke-checkbox: #{t.$stroke-checkbox};
+  --app-stroke-divider: #{t.$stroke-divider};
+
+  // Aliases históricos de tokens tab/* mientras no se hayan migrado los
+  // consumidores finales; se eliminan al cerrar la migración.
+  --tab-todo: #{t.$tab-todo};
+  --tab-routine: #{t.$tab-routine};
+  --tab-event: #{t.$tab-event};
+  --tab-my: #{t.$tab-my};
+  --tab-more: #{t.$tab-more};
+  --color-tab-label: #{t.$color-primary-dark};
+
+  // Puente Ionic: primary, danger y referencias a surface y text.
+  --ion-color-primary: #{t.$color-primary};
+  --ion-color-primary-rgb: #{t.$primary-rgb};
+  --ion-color-primary-contrast: #{t.$color-on-primary};
+  --ion-color-primary-shade: #{t.$primary-shade};
+  --ion-color-primary-tint: #{t.$primary-tint};
+  --ion-color-danger: #{t.$color-danger};
+  --ion-background-color: var(--app-surface);
+  --ion-text-color: var(--app-text);
+  --ion-font-family: var(--app-font-body);
 }

@@ -1,0 +1,49 @@
+// Tokens crudos aprobados en Figma y en la tabla Mapeo Figma → src/theme de design.md.
+// Este parcial NO emite CSS: solo aporta valores que variables.scss expone como
+// variables --app-*, --ion-* y --tab-*.
+
+$color-primary: #4b3f6b;
+$color-primary-dark: #3a2e5c;
+$color-on-primary: #ffffff;
+$color-text: #2e2547;
+$color-text-muted: #6b6580;
+$color-surface: #ffffff;
+$color-surface-muted: #f2f2f4;
+$color-border: #e6e4ec;
+$color-card-border: #d9d6e2;
+$color-check-empty: #e4e1ee;
+$color-accent-link: #3aa8e0;
+$color-danger: #c5000f;
+$color-scrim: #00000066;
+
+$tab-todo: #b8cfa8;
+$tab-routine: #f28b8b;
+$tab-event: #9fc3cf;
+$tab-my: #e8e1b8;
+$tab-more: #c9c9c9;
+$tab-filler: #4b3f6b;
+
+$shadow-card-color: #2e254714;
+$shadow-fab-color: #4b3f6b59;
+
+$space-4: 4px;
+$space-8: 8px;
+$space-12: 12px;
+$space-16: 16px;
+$space-24: 24px;
+$space-32: 32px;
+
+$radius-badge: 2px;
+$radius-checkbox: 3px;
+$radius-button: 6px;
+$radius-tab: 8px;
+$radius-card: 10px;
+$radius-input: 10px;
+$radius-accent-underline: 1.5px;
+
+$stroke-checkbox: 1.5px;
+$stroke-divider: 1px;
+
+$primary-rgb: 75, 63, 107;
+$primary-shade: #3a2e5c;
+$primary-tint: #5d527a;
