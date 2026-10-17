@@ -1,18 +1,11 @@
-<ion-tabs>
-  <ion-tab-bar slot="bottom" aria-label="Secciones">
-    <ion-tab-button tab="tasks" [href]="links.TASKS" class="tasks-tab"
-      ><ion-label>Todas</ion-label></ion-tab-button
-    >
-    <ion-tab-button tab="settings" [href]="links.SETTINGS" class="settings-tab"
-      ><ion-label>{{ 'settings.tab' | translate }}</ion-label></ion-tab-button
-    >
-    @if (flags.categoriesEnabled()) {
-      <ion-tab-button tab="my" [href]="links.CATEGORIES" class="categories-tab"
-        ><ion-label>Mis listas</ion-label></ion-tab-button
-      >
-    }
-  </ion-tab-bar>
-</ion-tabs>
+<div class="shell">
+  <app-side-tab-rail
+    [active]="activeTab()"
+    [showMy]="flags.categoriesEnabled()"
+    (selected)="openTab($event)"
+  />
+  <ion-router-outlet />
+</div>
 <aside class="remote-status" aria-label="Configuración remota">
   <small>enable_categories: {{ flags.categoriesEnabled() }}</small>
   @if (flags.error() || feedback.error()) {

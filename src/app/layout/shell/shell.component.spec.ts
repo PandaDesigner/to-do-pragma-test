@@ -53,16 +53,16 @@ describe('Shell and categories guard', () => {
     tasks.setCategory('c');
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector('ion-tab-button[tab="my"]'),
+      fixture.nativeElement.querySelector('[data-tab="my"]'),
     ).not.toBeNull();
     expect(tasks.visibleTasks()).toHaveLength(1);
     enabled.set(false);
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector('ion-tab-button[tab="my"]'),
+      fixture.nativeElement.querySelector('[data-tab="my"]'),
     ).toBeNull();
     expect(
-      fixture.nativeElement.querySelector('ion-tab-button[tab="tasks"]'),
+      fixture.nativeElement.querySelector('[data-tab="todo"]'),
     ).not.toBeNull();
     expect(tasks.categoryId()).toBeUndefined();
     expect(tasks.visibleTasks()).toHaveLength(2);

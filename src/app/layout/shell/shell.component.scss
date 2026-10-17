@@ -2,58 +2,17 @@
   display: block;
   height: 100%;
 }
-ion-tabs {
-  margin-left: 27px;
-  width: calc(100% - 27px);
-}
-ion-tab-bar {
-  position: absolute;
-  inset: 0 auto 0 -27px;
-  width: 27px;
-  height: 100dvh;
+
+.shell {
   display: flex;
-  flex-direction: column;
-  padding: 0;
-  border: 0;
-  background: var(--app-primary);
-  overflow: visible;
+  min-height: 100%;
 }
-ion-tab-button {
-  width: 27px;
-  max-height: none;
+
+ion-router-outlet {
   flex: 1;
-  border-radius: 0 8px 8px 0;
-  --color: var(--app-primary-dark);
-  --color-selected: var(--app-primary);
-  --background-focused: var(--app-surface);
+  min-width: 0;
 }
-ion-label {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 120px;
-  height: 20px;
-  margin: 0;
-  overflow: visible;
-  text-align: center;
-  white-space: nowrap;
-  transform: translate(-50%, -50%) rotate(-90deg);
-  font-size: 13px;
-  font-weight: 600;
-}
-.tasks-tab {
-  --background: var(--tab-todo);
-}
-.categories-tab {
-  --background: var(--tab-my);
-}
-.settings-tab {
-  --background: var(--tab-more);
-}
-.tab-selected {
-  --background: var(--app-surface);
-  border-radius: 0;
-}
+
 .remote-status {
   position: fixed;
   right: 12px;
@@ -62,29 +21,34 @@ ion-label {
   font-size: 11px;
   color: var(--app-text-muted);
 }
+
 .remote-status small {
   display: block;
   text-align: right;
   background: var(--app-surface);
   padding: 4px;
 }
+
 .remote-error {
   max-width: min(360px, calc(100vw - 60px));
   padding: 12px;
   background: var(--app-surface-muted);
   border: 1px solid var(--app-border);
-  border-radius: 8px;
+  border-radius: var(--app-radius-tab);
 }
+
 p {
   margin: 0 0 8px;
 }
+
 button {
   min-height: 44px;
   background: var(--app-primary);
   color: var(--app-surface);
-  border-radius: 6px;
+  border-radius: var(--app-radius-button);
   padding: 8px 12px;
 }
+
 button:disabled {
   opacity: 0.4;
 }
