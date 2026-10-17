@@ -145,4 +145,19 @@ describe('SettingsPage', () => {
       fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
     ).not.toBeNull();
   });
+
+  it('caps the debug seed button at two activations and disables it', async () => {
+    const { fixture } = setup();
+    const page = fixture.componentInstance;
+    await page.generateFiveThousand();
+    await page.generateFiveThousand();
+    fixture.detectChanges();
+    expect(page.debugSeedExhausted()).toBe(true);
+    const button = fixture.nativeElement.querySelector(
+      '[data-testid="generate-tasks"]',
+    ) as HTMLButtonElement;
+    expect(button.disabled).toBe(true);
+    await page.generateFiveThousand();
+    expect(page.debugSeedCount()).toBe(2);
+  });
 });
