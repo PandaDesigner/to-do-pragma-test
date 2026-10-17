@@ -97,6 +97,11 @@
         (action)="openSheet()"
       />
       }
+      @if (store.hasMoreTasks()) {
+      <button type="button" class="link load-more" (click)="loadMore()">
+        Cargar más
+      </button>
+      }
     </section>
     }
     <app-new-task-input
@@ -163,6 +168,21 @@
           </div>
           <div class="form-row form-row--two">
             <label class="form-field">
+              <span class="form-field__label">Duración</span>
+              <select formControlName="durationPreset">
+                <option [value]="15">15 min</option>
+                <option [value]="30">30 min</option>
+                <option [value]="45">45 min</option>
+                <option [value]="60">1 h</option>
+                <option [value]="75">1 h 15 min</option>
+                <option [value]="90">1 h 30 min</option>
+                <option [value]="105">1 h 45 min</option>
+                <option [value]="120">2 h</option>
+                <option value="custom">Personalizado</option>
+              </select>
+            </label>
+            @if (durationPreset() === 'custom') {
+            <label class="form-field">
               <span class="form-field__label">Duración (min)</span>
               <input
                 type="number"
@@ -172,16 +192,22 @@
                 formControlName="durationMin"
               />
             </label>
+            }
+          </div>
+          <div class="form-row">
             <label class="form-field">
               <span class="form-field__label">Aviso (min antes)</span>
-              <input
-                type="number"
-                min="0"
-                step="1"
-                inputmode="numeric"
-                formControlName="reminderMin"
-              />
+              <select formControlName="reminderMin">
+                <option [value]="0">Sin aviso</option>
+                <option [value]="5">5 min antes</option>
+                <option [value]="15">15 min antes</option>
+                <option [value]="30">30 min antes</option>
+                <option [value]="60">1 h antes</option>
+              </select>
             </label>
+            <p class="form-helper">
+              Los avisos requieren plugin push y credenciales del dispositivo.
+            </p>
           </div>
           @if (flags.categoriesEnabled()) {
           <label class="form-field">

@@ -107,7 +107,8 @@ export class TasksPage implements OnInit {
     }),
     time: new FormControl('', { nonNullable: true }),
     durationMin: new FormControl('', { nonNullable: true }),
-    reminderMin: new FormControl('', { nonNullable: true }),
+    durationPreset: new FormControl<number | 'custom'>(30, { nonNullable: true }),
+    reminderMin: new FormControl('15', { nonNullable: true }),
     categoryId: new FormControl('', { nonNullable: true }),
   });
   readonly section = this.readSection();
@@ -177,6 +178,8 @@ export class TasksPage implements OnInit {
   togglePanel(): void {
     this.panelOpen.update((open) => !open);
   }
+
+  readonly durationPreset = computed(() => this.form.controls.durationPreset.value);
 
   openSheet(): void {
     this.sheetOpen.set(true);
@@ -255,12 +258,14 @@ export class TasksPage implements OnInit {
 
   editTask(task: Task): void {
     this.editingId.set(task.id);
+    const duration = task.durationMin;
     this.form.reset({
       title: task.title,
       dueDate: task.dueDate,
       time: task.time ?? '',
-      durationMin: task.durationMin?.toString() ?? '',
-      reminderMin: task.reminderMin?.toString() ?? '',
+      durationMin: duration?.toString() ?? '',
+      durationPreset: duration === undefined || [15, 30, 45, 60, 75, 90, 105, 120].includes(duration) ? duration : 'custom',
+      reminderMin: task.reminderMin?.toString() ?? '0',
       categoryId: task.categoryId ?? '',
     });
     this.openSheet();
@@ -273,7 +278,8 @@ export class TasksPage implements OnInit {
       dueDate: this.clock.today(),
       time: '',
       durationMin: '',
-      reminderMin: '',
+      durationPreset: 30,
+      reminderMin: '15',
       categoryId: '',
     });
   }
