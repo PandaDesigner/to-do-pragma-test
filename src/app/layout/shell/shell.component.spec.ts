@@ -162,4 +162,62 @@ describe('Shell and categories guard', () => {
       expect(router.serializeUrl(denied)).toBe(APP_ROUTE.TASKS);
     }
   });
+
+  it('persists new categories via onCategorySave and assigns an id when missing', async () => {
+    const { categories, fixture } = setup();
+    const shell = fixture.componentInstance;
+    await shell.onCategorySave({
+      id: '',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    } as never);
+    const saved = categories.categories().find((category) => category.name === 'Shopping');
+    expect(saved?.id).toBeTruthy();
+    expect(saved?.icon).toBe('cart');
+  });
+
+  it('blocks onCategorySave when the categories flag is off', async () => {
+    const { categories, enabled, fixture } = setup();
+    enabled.set(false);
+    const shell = fixture.componentInstance;
+    await shell.onCategorySave({
+      id: '',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    } as never);
+    expect(categories.categories()).toEqual([]);
+  });
+
+  it('removes categories via onCategoryDelete', async () => {
+    const { categories, fixture } = setup();
+    await categories.upsert({
+      id: 'c1',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    });
+    const shell = fixture.componentInstance;
+    await shell.onCategoryDelete('c1');
+    expect(categories.categories()).toEqual([]);
+  });
+
+  it('blocks onCategoryDelete when the categories flag is off', async () => {
+    const { categories, enabled, fixture } = setup();
+    await categories.upsert({
+      id: 'c1',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    });
+    enabled.set(false);
+    const shell = fixture.componentInstance;
+    await shell.onCategoryDelete('c1');
+    expect(categories.categories()).toHaveLength(1);
+  });
 });
