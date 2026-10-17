@@ -22,7 +22,9 @@ describe('CategorySection', () => {
     'rejects %s as an unknown section',
     (value) => {
       expect(isCategorySection(value)).toBe(false);
-      expect(() => parseCategorySection(value)).toThrow('Sección de categoría no válida');
+      expect(() => parseCategorySection(value)).toThrow(
+        'Sección de categoría no válida',
+      );
     },
   );
 });
