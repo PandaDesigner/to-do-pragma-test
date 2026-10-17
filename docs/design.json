@@ -5143,6 +5143,51 @@
     "9. Remote Config y guard; demo flag-off.",
     "10. Comparar cada pantalla con su PNG de mocks/ en Chrome 375x812; tolerancia 2px."
   ],
+  "figmaCodeMap": {
+    "4:440": "todo-screen",
+    "4:520": "todo-screen",
+    "4:617": "notes",
+    "4:664": "todo-screen",
+    "4:788": "categories",
+    "4:869": "categories",
+    "4:947": "categories form sheet",
+    "4:973": "todo-screen",
+    "4:1062": "todo-screen",
+    "4:1113": "feature-flag-ui",
+    "4:1267": "task-sheet",
+    "4:1365": "task-sheet",
+    "4:1404": "swipe-delete",
+    "4:1496": "settings",
+    "4:1560": "dark-mode",
+    "mockup-original.png": "Referencia conjunta de Todo y Shopping. No es una pantalla adicional ni se cuenta como otro nodo."
+  },
+  "confirmDialog": {
+    "id": "4:1404",
+    "name": "ConfirmDialog",
+    "parent": "todo-swipe-delete-confirm",
+    "actions": ["Cancelar", "Eliminar"],
+    "note": "Diálogo de confirmación contenido en el frame 4:1404."
+  },
+  "sheets": [
+    {
+      "id": "4:947",
+      "parent": "4:869",
+      "name": "categories-form-sheet-panel",
+      "height": 487,
+      "padding": 24,
+      "handle": "36x5",
+      "radius": 10
+    },
+    {
+      "id": "4:1365",
+      "parent": "4:1267",
+      "name": "new-task-sheet-panel",
+      "height": 487,
+      "padding": 24,
+      "handle": "36x5",
+      "radius": 10
+    }
+  ],
   "discrepancies": [
     "Los emojis de categoría (🛒💼🏠🩺) existen en los nodos pero no se renderizan en los PNG exportados.",
     "Chevron del panel: abajo cuando está abierto y arriba cuando está colapsado (invertido respecto a la convención); se respeta Figma.",
