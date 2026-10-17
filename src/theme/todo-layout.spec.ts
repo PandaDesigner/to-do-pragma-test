@@ -6,6 +6,15 @@ function readAppStyles(relativePath: string): string {
 }
 
 describe('Todo layout regression contracts', () => {
+  it('[TODO-04.1] gives task categories pill corners and space to wrap conforme a Figma 4:973', () => {
+    const styles = readAppStyles(
+      'shared/components/task-item/task-item.component.scss',
+    );
+    expect(styles).toMatch(/border-radius:\s*var\(--app-radius-pill\);/);
+    expect(styles).toMatch(/max-width:\s*100%;/);
+    expect(styles).toMatch(/flex-wrap:\s*wrap;/);
+  });
+
   it('[TODO-04.1] uses pill corners and a separate touch target conforme a Figma 4:973', () => {
     const styles = readAppStyles('shared/components/chip/chip.component.scss');
     expect(styles).toMatch(/border-radius:\s*var\(--app-radius-pill\);/);
