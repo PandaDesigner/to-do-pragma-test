@@ -20,36 +20,36 @@ La página de tareas usa `ion-tab-bar` y un formulario incrustado. Figma, leído
 
 ## Fuente Figma
 
-| Nodo | Pantalla | Escenarios | Notas |
-| --- | --- | --- | --- |
-| [4:440](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-440) | todo-day-panel-open | TODO-01.1, TODO-01.2, TODO-02.1 | Rail, fecha, panel abierto |
-| [4:520](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-520) | todo-panel-closed | TODO-02.2 | Panel de 62 px y lista |
-| [4:664](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-664) | todo-completed-task | TODO-03.1 | Tachado y checkbox marcado |
-| [4:973](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-973) | todo-filtered-by-category | TODO-04.1 | Chips y filtro |
-| [4:1062](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1062) | todo-empty-state | TODO-05.1 | Ilustración y llamada |
-| [4:1496](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1496) | more-settings | SET-02.1 | Solo la sección Debug se mueve aquí |
+| Nodo                                                                         | Pantalla                  | Escenarios                      | Notas                               |
+| ---------------------------------------------------------------------------- | ------------------------- | ------------------------------- | ----------------------------------- |
+| [4:440](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-440)   | todo-day-panel-open       | TODO-01.1, TODO-01.2, TODO-02.1 | Rail, fecha, panel abierto          |
+| [4:520](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-520)   | todo-panel-closed         | TODO-02.2                       | Panel de 62 px y lista              |
+| [4:664](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-664)   | todo-completed-task       | TODO-03.1                       | Tachado y checkbox marcado          |
+| [4:973](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-973)   | todo-filtered-by-category | TODO-04.1                       | Chips y filtro                      |
+| [4:1062](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1062) | todo-empty-state          | TODO-05.1                       | Ilustración y llamada               |
+| [4:1496](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1496) | more-settings             | SET-02.1                        | Solo la sección Debug se mueve aquí |
 
 ## Mapeo Figma → src/theme
 
 No hay variables nuevas. Se usan los tokens ya expuestos:
 
-| Variable Figma | Light | Dark | Token |
-| --- | --- | --- | --- |
-| color/primary | #4B3F6B | #8B7FC0 | `--app-primary` |
-| color/primary-dark | #3A2E5C | #EDEAF5 | `--app-primary-dark` |
-| color/surface | #FFFFFF | #1E1A2B | `--app-surface` |
-| color/surface-muted | #F2F2F4 | #2A2539 | `--app-surface-muted` |
-| color/border | #E6E4EC | #332D45 | `--app-border` |
-| color/card-border | #D9D6E2 | #332D45 | `--app-card-border` |
-| color/text | #2E2547 | #EDEAF5 | `--app-text` |
-| color/accent-link | #3AA8E0 | #3AA8E0 | `--app-accent-link` |
-| color/check-empty | #E4E1EE | #E4E1EE | `--app-check-empty` |
-| tab/todo..more | #B8CFA8, #F28B8B, #9FC3CF, #E8E1B8, #C9C9C9 | alfa D9 | `--app-category-1..5` |
-| tab/filler | #4B3F6B | #4B3F6BD9 | `--app-category-filler` |
-| radius/tab, badge, checkbox, button, card, input | 8, 2, 3, 6, 10, 10 | igual | `--app-radius-*` |
-| space 4, 8, 12, 16, 24 | igual | igual | `--app-space-*` |
-| fs badge, tab, meta, button, overline, task-title, display-date | 11, 13, 14, 14, 15, 17, 38 | igual | `--app-font-size-*` |
-| shadow/card, shadow/fab | #2E254714, #4B3F6B59 | igual | `--app-shadow-card`, `--app-shadow-fab` |
+| Variable Figma                                                  | Light                                       | Dark      | Token                                   |
+| --------------------------------------------------------------- | ------------------------------------------- | --------- | --------------------------------------- |
+| color/primary                                                   | #4B3F6B                                     | #8B7FC0   | `--app-primary`                         |
+| color/primary-dark                                              | #3A2E5C                                     | #EDEAF5   | `--app-primary-dark`                    |
+| color/surface                                                   | #FFFFFF                                     | #1E1A2B   | `--app-surface`                         |
+| color/surface-muted                                             | #F2F2F4                                     | #2A2539   | `--app-surface-muted`                   |
+| color/border                                                    | #E6E4EC                                     | #332D45   | `--app-border`                          |
+| color/card-border                                               | #D9D6E2                                     | #332D45   | `--app-card-border`                     |
+| color/text                                                      | #2E2547                                     | #EDEAF5   | `--app-text`                            |
+| color/accent-link                                               | #3AA8E0                                     | #3AA8E0   | `--app-accent-link`                     |
+| color/check-empty                                               | #E4E1EE                                     | #E4E1EE   | `--app-check-empty`                     |
+| tab/todo..more                                                  | #B8CFA8, #F28B8B, #9FC3CF, #E8E1B8, #C9C9C9 | alfa D9   | `--app-category-1..5`                   |
+| tab/filler                                                      | #4B3F6B                                     | #4B3F6BD9 | `--app-category-filler`                 |
+| radius/tab, badge, checkbox, button, card, input                | 8, 2, 3, 6, 10, 10                          | igual     | `--app-radius-*`                        |
+| space 4, 8, 12, 16, 24                                          | igual                                       | igual     | `--app-space-*`                         |
+| fs badge, tab, meta, button, overline, task-title, display-date | 11, 13, 14, 14, 15, 17, 38                  | igual     | `--app-font-size-*`                     |
+| shadow/card, shadow/fab                                         | #2E254714, #4B3F6B59                        | igual     | `--app-shadow-card`, `--app-shadow-fab` |
 
 ## Medidas de get_design_context
 

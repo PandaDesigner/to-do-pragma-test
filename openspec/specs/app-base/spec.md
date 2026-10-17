@@ -3,7 +3,6 @@
 ## Purpose
 
 App funcional de Todo Notebook sobre el scaffolding de `init`. Cubre los dominios de tareas y categorías, estrategias pure de filtrado y orden, puertos de repositorio, persistencia local con Ionic Storage + driver SQLite, stores con `@ngrx/signals`, feature flag `enable_categories` vía Firebase Remote Config, decoradores `@Debounce` y `@LogAction`, UI con tabs, virtual scroll desde 200 tareas y botón de generación masiva de 5.000 tareas. Las versiones firmadas de Android e iOS quedan fuera.
-
 ## Requirements
 ### Requirement: APP-01 Modelos y transiciones de tareas
 
@@ -125,22 +124,24 @@ Las páginas `tasks` y `categories` MUST ser standalone con `OnPush`, usar `trac
 
 ### Requirement: APP-10 Feature flag enable_categories en UI
 
-Cuando `enable_categories` es `false`, la pestaña "Mis listas" y los chips de categoría MUST ocultarse; la pestaña "Todas" sigue mostrando todas las tareas.
+Cuando `enable_categories` es `false`, la pestaña My y los chips de categoría MUST ocultarse; Routine y Event MUST permanecer visibles pero deshabilitadas. La pestaña Todo sigue mostrando las tareas sin filtro de categoría. Si una sección dependiente está abierta, MUST volver a Todo. Figma: 4:440.
 
 #### Scenario: APP-10-A Flag en false
 
-- **GIVEN** el shell con `enable_categories: false`
+- **GIVEN** el shell con `enable_categories: false`, conforme a Figma 4:440
 - **WHEN** se renderiza
-- **THEN** la pestaña "Mis listas" no aparece.
+- **THEN** la pestaña My no aparece.
 - **AND** las tareas no muestran chip de categoría.
+- **AND** Routine y Event están deshabilitadas.
+- **AND** una sección dependiente abierta vuelve a Todo sin filtro de categoría.
 
 ### Requirement: APP-11 Botón debug 5.000 tareas
 
-La página `tasks` MUST exponer un botón que genera 5.000 tareas pendientes en bloque.
+La página de Ajustes MUST exponer un botón que genera 5.000 tareas pendientes en bloque. La página de tareas MUST NOT mostrarlo. Figma: 4:1496.
 
 #### Scenario: APP-11-A Generación masiva
 
-- **GIVEN** la página `tasks`
+- **GIVEN** la página de Ajustes, conforme a Figma 4:1496
 - **WHEN** se invoca `generateFiveThousand()`
 - **THEN** `tasks()` pasa a tener 5.005 tareas y `shouldVirtualize()` devuelve `true`.
 
