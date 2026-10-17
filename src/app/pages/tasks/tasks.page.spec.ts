@@ -364,20 +364,16 @@ describe('TasksPage', () => {
     expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
   });
 
-  it('[TODO-06.1] creates a task for today from the quick input', async () => {
-    const { fixture, tasks } = await setup();
-    const input: HTMLInputElement = fixture.nativeElement.querySelector(
-      'app-new-task-input input',
-    );
-    input.value = 'Clean my flat';
-    input.dispatchEvent(new Event('input'));
-    fixture.detectChanges();
+  it('[TODO-06.1] creates a task for today from the new-task sheet opened via the FAB', async () => {
+    const { fixture, page, tasks } = await setup();
     (
-      fixture.nativeElement.querySelector(
-        'app-new-task-input button',
-      ) as HTMLButtonElement
+      fixture.nativeElement.querySelector('ion-fab-button') as HTMLButtonElement
     ).click();
-    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(page.sheetOpen()).toBe(true);
+    page.form.patchValue({ title: 'Clean my flat' });
+    await page.saveTask();
+    fixture.detectChanges();
     expect(tasks.tasks()[0]).toMatchObject({
       title: 'Clean my flat',
       dueDate: '2026-01-02',

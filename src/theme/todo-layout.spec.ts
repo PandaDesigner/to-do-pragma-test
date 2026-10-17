@@ -87,10 +87,11 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/main\.notebook-page\s*\{[^}]*display:\s*flex;/);
     expect(styles).toMatch(/\.task-list\s*\{[^}]*flex:\s*1\s*1\s*auto;/);
     expect(styles).toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
-    expect(styles).toMatch(/\.pager\s*\{[^}]*position:\s*sticky;/);
+    expect(styles).toMatch(/\.pager\s*\{[^}]*position:\s*fixed;/);
     expect(styles).toMatch(
       /\.pager\s*\{[^}]*background:\s*var\(--app-surface\);/,
     );
+    expect(styles).toMatch(/\.chips\s*\{[^}]*flex-wrap:\s*wrap;/);
   });
 
   it('[TODO-04.1] uses the on-primary text token for the selected category conforme a Figma 4:973', () => {
@@ -102,11 +103,11 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/\.chip\s*\{[^}]*white-space:\s*nowrap;/);
   });
 
-  it('[TODO-04.1] separates category filters in a horizontally scrollable row conforme a Figma 4:973', () => {
+  it('[TODO-04.1] wraps category filters when there are several conforme a Figma 4:973', () => {
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
     expect(styles).toMatch(/\.chips\s*\{[^}]*display:\s*flex;/);
     expect(styles).toMatch(/\.chips\s*\{[^}]*gap:\s*var\(--app-space-8\);/);
-    expect(styles).toMatch(/\.chips\s*\{[^}]*overflow-x:\s*auto;/);
+    expect(styles).toMatch(/\.chips\s*\{[^}]*flex-wrap:\s*wrap;/);
   });
 
   it('[TODO-05.1] centers content inside the empty-state inset conforme a Figma 4:1062', () => {

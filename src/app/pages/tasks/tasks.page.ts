@@ -37,7 +37,6 @@ import { TaskItemComponent } from '../../shared/components/task-item/task-item.c
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ChipComponent } from '../../shared/components/chip/chip.component';
-import { NewTaskInputComponent } from '../../shared/components/new-task-input/new-task-input.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
@@ -76,7 +75,6 @@ export const PENDING_PANEL = {
     PageHeaderComponent,
     EmptyStateComponent,
     ChipComponent,
-    NewTaskInputComponent,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -197,25 +195,6 @@ export class TasksPage implements OnInit {
   closeSheet(): void {
     this.sheetOpen.set(false);
     this.cancelEdit();
-  }
-
-  async addQuickTask(title: string): Promise<void> {
-    if (this.store.busy() || !this.canCreate()) {
-      return;
-    }
-    const now = this.clock.now();
-    const categoryId = this.firstAvailableCategoryId();
-    await this.feedback.run(() =>
-      this.store.upsert({
-        id: this.createId(),
-        title,
-        status: TASK_STATUS.PENDING,
-        categoryId,
-        dueDate: this.clock.today(),
-        createdAt: now,
-        updatedAt: now,
-      }),
-    );
   }
 
   async rescheduleEarlier(): Promise<void> {
