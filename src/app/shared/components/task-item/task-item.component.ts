@@ -17,6 +17,22 @@ import type { Task } from '../../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../../domain/task-state';
 import { resolveCategoryIcon } from '../../../domain/category-icons';
 
+function mapColorTokenToIndex(token: string): number {
+  if (token === 'routine') {
+    return 2;
+  }
+  if (token === 'event') {
+    return 3;
+  }
+  if (token === 'my') {
+    return 4;
+  }
+  if (token === 'primary' || token === 'filler' || token === 'todo') {
+    return 'filler' as unknown as number;
+  }
+  return 5;
+}
+
 const ACTION_LABEL: Record<TaskEvent, string> = {
   COMPLETE: 'Completar',
   EXPIRE: 'Vencer',
@@ -46,12 +62,20 @@ export class TaskItemComponent {
   readonly actions = input<readonly TaskEvent[]>([]);
   readonly categoryName = input<string>();
   readonly categoryIcon = input<string>();
+  readonly categoryColorToken = input<string>();
   readonly resolvedCategoryIcon = computed(() => {
     const key = this.categoryIcon();
     if (!key) {
       return null;
     }
     return resolveCategoryIcon(key);
+  });
+  readonly resolvedCategoryColor = computed(() => {
+    const token = this.categoryColorToken();
+    if (!token) {
+      return null;
+    }
+    return `var(--app-category-${mapColorTokenToIndex(token)})`;
   });
   readonly showCategories = input(true);
   readonly disabled = input(false);
