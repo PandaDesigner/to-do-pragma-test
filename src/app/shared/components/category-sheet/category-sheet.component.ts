@@ -17,6 +17,7 @@ import {
 import {
   CATEGORY_ICONS,
   type CategoryIconKey,
+  pickValue,
 } from '../../../domain/category-icons';
 import { CategoryStore } from '../../../store/category';
 import { ChipComponent } from '../chip/chip.component';
@@ -308,26 +309,22 @@ export class CategorySheetComponent {
 }
 
 function mapColorToken(token: string): CategoryColorKey {
-  if (token === 'primary' || token === 'todo' || token === 'filler') {
-    return 'primary';
-  }
-  if (token === 'routine') {
-    return 'routine';
-  }
-  if (token === 'event') {
-    return 'event';
-  }
-  if (token === 'my') {
-    return 'my';
-  }
-  return 'more';
+  return pickValue(
+    token,
+    {
+      routine: 'routine',
+      event: 'event',
+      my: 'my',
+      primary: 'primary',
+      todo: 'primary',
+      filler: 'primary',
+    } as const,
+    'more',
+  );
 }
 
 function colorKeyToToken(key: CategoryColorKey): string {
-  if (key === 'primary') {
-    return 'primary';
-  }
-  return key;
+  return key === 'primary' ? 'primary' : key;
 }
 
 export function fillColor(key: CategoryColorKey): string {

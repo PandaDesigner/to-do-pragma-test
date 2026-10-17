@@ -15,22 +15,21 @@ import {
 } from 'ionicons/icons';
 import type { Task } from '../../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../../domain/task-state';
-import { resolveCategoryIcon } from '../../../domain/category-icons';
+import { resolveCategoryIcon, pickValue } from '../../../domain/category-icons';
 
 function mapColorTokenToIndex(token: string): number {
-  if (token === 'routine') {
-    return 2;
-  }
-  if (token === 'event') {
-    return 3;
-  }
-  if (token === 'my') {
-    return 4;
-  }
-  if (token === 'primary' || token === 'filler' || token === 'todo') {
-    return 'filler' as unknown as number;
-  }
-  return 5;
+  return pickValue(
+    token,
+    {
+      routine: 2,
+      event: 3,
+      my: 4,
+      primary: 'filler' as unknown as number,
+      todo: 'filler' as unknown as number,
+      filler: 'filler' as unknown as number,
+    } as const,
+    5,
+  );
 }
 
 const ACTION_LABEL: Record<TaskEvent, string> = {

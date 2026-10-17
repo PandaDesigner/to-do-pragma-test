@@ -50,3 +50,14 @@ export function resolveCategoryIcon(key: string): string {
   const match = CATEGORY_ICONS.find((entry) => entry.key === key);
   return match?.icon ?? CATEGORY_ICONS[0].icon;
 }
+
+export function pickValue<TKey extends string, TValue>(
+  value: TKey | string,
+  mapping: Readonly<Record<TKey, TValue>>,
+  fallback: TValue,
+): TValue {
+  if ((Object.keys(mapping) as TKey[]).includes(value as TKey)) {
+    return mapping[value as TKey];
+  }
+  return fallback;
+}
