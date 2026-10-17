@@ -464,6 +464,7 @@ describe('TasksPage', () => {
     page.form.patchValue({
       title: 'Plan sprint',
       time: '09:00',
+      durationPreset: 'custom',
       durationMin: '60',
       reminderMin: '30',
     });
