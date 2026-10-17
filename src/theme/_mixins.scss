@@ -1,0 +1,46 @@
+@use 'tokens' as t;
+
+// Mixins compartidos para los consumidores. Las unidades y los tokens son
+// los verificados en Figma (ver 4:440/4:788/4:1267).
+
+@mixin bp-up($bp) {
+  @if $bp == sm {
+    @media (min-width: 480px) {
+      @content;
+    }
+  } @else if $bp == md {
+    @media (min-width: 768px) {
+      @content;
+    }
+  } @else if $bp == lg {
+    @media (min-width: 1024px) {
+      @content;
+    }
+  } @else {
+    @error "Breakpoint no soportado: #{$bp}";
+  }
+}
+
+@mixin truncate($lines: 1) {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: $lines;
+  line-clamp: $lines;
+}
+
+@mixin focus-visible($offset: 2px) {
+  outline: 2px solid var(--app-primary);
+  outline-offset: $offset;
+}
+
+@mixin safe-area($side: all) {
+  @if $side == all {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  } @else {
+    padding-#{$side}: env(safe-area-inset-#{$side});
+  }
+}

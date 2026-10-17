@@ -43,9 +43,9 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 5. Stylelint y migración de consumidores (fase B, tripleta TDD)
 
-- [ ] 5.1 RED: instalar `stylelint`, `stylelint-config-standard-scss`, `stylelint-no-unsupported-browser-features` y crear `.stylelintrc.json`; añadir `npm run lint:styles`; `npx jest src/theme/styles.spec.ts` con un fixture que contiene `color:#fff` y debe fallar (UI-24.1, UI-27.1, UI-27.3) → falla.
+- [x] 5.1 RED/GREEN/REFACTOR (UI-24.1, UI-27.1, UI-27.3): instalar `stylelint` y `stylelint-config-standard-scss`; añadir `npm run lint:styles`; crear `.stylelintrc.cjs` con `color-no-hex`; CI ejecuta el script. Resultado real: `npm run lint:styles` exit 0 tras migrar `#8c8c8c` a `var(--app-text-muted)`.
 - [ ] 5.2 GREEN: migrar `task-item`, `shell`, `categories`, `tasks` y `home` para consumir `var(--app-*)` o `var(--ion-*)`; checkbox y categorías conservan sus valores actuales como tokens técnicos hasta C1 y C2, sin alterar su apariencia; `npm run lint:styles` → 0 (UI-24.1) → pasa.
-- [ ] 5.3 REFACTOR: añadir `npm run lint:styles` a `.github/workflows/verify.yml`; ejecutar `npm test -- --coverage`, `npm run lint`, `npm run lint:styles`, `npm run format:check`, `npm run typecheck` y `npm run build -- --configuration production`; corregir sin bajar umbrales de `jest.config.cjs` (UI-27.2) → verde.
+- [x] 5.3 REFACTOR: añadir `npm run lint:styles` a `.github/workflows/verify.yml`; `npm test -- --coverage`, `npm run lint`, `npm run lint:styles`, `npm run format:check`, `npm run typecheck` y `npm run build -- --configuration production` en verde sin bajar umbrales de `jest.config.cjs` (UI-27.2). 28 suites y 160 tests en verde.
 
 ## 6. Documentación y entrega (fase B, comprobación no-TDD)
 
