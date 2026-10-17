@@ -37,7 +37,7 @@ interface TaskStoreState extends OperationStatus {
   pageCount: number;
 }
 
-const TASK_PAGE_SIZE = 8;
+const TASK_PAGE_SIZE = 20;
 
 const initialState: TaskStoreState = {
   tasks: [],
@@ -169,7 +169,18 @@ export const TaskStore = signalStore(
           patchState(store, { categoryId, pageCount: 1 });
         },
         loadMore(): void {
-          patchState(store, { pageCount: store.pageCount() + 1 });
+          this.setPage(store.pageCount() + 1);
+        },
+        setPage(page: number): void {
+          const total = store.tasks().length;
+          const size = store.pageSize();
+          const totalPages = total === 0 ? 1 : Math.ceil(total / size);
+          const target = Math.min(Math.max(1, page), totalPages);
+          patchState(store, { pageCount: target });
+        },
+        setPageSize(size: number): void {
+          const target = Math.max(1, Math.floor(size));
+          patchState(store, { pageSize: target, pageCount: 1 });
         },
         setSection(section: CategorySection): void {
           patchState(store, { section, categoryId: undefined });

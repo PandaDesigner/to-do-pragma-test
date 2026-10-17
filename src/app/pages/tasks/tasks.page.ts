@@ -169,6 +169,17 @@ export class TasksPage implements OnInit {
   readonly shouldVirtualize = computed(
     () => this.store.visibleTasks().length >= VIRTUAL_SCROLL_THRESHOLD,
   );
+  readonly totalPages = computed(() => {
+    const total = this.store.tasks().length;
+    if (total === 0) {
+      return 1;
+    }
+    return Math.ceil(total / this.store.pageSize());
+  });
+  readonly currentPage = computed(() => this.store.pageCount());
+  readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
+    buildPagerNumbers(this.currentPage(), this.totalPages(), 2),
+  );
   readonly trackById = (_index: number, task: Task): string => task.id;
 
   ngOnInit(): void {
@@ -332,10 +343,8 @@ export class TasksPage implements OnInit {
     await this.feedback.run(() => this.store.retry());
   }
 
-  async loadMore(): Promise<void> {
-    await this.feedback.run(async () => {
-      this.store.loadMore();
-    });
+  goToPage(page: number): void {
+    this.store.setPage(page);
   }
 
   private firstAvailableCategoryId(): string | null {
@@ -384,4 +393,28 @@ export class TasksPage implements OnInit {
     }
     await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
+}
+
+function buildPagerNumbers(
+  current: number,
+  total: number,
+  window: number,
+): readonly (number | 'ellipsis')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  const range: (number | 'ellipsis')[] = [1];
+  const start = Math.max(2, current - window);
+  const end = Math.min(total - 1, current + window);
+  if (start > 2) {
+    range.push('ellipsis');
+  }
+  for (let page = start; page <= end; page++) {
+    range.push(page);
+  }
+  if (end < total - 1) {
+    range.push('ellipsis');
+  }
+  range.push(total);
+  return range;
 }

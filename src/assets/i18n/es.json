@@ -28,6 +28,8 @@
     "emptyTitle": "No hay tareas para hoy",
     "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
     "emptyAction": "Añadir tarea",
-    "quickAdd": "Añadir tarea"
+    "quickAdd": "Añadir tarea",
+    "pagerPrev": "Página anterior",
+    "pagerNext": "Página siguiente"
   }
 }

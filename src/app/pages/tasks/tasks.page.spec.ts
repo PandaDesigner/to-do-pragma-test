@@ -166,7 +166,7 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     expect(tasks.tasks()).toHaveLength(5005);
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
-    expect(tasks.visibleTasks()).toHaveLength(8);
+    expect(tasks.visibleTasks()).toHaveLength(20);
     while (tasks.visibleTasks().length < tasks.tasks().length) {
       tasks.loadMore();
     }

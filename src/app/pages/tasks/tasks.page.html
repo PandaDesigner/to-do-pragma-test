@@ -96,10 +96,40 @@
         [illustrated]="true"
         (action)="openSheet()"
       />
-      } @if (store.hasMoreTasks()) {
-      <button type="button" class="link load-more" (click)="loadMore()">
-        Cargar más
-      </button>
+      } @if (totalPages() > 1) {
+      <nav class="pager" aria-label="Paginación">
+        <button
+          type="button"
+          class="pager__btn"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+          [attr.aria-label]="'todo.pagerPrev' | translate"
+        >
+          ‹
+        </button>
+        @for (item of pageNumbers(); track item) { @if (item === 'ellipsis') {
+        <span class="pager__ellipsis" aria-hidden="true">…</span>
+        } @else {
+        <button
+          type="button"
+          class="pager__btn"
+          [class.pager__btn--active]="item === currentPage()"
+          (click)="goToPage(item)"
+          [attr.aria-current]="item === currentPage() ? 'page' : null"
+        >
+          {{ item }}
+        </button>
+        } }
+        <button
+          type="button"
+          class="pager__btn"
+          [disabled]="currentPage() === totalPages()"
+          (click)="goToPage(currentPage() + 1)"
+          [attr.aria-label]="'todo.pagerNext' | translate"
+        >
+          ›
+        </button>
+      </nav>
       }
     </section>
     }
