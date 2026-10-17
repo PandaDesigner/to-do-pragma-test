@@ -110,50 +110,29 @@ main.notebook-page {
   min-height: 0;
   flex: 1;
 }
-.virtualized {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.debug-panel {
-  flex-shrink: 0;
-  margin-bottom: 10px;
-  font-size: 13px;
-}
-summary {
-  min-height: 44px;
-  padding-top: 12px;
-  cursor: pointer;
-}
 
 .task-list {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  overscroll-behavior: contain;
-  // The pager and FAB live at the page level (sibling of <ion-content>); no
-  // padding-bottom needed inside the list.
 }
 
 .pager {
   position: fixed;
-  inset-inline: 0;
-  bottom: 0;
+  inset: auto 0 0;
   display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  align-items: center;
   gap: var(--app-space-4);
   padding: var(--app-space-12) var(--app-space-8);
   background: var(--app-surface);
-  z-index: 5;
+  z-index: 1;
 }
 
 .pager__btn {
+  flex: none;
   min-width: var(--app-touch-target);
   min-height: var(--app-touch-target);
   padding: 0 var(--app-space-8);
-  flex: 1 0 auto;
   border: 0;
   background: transparent;
   color: var(--app-text);
@@ -164,11 +143,11 @@ summary {
     opacity: 0.4;
     cursor: not-allowed;
   }
-}
 
-.pager__btn--active {
-  background: var(--app-primary);
-  color: var(--app-on-primary);
+  &--active {
+    background: var(--app-primary);
+    color: var(--app-on-primary);
+  }
 }
 
 .pager__ellipsis {
@@ -177,19 +156,21 @@ summary {
 }
 
 ion-fab.fab-new-task {
-  // slot="fixed" handles viewport positioning; size the button via tokens.
+  position: fixed;
+  right: 50px;
+  bottom: calc(
+    var(--app-pager-height) + var(--app-space-16) +
+      env(safe-area-inset-bottom, 0px)
+  );
+  width: var(--app-fab-size);
+  height: var(--app-fab-size);
   --background: var(--app-primary);
   --color: var(--app-on-primary);
   --box-shadow: var(--app-shadow-fab);
 
-  ion-fab-button {
-    width: var(--app-fab-size);
-    height: var(--app-fab-size);
-  }
-
   ion-icon {
-    width: calc(var(--app-fab-size) - var(--app-space-16));
-    height: calc(var(--app-fab-size) - var(--app-space-16));
+    color: var(--app-on-primary);
+    fill: var(--app-on-primary);
   }
 }
 
@@ -232,26 +213,20 @@ ion-fab.fab-new-task {
 }
 
 ion-fab.fab-new-task {
-  position: absolute;
-  right: 50px;
-  bottom: calc(
-    var(--app-pager-height) + var(--app-space-16) +
-      env(safe-area-inset-bottom, 0px)
-  );
-  width: var(--app-fab-size);
-  height: var(--app-fab-size);
-}
-
-ion-fab-button {
-  width: 100%;
-  height: 100%;
-  margin: 0;
+  // slot="fixed" handles viewport positioning.
   --background: var(--app-primary);
   --color: var(--app-on-primary);
   --box-shadow: var(--app-shadow-fab);
+
+  ion-fab-button {
+    width: var(--app-fab-size);
+    height: var(--app-fab-size);
+  }
+
   ion-icon {
-    width: 64px;
-    height: 64px;
-    font-size: 64px;
+    width: calc(var(--app-fab-size) - var(--app-space-16));
+    height: calc(var(--app-fab-size) - var(--app-space-16));
+    color: var(--app-on-primary);
+    fill: var(--app-on-primary);
   }
 }

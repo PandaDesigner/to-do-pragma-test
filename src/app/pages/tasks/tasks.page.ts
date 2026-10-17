@@ -168,7 +168,7 @@ export class TasksPage implements OnInit {
   );
   readonly currentPage = computed(() => this.store.pageCount());
   readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
-    buildPagerNumbers(this.currentPage(), this.totalPages(), 2),
+    buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
 
@@ -377,23 +377,25 @@ export class TasksPage implements OnInit {
 function buildPagerNumbers(
   current: number,
   total: number,
-  window: number,
 ): readonly (number | 'ellipsis')[] {
+  if (total <= 1) {
+    return [];
+  }
   if (total <= 7) {
     return Array.from({ length: total }, (_, index) => index + 1);
   }
-  const range: (number | 'ellipsis')[] = [1];
-  const start = Math.max(2, current - window);
-  const end = Math.min(total - 1, current + window);
-  if (start > 2) {
-    range.push('ellipsis');
+  // Ventana hacia adelante: hasta 3 numeros empezando en `current`, luego
+  // ellipsis + last si hay huecos entre el segmento y total.
+  const safeCurrent = Math.min(Math.max(1, current), total);
+  const range: (number | 'ellipsis')[] = [safeCurrent];
+  if (safeCurrent + 1 <= total) {
+    range.push(safeCurrent + 1);
   }
-  for (let page = start; page <= end; page++) {
-    range.push(page);
+  if (safeCurrent + 2 <= total && safeCurrent + 2 !== total) {
+    range.push(safeCurrent + 2);
   }
-  if (end < total - 1) {
-    range.push('ellipsis');
+  if ((range[range.length - 1] as number) < total) {
+    range.push('ellipsis', total);
   }
-  range.push(total);
   return range;
 }
