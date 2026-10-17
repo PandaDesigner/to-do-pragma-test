@@ -9,7 +9,7 @@ describe('Todo layout regression contracts', () => {
   it('[TODO-01.1] keeps the nested Ionic outlet in the flex layout conforme a Figma 4:440', () => {
     const styles = readAppStyles('layout/shell/shell.component.scss');
     expect(styles).toMatch(/ion-router-outlet\s*\{[^}]*position:\s*relative;/);
-    expect(styles).toMatch(/\.shell\s*\{[^}]*height:\s*100%;/);
+    expect(styles).toMatch(/\.shell\s*\{[^}]*\sheight:\s*100%;/);
   });
 
   it('[TODO-01.2] gives the day heading priority over generic notebook typography conforme a Figma 4:440', () => {
@@ -27,6 +27,14 @@ describe('Todo layout regression contracts', () => {
     );
     expect(styles).toMatch(/input\s*\{[^}]*min-height:\s*0;/);
     expect(styles).toMatch(/input\s*\{[^}]*padding:\s*0;/);
+  });
+
+  it('[TODO-02.1] compensates absolute panel and FAB coordinates for the rail conforme a Figma 4:440', () => {
+    const styles = readAppStyles('pages/tasks/tasks.page.scss');
+    expect(styles).toMatch(/left:\s*calc\(292px - var\(--app-rail-width\)\);/);
+    expect(styles).toMatch(/margin-left:\s*calc\(0px - var\(--app-rail-width\)\);/);
+    expect(styles).toMatch(/ion-fab-button\s*\{[^}]*width:\s*100%;/);
+    expect(styles).toMatch(/ion-fab-button\s*\{[^}]*height:\s*100%;/);
   });
 
   it('[TODO-05.1] centers the empty-state content conforme a Figma 4:1062', () => {
