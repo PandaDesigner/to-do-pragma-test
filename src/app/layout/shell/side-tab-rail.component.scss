@@ -2,14 +2,14 @@
   display: block;
   flex: 0 0 var(--app-rail-width);
   width: var(--app-rail-width);
-  height: 812px;
+  height: 100%;
 }
 
 .rail {
   display: flex;
   flex-direction: column;
   width: var(--app-rail-width);
-  height: 812px;
+  height: 100%;
 }
 
 .rail-tab {
