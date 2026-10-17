@@ -2,9 +2,9 @@
   <span class="check" aria-hidden="true"></span>
   <input
     [value]="draft()"
-    [attr.aria-label]="label"
+    [attr.aria-label]="label()"
     autocomplete="off"
     (input)="updateDraft($event)"
   />
-  <button type="button" (click)="submitTitle()">{{ label }}</button>
+  <button type="button" (click)="submitTitle()">{{ label() }}</button>
 </form>
