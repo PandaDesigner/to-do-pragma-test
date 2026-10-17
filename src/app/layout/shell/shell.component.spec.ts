@@ -10,6 +10,7 @@ import {
   categoriesEnabledGuard,
 } from '../../core/guards/categories-enabled-guard';
 import { ShellComponent } from './shell.component';
+import { routes } from '../../app.routes';
 
 describe('Shell and categories guard', () => {
   function setup() {
@@ -27,7 +28,7 @@ describe('Shell and categories guard', () => {
     return { ...dependencies, fixture, router: TestBed.inject(Router) };
   }
 
-  it('[TODO-01.1] shows the five-tab rail and disables Routine and Event', () => {
+  it('[TODO-01.1] shows the five-tab rail and enables Routine and Event', () => {
     const { fixture } = setup();
     const rail = fixture.nativeElement.querySelector('[role="tablist"]');
     expect(rail).not.toBeNull();
@@ -38,11 +39,63 @@ describe('Shell and categories guard', () => {
     expect(
       (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
         .disabled,
-    ).toBe(true);
+    ).toBe(false);
     expect(
       (rail.querySelector('[data-tab="event"]') as HTMLButtonElement).disabled,
-    ).toBe(true);
+    ).toBe(false);
   });
+
+  it.each([
+    ['routine', '/tabs/routine'],
+    ['event', '/tabs/event'],
+  ])(
+    '[TODO-07.1] navigates %s to its section route conforme a Figma 4:440',
+    (tab, path) => {
+      const { fixture, router } = setup();
+      const navigate = jest
+        .spyOn(router, 'navigateByUrl')
+        .mockResolvedValue(true);
+      (
+        fixture.nativeElement.querySelector(
+          '[data-tab="' + tab + '"]',
+        ) as HTMLButtonElement
+      ).click();
+      expect(navigate).toHaveBeenCalledWith(path);
+    },
+  );
+
+  it('[TODO-08.2] guards direct Routine/Event routes conforme a Figma 4:440', () => {
+    const children = routes.find((route) => route.path === 'tabs')?.children;
+    for (const path of ['routine', 'event']) {
+      const route = children?.find((route) => route.path === path);
+      expect(route?.data?.['categorySection']).toBe(path);
+      expect(route?.canMatch).toContain(categoriesEnabledGuard);
+    }
+  });
+
+  it.each(['/tabs/routine', '/tabs/event'])(
+    '[TODO-08.1] redirects %s and disables section tabs when categories turn off conforme a Figma 4:440',
+    async (path) => {
+      const { fixture, enabled, router } = setup();
+      jest.spyOn(router, 'url', 'get').mockReturnValue(path);
+      const navigate = jest
+        .spyOn(router, 'navigateByUrl')
+        .mockResolvedValue(true);
+      enabled.set(false);
+      fixture.detectChanges();
+      await fixture.whenStable();
+      expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
+      for (const tab of ['routine', 'event']) {
+        expect(
+          (
+            fixture.nativeElement.querySelector(
+              '[data-tab="' + tab + '"]',
+            ) as HTMLButtonElement
+          ).disabled,
+        ).toBe(true);
+      }
+    },
+  );
 
   it('renders both tabs, then hides categories and clears only the category filter', async () => {
     const { fixture, enabled, tasks } = setup();
