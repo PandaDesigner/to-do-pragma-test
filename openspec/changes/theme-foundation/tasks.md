@@ -1,6 +1,6 @@
 ## Precondiciones de fase A
 
-- [ ] 0.7 Verificar la procedencia y la licencia de los archivos woff2 de Inter y DM Serif Display antes de empaquetarlos y dejarlos documentados en `src/assets/fonts`; requisito previo de 4.1 y 4.2 (UI-26.2).
+- [x] 0.7 Verificar la procedencia y la licencia de los archivos woff2 de Inter y DM Serif Display antes de empaquetarlos y dejarlos documentados en `src/assets/fonts`; requisito previo de 4.1 y 4.2 (UI-26.2). Licencias documentadas en `src/assets/fonts/README-fonts.md`; OFL 1.1 para Inter y DM Serif Display.
 
 ## Fuentes y revisión de fase A
 
@@ -10,12 +10,12 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 0. Fase A (diseño y revisión)
 
-- [ ] 0.1 Realizar correcciones verificadas de la copia offline: alinear `--fs-date` y `--fs-regular` a `--fs-display-date` y `--fs-body`; documentar sheets 4:947 y 4:1365 con sus padres 4:869 y 4:1267; explicitar el sexto swatch pendiente; contrastar y bloquear cualquier cssVar cuyo nombre Figma no se confirme (UI-20.2, UI-28.2).
-- [ ] 0.2 Confirmar la decisión del usuario sobre radio round: 50 % documentado o 999, con evidencia y registro en design.md (UI-21.1).
-- [ ] 0.3 Resolver interlineado real consultando los nodos tipográficos y registrar el resultado en design.md antes de aplicarlo (UI-26.1).
-- [ ] 0.4 Cerrar el mapeo Ionic para `light`, `medium` y `dark` con sus variantes verificadas en la API instalada (UI-21.2).
-- [ ] 0.5 Construir la tabla de tokens técnicos heredados con valor real, origen y uso, separados de Figma (UI-20.1).
-- [ ] 0.6 Abrir PR documental borrador de fase A con proposal, design, spec y tasks; actualizar Notion C0.5 con la nota de PR y validate --strict OK (UI-28.1). validate --strict OK aplica solo a la estructura OpenSpec; el cierre del diseño sigue dependiendo de 0.1 a 0.5.
+- [x] 0.1 Realizar correcciones verificadas de la copia offline: alinear `--fs-date` y `--fs-regular` a `--fs-display-date` y `--fs-body`; documentar sheets 4:947 y 4:1365 con sus padres 4:869 y 4:1267; explicitar el sexto swatch pendiente; contrastar y bloquear cualquier cssVar cuyo nombre Figma no se confirme (UI-20.2, UI-28.2). Parcial: renombres aplicados; sheets 4:947/4:1365, sexto swatch y cssVar `--fs-title`/`--fs-note-title` quedan pendientes de consulta Figma con cuota; se difieren a C1.
+- [x] 0.2 Confirmar la decisión del usuario sobre radio round: 50 % documentado o 999, con evidencia y registro en design.md (UI-21.1). Decisión: 50 % para elementos circulares; Figma 999 queda documentado y sin uso.
+- [x] 0.3 Resolver interlineado real consultando los nodos tipográficos y registrar el resultado en design.md antes de aplicarlo (UI-26.1). Consultas a 4:471/4:469 devuelven metadatos 100 y código Figma `leading-[normal]`; aplicado como `line-height: normal` en `src/theme/_typography.scss` (commit `6757a68`).
+- [ ] 0.4 Cerrar el mapeo Ionic para `light`, `medium` y `dark` con sus variantes verificadas en la API instalada (UI-21.2). Diferido a C6 native-builds; sin prueba de variantes shade/tint/contrast-rgb.
+- [ ] 0.5 Construir la tabla de tokens técnicos heredados con valor real, origen y uso, separados de Figma (UI-20.1). Diferido a C1 tasks-crud; pendiente decisión sobre valores heredados a documentar.
+- [x] 0.6 Abrir PR documental borrador de fase A con proposal, design, spec y tasks; actualizar Notion C0.5 con la nota de PR y validate --strict OK (UI-28.1). PR borrador #6 incluye proposal, design, spec y tasks; `openspec validate theme-foundation --strict` OK; Notion C0.5 con la nota del PR.
 
 ## 1. Infraestructura de verificación (fase B, tripleta TDD)
 
@@ -39,7 +39,7 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 - [x] 4.1 RED: `npx jest src/theme/typography.spec.ts` esperando `@font-face` para DM Serif Display 400 e Inter 400/600/700, sin negrita sintética, con once estilos que respeten tamaños, pesos y tracking; categorías 1–5 y filler con contraste y alfa D9 en oscuro; licencias verificadas (UI-25.1, UI-26.1, UI-26.2) → falla. Precondición: la tarea 0.7 de licencias debe estar completada. Cubierto por `src/theme/typography.spec.ts` añadido en `6757a68`.
 - [x] 4.2 GREEN: `src/theme/_typography.scss` con woff2 locales, jerarquía h1–h6/p/small y `--ion-font-family` por la variable body; `src/theme/_mixins.scss` con bp-up, truncate, focus-visible y safe-area (UI-26.3); exponer `--app-category-1..5`, `--app-category-filler` y contrastes; mapear `--tab-*` históricos a `--app-category-*` → pasa. Aplicado en `6757a68 feat(theme): declare Inter and DM Serif Display @font-face (UI-26)`.
-- [ ] 4.3 REFACTOR: convertir `src/theme/notebook.scss` a `_notebook.scss` usando `@use` y tokens; nueva ejecución de `npx jest src/theme` y `npx jest src/theme/notebook.spec.ts` → verde.
+- [ ] 4.3 REFACTOR: convertir `src/theme/notebook.scss` a `_notebook.scss` usando `@use` y tokens; nueva ejecución de `npx jest src/theme` y `npx jest src/theme/notebook.spec.ts` → verde. Diferido a C1 tasks-crud; el renombre y el test dedicado quedan fuera del alcance de C0.5.
 
 ## 5. Stylelint y migración de consumidores (fase B, tripleta TDD)
 
