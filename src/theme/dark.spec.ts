@@ -25,7 +25,12 @@ describe('UI-22 Paleta oscura verificable', () => {
     expect(css).toMatch(/--app-surface:\s*#1e1a2b/);
   });
 
-  it('keeps the system preference as the only dark activation path', () => {
-    expect(css).not.toMatch(/ion-palette-dark/);
+  it('[UI-22.1] exposes the dark palette on .ion-palette-dark', () => {
+    expect(css).toMatch(/\.ion-palette-dark/);
+    expect(css).toMatch(/--app-primary:\s*#8b7fc0/);
+  });
+
+  it('[UI-22.2] follows the system when no saved preference adds a class', () => {
+    expect(css).toMatch(/@media\s*\(prefers-color-scheme:\s*dark\)/);
   });
 });

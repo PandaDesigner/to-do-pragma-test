@@ -49,7 +49,7 @@ El sistema MUST mapear primary, danger, light, medium y dark a variables Ionic a
 
 ### Requirement: UI-22 Paleta oscura verificable
 
-El sistema MUST ofrecer la paleta de .ion-palette-dark con primary #8B7FC0, primary-dark y text #EDEAF5, surface #1E1A2B y los restantes valores exactos de design.md. El sistema MUST conservar el seguimiento de prefers-color-scheme y permitir forzar oscuro con .ion-palette-dark, conforme a la decisión del usuario. La decisión posterior del usuario sustituye la propuesta body.dark/body.light del plan: esas clases y el forzado claro manual quedan fuera de alcance; retirar .ion-palette-dark restaura el seguimiento del sistema. Este cambio MUST NOT añadir persistencia de preferencias sin autorización.
+El sistema MUST ofrecer la paleta de Figma 4:1560 con primary #8B7FC0, primary-dark y text #EDEAF5 y surface #1E1A2B. Sin preferencia guardada, MUST seguir prefers-color-scheme. La preferencia guardada en Ionic Storage MUST aplicarse con .ion-palette-dark cuando es oscuro y MUST retirar esa clase cuando es claro. El selector vive en Settings. Figma: 4:1560.
 
 #### Scenario: UI-22.1 Oscuro por clase
 

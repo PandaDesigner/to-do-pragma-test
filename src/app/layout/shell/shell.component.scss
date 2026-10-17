@@ -15,7 +15,7 @@ ion-tab-bar {
   flex-direction: column;
   padding: 0;
   border: 0;
-  background: var(--color-primary);
+  background: var(--app-primary);
   overflow: visible;
 }
 ion-tab-button {
@@ -23,9 +23,9 @@ ion-tab-button {
   max-height: none;
   flex: 1;
   border-radius: 0 8px 8px 0;
-  --color: var(--color-tab-label);
-  --color-selected: var(--color-primary);
-  --background-focused: var(--color-surface);
+  --color: var(--app-primary-dark);
+  --color-selected: var(--app-primary);
+  --background-focused: var(--app-surface);
 }
 ion-label {
   position: absolute;
@@ -48,7 +48,7 @@ ion-label {
   --background: var(--tab-my);
 }
 .tab-selected {
-  --background: var(--color-surface);
+  --background: var(--app-surface);
   border-radius: 0;
 }
 .remote-status {
@@ -57,19 +57,19 @@ ion-label {
   bottom: 6px;
   z-index: 20;
   font-size: 11px;
-  color: var(--color-text-muted);
+  color: var(--app-text-muted);
 }
 .remote-status small {
   display: block;
   text-align: right;
-  background: var(--color-surface);
+  background: var(--app-surface);
   padding: 4px;
 }
 .remote-error {
   max-width: min(360px, calc(100vw - 60px));
   padding: 12px;
-  background: var(--color-surface-muted);
-  border: 1px solid var(--color-border);
+  background: var(--app-surface-muted);
+  border: 1px solid var(--app-border);
   border-radius: 8px;
 }
 p {
@@ -77,8 +77,8 @@ p {
 }
 button {
   min-height: 44px;
-  background: var(--color-primary);
-  color: var(--color-surface);
+  background: var(--app-primary);
+  color: var(--app-surface);
   border-radius: 6px;
   padding: 8px 12px;
 }
