@@ -15,6 +15,65 @@ main.notebook-page {
   padding: var(--app-space-24);
 }
 
+.editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-16);
+}
+
+.editor-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-8);
+  font-size: var(--app-font-size-meta);
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.editor-form .form-field__label {
+  color: var(--app-text-muted);
+  font-weight: 600;
+}
+
+.editor-form input,
+.editor-form select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--app-space-12);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-input);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font-size: var(--app-font-size-body);
+  box-sizing: border-box;
+}
+
+.editor-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--app-space-12);
+}
+
+.editor-form .form-link {
+  align-self: flex-start;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--app-accent-link);
+  font: 600 var(--app-font-size-meta)/normal var(--app-font-body);
+}
+
+.editor-form .form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-12);
+}
+
+.editor-form .form-actions .primary {
+  width: 100%;
+  min-height: 50px;
+}
+
 .task-editor .editor {
   margin: 0;
   padding: 0;

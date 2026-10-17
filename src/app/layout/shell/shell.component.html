@@ -6,6 +6,10 @@
     (selected)="openTab($event)"
   />
   <ion-router-outlet />
+  <app-category-sheet
+    (save)="onCategorySave($event)"
+    (delete)="onCategoryDelete($event)"
+  />
 </div>
 <aside class="remote-status" aria-label="Configuración remota">
   <small>enable_categories: {{ flags.categoriesEnabled() }}</small>

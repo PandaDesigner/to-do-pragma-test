@@ -35,7 +35,7 @@ describe('Shell and categories guard', () => {
     const labels = [...rail.querySelectorAll('[role="tab"]')].map(
       (tab: HTMLElement) => tab.textContent?.trim(),
     );
-    expect(labels).toEqual(['Todo', 'Routine', 'Event', 'My', 'More']);
+    expect(labels).toEqual(['Todo', 'Routine', 'Event', 'Category', 'More']);
     expect(
       (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
         .disabled,
@@ -107,12 +107,14 @@ describe('Shell and categories guard', () => {
     tasks.setCategory('c');
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector('[data-tab="my"]'),
+      fixture.nativeElement.querySelector('[data-tab="category"]'),
     ).not.toBeNull();
     expect(tasks.visibleTasks()).toHaveLength(1);
     enabled.set(false);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('[data-tab="my"]')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-tab="category"]'),
+    ).toBeNull();
     expect(
       fixture.nativeElement.querySelector('[data-tab="todo"]'),
     ).not.toBeNull();

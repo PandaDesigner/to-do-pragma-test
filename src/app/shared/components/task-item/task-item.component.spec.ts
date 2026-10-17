@@ -4,6 +4,29 @@ import { taskFixture } from '../../../testing/task.fixture';
 import { TaskItemComponent } from './task-item.component';
 
 describe('TaskItemComponent', () => {
+  it('renders the category icon next to the name when categoryIcon is provided', () => {
+    const fixture = TestBed.createComponent(TaskItemComponent);
+    const task = taskFixture();
+    fixture.componentRef.setInput('task', task);
+    fixture.componentRef.setInput('categoryName', 'Shopping');
+    fixture.componentRef.setInput('categoryIcon', 'cart');
+    fixture.detectChanges();
+    const chip = fixture.nativeElement.querySelector('.category-chip');
+    expect(chip?.querySelector('ion-icon')).not.toBeNull();
+    expect(chip?.textContent).toContain('Shopping');
+  });
+
+  it('omits the icon when categoryIcon is not provided', () => {
+    const fixture = TestBed.createComponent(TaskItemComponent);
+    const task = taskFixture();
+    fixture.componentRef.setInput('task', task);
+    fixture.componentRef.setInput('categoryName', 'Shopping');
+    fixture.detectChanges();
+    const chip = fixture.nativeElement.querySelector('.category-chip');
+    expect(chip?.querySelector('ion-icon')).toBeNull();
+    expect(chip?.textContent).toContain('Shopping');
+  });
+
   it('emits a toggle without changing the task and hides category chips when disabled', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = Object.freeze(taskFixture());

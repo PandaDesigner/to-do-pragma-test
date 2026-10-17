@@ -113,6 +113,7 @@
         [task]="task"
         [actions]="store.actionsFor(task)"
         [categoryName]="categoryNames().get(task.categoryId)"
+        [categoryIcon]="categoryIcons().get(task.categoryId)"
         [showCategories]="flags.categoriesEnabled()"
         [disabled]="store.busy()"
         (taskToggle)="toggleTask($event)"
@@ -134,34 +135,69 @@
         @if (feedback.error()) {
         <p class="error-notice" role="alert">{{ feedback.error() }}</p>
         }
-        <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor">
+        <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor editor-form">
           <h2 id="task-editor-title">
             {{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}
           </h2>
-          <label
-            >Título<input
+          <label class="form-field">
+            <span class="form-field__label">Título</span>
+            <input
               formControlName="title"
               autocomplete="off"
               maxlength="240"
-          /></label>
+            />
+          </label>
           @if (form.controls.title.touched && form.controls.title.invalid) {
           <p class="error" role="alert">Escribe un título.</p>
           }
-          <div class="form-row">
-            <label
-              >Fecha<input type="date" formControlName="dueDate" required
-            /></label>
-            @if (flags.categoriesEnabled()) {
-            <label
-              >Categoría<select formControlName="categoryId">
-                <option value="">Sin categoría</option>
-                @for (category of availableCategories(); track category.id) {
-                <option [value]="category.id">{{ category.name }}</option>
-                }
-              </select></label
-            >
-            }
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label">Fecha</span>
+              <input type="date" formControlName="dueDate" required />
+            </label>
+            <label class="form-field">
+              <span class="form-field__label">Hora</span>
+              <input type="time" formControlName="time" />
+            </label>
           </div>
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label">Duración (min)</span>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                formControlName="durationMin"
+              />
+            </label>
+            <label class="form-field">
+              <span class="form-field__label">Aviso (min antes)</span>
+              <input
+                type="number"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                formControlName="reminderMin"
+              />
+            </label>
+          </div>
+          @if (flags.categoriesEnabled()) {
+          <label class="form-field">
+            <span class="form-field__label">Categoría</span>
+            <select formControlName="categoryId">
+              <option value="">Sin categoría</option>
+              @for (category of availableCategories(); track category.id) {
+              <option [value]="category.id">{{ category.name }}</option>
+              }
+            </select>
+          </label>
+          }
+          @if (flags.categoriesEnabled()) {
+          <button type="button" class="link form-link" (click)="openCategorySheet()">
+            Crear categoría
+          </button>
+          }
           <div class="form-actions">
             <button type="submit" class="primary" [disabled]="store.busy()">
               {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}

@@ -4,7 +4,7 @@ import { RemoteConfigService } from '../config/remote-config';
 
 export const APP_ROUTE = {
   TASKS: '/tabs/tasks',
-  CATEGORIES: '/tabs/my',
+  CATEGORIES: '/tabs/category',
   SETTINGS: '/tabs/settings',
   ROUTINE: '/tabs/routine',
   EVENT: '/tabs/event',

@@ -10,7 +10,7 @@ export const RAIL_TAB = {
   TODO: 'todo',
   ROUTINE: 'routine',
   EVENT: 'event',
-  MY: 'my',
+  CATEGORY: 'category',
   MORE: 'more',
 } as const;
 
@@ -49,8 +49,8 @@ export const RAIL_TABS: readonly RailTab[] = [
     fill: 'var(--app-category-3)',
   },
   {
-    id: RAIL_TAB.MY,
-    label: 'My',
+    id: RAIL_TAB.CATEGORY,
+    label: 'Category',
     height: 127,
     disabled: false,
     fill: 'var(--app-category-4)',
@@ -78,12 +78,12 @@ export class SideTabRailComponent {
   readonly tabs = RAIL_TABS;
   readonly fillerHeight = RAIL_FILLER_HEIGHT;
   readonly visibleTabs = computed(() =>
-    RAIL_TABS.filter((tab) => this.showMy() || tab.id !== RAIL_TAB.MY),
+    RAIL_TABS.filter((tab) => this.showMy() || tab.id !== RAIL_TAB.CATEGORY),
   );
 
   showsFillerAfter(tabId: RailTabId): boolean {
     if (this.showMy()) {
-      return tabId === RAIL_TAB.MY;
+      return tabId === RAIL_TAB.CATEGORY;
     }
     return tabId === RAIL_TAB.EVENT;
   }

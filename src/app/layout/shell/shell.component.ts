@@ -9,7 +9,10 @@ import { IonRouterOutlet } from '@ionic/angular/standalone';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { APP_ROUTE } from '../../core/guards/categories-enabled-guard';
 import { TaskStore } from '../../store/task';
+import { CategoryStore } from '../../store/category';
 import { ActionFeedback } from '../../shared/services/action-feedback';
+import { CategorySheetComponent } from '../../shared/components/category-sheet/category-sheet.component';
+import type { Category } from '../../domain/category';
 import {
   RAIL_TAB,
   SideTabRailComponent,
@@ -20,7 +23,7 @@ const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   [RAIL_TAB.TODO]: APP_ROUTE.TASKS,
   [RAIL_TAB.ROUTINE]: APP_ROUTE.ROUTINE,
   [RAIL_TAB.EVENT]: APP_ROUTE.EVENT,
-  [RAIL_TAB.MY]: APP_ROUTE.CATEGORIES,
+  [RAIL_TAB.CATEGORY]: APP_ROUTE.CATEGORIES,
   [RAIL_TAB.MORE]: APP_ROUTE.SETTINGS,
 };
 
@@ -28,7 +31,7 @@ const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
-  imports: [IonRouterOutlet, SideTabRailComponent],
+  imports: [IonRouterOutlet, SideTabRailComponent, CategorySheetComponent],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,7 +39,27 @@ export class ShellComponent {
   readonly flags = inject(RemoteConfigService);
   readonly feedback = inject(ActionFeedback);
   private readonly tasks = inject(TaskStore);
+  private readonly categories = inject(CategoryStore);
   private readonly router = inject(Router);
+
+  async onCategorySave(draft: Category): Promise<void> {
+    await this.feedback.run(async () => {
+      if (!this.flags.categoriesEnabled()) {
+        throw new Error('Las categorías están deshabilitadas.');
+      }
+      const id = draft.id || globalThis.crypto.randomUUID();
+      await this.categories.upsert({ ...draft, id });
+    });
+  }
+
+  async onCategoryDelete(id: string): Promise<void> {
+    await this.feedback.run(async () => {
+      if (!this.flags.categoriesEnabled()) {
+        throw new Error('Las categorías están deshabilitadas.');
+      }
+      await this.categories.remove(id);
+    });
+  }
 
   activeTab(): RailTabId {
     if (this.router.url.startsWith(APP_ROUTE.ROUTINE)) {
@@ -46,7 +69,7 @@ export class ShellComponent {
       return RAIL_TAB.EVENT;
     }
     if (this.router.url.startsWith(APP_ROUTE.CATEGORIES)) {
-      return RAIL_TAB.MY;
+      return RAIL_TAB.CATEGORY;
     }
     if (this.router.url.startsWith(APP_ROUTE.SETTINGS)) {
       return RAIL_TAB.MORE;

@@ -10,11 +10,20 @@ import {
 
 interface CategoryStoreState extends OperationStatus {
   categories: readonly Category[];
+  sheetRequest: SheetRequest | null;
 }
+
+export type CategorySheetMode = 'create' | 'edit';
+
+export type SheetRequest =
+  | { mode: 'create' }
+  | { mode: 'edit'; draft: Category };
+
 const initialState: CategoryStoreState = {
   categories: [],
   busy: false,
   error: null,
+  sheetRequest: null,
 };
 
 function mergeCategory(
@@ -85,6 +94,12 @@ export const CategoryStore = signalStore(
             });
             tasks.setCategories(nextCategories);
           });
+        },
+        openCategorySheet(request: SheetRequest): void {
+          patchState(store, { sheetRequest: request });
+        },
+        closeCategorySheet(): void {
+          patchState(store, { sheetRequest: null });
         },
       };
     },

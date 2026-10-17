@@ -105,6 +105,9 @@ export class TasksPage implements OnInit {
         Validators.pattern(/^\d{4}-\d{2}-\d{2}$/),
       ],
     }),
+    time: new FormControl('', { nonNullable: true }),
+    durationMin: new FormControl('', { nonNullable: true }),
+    reminderMin: new FormControl('', { nonNullable: true }),
     categoryId: new FormControl('', { nonNullable: true }),
   });
   readonly section = this.readSection();
@@ -132,6 +135,15 @@ export class TasksPage implements OnInit {
         this.availableCategories().map((category) => [
           category.id,
           category.name,
+        ]),
+      ),
+  );
+  readonly categoryIcons = computed(
+    () =>
+      new Map(
+        this.availableCategories().map((category) => [
+          category.id,
+          category.icon,
         ]),
       ),
   );
@@ -212,6 +224,9 @@ export class TasksPage implements OnInit {
         id: existing?.id ?? this.createId(),
         title: input.title.trim(),
         dueDate: input.dueDate,
+        time: input.time || undefined,
+        durationMin: input.durationMin ? Number(input.durationMin) : undefined,
+        reminderMin: input.reminderMin ? Number(input.reminderMin) : undefined,
         status: existing?.status ?? TASK_STATUS.PENDING,
         categoryId: this.flags.categoriesEnabled()
           ? input.categoryId || null
@@ -225,11 +240,18 @@ export class TasksPage implements OnInit {
     });
   }
 
+  openCategorySheet(): void {
+    this.categories.openCategorySheet({ mode: 'create' });
+  }
+
   editTask(task: Task): void {
     this.editingId.set(task.id);
     this.form.reset({
       title: task.title,
       dueDate: task.dueDate,
+      time: task.time ?? '',
+      durationMin: task.durationMin?.toString() ?? '',
+      reminderMin: task.reminderMin?.toString() ?? '',
       categoryId: task.categoryId ?? '',
     });
     this.openSheet();
@@ -237,7 +259,14 @@ export class TasksPage implements OnInit {
 
   cancelEdit(): void {
     this.editingId.set(null);
-    this.form.reset({ title: '', dueDate: this.clock.today(), categoryId: '' });
+    this.form.reset({
+      title: '',
+      dueDate: this.clock.today(),
+      time: '',
+      durationMin: '',
+      reminderMin: '',
+      categoryId: '',
+    });
   }
 
   async toggleTask(id: string): Promise<void> {
