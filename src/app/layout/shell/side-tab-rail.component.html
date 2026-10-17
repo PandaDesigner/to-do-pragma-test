@@ -15,11 +15,11 @@
       <span>{{ tab.label }}</span>
     </button>
     @if (showsFillerAfter(tab.id)) {
-      <span
+      <div
         class="filler"
         aria-hidden="true"
         [style.height.px]="fillerHeight"
-      ></span>
+      ></div>
     }
   }
 </nav>
