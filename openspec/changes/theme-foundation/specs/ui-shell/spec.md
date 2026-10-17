@@ -12,17 +12,17 @@ El sistema MUST definir los valores crudos aprobados en src/theme/_tokens.scss, 
 - **WHEN** se carga la paleta clara
 - **THEN** las variables públicas resuelven exactamente esos valores y las medidas provienen de la tabla documentada.
 
-#### Scenario: UI-20.3 Propagación de un token
-
-- **GIVEN** un consumidor de un token documentado conforme a Figma 4:440
-- **WHEN** se cambia ese token en _tokens.scss y se recompila en una prueba aislada
-- **THEN** el consumidor refleja el cambio sin editar su hoja de estilos.
-
 #### Scenario: UI-20.2 Discrepancia de fuentes
 
 - **GIVEN** un valor ausente, estimado o contradictorio entre las fuentes
 - **WHEN** se prepara su migración
 - **THEN** la tarea afectada queda pendiente con motivo y no se introduce un valor inventado.
+
+#### Scenario: UI-20.3 Propagación de un token
+
+- **GIVEN** un consumidor de un token documentado conforme a Figma 4:440
+- **WHEN** se cambia ese token en _tokens.scss y se recompila en una prueba aislada
+- **THEN** el consumidor refleja el cambio sin editar su hoja de estilos.
 
 ### Requirement: UI-21 Puente Ionic
 
@@ -36,9 +36,9 @@ El sistema MUST mapear primary, danger, light, medium y dark a variables Ionic a
 
 #### Scenario: UI-21.2 Variantes completas
 
-- **GIVEN** los mapeos Ionic aprobados para las paletas de Figma 4:440 y 4:1560
+- **GIVEN** los mapeos Ionic aprobados para las paletas de Figma 4:440 y 4:1560 y el cierre de la tarea 0.4 (variantes verificadas con la API instalada)
 - **WHEN** se compila el tema y se inspeccionan los colores definidos
-- **THEN** cada color tiene base, rgb, contrast, contrast-rgb, shade y tint consistentes con la paleta activa.
+- **THEN** cada color tiene base, rgb, contrast, contrast-rgb, shade y tint consistentes con la paleta activa; si el cierre 0.4 no se ha ejecutado, el escenario se mantiene pendiente.
 
 #### Scenario: UI-21.3 Contraste y excepción auditada
 
@@ -110,7 +110,7 @@ El sistema MUST usar DM Serif Display 400 e Inter 400/600/700 desde archivos loc
 
 #### Scenario: UI-26.1 Estilos tipográficos
 
-- **GIVEN** las fuentes cargadas y las discrepancias de interlineado resueltas
+- **GIVEN** las fuentes cargadas, la unidad de interlineado cerrada por la tarea 0.3 y los archivos de fuente con licencia verificada
 - **WHEN** se renderizan título, fecha, tarea, meta, botón y pestaña
 - **THEN** sus fuentes efectivas coinciden con la tabla de design.md, incluidos tamaños 36, 38, 17, 14, 14 y 13 px respectivamente.
 
@@ -152,12 +152,6 @@ El proyecto MUST ejecutar Jest, conservar los umbrales de jest.config.cjs y aña
 
 El proyecto MUST mantener src/theme/README.md con una fila por token de _tokens.scss, valores claros/oscuros, origen Figma o técnico y uso, verificado por Jest. MUST documentar tokens y su fuente, guardar evidencia 375x812 clara y oscura de las pantallas afectadas junto a get_screenshot de 4:440 y 4:1560 en evidence/, y enlazarla en verify-report.md y el PR borrador. El PR MUST apuntar a develop, citar OpenSpec, IDs, nodos, tests y Notion C0.5. MUST NOT archivarse, fusionarse, hacer force-push ni marcarse listo.
 
-#### Scenario: UI-28.3 Catálogo sincronizado
-
-- **GIVEN** los tokens definidos en _tokens.scss
-- **WHEN** Jest compara el catálogo src/theme/README.md
-- **THEN** cada token aparece con origen, valores claros/oscuros y uso, diferenciando los técnicos heredados de los extraídos de Figma.
-
 #### Scenario: UI-28.2 Auditoría contemplada sin ampliar alcance
 
 - **GIVEN** los hallazgos de docs/auditoria-figma.md y los nodos 4:440, 4:1560, 4:788 y 4:1267
@@ -165,6 +159,12 @@ El proyecto MUST mantener src/theme/README.md con una fila por token de _tokens.
 - **THEN** design.md y verify-report.md trazan cada hallazgo C0.5: on-primary blanco, muted oscuro aprobado, tokens faltantes, tabs con alfa D9, filler independiente del primario oscuro, fuentes locales, once estilos, padding superior 55 px, gaps de header 3/15 px, radio del acento 1.5 px, input de alto 50 px con radio 10 y surface-muted sin borde, botón de alto 50 px y padding horizontal 16 px, y eliminación de literales del home sin retirar comportamiento.
 - **AND** los hallazgos C1 (rail completo, fecha, panel, FAB, TODAY, checkbox y formularios nuevos, swipe y textos), C2 (swatch 27 px, chips 33/35 px, ColorPicker y sheets), C3 (filler con flag apagado) y C7 (comparativa final) se registran como pendientes de sus cambios, no se implementan ni se declaran resueltos por C0.5.
 - **AND** las correcciones offline auditadas incluyen verificar --fs-title/--fs-note-title en 4:788/4:1267, documentar sheets 4:947 y 4:1365 con sus padres y explicitar el sexto swatch pendiente; los elementos estimados no pasan a valores Figma confirmados sin evidencia nueva.
+
+#### Scenario: UI-28.3 Catálogo sincronizado
+
+- **GIVEN** los tokens definidos en _tokens.scss
+- **WHEN** Jest compara el catálogo src/theme/README.md
+- **THEN** cada token aparece con origen, valores claros/oscuros y uso, diferenciando los técnicos heredados de los extraídos de Figma.
 
 #### Scenario: UI-28.1 Revisión trazable
 

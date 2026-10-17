@@ -1,3 +1,7 @@
+## Precondiciones de fase A
+
+- [ ] 0.7 Verificar la procedencia y la licencia de los archivos woff2 de Inter y DM Serif Display antes de empaquetarlos y dejarlos documentados en `src/assets/fonts`; requisito previo de 4.1 y 4.2 (UI-26.2).
+
 ## Fuentes y revisión de fase A
 
 Fuentes obligatorias cargadas: docs/workflow-mcp.md, docs/auditoria-figma.md, docs/plan-theme-foundation.md, docs/prompts/theme-foundation.md, docs/prompts/docs-workflow-mcp.md, docs/notion-mcp-pi.md y docs/config-yaml-rules.md, junto a Figma y docs/design.json/md. El prompt docs-workflow-mcp pertenece a un PR separado; no se mezcla con theme-foundation.
@@ -6,12 +10,12 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 0. Fase A (diseño y revisión)
 
-- [ ] 0.1 Realizar correcciones verificadas de la copia offline: alinear `--fs-date` y `--fs-regular` a `--fs-display-date` y `--fs-body`; documentar sheets 4:947 y 4:1365 con sus padres 4:869 y 4:1267; explicitar el sexto swatch pendiente (UI-28.2).
+- [ ] 0.1 Realizar correcciones verificadas de la copia offline: alinear `--fs-date` y `--fs-regular` a `--fs-display-date` y `--fs-body`; documentar sheets 4:947 y 4:1365 con sus padres 4:869 y 4:1267; explicitar el sexto swatch pendiente; contrastar y bloquear cualquier cssVar cuyo nombre Figma no se confirme (UI-20.2, UI-28.2).
 - [ ] 0.2 Confirmar la decisión del usuario sobre radio round: 50 % documentado o 999, con evidencia y registro en design.md (UI-21.1).
 - [ ] 0.3 Resolver interlineado real consultando los nodos tipográficos y registrar el resultado en design.md antes de aplicarlo (UI-26.1).
 - [ ] 0.4 Cerrar el mapeo Ionic para `light`, `medium` y `dark` con sus variantes verificadas en la API instalada (UI-21.2).
 - [ ] 0.5 Construir la tabla de tokens técnicos heredados con valor real, origen y uso, separados de Figma (UI-20.1).
-- [ ] 0.6 Abrir PR documental borrador de fase A con proposal, design, spec y tasks; actualizar Notion C0.5 con la nota de PR y validate --strict OK (UI-28.1).
+- [ ] 0.6 Abrir PR documental borrador de fase A con proposal, design, spec y tasks; actualizar Notion C0.5 con la nota de PR y validate --strict OK (UI-28.1). validate --strict OK aplica solo a la estructura OpenSpec; el cierre del diseño sigue dependiendo de 0.1 a 0.5.
 
 ## 1. Infraestructura de verificación (fase B, tripleta TDD)
 
@@ -33,7 +37,7 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 4. Mixins, tipografía y categorías (fase B, tripleta TDD)
 
-- [ ] 4.1 RED: `npx jest src/theme/typography.spec.ts` esperando `@font-face` para DM Serif Display 400 e Inter 400/600/700, sin negrita sintética, con once estilos que respeten tamaños, pesos y tracking; categorías 1–5 y filler con contraste y alfa D9 en oscuro (UI-25.1, UI-26.1, UI-26.2) → falla.
+- [ ] 4.1 RED: `npx jest src/theme/typography.spec.ts` esperando `@font-face` para DM Serif Display 400 e Inter 400/600/700, sin negrita sintética, con once estilos que respeten tamaños, pesos y tracking; categorías 1–5 y filler con contraste y alfa D9 en oscuro; licencias verificadas (UI-25.1, UI-26.1, UI-26.2) → falla. Precondición: la tarea 0.7 de licencias debe estar completada.
 - [ ] 4.2 GREEN: `src/theme/_typography.scss` con woff2 locales, jerarquía h1–h6/p/small y `--ion-font-family` por la variable body; `src/theme/_mixins.scss` con bp-up, truncate, focus-visible y safe-area (UI-26.3); exponer `--app-category-1..5`, `--app-category-filler` y contrastes; mapear `--tab-*` históricos a `--app-category-*` → pasa.
 - [ ] 4.3 REFACTOR: convertir `src/theme/notebook.scss` a `_notebook.scss` usando `@use` y tokens; nueva ejecución de `npx jest src/theme` y `npx jest src/theme/notebook.spec.ts` → verde.
 
@@ -47,4 +51,4 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 - [ ] 6.1 `npx jest src/theme/docs.spec.ts` que comprueba que cada token de `_tokens.scss` aparece en `src/theme/README.md` con origen, valores claros/oscuros y uso, diferenciando técnicos de Figma (UI-28.3).
 - [ ] 6.2 Guardar comandos y salidas reales en `verify-report.md`; enlazar capturas 375x812 light/dark junto a `get_screenshot` de 4:440 y 4:1560 (UI-28.1).
-- [ ] 6.3 Crear commits Conventional Commits con IDs; abrir PR borrador de `feature/theme-foundation` hacia `develop` con cambio OpenSpec, nodos Figma, tests y evidencia; actualizar Notion C0.5 solo en `Status`/`Note`, conservando texto y añadiendo URL, conteo real y hash; no archivar, fusionar, force-push ni marcar listo (UI-28.1).
+- [ ] 6.3 Crear commits Conventional Commits con IDs; abrir PR borrador de `feature/theme-foundation` hacia `develop` con cambio OpenSpec, nodos Figma, tests y evidencia; actualizar Notion C0.5 solo en `Status`/`Note`, conservando texto y añadiendo URL, conteo real y hash; no archivar, fusionar, force-push ni marcar listo (UI-28.1). El PR se referenciará por URL en Notion.
