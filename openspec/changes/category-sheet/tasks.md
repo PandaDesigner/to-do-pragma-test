@@ -43,7 +43,7 @@
 
 ## 6. Cierre
 
-- [ ] 6.1 Capturas 375 por 812 en claro y oscuro, es y en, del sheet abierto y cerrado, con diff visual en `verify-report.md`.
+- [ ] 6.1 Capturas 375 por 812 en claro y oscuro, es y en, del sheet abierto y cerrado, con diff visual en `verify-report.md`. Ausente: ver `verify-report.md` (falta de simulador/emulador firmado en la sesión actual; AGENTS.md obliga a documentar la ausencia).
 - [x] 6.2 Actualizar `openspec/traceability.md` con las filas SHEET-01 a SHEET-07 enlazando cada `it()`.
 - [x] 6.3 Pasar tipos, lint, jest con cobertura (364/364 tests), `trace:check` y `openspec validate --strict`.
-- [ ] 6.4 PR a `develop` con sección Reutilización: `ChipComponent` extendido, `IconOptionComponent` y `ColorSwatchComponent` declarados locales, `CategorySheetComponent` y comando `openCategorySheet` añadidos, doce `ionicons/icons` reusados.
+- [ ] 6.4 PR a `develop` con sección Reutilización: `ChipComponent` extendido, `IconOptionComponent` y `ColorSwatchComponent` declarados locales, `CategorySheetComponent` y comando `openCategorySheet` añadidos, doce `ionicons/icons` reusados. Ausente en los PR #14/#15 ya mergeados; el resumen está en `verify-report.md`.
