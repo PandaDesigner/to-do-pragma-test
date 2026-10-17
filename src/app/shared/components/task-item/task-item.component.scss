@@ -38,10 +38,12 @@ input:checked {
   gap: var(--app-space-4);
 }
 .task-title {
-  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  word-break: break-word;
   font-size: var(--app-font-size-task-title);
   font-weight: 700;
   color: var(--app-text);
