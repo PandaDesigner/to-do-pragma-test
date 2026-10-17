@@ -30,9 +30,21 @@
 - [x] 4.5 Extraer `page-header` y usarlo en Ajustes y Categorías.
 - [ ] 4.6 Registrar primero en Figma el fondo de acciones oscuro aprobado `#786AAD`, mantener acentos y paleta clara, y sincronizar la app con prueba de contraste mínimo 4,5:1. Bloqueado por cuota de Figma MCP; no se ha aplicado el token.
 
+## 4A. Ampliación aprobada: Routine y Event
+
+- [x] 4.7 Documentar categorías General/Routine/Event, rutas, estados visibles, flag y alta contextual; actualizar glosario.
+- [ ] 4.8 RED: pruebas de CAT-SEC-01.1 a CAT-SEC-01.4 para sección, compatibilidad y validación.
+- [ ] 4.9 GREEN: sección persistida en categoría y selector en su formulario, independiente del color y tipo.
+- [ ] 4.10 RED: pruebas de TODO-07.1 a TODO-08.2 para navegación, listas, panel, estados y guard.
+- [ ] 4.11 GREEN: rutas propias y rail activo, filtros por sección, completadas visibles y desactivación con el flag.
+- [ ] 4.12 RED: pruebas de TODO-09.1 a TODO-09.4 para creación contextual y sección sin categorías.
+- [ ] 4.13 GREEN: alta con categoría de sección, título conservado y validación sin pérdida de datos.
+- [ ] 4.14 Verificar recorridos y persistencia en navegador, idiomas/temas, virtualización y pruebas completas; guardar evidencia.
+
 ## 5. Cierre
 
 - [ ] 5.1 Exportar los iconos de Figma a `src/assets/icon` y quitar literales visuales.
 - [ ] 5.2 Capturas 375x812 en claro y oscuro, es y en, con diff visual en `verify-report.md`.
 - [ ] 5.3 Actualizar `openspec/traceability.md` y la fila de Notion, o anotar que el servidor no está conectado.
 - [ ] 5.4 Pasar tipos, lint, estilos, tests con cobertura, build, `trace:check` y `openspec validate --strict`.
+- [ ] 5.5 Actualizar README con rutas, secciones, filtros, idiomas, feature flag, comandos y limitaciones verificadas.

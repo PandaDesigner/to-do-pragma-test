@@ -2,7 +2,7 @@
 
 ### Requirement: APP-10 Feature flag enable_categories en UI
 
-Cuando `enable_categories` es `false`, la pestaña My y los chips de categoría MUST ocultarse; la pestaña Todo sigue mostrando todas las tareas. Figma: 4:440.
+Cuando `enable_categories` es `false`, la pestaña My y los chips de categoría MUST ocultarse; Routine y Event MUST permanecer visibles pero deshabilitadas. La pestaña Todo sigue mostrando las tareas sin filtro de categoría. Si una sección dependiente está abierta, MUST volver a Todo. Figma: 4:440.
 
 #### Scenario: APP-10-A Flag en false
 
@@ -10,6 +10,8 @@ Cuando `enable_categories` es `false`, la pestaña My y los chips de categoría 
 - **WHEN** se renderiza
 - **THEN** la pestaña My no aparece.
 - **AND** las tareas no muestran chip de categoría.
+- **AND** Routine y Event están deshabilitadas.
+- **AND** una sección dependiente abierta vuelve a Todo sin filtro de categoría.
 
 ### Requirement: APP-11 Botón debug 5.000 tareas
 

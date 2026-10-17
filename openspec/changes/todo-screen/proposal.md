@@ -4,7 +4,7 @@ La pantalla de tareas no es la de Figma. Sigue con una barra de dos pestañas y 
 
 ## What Changes
 
-- Sustituir la barra inferior por el rail de cinco pestañas de Figma. Routine y Event se ven y no navegan (D2).
+- Sustituir la barra inferior por el rail de cinco pestañas de Figma. Tras la ampliación aprobada por el usuario, Routine y Event navegan y filtran por la sección de las categorías; solo quedan deshabilitadas con categorías apagadas.
 - Mostrar la cabecera del día, el badge de hoy y el panel de tareas pendientes, abierto y cerrado.
 - Mostrar las tareas con el checkbox de Figma, el tachado de las completadas y los chips de categoría para filtrar.
 - Quitar el editor incrustado. El input rápido crea una tarea con el título. El botón flotante abre el sheet; el formulario completo de ese sheet queda para el change siguiente.
@@ -18,10 +18,13 @@ La pantalla de tareas no es la de Figma. Sigue con una barra de dos pestañas y 
 
 - `todo-screen`: rail, cabecera del día, panel de pendientes, lista, chips, input rápido, botón flotante y estado vacío, conforme a Figma 4:440, 4:520, 4:664, 4:973 y 4:1062.
 
+- `category-sections`: marca General, Routine o Event en cada categoría, independiente del tipo y del color; las categorías existentes sin marca se interpretan como General.
+
 ### Modified Capabilities
 
 - `app-base`: la pestaña de listas pasa a llamarse como en Figma y el botón de 5.000 tareas deja la página de tareas.
 - `settings`: Ajustes muestra la sección de depuración que sale de la página de tareas.
+- Las vistas Todo/Routine/Event muestran pendientes, vencidas y completadas, no archivadas. La creación desde una sección exige una categoría de esa sección. Se mantienen los repositorios y datos existentes.
 
 ## Impact
 

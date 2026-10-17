@@ -7,14 +7,14 @@ La página de tareas usa `ion-tab-bar` y un formulario incrustado. Figma, leído
 **Goals:**
 
 - La pantalla de tareas coincide en medidas con esos cinco nodos.
-- Routine y Event se ven y no navegan.
+- Routine y Event navegan a rutas propias y filtran las categorías de su sección cuando el flag está activo.
 - El editor incrustado desaparece. El input rápido crea una tarea de hoy. El botón flotante abre un `ion-modal`.
 - La depuración de 5.000 tareas pasa a Ajustes.
 - Se extraen `page-header`, `empty-state` y `chip`. `TaskItem` se ajusta, no se copia.
 
 **Non-Goals:**
 
-- El sheet 4:1267/4:1365, el swipe, las notas, el CRUD de categorías y el marco con el flag apagado.
+- El aspecto completo del sheet 4:1267/4:1365, el swipe, las notas, el rediseño completo del CRUD de categorías y la fidelidad visual del marco con el flag apagado. Sí entra el selector de sección aprobado para las categorías.
 - Rehacer el andamiaje que esta pantalla no toca.
 - Igualar al píxel el texto español contra un marco en inglés.
 
@@ -67,7 +67,7 @@ Estado vacío: ilustración 68 y el botón de 239x50. Chips: punto de 8 y hueco 
 
 ## Decisions
 
-1. El rail vive en el shell y solo recibe pestañas, la activa y si My se muestra. No navega ni lee el store. Routine y Event van deshabilitadas. My sigue oculta si el flag está apagado; el marco 4:1113 no entra aquí.
+1. El rail vive en el shell y solo recibe pestañas, la activa y si las categorías están activas. No navega ni lee el store. Routine y Event están habilitadas con categorías activas; se deshabilitan al apagar el flag. My sigue oculta si el flag está apagado; el marco 4:1113 no entra en la comparación visual.
 2. `page-header` se extrae porque Ajustes y Categorías ya repiten la cabecera, y este change toca Ajustes. La fecha del día usa ese mismo componente con el tamaño display-date. No se crea otra cabecera. TodayBadge se queda en la página de tareas: solo tiene un uso.
 3. `empty-state` y `chip` son presentacionales. El vacío también sustituye el de Categorías, que es el segundo uso real. El chip filtra en esta pantalla y el sheet siguiente es el segundo uso previsto.
 4. `TaskItem` se extiende. No se añade un sexto input: el tachado sale del estado de la tarea y la meta se proyecta.
@@ -77,6 +77,17 @@ Estado vacío: ilustración 68 y el botón de 239x50. Chips: punto de 8 y hueco 
 8. Las etiquetas del rail se quedan como en Figma. El resto de textos nuevos entra en `es.json` y `en.json`. La tolerancia de 2 px se mide en inglés contra el mock. El español se captura para demostrar la traducción, no para igualar un marco inglés.
 9. Los componentes nuevos se generan con el CLI de Ionic. No se añaden dependencias.
 10. Revisión con Impeccable y UI UX Pro Max: el usuario aprobó separar el fondo de acciones de los acentos. El fondo oscuro aprobado es `#786AAD` con texto blanco (4,70:1); los acentos conservan `#8B7FC0` (4,76:1 sobre `#1E1A2B`). La paleta clara no cambia. El nuevo color se registra primero en Figma y después se sincroniza con la app. Sigue pendiente: Figma MCP agotó la cuota antes de crear o aplicar el token. No se cambia `color/primary` globalmente, porque oscurecer también los acentos reduciría su contraste.
+
+## Ampliación aprobada: secciones y navegación
+
+- Cada categoría tiene una sección `general`, `routine` o `event`, distinta de `kind` y `colorToken`. La marca se elige en el formulario existente. Una categoría solo tiene una sección; renombrarla o cambiar su color no mueve sus tareas entre secciones.
+- `Category.section` es opcional para compatibilidad. La ausencia en datos v1 significa General, sin reescribir ni perder registros. El repositorio y sus claves no cambian. Los valores de sección presentes pero desconocidos se rechazan en la carga o escritura con el tratamiento de error existente.
+- Las rutas son `/tabs/tasks`, `/tabs/routine` y `/tabs/event`. Las tres reutilizan `TasksPage`; las dos últimas pasan la sección mediante datos de ruta y usan el guard de categorías. Todo no limita por sección e incluye tareas sin categoría.
+- La página combina el filtro de sección con el filtro de categoría. Sus chips y el panel de pendientes usan el mismo conjunto de categorías, sin inferir grupos por nombre o color. Sin categorías de una sección, la vista queda vacía y ofrece ir a crearlas.
+- Al entrar en cualquiera de las tres vistas se muestran pendientes, vencidas y completadas; las archivadas quedan fuera. Completar mantiene la tarea visible y tachada. Se conserva el filtro por estados del store para otros consumidores.
+- Con `enable_categories=false`, Routine/Event quedan visibles y deshabilitadas; una ruta abierta o un enlace directo vuelve a Todo. My y los chips siguen ocultándose. No se conservan filtros invisibles de categoría.
+- La creación usa la categoría elegida en el filtro. Desde Todas en Routine/Event, el input rápido conserva el título en el formulario y exige elegir una categoría de esa sección antes de guardar. El formulario no permite asignar categorías de otra sección. Sin categorías, primero se crea una; no se guardan tareas que desaparezcan por falta de asignación.
+- La implementación no añade stores, dependencias ni tipos de tarea. Mantiene las interfaces de repositorio y la virtualización. Las extensiones funcionales aprobadas reutilizan el rail de Figma 4:440 y los campos del formulario de Figma 4:869; no se presentan como nuevos mocks aprobados al píxel.
 
 ## Risks / Trade-offs
 
