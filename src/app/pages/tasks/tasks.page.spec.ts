@@ -412,4 +412,60 @@ describe('TasksPage', () => {
     categories.openCategorySheet({ mode: 'create' });
     expect(categories.sheetRequest()).toEqual({ mode: 'create' });
   });
+
+  it('populates the editor form with title, dueDate and categoryId when editing', async () => {
+    const { categories, page, tasks } = await setup();
+    await categories.upsert({
+      id: 'cart',
+      name: 'Shopping',
+      kind: 'list',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await tasks.upsert(
+      taskFixture({
+        title: 'Buy milk',
+        dueDate: '2026-03-15',
+        categoryId: 'cart',
+      }),
+    );
+    page.editTask(tasks.tasks()[0]);
+    expect(page.form.controls.title.value).toBe('Buy milk');
+    expect(page.form.controls.dueDate.value).toBe('2026-03-15');
+    expect(page.form.controls.categoryId.value).toBe('cart');
+    expect(page.sheetOpen()).toBe(true);
+  });
+
+  it('populates time, durationMin and reminderMin from the stored task', async () => {
+    const { page, tasks } = await setup();
+    await tasks.upsert(
+      taskFixture({
+        title: 'Run',
+        dueDate: '2026-04-01',
+        time: '08:30',
+        durationMin: 45,
+        reminderMin: 15,
+      }),
+    );
+    page.editTask(tasks.tasks()[0]);
+    expect(page.form.controls.time.value).toBe('08:30');
+    expect(page.form.controls.durationMin.value).toBe('45');
+    expect(page.form.controls.reminderMin.value).toBe('15');
+  });
+
+  it('persists time, durationMin and reminderMin when saving', async () => {
+    const { page, tasks } = await setup();
+    await page.openSheet();
+    page.form.patchValue({
+      title: 'Plan sprint',
+      time: '09:00',
+      durationMin: '60',
+      reminderMin: '30',
+    });
+    await page.saveTask();
+    const saved = tasks.tasks()[0];
+    expect(saved.time).toBe('09:00');
+    expect(saved.durationMin).toBe(60);
+    expect(saved.reminderMin).toBe(30);
+  });
 });
