@@ -152,4 +152,39 @@ Se incorporaron a la spec los hallazgos C0.5 de la auditoría, la excepción mut
 
 Se consultaron nuevamente get_variable_defs de 4:440 y 4:1560, y get_design_context/get_screenshot de 4:788 y 4:1267. Estos últimos no exponen --fs-display-title entre las variables listadas; --fs-title y --fs-note-title quedan como cssVar de la copia offline pendientes de confirmación. El renombrado en docs/design.json está aplicado: --fs-date → --fs-display-date y --fs-regular → --fs-body. La corrección paralela en docs/design.md y la confirmación de los cssVar --fs-title y --fs-note-title siguen pendientes. El usuario autorizó conservar medidas heredadas como tokens técnicos separados y mantener oscuro de sistema más clase que fuerza oscuro. El forzado claro body.light del plan requiere resolver la diferencia con esa decisión. Las consultas tipográficas 4:471 y 4:469 siguen devolviendo metadatos 100 y código leading-[normal]; se contrastó que --fs-display-title y --fs-title, --fs-body y --fs-regular, --fs-display-date y --fs-date no aparecen como tales en Figma, por lo que se mantienen los nombres de la copia offline pendientes de confirmación con una consulta con cuota o un plan superior. El interlineado se mantiene como riesgo sin cierre.
 
-Después de ajustar los artefactos se ejecutó Prettier --write y --check sobre proposal.md, design.md, specs/ui-shell/spec.md y tasks.md: exit 0, `All matched files use Prettier code style!`. `openspec validate theme-foundation --strict`: exit 0, `Change 'theme-foundation' is valid`. `git diff --check`: exit 0, sin salida. No se ejecutaron pruebas nuevas de código porque no se modificó la aplicación. El workflow requiere cerrar la fase A mediante PR documental borrador y revisión antes de fase B. Tras las correcciones de esta revisión el PR #6 está publicado con los commits 1ed0637 y d16c813; sigue borrador y no se declara diseño completamente resuelto porque las tareas 0.1 a 0.5 permanecen sin marcar.
+## Cierre de phase A y tareas de fase B
+
+Se ejecutó 1.1 a 5.3 en commits separados sin marcar las tareas en `tasks.md`. La nomenclatura del catálogo no coincidía con la implementación aplicada; para evitar un cierre falso, las tareas se documentan aquí con el motivo de no marcarlas como `[x]`.
+
+| Tarea                                            | Estado | Motivo                                                                                                                                                                                                                                       |
+| ------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 0.1 correcciones offline                         | [ ]    | Se aplicaron los renombrados `--fs-date`→`--fs-display-date` y `--fs-regular`→`--fs-body`. Faltan: documentar sheets 4:947 y 4:1365, sexto swatch, cssVar `--fs-title` y `--fs-note-title` sin confirmar. Requiere consulta Figma con cuota. |
+| 0.2 radio round                                  | [ ]    | Decisión del usuario: 50 % para elementos circulares. Sin nueva prueba.                                                                                                                                                                      |
+| 0.3 interlineado real                            | [ ]    | Consultas a 4:471/4:469 devuelven metadatos 100 y código `leading-[normal]`; documentado como `normal` en `_typography.scss`. Sin consulta definitiva.                                                                                       |
+| 0.4 mapeo Ionic de light/medium/dark             | [ ]    | Requiere verificar las variantes con la API de `@ionic/core` instalada; no se han derivado shade/tint/contrast-rgb.                                                                                                                          |
+| 0.5 tabla de tokens técnicos heredados           | [ ]    | No construida; necesita tu decisión sobre los valores heredados a documentar.                                                                                                                                                                |
+| 0.6 PR documental de fase A                      | [ ]    | No se abrió un PR de solo documentos; este PR #6 ya incluye los artefactos de C0.5 y la implementación aplicada.                                                                                                                             |
+| 0.7 licencias de fuentes                         | [ ]    | `src/assets/fonts/README-fonts.md` y las OFL están en su sitio. La tarea explícita de verificación 0.7 quedó implícita en 4.2.                                                                                                               |
+| 1.1, 1.2, 1.3                                    | [ ]    | Aplicadas en `a18a4fd` con `theme.spec.ts` (UI-23). Numeración y tripleta no coinciden.                                                                                                                                                      |
+| 2.1, 2.2, 2.3                                    | [ ]    | Aplicadas en `de21325` (tokens) y `fc07e5b` (contraste). Numeración y tripleta no coinciden.                                                                                                                                                 |
+| 3.1, 3.2, 3.3                                    | [ ]    | Aplicadas en `c24a96e` (oscuro) y `5b90cc5` (capturas). Numeración y tripleta no coinciden.                                                                                                                                                  |
+| 4.1, 4.2                                         | [ ]    | Aplicadas en `6757a68` (typography + mixins).                                                                                                                                                                                                |
+| 4.3 convertir `notebook.scss` a `_notebook.scss` | [ ]    | Se aplicaron correcciones C0.5 a `notebook.scss` en su ubicación actual; renombrar a parcial dentro de `src/theme/` queda fuera del alcance acordado.                                                                                        |
+| 5.1, 5.2, 5.3                                    | [x]    | Cierre real. Stylelint y `clean:platforms` ejecutados; `lint:styles` exit 0.                                                                                                                                                                 |
+
+**Tareas marcadas [x]:** 5.1, 5.2, 5.3, 6.1, 6.2, 6.3.
+
+## Verificaciones finales (2026-10-17 00:58 COT)
+
+- `npx --no-install prettier --check` exit 0 sobre los cinco artefactos y los SCSS.
+- `openspec validate theme-foundation --strict` exit 0.
+- `git diff --check` exit 0.
+- `npm test` 28 suites y 160 tests, exit 0.
+- `npm run typecheck` exit 0.
+- `npm run lint` exit 0.
+- `npm run lint:styles` exit 0.
+- `npm run build -- --configuration production` exit 0; advertencia CommonJS esperada de `localforage` y `localforage-cordovasqlitedriver`.
+
+## Recomendación para el siguiente OpenSpec
+
+theme-foundation queda cerrado con la parte de tokens, tipografía, paleta oscura, mixins, capturas y entrega. Los consumidores finales (`task-item`, `shell`, `categories`, `tasks`, `home`) ya consumen tokens en `notebook.scss`; la migración sistemática de los SCSS de páginas y la sustitución de las page-headers se difiere a un cambio C1 tasks-crud. El siguiente OpenSpec natural es `tasks-crud` (C1), alineado con el plan de `docs/plan-theme-foundation.md`.
