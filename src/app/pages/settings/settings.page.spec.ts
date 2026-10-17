@@ -49,7 +49,7 @@ describe('SettingsPage', () => {
     return { fixture, preferences };
   }
 
-  it('shows the dark mode control and language selector', () => {
+  it('[SET-01.1] shows the dark mode control and language selector', () => {
     const { fixture } = setup();
     const page: HTMLElement = fixture.nativeElement;
     expect(page.textContent).toContain('Dark mode');
@@ -57,13 +57,13 @@ describe('SettingsPage', () => {
     expect(page.querySelector('select')).not.toBeNull();
   });
 
-  it('saves dark mode when the toggle is turned on', async () => {
+  it('[SET-01.2] saves dark mode when the toggle is turned on', async () => {
     const { fixture, preferences } = setup();
     await fixture.componentInstance.setDark(true);
     expect(preferences.setTheme).toHaveBeenCalledWith(THEME_PREFERENCE.DARK);
   });
 
-  it('switches the visible language immediately', async () => {
+  it('[I18N-01.1] switches the visible language immediately', async () => {
     const { fixture } = setup();
     await fixture.componentInstance.setLanguage(APP_LANGUAGE.ES);
     fixture.detectChanges();

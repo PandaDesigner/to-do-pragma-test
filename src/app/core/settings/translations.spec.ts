@@ -12,7 +12,7 @@ function keys(value: object, prefix = ''): string[] {
 }
 
 describe('settings translations', () => {
-  it('keeps the same keys in Spanish and English', () => {
+  it('[I18N-01.2] keeps the same keys in Spanish and English', () => {
     expect(keys(es).sort()).toEqual(keys(en).sort());
   });
 });
