@@ -27,6 +27,23 @@ describe('Shell and categories guard', () => {
     return { ...dependencies, fixture, router: TestBed.inject(Router) };
   }
 
+  it('[TODO-01.1] shows the five-tab rail and disables Routine and Event', () => {
+    const { fixture } = setup();
+    const rail = fixture.nativeElement.querySelector('[role="tablist"]');
+    expect(rail).not.toBeNull();
+    const labels = [
+      ...rail.querySelectorAll('[role="tab"]'),
+    ].map((tab: HTMLElement) => tab.textContent?.trim());
+    expect(labels).toEqual(['Todo', 'Routine', 'Event', 'My', 'More']);
+    expect(
+      (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
+        .disabled,
+    ).toBe(true);
+    expect(
+      (rail.querySelector('[data-tab="event"]') as HTMLButtonElement).disabled,
+    ).toBe(true);
+  });
+
   it('renders both tabs, then hides categories and clears only the category filter', async () => {
     const { fixture, enabled, tasks } = setup();
     await tasks.upsertMany([
