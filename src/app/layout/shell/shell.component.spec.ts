@@ -83,7 +83,8 @@ describe('Shell and categories guard', () => {
         .mockResolvedValue(true);
       enabled.set(false);
       fixture.detectChanges();
-      await fixture.whenStable();
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
       expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
       for (const tab of ['routine', 'event']) {
         expect(

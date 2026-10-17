@@ -6,6 +6,8 @@ export const APP_ROUTE = {
   TASKS: '/tabs/tasks',
   CATEGORIES: '/tabs/my',
   SETTINGS: '/tabs/settings',
+  ROUTINE: '/tabs/routine',
+  EVENT: '/tabs/event',
 } as const;
 
 export const categoriesEnabledGuard = (() => {

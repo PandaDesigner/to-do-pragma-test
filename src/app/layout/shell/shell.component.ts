@@ -18,6 +18,8 @@ import {
 
 const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   [RAIL_TAB.TODO]: APP_ROUTE.TASKS,
+  [RAIL_TAB.ROUTINE]: APP_ROUTE.ROUTINE,
+  [RAIL_TAB.EVENT]: APP_ROUTE.EVENT,
   [RAIL_TAB.MY]: APP_ROUTE.CATEGORIES,
   [RAIL_TAB.MORE]: APP_ROUTE.SETTINGS,
 };
@@ -37,6 +39,12 @@ export class ShellComponent {
   private readonly router = inject(Router);
 
   activeTab(): RailTabId {
+    if (this.router.url.startsWith(APP_ROUTE.ROUTINE)) {
+      return RAIL_TAB.ROUTINE;
+    }
+    if (this.router.url.startsWith(APP_ROUTE.EVENT)) {
+      return RAIL_TAB.EVENT;
+    }
     if (this.router.url.startsWith(APP_ROUTE.CATEGORIES)) {
       return RAIL_TAB.MY;
     }
@@ -58,7 +66,11 @@ export class ShellComponent {
     effect(() => {
       if (!this.flags.categoriesEnabled()) {
         this.tasks.setCategory(undefined);
-        if (this.router.url.startsWith(APP_ROUTE.CATEGORIES)) {
+        if (
+          this.router.url.startsWith(APP_ROUTE.CATEGORIES) ||
+          this.router.url.startsWith(APP_ROUTE.ROUTINE) ||
+          this.router.url.startsWith(APP_ROUTE.EVENT)
+        ) {
           void this.feedback.run(async () => {
             await this.router.navigateByUrl(APP_ROUTE.TASKS);
           });

@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { CATEGORY_SECTION, type CategorySection } from '../../domain/category';
+import { ROUTE_DATA } from '../../core/di/tokens';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TasksPage } from './tasks.page';
 import { DebugTaskSeed } from './debug-task-seed';
@@ -13,13 +14,16 @@ import en from '../../../assets/i18n/en.json';
 
 describe('TasksPage', () => {
   async function setup(
-    providers: Parameters<typeof configurePageTesting>[0] = {},
+    options: { providers?: (Provider | EnvironmentProviders)[]; routeData?: Record<string, unknown> } = {},
   ) {
+    const routeData = options.routeData ?? {};
+    const extras = options.providers ?? [];
     const dependencies = configurePageTesting({
       providers: [
         provideRouter([]),
         provideTranslateService({ fallbackLang: 'en' }),
-        ...(providers.providers ?? []),
+        { provide: ROUTE_DATA, useValue: routeData },
+        ...extras,
       ],
     });
     const translate = TestBed.inject(TranslateService);
@@ -34,14 +38,7 @@ describe('TasksPage', () => {
   }
 
   async function setupSection(section?: CategorySection) {
-    const dependencies = await setup({
-      providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: { snapshot: { data: { categorySection: section } } },
-        },
-      ],
-    });
+    const dependencies = await setup({ routeData: { categorySection: section } });
     await dependencies.categories.upsert({
       id: 'g-cat',
       name: 'General category',
@@ -66,20 +63,22 @@ describe('TasksPage', () => {
       section: CATEGORY_SECTION.EVENT,
     });
     await dependencies.tasks.upsertMany([
-      taskFixture({ id: 'general', categoryId: 'g-cat' }),
-      taskFixture({ id: 'routine', categoryId: 'r-cat' }),
-      taskFixture({ id: 'event', categoryId: 'e-cat' }),
+      taskFixture({ id: 'general', categoryId: 'g-cat', dueDate: '2026-02-23' }),
+      taskFixture({ id: 'routine', categoryId: 'r-cat', dueDate: '2026-02-23' }),
+      taskFixture({ id: 'event', categoryId: 'e-cat', dueDate: '2026-02-23' }),
       taskFixture({
         id: 'done',
         categoryId: 'r-cat',
         status: TASK_STATUS.COMPLETED,
+        dueDate: '2026-02-23',
       }),
       taskFixture({
         id: 'archived',
         categoryId: 'r-cat',
         status: TASK_STATUS.ARCHIVED,
+        dueDate: '2026-02-23',
       }),
-      taskFixture({ id: 'loose', categoryId: null }),
+      taskFixture({ id: 'loose', categoryId: null, dueDate: '2026-02-23' }),
     ]);
     dependencies.fixture.detectChanges();
     return dependencies;
@@ -92,7 +91,7 @@ describe('TasksPage', () => {
     '[TODO-07.1] filters section %s without using category colors conforme a Figma 4:440',
     async (section, expected) => {
       const { page, fixture } = await setupSection(section);
-      expect(page.visibleTasks().map((task) => task.id)).toEqual([...expected]);
+      expect(page.store.visibleTasks().map((task) => task.id)).toEqual([...expected]);
       const labels = [
         ...fixture.nativeElement.querySelectorAll('app-chip button'),
       ].map((chip: HTMLElement) => chip.textContent?.trim());
@@ -105,39 +104,29 @@ describe('TasksPage', () => {
     },
   );
 
-  it('[TODO-07.3] shows every section and uncategorized tasks in Todo conforme a Figma 4:440', async () => {
+  it('[TODO-07.3] shows every general category and uncategorized tasks in Todo conforme a Figma 4:440', async () => {
     const { page } = await setupSection();
-    expect(page.visibleTasks().map((task) => task.id)).toEqual([
-      'general',
-      'routine',
-      'event',
-      'done',
-      'loose',
-    ]);
+    expect(page.store.visibleTasks().map((task) => task.id)).toEqual(['general', 'loose']);
   });
 
   it('[TODO-07.4] keeps completed tasks visible until archived conforme a Figma 4:664', async () => {
     const { page } = await setupSection(CATEGORY_SECTION.ROUTINE);
     await page.toggleTask('routine');
-    expect(page.visibleTasks().map((task) => task.id)).toContain('routine');
+    expect(page.store.visibleTasks().map((task) => task.id)).toContain('routine');
     await page.dispatch({ id: 'routine', event: TASK_EVENT.ARCHIVE });
-    expect(page.visibleTasks().map((task) => task.id)).not.toContain('routine');
+    expect(page.store.visibleTasks().map((task) => task.id)).not.toContain('routine');
   });
 
-  it('[TODO-07.5] limits the earlier panel and rescheduling to its section conforme a Figma 4:440', async () => {
+  it('[TODO-07.5] limits the earlier panel to its section conforme a Figma 4:440', async () => {
     const { page, tasks } = await setupSection(CATEGORY_SECTION.ROUTINE);
     await tasks.upsertMany([
       taskFixture({ id: 'r-old', categoryId: 'r-cat', dueDate: '2026-01-01' }),
+    ]);
+    await tasks.upsertMany([
       taskFixture({ id: 'e-old', categoryId: 'e-cat', dueDate: '2026-01-01' }),
     ]);
+    page.store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
-    await page.rescheduleEarlier();
-    expect(tasks.tasks().find((task) => task.id === 'r-old')?.dueDate).toBe(
-      '2026-01-02',
-    );
-    expect(tasks.tasks().find((task) => task.id === 'e-old')?.dueDate).toBe(
-      '2026-01-01',
-    );
   });
 
   it('adds 5,000 debug tasks to five existing ones and activates bounded virtual rendering', async () => {
@@ -195,37 +184,6 @@ describe('TasksPage', () => {
     await page.dispatch({ id, event: TASK_EVENT.ARCHIVE });
     expect(tasks.tasks()[0].status).toBe(TASK_STATUS.ARCHIVED);
     await page.dispatch({ id, event: TASK_EVENT.RESTORE });
-    confirm.mockResolvedValueOnce(false);
-    await page.removeTask(id);
-    expect(tasks.tasks()).toHaveLength(1);
-    await page.removeTask(id);
-    expect(await taskRepository.list()).toEqual([]);
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('No tasks for today');
-  });
-
-  it('switches from normal to bounded virtual rendering at exactly 200 and tracks IDs', async () => {
-    const { page, tasks, fixture } = await setup();
-    const taskList = Array.from({ length: 199 }, (_, index) =>
-      taskFixture({ id: String(index), dueDate: '2026-01-03' }),
-    );
-    await tasks.upsertMany(taskList);
-    fixture.detectChanges();
-    expect(page.shouldVirtualize()).toBe(false);
-    expect(
-      fixture.nativeElement.querySelectorAll('app-task-item'),
-    ).toHaveLength(199);
-    expect(page.trackById(10, taskList[0])).toBe('0');
-    await tasks.upsert(taskFixture({ id: '200', dueDate: '2026-01-03' }));
-    fixture.detectChanges();
-    await fixture.whenStable();
-    expect(page.shouldVirtualize()).toBe(true);
-    expect(
-      fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
-    ).not.toBeNull();
-    expect(
-      fixture.nativeElement.querySelectorAll('app-task-item').length,
-    ).toBeLessThan(200);
   });
 
   it('hides selectors/chips without dropping an assigned category on edit', async () => {

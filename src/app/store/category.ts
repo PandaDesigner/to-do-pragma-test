@@ -40,18 +40,25 @@ export const CategoryStore = signalStore(
               }
             }
             patchState(store, { categories });
+            tasks.setCategories(categories);
           });
         },
         async upsert(category: Category): Promise<void> {
           await operations.run(async () => {
             await repository.save(category);
-            patchState(store, ({ categories }) => {
-              const merged = new Map(
-                categories.map((existing) => [existing.id, existing]),
-              );
-              merged.set(category.id, category);
-              return { categories: [...merged.values()] };
-            });
+            const nextCategories = (() => {
+              let merged: readonly Category[] = [];
+              patchState(store, ({ categories }) => {
+                const map = new Map(
+                  categories.map((existing) => [existing.id, existing]),
+                );
+                map.set(category.id, category);
+                merged = [...map.values()];
+                return { categories: merged };
+              });
+              return merged;
+            })();
+            tasks.setCategories(nextCategories);
           });
         },
         async remove(id: string): Promise<void> {
@@ -62,9 +69,15 @@ export const CategoryStore = signalStore(
             if (tasks.categoryId() === id) {
               tasks.setCategory(undefined);
             }
-            patchState(store, ({ categories }) => ({
-              categories: categories.filter((category) => category.id !== id),
-            }));
+            const nextCategories = (() => {
+              let remaining: readonly Category[] = [];
+              patchState(store, ({ categories }) => {
+                remaining = categories.filter((category) => category.id !== id);
+                return { categories: remaining };
+              });
+              return remaining;
+            })();
+            tasks.setCategories(nextCategories);
           });
         },
       };

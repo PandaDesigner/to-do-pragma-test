@@ -6,7 +6,7 @@
       class="rail-tab"
       [class.active]="tab.id === active()"
       [attr.data-tab]="tab.id"
-      [disabled]="tab.disabled"
+      [disabled]="isDisabled(tab)"
       [attr.aria-selected]="tab.id === active()"
       [style.height.px]="tab.height"
       [style.--rail-fill]="tab.fill"

@@ -1,6 +1,6 @@
-import type { Category } from '../category/category';
+import type { Category } from '../category';
 import type { Task } from '../task';
-import { CATEGORY_SECTION } from '../category/category-section';
+import { CATEGORY_SECTION } from './category-section';
 import { filterTasksBySection } from './filter-by-section';
 
 const home: Category = { id: 'home', name: 'Casa', kind: 'list', colorToken: 'my', icon: 'list', section: CATEGORY_SECTION.GENERAL };

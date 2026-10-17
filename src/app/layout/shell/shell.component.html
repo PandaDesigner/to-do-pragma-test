@@ -2,6 +2,7 @@
   <app-side-tab-rail
     [active]="activeTab()"
     [showMy]="flags.categoriesEnabled()"
+    [sectionsEnabled]="flags.categoriesEnabled()"
     (selected)="openTab($event)"
   />
   <ion-router-outlet />

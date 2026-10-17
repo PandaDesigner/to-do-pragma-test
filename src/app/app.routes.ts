@@ -3,6 +3,11 @@ import {
   APP_ROUTE,
   categoriesEnabledGuard,
 } from './core/guards/categories-enabled-guard';
+import { CATEGORY_SECTION } from './domain/category';
+import { ROUTE_DATA } from './core/di/tokens';
+
+const loadTasksPage = () =>
+  import('./pages/tasks/tasks.page').then((module) => module.TasksPage);
 
 export const routes: Routes = [
   {
@@ -14,8 +19,28 @@ export const routes: Routes = [
     children: [
       {
         path: 'tasks',
-        loadComponent: () =>
-          import('./pages/tasks/tasks.page').then((module) => module.TasksPage),
+        providers: [
+          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.GENERAL } },
+        ],
+        loadComponent: loadTasksPage,
+      },
+      {
+        path: 'routine',
+        canMatch: [categoriesEnabledGuard],
+        data: { categorySection: CATEGORY_SECTION.ROUTINE },
+        providers: [
+          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.ROUTINE } },
+        ],
+        loadComponent: loadTasksPage,
+      },
+      {
+        path: 'event',
+        canMatch: [categoriesEnabledGuard],
+        data: { categorySection: CATEGORY_SECTION.EVENT },
+        providers: [
+          { provide: ROUTE_DATA, useValue: { categorySection: CATEGORY_SECTION.EVENT } },
+        ],
+        loadComponent: loadTasksPage,
       },
       {
         path: 'my',

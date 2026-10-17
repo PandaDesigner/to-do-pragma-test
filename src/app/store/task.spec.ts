@@ -32,6 +32,7 @@ describe('TaskStore', () => {
       [future, overdue, today, completed].map((task) => repository.save(task)),
     );
     await store.refresh();
+    store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
     expect(store.visibleTasks().map((task) => task.id)).toEqual([
       'past',
       'today',

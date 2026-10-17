@@ -37,14 +37,14 @@
       </button>
       }
     </section>
-    } @if (flags.categoriesEnabled() && categories.categories().length) {
+    } @if (flags.categoriesEnabled() && availableCategories().length) {
     <nav class="chips" aria-label="Filtrar por categoría">
       <app-chip
         [label]="'todo.all' | translate"
         [selected]="store.categoryId() === undefined"
         (choose)="store.setCategory(undefined)"
       />
-      @for (category of categories.categories(); track category.id) {
+      @for (category of availableCategories(); track category.id) {
       <app-chip
         [label]="category.name"
         [colorToken]="category.colorToken"
@@ -155,7 +155,7 @@
             <label
               >Categoría<select formControlName="categoryId">
                 <option value="">Sin categoría</option>
-                @for (category of categories.categories(); track category.id) {
+                @for (category of availableCategories(); track category.id) {
                 <option [value]="category.id">{{ category.name }}</option>
                 }
               </select></label

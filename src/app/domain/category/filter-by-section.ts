@@ -2,9 +2,9 @@ import {
   CATEGORY_SECTION,
   getCategorySection,
   type CategorySection,
-} from '../category/category-section';
-import type { Category } from '../category/category';
-import type { Task } from './task';
+} from './category-section';
+import type { Category } from '../category';
+import type { Task } from '../task';
 
 export type CategoryBySection = Map<CategorySection, Set<string>>;
 
@@ -29,6 +29,9 @@ export function filterTasksBySection(
   categories: readonly Category[],
   section: CategorySection,
 ): Task[] {
+  if (categories.length === 0) {
+    return [...tasks];
+  }
   if (section === CATEGORY_SECTION.GENERAL) {
     const generalCategoryIds = new Set(
       categories

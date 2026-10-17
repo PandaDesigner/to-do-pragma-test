@@ -38,14 +38,14 @@ export const RAIL_TABS: readonly RailTab[] = [
     id: RAIL_TAB.ROUTINE,
     label: 'Routine',
     height: 126,
-    disabled: true,
+    disabled: false,
     fill: 'var(--app-category-2)',
   },
   {
     id: RAIL_TAB.EVENT,
     label: 'Event',
     height: 132,
-    disabled: true,
+    disabled: false,
     fill: 'var(--app-category-3)',
   },
   {
@@ -73,6 +73,7 @@ export const RAIL_TABS: readonly RailTab[] = [
 export class SideTabRailComponent {
   readonly active = input<RailTabId>(RAIL_TAB.TODO);
   readonly showMy = input(true);
+  readonly sectionsEnabled = input(true);
   readonly selected = output<RailTabId>();
   readonly tabs = RAIL_TABS;
   readonly fillerHeight = RAIL_FILLER_HEIGHT;
@@ -88,9 +89,19 @@ export class SideTabRailComponent {
   }
 
   choose(tab: RailTab): void {
-    if (tab.disabled) {
+    if (this.isDisabled(tab)) {
       return;
     }
     this.selected.emit(tab.id);
+  }
+
+  isDisabled(tab: RailTab): boolean {
+    if (tab.disabled) {
+      return true;
+    }
+    if (!this.sectionsEnabled() && (tab.id === RAIL_TAB.ROUTINE || tab.id === RAIL_TAB.EVENT)) {
+      return true;
+    }
+    return false;
   }
 }

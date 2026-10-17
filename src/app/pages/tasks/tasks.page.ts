@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import {
   FormControl,
   FormGroup,
@@ -21,10 +22,15 @@ import {
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
-import { CLOCK, CREATE_ID } from '../../core/di/tokens';
+import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../domain/task-state';
+import {
+  CATEGORY_SECTION,
+  type CategorySection,
+} from '../../domain/category/category-section';
+import type { Category } from '../../domain/category';
 import { TaskStore } from '../../store/task';
 import { CategoryStore } from '../../store/category';
 import { TaskItemComponent } from '../../shared/components/task-item/task-item.component';
@@ -35,8 +41,14 @@ import { NewTaskInputComponent } from '../../shared/components/new-task-input/ne
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
+import { taskBelongsToSection } from './section-helpers';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
+const VIEW_STATUSES = [
+  TASK_STATUS.PENDING,
+  TASK_STATUS.OVERDUE,
+  TASK_STATUS.COMPLETED,
+] as const;
 export const PENDING_PANEL = {
   LEFT: 62,
   TOP: 187,
@@ -76,6 +88,7 @@ export class TasksPage implements OnInit {
   private readonly confirmation = inject(DeletionConfirmation);
   private readonly clock = inject(CLOCK);
   private readonly createId = inject(CREATE_ID);
+  private readonly routeData = inject(ROUTE_DATA);
   readonly editingId = signal<string | null>(null);
   readonly panelOpen = signal(true);
   readonly sheetOpen = signal(false);
@@ -94,12 +107,34 @@ export class TasksPage implements OnInit {
     }),
     categoryId: new FormControl('', { nonNullable: true }),
   });
+  readonly section = this.readSection();
+  readonly availableCategories = this.store.availableCategories;
+  readonly sectionLabel = computed(
+    () => 'section.' + this.store.section(),
+  );
+  readonly emptyStateTitle = computed(
+    () => 'todo.sections.' + this.store.section() + '.emptyTitle',
+  );
+  readonly emptyStateHint = computed(
+    () => 'todo.sections.' + this.store.section() + '.emptyHint',
+  );
+  readonly emptyStateAction = computed(
+    () => 'todo.sections.' + this.store.section() + '.emptyAction',
+  );
+  readonly canCreate = computed(
+    () =>
+      (this.flags.categoriesEnabled() &&
+        this.store.section() === CATEGORY_SECTION.GENERAL) ||
+      !this.flags.categoriesEnabled() ||
+      this.availableCategories().length > 0,
+  );
   readonly categoryNames = computed(
     () =>
       new Map(
-        this.categories
-          .categories()
-          .map((category) => [category.id, category.name]),
+        this.availableCategories().map((category) => [
+          category.id,
+          category.name,
+        ]),
       ),
   );
   readonly dayTitle = computed(() => formatDayTitle(this.clock.today()));
@@ -113,6 +148,8 @@ export class TasksPage implements OnInit {
   readonly trackById = (_index: number, task: Task): string => task.id;
 
   ngOnInit(): void {
+    this.store.setSection(this.section);
+    this.store.setStatuses(VIEW_STATUSES);
     void this.feedback.run(async () => {
       await Promise.all([this.store.refresh(), this.categories.refresh()]);
     });
@@ -132,16 +169,17 @@ export class TasksPage implements OnInit {
   }
 
   async addQuickTask(title: string): Promise<void> {
-    if (this.store.busy()) {
+    if (this.store.busy() || !this.canCreate()) {
       return;
     }
     const now = this.clock.now();
+    const categoryId = this.firstAvailableCategoryId();
     await this.feedback.run(() =>
       this.store.upsert({
         id: this.createId(),
         title,
         status: TASK_STATUS.PENDING,
-        categoryId: null,
+        categoryId,
         dueDate: this.clock.today(),
         createdAt: now,
         updatedAt: now,
@@ -233,8 +271,30 @@ export class TasksPage implements OnInit {
     await this.feedback.run(() => this.store.retry());
   }
 
+  private firstAvailableCategoryId(): string | null {
+    const available = this.availableCategories();
+    if (available.length === 0) {
+      return null;
+    }
+    return available[0].id;
+  }
+
+  private readSection(): CategorySection {
+    const section = this.routeData['categorySection'];
+    return (section as CategorySection | undefined) ?? CATEGORY_SECTION.GENERAL;
+  }
+
   private isEarlierOpenTask(task: Task): boolean {
     if (task.dueDate >= this.clock.today()) {
+      return false;
+    }
+    if (
+      !taskBelongsToSection(
+        task,
+        this.store.section(),
+        this.availableCategories(),
+      )
+    ) {
       return false;
     }
     if (this.store.categoryId() === null && task.categoryId !== null) {
