@@ -17,6 +17,22 @@ const initialState: CategoryStoreState = {
   error: null,
 };
 
+function mergeCategory(
+  categories: readonly Category[],
+  category: Category,
+): readonly Category[] {
+  const map = new Map(categories.map((existing) => [existing.id, existing]));
+  map.set(category.id, category);
+  return [...map.values()];
+}
+
+function removeCategoryById(
+  categories: readonly Category[],
+  id: string,
+): readonly Category[] {
+  return categories.filter((category) => category.id !== id);
+}
+
 export const CategoryStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
@@ -46,18 +62,11 @@ export const CategoryStore = signalStore(
         async upsert(category: Category): Promise<void> {
           await operations.run(async () => {
             await repository.save(category);
-            const nextCategories = (() => {
-              let merged: readonly Category[] = [];
-              patchState(store, ({ categories }) => {
-                const map = new Map(
-                  categories.map((existing) => [existing.id, existing]),
-                );
-                map.set(category.id, category);
-                merged = [...map.values()];
-                return { categories: merged };
-              });
-              return merged;
-            })();
+            let nextCategories: readonly Category[] = [];
+            patchState(store, ({ categories }) => {
+              nextCategories = mergeCategory(categories, category);
+              return { categories: nextCategories };
+            });
             tasks.setCategories(nextCategories);
           });
         },
@@ -69,14 +78,11 @@ export const CategoryStore = signalStore(
             if (tasks.categoryId() === id) {
               tasks.setCategory(undefined);
             }
-            const nextCategories = (() => {
-              let remaining: readonly Category[] = [];
-              patchState(store, ({ categories }) => {
-                remaining = categories.filter((category) => category.id !== id);
-                return { categories: remaining };
-              });
-              return remaining;
-            })();
+            let nextCategories: readonly Category[] = [];
+            patchState(store, ({ categories }) => {
+              nextCategories = removeCategoryById(categories, id);
+              return { categories: nextCategories };
+            });
             tasks.setCategories(nextCategories);
           });
         },
