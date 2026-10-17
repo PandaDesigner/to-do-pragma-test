@@ -55,17 +55,3 @@
   --ion-text-color: var(--app-text);
   --ion-font-family: var(--app-font-body);
 }
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --app-primary: #8b7fc0;
-    --app-primary-dark: #edeaf5;
-    --app-text: #edeaf5;
-    --app-text-muted: #6b6580;
-    --app-surface: #1e1a2b;
-    --app-surface-muted: #2a2539;
-    --app-border: #332d45;
-    --app-card-border: #332d45;
-    --ion-color-primary: #8b7fc0;
-  }
-}

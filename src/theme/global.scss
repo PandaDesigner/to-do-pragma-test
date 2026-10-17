@@ -1,5 +1,7 @@
 @use 'fonts';
 @use 'notebook';
+@use 'dark';
+@forward 'tokens';
 
 /*
  * App Global CSS
@@ -29,7 +31,8 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * Sustituido por `src/theme/_dark.scss` en la tarea 3.2 para tener un
- * único origen de paleta y soportar `body.light` / `body.dark`.
+ * Sustituido por `src/theme/_dark.scss` para tener un único origen
+ * de paleta y soportar `prefers-color-scheme: dark` con los tokens de
+ * Figma 4:1560.
  * https://ionicframework.com/docs/theming/dark-mode
  */
