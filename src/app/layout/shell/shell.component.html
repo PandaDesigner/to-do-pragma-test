@@ -4,7 +4,7 @@
       ><ion-label>Todas</ion-label></ion-tab-button
     >
     <ion-tab-button tab="settings" [href]="links.SETTINGS" class="settings-tab"
-      ><ion-label>Ajustes</ion-label></ion-tab-button
+      ><ion-label>{{ 'settings.tab' | translate }}</ion-label></ion-tab-button
     >
     @if (flags.categoriesEnabled()) {
       <ion-tab-button tab="my" [href]="links.CATEGORIES" class="categories-tab"

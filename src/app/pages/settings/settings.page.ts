@@ -33,6 +33,14 @@ export class SettingsPage {
     return this.systemDark;
   };
 
+  async setDarkFromToggle(event: Event): Promise<void> {
+    await this.setDark(readToggleChecked(event));
+  }
+
+  async setLanguageFromSelect(event: Event): Promise<void> {
+    await this.setLanguage(readSelectValue(event));
+  }
+
   async setDark(enabled: boolean): Promise<void> {
     if (enabled === this.darkEnabled()) {
       return;
@@ -45,4 +53,19 @@ export class SettingsPage {
   async setLanguage(language: string): Promise<void> {
     await this.preferences.setLanguage(parseAppLanguage(language));
   }
+}
+
+function readToggleChecked(event: Event): boolean {
+  const detail = (event as CustomEvent<{ checked?: boolean }>).detail;
+  if (typeof detail?.checked !== 'boolean') {
+    throw new Error('Evento de modo oscuro inválido');
+  }
+  return detail.checked;
+}
+
+function readSelectValue(event: Event): string {
+  if (!(event.target instanceof HTMLSelectElement)) {
+    throw new Error('Evento de idioma inválido');
+  }
+  return event.target.value;
 }
