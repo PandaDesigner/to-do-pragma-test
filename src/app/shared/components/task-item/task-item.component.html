@@ -9,18 +9,18 @@
     />
   </label>
   <div class="task-copy">
-    <strong>{{ task().title }}</strong>
-    <small
-      >{{ task().dueDate }}
+    <strong class="task-title" [attr.title]="task().title">{{ task().title }}</strong>
+    <div class="task-meta">
+      <span class="task-due" [attr.title]="task().dueDate">{{ task().dueDate }}</span>
       @if (showCategories() && categoryName()) {
         <span class="category-chip" [attr.title]="categoryName()">
           @if (resolvedCategoryIcon(); as icon) {
-            <ion-icon [icon]="icon" aria-hidden="true"></ion-icon>
+            <ion-icon class="category-chip__icon" [icon]="icon" aria-hidden="true"></ion-icon>
           }
-          <span>{{ categoryName() }}</span>
+          <span class="category-chip__label">{{ categoryName() }}</span>
         </span>
       }
-    </small>
+    </div>
   </div>
   <div class="task-actions">
     <button

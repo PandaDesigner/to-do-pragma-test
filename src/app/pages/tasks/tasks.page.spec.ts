@@ -315,7 +315,7 @@ describe('TasksPage', () => {
     const row: HTMLElement =
       fixture.nativeElement.querySelector('app-task-item');
     expect(row.querySelector('input')?.checked).toBe(true);
-    expect(row.querySelector('.completed strong')?.textContent).toContain(
+    expect(row.querySelector('.completed .task-title')?.textContent).toContain(
       'Clean my flat',
     );
   });
