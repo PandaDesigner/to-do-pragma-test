@@ -45,9 +45,7 @@ import { taskBelongsToSection } from './section-helpers';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
 
-const DURATION_PRESETS = [
-  15, 30, 45, 60, 75, 90, 105, 120,
-] as const;
+const DURATION_PRESETS = [15, 30, 45, 60, 75, 90, 105, 120] as const;
 const VIEW_STATUSES = [
   TASK_STATUS.PENDING,
   TASK_STATUS.OVERDUE,
@@ -111,7 +109,9 @@ export class TasksPage implements OnInit {
     }),
     time: new FormControl('', { nonNullable: true }),
     durationMin: new FormControl('', { nonNullable: true }),
-    durationPreset: new FormControl<number | 'custom'>(30, { nonNullable: true }),
+    durationPreset: new FormControl<number | 'custom'>(30, {
+      nonNullable: true,
+    }),
     reminderMin: new FormControl('15', { nonNullable: true }),
     categoryId: new FormControl('', { nonNullable: true }),
   });
@@ -183,7 +183,9 @@ export class TasksPage implements OnInit {
     this.panelOpen.update((open) => !open);
   }
 
-  readonly durationPreset = computed(() => this.form.controls.durationPreset.value);
+  readonly durationPreset = computed(
+    () => this.form.controls.durationPreset.value,
+  );
 
   openSheet(): void {
     this.sheetOpen.set(true);
@@ -272,8 +274,8 @@ export class TasksPage implements OnInit {
       duration === undefined
         ? 30
         : DURATION_PRESETS.includes(
-            duration as (typeof DURATION_PRESETS)[number],
-          )
+              duration as (typeof DURATION_PRESETS)[number],
+            )
           ? duration
           : 'custom';
     this.form.reset({

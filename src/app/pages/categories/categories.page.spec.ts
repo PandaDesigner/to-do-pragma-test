@@ -82,8 +82,12 @@ describe('CategoriesPage', () => {
       icon: 'home',
       colorToken: 'event',
     });
-    expect(page.iconFor(categories.categories()[0])).toMatch(/^data:image\/svg/);
-    expect(page.iconFor(categories.categories()[1])).toMatch(/^data:image\/svg/);
+    expect(page.iconFor(categories.categories()[0])).toMatch(
+      /^data:image\/svg/,
+    );
+    expect(page.iconFor(categories.categories()[1])).toMatch(
+      /^data:image\/svg/,
+    );
     expect(page.iconFor(categories.categories()[0])).not.toBe(
       page.iconFor(categories.categories()[1]),
     );

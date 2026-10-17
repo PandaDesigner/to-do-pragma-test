@@ -1,4 +1,8 @@
-import { pickValue, resolveCategoryIcon, CATEGORY_ICONS } from './category-icons';
+import {
+  pickValue,
+  resolveCategoryIcon,
+  CATEGORY_ICONS,
+} from './category-icons';
 
 describe('pickValue', () => {
   it('returns the mapped value when the key is in the table', () => {

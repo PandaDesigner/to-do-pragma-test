@@ -16,8 +16,7 @@ interface CategoryStoreState extends OperationStatus {
 export type CategorySheetMode = 'create' | 'edit';
 
 export type SheetRequest =
-  | { mode: 'create' }
-  | { mode: 'edit'; draft: Category };
+  { mode: 'create' } | { mode: 'edit'; draft: Category };
 
 const initialState: CategoryStoreState = {
   categories: [],

@@ -46,7 +46,9 @@ describe('ChipComponent', () => {
     @Component({
       standalone: true,
       imports: [ChipComponent],
-      template: `<app-chip label="Shopping"><span appChipIcon>cart</span></app-chip>`,
+      template: `<app-chip label="Shopping"
+        ><span appChipIcon>cart</span></app-chip
+      >`,
     })
     class HostComponent {}
     const fixture = TestBed.createComponent(HostComponent);

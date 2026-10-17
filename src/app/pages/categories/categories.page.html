@@ -1,8 +1,7 @@
 <ion-content [scrollY]="!shouldVirtualize()">
   <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
     <app-page-header overline="Mis listas" title="Categorías" />
-    @if (flags.categoriesEnabled()) {
-    @if (feedback.error() || store.error()) {
+    @if (flags.categoriesEnabled()) { @if (feedback.error() || store.error()) {
     <div class="error-notice" role="alert">
       <p>{{ feedback.error() || store.error() }}</p>
       <button type="button" (click)="retry()" [disabled]="store.busy()">
@@ -40,10 +39,7 @@
     </section>
     }
     <ion-fab vertical="bottom" horizontal="end">
-      <ion-fab-button
-        (click)="openCreateSheet()"
-        aria-label="Nueva categoría"
-      >
+      <ion-fab-button (click)="openCreateSheet()" aria-label="Nueva categoría">
         +
       </ion-fab-button>
     </ion-fab>

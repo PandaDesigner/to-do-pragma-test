@@ -108,7 +108,7 @@ export class IconOptionComponent {
     >
       <span class="swatch__fill" [style.background]="fillColor()"></span>
       @if (selected()) {
-      <span class="swatch__check" aria-hidden="true">OK</span>
+        <span class="swatch__check" aria-hidden="true">OK</span>
       }
     </button>
   `,
