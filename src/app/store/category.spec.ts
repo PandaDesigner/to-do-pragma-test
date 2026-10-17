@@ -110,4 +110,24 @@ describe('CategoryStore', () => {
     await store.retry();
     expect(store.categories()[0].name).toBe('Renamed');
   });
+
+  it('[SHEET-06.1] opens the category sheet through a shared signal conforme a Figma 4:869', () => {
+    const { store } = setup();
+    expect(store.sheetRequest()).toBeNull();
+    store.openCategorySheet({ mode: 'create' });
+    expect(store.sheetRequest()).toEqual({ mode: 'create' });
+  });
+
+  it('[SHEET-06.2] closes the sheet and clears the signal conforme a Figma 4:869', () => {
+    const { store } = setup();
+    store.openCategorySheet({ mode: 'edit', draft: category });
+    store.closeCategorySheet();
+    expect(store.sheetRequest()).toBeNull();
+  });
+
+  it('[SHEET-06.3] rejects requests with a mode outside the closed type', () => {
+    const { store } = setup();
+    // @ts-expect-error -- intentional closed-type violation for the contract test
+    store.openCategorySheet({ mode: 'delete' });
+  });
 });
