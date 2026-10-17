@@ -25,11 +25,19 @@ export const routes: Routes = [
             (module) => module.CategoriesPage,
           ),
       },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./pages/settings/settings.page').then(
+            (module) => module.SettingsPage,
+          ),
+      },
       { path: '', redirectTo: APP_ROUTE.TASKS, pathMatch: 'full' },
     ],
   },
   { path: 'home', redirectTo: APP_ROUTE.TASKS, pathMatch: 'full' },
   { path: 'tasks', redirectTo: APP_ROUTE.TASKS, pathMatch: 'full' },
   { path: 'categories', redirectTo: APP_ROUTE.CATEGORIES, pathMatch: 'full' },
+  { path: 'settings', redirectTo: APP_ROUTE.SETTINGS, pathMatch: 'full' },
   { path: '', redirectTo: APP_ROUTE.TASKS, pathMatch: 'full' },
 ];

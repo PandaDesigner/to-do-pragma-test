@@ -5,6 +5,7 @@ import { RemoteConfigService } from '../config/remote-config';
 export const APP_ROUTE = {
   TASKS: '/tabs/tasks',
   CATEGORIES: '/tabs/my',
+  SETTINGS: '/tabs/settings',
 } as const;
 
 export const categoriesEnabledGuard = (() => {
