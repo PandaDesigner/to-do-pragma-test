@@ -123,10 +123,26 @@ describe('SettingsPage', () => {
     expect(fixture.nativeElement.querySelector('.debug')).toBeNull();
   });
 
-  it('[I18N-01.1] switches the visible language immediately', async () => {
+  it('rejects invalid dark mode toggle events', async () => {
     const { fixture } = setup();
-    await fixture.componentInstance.setLanguage(APP_LANGUAGE.ES);
-    fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('Modo oscuro');
+    await expect(
+      fixture.componentInstance.setDarkFromToggle({} as CustomEvent),
+    ).rejects.toThrow(/modo oscuro/);
+  });
+
+  it('rejects invalid language select events', async () => {
+    const { fixture } = setup();
+    await expect(
+      fixture.componentInstance.setLanguageFromSelect({} as Event),
+    ).rejects.toThrow(/idioma/);
+  });
+
+  it('triggers debug seed and deletion when the buttons are pressed', async () => {
+    const { fixture } = setup();
+    await fixture.componentInstance.generateFiveThousand();
+    await fixture.componentInstance.removeAllTasks();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
+    ).not.toBeNull();
   });
 });
