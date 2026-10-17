@@ -330,6 +330,12 @@ export class TasksPage implements OnInit {
     await this.feedback.run(() => this.store.retry());
   }
 
+  async loadMore(): Promise<void> {
+    await this.feedback.run(async () => {
+      this.store.loadMore();
+    });
+  }
+
   private firstAvailableCategoryId(): string | null {
     const available = this.availableCategories();
     if (available.length === 0) {
