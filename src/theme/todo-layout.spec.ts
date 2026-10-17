@@ -58,6 +58,8 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(
       /\.chip\.selected\s*\{[^}]*color:\s*var\(--app-on-primary\);/,
     );
+    expect(styles).toMatch(/:host\s*\{[^}]*flex-shrink:\s*0;/);
+    expect(styles).toMatch(/\.chip\s*\{[^}]*white-space:\s*nowrap;/);
   });
 
   it('[TODO-04.1] separates category filters in a horizontally scrollable row conforme a Figma 4:973', () => {
