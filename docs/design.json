@@ -206,7 +206,7 @@
       "size": 36,
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
-      "cssVar": "--fs-title",
+      "cssVar": "--fs-display-title",
       "usage": "Títulos de página y de sheet"
     },
     {
@@ -247,7 +247,8 @@
       "letterSpacing": 0,
       "lineHeight": "100% (normal)",
       "cssVar": "--fs-note-title",
-      "usage": "Título de NoteItem/CategoryRow/SettingRow"
+      "usage": "Título de NoteItem/CategoryRow/SettingRow",
+      "figmaNote": "Nombre Figma confirmado en 4:788."
     },
     {
       "name": "Body/Regular",
@@ -5249,9 +5250,9 @@
     "Textos mezclados inglés/español (Eliminar, Cancelar, generar 5000 tareas, texto de Debug).",
     "Display/Date usaba cssVar --fs-date; corregido a --fs-display-date según Figma 4:440.",
     "Body/Regular usaba cssVar --fs-regular; corregido a --fs-body según Figma 4:440.",
-    "Display/Title y Body/Note Title no aparecen como variables en Figma; cssVar --fs-title y --fs-note-title de la copia offline quedan pendientes de confirmación hasta una consulta con cuota o un plan superior.",
-    "Interlineado: la copia offline registra '100% (normal)'; Figma devuelve metadatos 100 y código leading-[normal]. Bloqueado: requiere consulta adicional a Figma o al cliente para fijar la unidad.",
+    "Display/Title usaba cssVar --fs-title; corregido a --fs-display-title según Figma 4:788 y 4:1267.",
+    "Interlineado: la copia offline registra '100% (normal)'; Figma devuelve metadatos 100 y código leading-[normal]. La consulta reiterada en 4:440, 4:788 y 4:1267 confirma que Figma exporta el valor como 100 y CSS como 'normal'. Para C0.5 se documenta la unidad CSS normal como referencia, sin fijar un cierre de pixel exacto: el navegador aplica 'normal' según la fuente y el tamaño. Verificado contra 4:440/4:788/4:1267.",
     "Radio round: Figma documenta 999; la copia offline y design.md registran 50 %. Decisión de C0.5: usar 50 % para elementos circulares sin exponer el radio como token; el valor 999 se documenta solo si una consulta posterior confirma el uso fuera de círculos.",
-    "Sheets 4:947 y 4:1365 faltan en screens[]; documentar como child de 4:869 y 4:1267 en una corrección posterior."
+    "Sheets 4:947 y 4:1365 faltan en screens[]; documentar como child de 4:869 y 4:1267 en una corrección posterior. En 4:1267 el sheet es 4:1365 con altura 487, padding lateral 24, handle 36x5 y radius 10; el color 50% de Figma coincide con el token round 50 % cerrado en C0.5."
   ]
 }

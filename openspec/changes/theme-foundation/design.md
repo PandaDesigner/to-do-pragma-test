@@ -71,7 +71,7 @@ Todos los archivos de la tabla viven en `src/theme`. La tabla indica consumidore
 
 Familias: `--app-font-display` y `--app-font-body`; `--ion-font-family` referencia la segunda. Declaraciones @font-face solo en typography.scss; archivos locales en src/assets/fonts con su licencia y procedencia. DM Serif Display solo 400; prohibida negrita sintética. No se ha elegido un proveedor de descarga sin verificar los archivos y licencias.
 
-Interlineado: bloqueado. La copia offline registra `100% (normal)`, Figma devuelve metadatos 100 con código `leading-[normal]` y no se admite aplicar uno de los dos sin evidencia nueva. La unidad de line-height queda como riesgo sin cierre: no se afirma fidelidad tipográfica y la tarea 0.3 de fase A debe resolverla antes de aplicar los once estilos.
+Interlineado: la copia offline registra `100% (normal)` y Figma responde con metadatos 100 y código `leading-[normal]` en 4:440, 4:788 y 4:1267. Se documenta la unidad CSS `normal` como referencia para los once estilos; el navegador aplica el alto según la fuente y el tamaño. La tarea 0.3 queda resuelta sin inventar un valor de píxel.
 
 ### Medidas: Figma → variables.scss
 
@@ -117,7 +117,7 @@ Reversión: revertir los commits del cambio; no modifica datos persistidos. No a
 
 ## Open Questions
 
-Resolver unidades reales de interlineado (tarea 0.3), confirmar Display/Title y Body/Note Title como cssVar en Figma y revisar conflictos de contraste distintos de muted. La discrepancia de radio round queda cerrada con 50 % para elementos circulares; el valor Figma 999 se documenta para consulta posterior. Confirmar proveedor y licencia de fuentes antes de empaquetar. Las medidas técnicas heredadas ya fueron autorizadas como categoría separada. El workflow ya está disponible.
+Confirmar Display/Title y Body/Note Title como cssVar en Figma y revisar conflictos de contraste distintos de muted. La discrepancia de radio round queda cerrada con 50 % para elementos circulares; el valor Figma 999 se documenta para consulta posterior. Confirmar proveedor y licencia de fuentes antes de empaquetar. Las medidas técnicas heredadas ya fueron autorizadas como categoría separada. El workflow ya está disponible.
 
 ## Trazabilidad de la auditoría Figma
 
