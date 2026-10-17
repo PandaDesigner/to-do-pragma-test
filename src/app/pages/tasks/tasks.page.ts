@@ -237,7 +237,12 @@ export class TasksPage implements OnInit {
         title: input.title.trim(),
         dueDate: input.dueDate,
         time: input.time || undefined,
-        durationMin: input.durationMin ? Number(input.durationMin) : undefined,
+        durationMin:
+          input.durationPreset === 'custom'
+            ? input.durationMin
+              ? Number(input.durationMin)
+              : undefined
+            : input.durationPreset,
         reminderMin: input.reminderMin ? Number(input.reminderMin) : undefined,
         status: existing?.status ?? TASK_STATUS.PENDING,
         categoryId: this.flags.categoriesEnabled()
@@ -259,12 +264,18 @@ export class TasksPage implements OnInit {
   editTask(task: Task): void {
     this.editingId.set(task.id);
     const duration = task.durationMin;
+    const durationPreset =
+      duration === undefined
+        ? 30
+        : [15, 30, 45, 60, 75, 90, 105, 120].includes(duration)
+          ? duration
+          : 'custom';
     this.form.reset({
       title: task.title,
       dueDate: task.dueDate,
       time: task.time ?? '',
       durationMin: duration?.toString() ?? '',
-      durationPreset: duration === undefined || [15, 30, 45, 60, 75, 90, 105, 120].includes(duration) ? duration : 'custom',
+      durationPreset,
       reminderMin: task.reminderMin?.toString() ?? '0',
       categoryId: task.categoryId ?? '',
     });
