@@ -122,6 +122,12 @@ export const TaskStore = signalStore(
             }));
           });
         },
+        async removeAll(): Promise<void> {
+          await operations.run(async () => {
+            await repository.clear?.();
+            patchState(store, { tasks: [] });
+          });
+        },
         async dispatch(id: string, event: TaskEvent): Promise<void> {
           const task = store.tasks().find((candidate) => candidate.id === id);
           if (!task) {
