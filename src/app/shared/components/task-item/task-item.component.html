@@ -15,14 +15,14 @@
       <span class="task-due" [attr.title]="task().dueDate">{{ task().dueDate }}</span>
       @if (showCategories() && categoryName()) {
         <span
-          class="category-chip"
+          class="category-dot"
           [style.--app-category-tint]="resolvedCategoryColor()"
           [attr.title]="categoryName()"
+          [attr.aria-label]="categoryName()"
         >
           @if (resolvedCategoryIcon(); as icon) {
-            <ion-icon class="category-chip__icon" [icon]="icon" aria-hidden="true"></ion-icon>
+            <ion-icon class="category-dot__icon" [icon]="icon" aria-hidden="true"></ion-icon>
           }
-          <span class="category-chip__label">{{ categoryName() }}</span>
         </span>
       }
     </div>

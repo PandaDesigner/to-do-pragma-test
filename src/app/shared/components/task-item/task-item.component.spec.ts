@@ -4,30 +4,31 @@ import { taskFixture } from '../../../testing/task.fixture';
 import { TaskItemComponent } from './task-item.component';
 
 describe('TaskItemComponent', () => {
-  it('renders the category icon next to the name when categoryIcon is provided', () => {
+  it('renders the category dot when categoryIcon is provided', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = taskFixture();
     fixture.componentRef.setInput('task', task);
     fixture.componentRef.setInput('categoryName', 'Shopping');
     fixture.componentRef.setInput('categoryIcon', 'cart');
     fixture.detectChanges();
-    const chip = fixture.nativeElement.querySelector('.category-chip');
-    expect(chip?.querySelector('ion-icon')).not.toBeNull();
-    expect(chip?.textContent).toContain('Shopping');
+    const dot = fixture.nativeElement.querySelector('.category-dot');
+    expect(dot).not.toBeNull();
+    expect(dot?.querySelector('ion-icon')).not.toBeNull();
+    expect(dot?.getAttribute('title')).toBe('Shopping');
   });
 
-  it('omits the icon when categoryIcon is not provided', () => {
+  it('renders the dot without the icon when categoryIcon is not provided', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = taskFixture();
     fixture.componentRef.setInput('task', task);
     fixture.componentRef.setInput('categoryName', 'Shopping');
     fixture.detectChanges();
-    const chip = fixture.nativeElement.querySelector('.category-chip');
-    expect(chip?.querySelector('ion-icon')).toBeNull();
-    expect(chip?.textContent).toContain('Shopping');
+    const dot = fixture.nativeElement.querySelector('.category-dot');
+    expect(dot).not.toBeNull();
+    expect(dot?.querySelector('ion-icon')).toBeNull();
   });
 
-  it('emits a toggle without changing the task and hides category chips when disabled', () => {
+  it('emits a toggle without changing the task and hides category dots when disabled', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = Object.freeze(taskFixture());
     fixture.componentRef.setInput('task', task);
@@ -36,6 +37,7 @@ describe('TaskItemComponent', () => {
       TASK_EVENT.ARCHIVE,
     ]);
     fixture.componentRef.setInput('categoryName', 'Shopping');
+    fixture.componentRef.setInput('categoryIcon', 'cart');
     const toggled = jest.fn();
     fixture.componentInstance.taskToggle.subscribe(toggled);
     fixture.detectChanges();
@@ -45,12 +47,10 @@ describe('TaskItemComponent', () => {
     checkbox.dispatchEvent(new Event('change'));
     expect(toggled).toHaveBeenCalledWith(task.id);
     expect(task.status).toBe('pending');
-    expect(
-      fixture.nativeElement.querySelector('.category-chip').textContent,
-    ).toContain('Shopping');
+    expect(fixture.nativeElement.querySelector('.category-dot')).not.toBeNull();
     fixture.componentRef.setInput('showCategories', false);
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.category-chip')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.category-dot')).toBeNull();
   });
 
   it('emits edit, delete and State actions; archived tasks cannot toggle', () => {

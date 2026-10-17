@@ -6,13 +6,12 @@ function readAppStyles(relativePath: string): string {
 }
 
 describe('Todo layout regression contracts', () => {
-  it('[TODO-04.1] gives task categories pill corners and space to wrap conforme a Figma 4:973', () => {
+  it('[TODO-04.1] gives task category a circular dot with the category tint conforme a Figma 4:973', () => {
     const styles = readAppStyles(
       'shared/components/task-item/task-item.component.scss',
     );
     expect(styles).toMatch(/border-radius:\s*var\(--app-radius-pill\);/);
-    expect(styles).toMatch(/max-width:\s*100%;/);
-    expect(styles).toMatch(/flex-wrap:\s*wrap;/);
+    expect(styles).toMatch(/background:\s*var\(--app-category-tint/);
   });
 
   it('[TODO-04.1] uses pill corners and a separate touch target conforme a Figma 4:973', () => {

@@ -221,12 +221,12 @@ describe('TasksPage', () => {
     await tasks.upsert(taskFixture({ categoryId: 'c', dueDate: '2026-01-03' }));
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector('.category-chip'),
+      fixture.nativeElement.querySelector('.category-dot'),
     ).not.toBeNull();
     enabled.set(false);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('select')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.category-chip')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.category-dot')).toBeNull();
     page.editTask(tasks.tasks()[0]);
     await page.saveTask();
     expect(tasks.tasks()[0].categoryId).toBe('c');
