@@ -46,13 +46,13 @@ Estas capturas documentan la regresión; no sustituyen las capturas ni el diff p
 
 ## Pruebas y revisión
 
-`src/theme/todo-layout.spec.ts` añade nueve contratos de estilos y estructura para TODO-01.1, TODO-01.2, TODO-02.1, TODO-03.1, TODO-05.1 y TODO-06.2. Se comprobó su fallo antes de aplicar la implementación. Son pruebas del código Sass y del template; la geometría y los clics se comprobaron aparte en Chrome. `tasks.page.spec.ts` también protege la apertura del modal al editar y la cancelación sin guardar.
+`src/theme/todo-layout.spec.ts` añade doce contratos de estilos y estructura para TODO-01.1, TODO-01.2, TODO-02.1, TODO-03.1, TODO-05.1 y TODO-06.2. Se comprobó su fallo antes de aplicar la implementación. Son pruebas del código Sass y del template; la geometría y los clics se comprobaron aparte en Chrome. `tasks.page.spec.ts` también protege la apertura del modal al editar y la cancelación sin guardar.
 
 Pasaron:
 
 - Prettier en los archivos modificados y `git diff --check`.
 - `npm run typecheck`, `npm run lint` y `npm run lint:styles`.
-- `npm run test`: 38 suites, 282 pruebas; sin reducir los umbrales existentes.
+- `npm run test`: 39 suites, 293 pruebas; sin reducir los umbrales existentes.
 - `npm run build`.
 - `npm run trace:check` y `npx openspec validate --all --strict`.
 - Revisión del diff contra las guías Sideroom. El helper de prueba separa la lectura del archivo de cada contrato; no requiere otra descomposición. No se refactoriza código ajeno al defecto.
@@ -89,6 +89,27 @@ Se comprobaron estos valores calculados en Chrome a 375×812 y 427×952, claro y
 
 - [Filtro y márgenes, oscuro](evidence/category-insets-dark-es.png)
 - [Filtro y márgenes, claro](evidence/category-insets-light-es.png)
+
+## Forma de etiquetas, padding compartido e idioma al volver
+
+Los filtros usan `radius/pill=999`, confirmado en Figma 4:1560, en lugar del 50 % que los deformaba como óvalos. Su altura visible es 35 px sin seleccionar y 33 px seleccionados; el área táctil se amplía a 44 px sin agrandar el fondo. Cada punto recibe el color real de su categoría. Las etiquetas de las filas usan el mismo radio, se limitan al ancho disponible y permiten distribuir la fecha y la categoría en dos líneas dentro de la fila de 65 px; el nombre completo permanece disponible en el texto y en `title`.
+
+Se centralizan los márgenes de la hoja en tokens: inicio de 37 px, final de columna de 0 px, cabecera diaria en 55 px y cabecera de página en 82 px. Los controles conservan un espacio interior derecho de 18 px y el modal conserva 24 px por lado. El usuario rechazó sustituirlos por 24 px simétricos: se mantienen las medidas de Figma. No se centra el texto de las listas.
+
+Se reprodujo el defecto del idioma con pruebas de remontaje de Ajustes: la preferencia conservaba `es` o `en`, pero el selector quedaba vacío al aplicar su valor antes de registrar sus opciones. Se usa `ReactiveFormsModule` y un `FormControl` sincronizado con la preferencia. No cambian la persistencia ni la carga de traducciones.
+
+Chrome confirma navegación Todo/My/More, regreso y recarga de Ajustes con el nombre del idioma visible en español e inglés; se probó claro/oscuro a 375×812 y 427×952. También se comprobaron columnas sin desbordamiento, etiquetas largas, colores de categoría, el área táctil ampliada y la etiqueta de categoría dentro de su fila.
+
+El detector de Impeccable señaló el borde izquierdo rojo de 3 px de `.error-notice` en `_notebook.scss`. Es una regla previa de avisos de error, no un borde añadido a las etiquetas ni por esta corrección; se mantiene fuera de este arreglo. Tipos, lint y stylelint pasan.
+
+Capturas a 375×812:
+
+- [Filtros y fila, claro](evidence/category-pills-light-es.png)
+- [Filtros y fila, oscuro](evidence/category-pills-dark-es.png)
+- [Idioma inglés, claro](evidence/language-return-light-en.png)
+- [Idioma español, claro](evidence/language-return-light-es.png)
+- [Idioma inglés, oscuro](evidence/language-return-dark-en.png)
+- [Idioma español, oscuro](evidence/language-return-dark-es.png)
 
 ## Pendiente para el cierre
 

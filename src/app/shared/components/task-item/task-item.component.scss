@@ -43,8 +43,10 @@ strong {
 }
 small {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
+  column-gap: var(--app-space-8);
+  row-gap: var(--app-space-4);
   color: var(--app-text);
   font-size: 14px;
 }
@@ -53,12 +55,12 @@ small {
   color: var(--app-primary-dark);
 }
 .category-chip {
-  max-width: 100px;
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  padding: 2px 5px;
-  border-radius: 12px;
+  padding: 0 var(--app-space-8);
+  border-radius: var(--app-radius-pill);
   background: var(--app-surface-muted);
 }
 .task-actions {

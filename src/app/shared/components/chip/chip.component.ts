@@ -14,5 +14,6 @@ import {
 export class ChipComponent {
   readonly label = input.required<string>();
   readonly selected = input(false);
+  readonly colorToken = input('todo');
   readonly choose = output<void>();
 }

@@ -5,6 +5,6 @@
   [attr.aria-pressed]="selected()"
   (click)="choose.emit()"
 >
-  <span class="dot" aria-hidden="true"></span>
+  <span class="dot" [attr.data-color]="colorToken()" aria-hidden="true"></span>
   <span>{{ label() }}</span>
 </button>

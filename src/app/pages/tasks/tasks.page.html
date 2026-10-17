@@ -47,6 +47,7 @@
       @for (category of categories.categories(); track category.id) {
       <app-chip
         [label]="category.name"
+        [colorToken]="category.colorToken"
         [selected]="store.categoryId() === category.id"
         (choose)="store.setCategory(category.id)"
       />

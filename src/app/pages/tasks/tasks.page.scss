@@ -1,5 +1,14 @@
-.notebook-page {
-  padding-right: 0;
+main.notebook-page {
+  padding-top: var(--app-content-day-top);
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: var(--app-day-actions-height);
+  padding-inline-end: var(--app-content-inset-end);
+  margin-bottom: var(--app-space-8);
 }
 
 .task-editor {
