@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Platform } from '@ionic/angular/standalone';
 import { Storage } from '@ionic/storage-angular';
+import { SettingsPreferences } from '../settings/settings-preferences';
 import { StorageInitializer } from './storage-initializer';
 import { IonicStorageTaskRepository } from '../../data/repositories/ionic-storage-task-repository';
 import { IonicStorageCategoryRepository } from '../../data/repositories/ionic-storage-category-repository';
@@ -20,6 +21,10 @@ describe('Storage initialization', () => {
         IonicStorageCategoryRepository,
         { provide: Storage, useValue: storage },
         { provide: Platform, useValue: { ready } },
+        {
+          provide: SettingsPreferences,
+          useValue: { load: jest.fn().mockResolvedValue(undefined) },
+        },
       ],
     });
     return { storage, ready, initializer: TestBed.inject(StorageInitializer) };
@@ -32,6 +37,7 @@ describe('Storage initialization', () => {
     expect(storage.defineDriver).toHaveBeenCalledWith(
       expect.objectContaining({ _driver: expect.any(String) }),
     );
+    expect(TestBed.inject(SettingsPreferences).load).toHaveBeenCalledTimes(1);
     expect(storage.get.mock.calls).toEqual([
       ['todo-notebook.tasks.v1'],
       ['todo-notebook.categories.v1'],

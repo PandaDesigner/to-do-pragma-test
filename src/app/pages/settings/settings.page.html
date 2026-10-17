@@ -1,0 +1,36 @@
+<ion-content>
+  <main class="notebook-page">
+    <header class="page-header">
+      <p class="overline">{{ 'settings.overline' | translate }}</p>
+      <h1>{{ 'settings.title' | translate }}</h1>
+    </header>
+    <section
+      class="settings-list"
+      [attr.aria-label]="'settings.title' | translate"
+    >
+      <label class="setting-row">
+        <span>{{ 'settings.darkMode' | translate }}</span>
+        <ion-toggle
+          [checked]="darkEnabled()"
+          (ionChange)="setDarkFromToggle($event)"
+          [attr.aria-label]="'settings.darkMode' | translate"
+        />
+      </label>
+      <label class="setting-row">
+        <span>{{ 'settings.language' | translate }}</span>
+        <select
+          [value]="preferences.language()"
+          (change)="setLanguageFromSelect($event)"
+          [attr.aria-label]="'settings.language' | translate"
+        >
+          <option [value]="languages.ES">
+            {{ 'settings.spanish' | translate }}
+          </option>
+          <option [value]="languages.EN">
+            {{ 'settings.english' | translate }}
+          </option>
+        </select>
+      </label>
+    </section>
+  </main>
+</ion-content>

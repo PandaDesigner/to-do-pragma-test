@@ -4,7 +4,7 @@ import { join } from 'node:path';
 const TRACE_ROW_PREFIX = '| 4:';
 const NODE_REGISTRATION = 'registro';
 const SCENARIO_COLUMN = 5;
-const SCENARIO_ID = /^[A-Z]+-\d+(?:\.\d+|-[A-Z])?$/;
+const SCENARIO_ID = /^[A-Z][A-Z0-9]*-\d+(?:\.\d+)?$/;
 
 function readTextFiles(directory, extension) {
   const files = [];
