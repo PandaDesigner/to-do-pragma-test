@@ -26,11 +26,12 @@ describe('UI-22 Paleta oscura verificable', () => {
   });
 
   it('[UI-22.1] exposes the dark palette on .ion-palette-dark', () => {
-    expect(css).toMatch(/\.ion-palette-dark/);
-    expect(css).toMatch(/--app-primary:\s*#8b7fc0/);
+    expect(css).toMatch(/\.ion-palette-dark\s*\{[^}]*--app-primary:\s*#8b7fc0/);
   });
 
-  it('[UI-22.2] follows the system when no saved preference adds a class', () => {
-    expect(css).toMatch(/@media\s*\(prefers-color-scheme:\s*dark\)/);
+  it('[UI-22.2] follows the system unless light was saved', () => {
+    expect(css).toMatch(
+      /@media\s*\(prefers-color-scheme:\s*dark\)[^{]*\{[^}]*:root:not\(\.ion-palette-light\)/,
+    );
   });
 });

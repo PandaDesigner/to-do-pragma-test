@@ -1,6 +1,4 @@
-// Paleta oscura: única fuente de valores para `prefers-color-scheme: dark`.
-// Sustituye a `dark.system.css` de Ionic (tarea 3.2) y a los overrides en
-// `variables.scss` para evitar dos orígenes de paleta.
+// Paleta oscura compartida por el sistema y por la clase guardada.
 
 @mixin dark-palette {
   --app-primary: #8b7fc0;
@@ -27,7 +25,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not(.ion-palette-light) {
     @include dark-palette;
   }
 }
