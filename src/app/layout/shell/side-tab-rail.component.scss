@@ -2,19 +2,19 @@
   display: block;
   flex: 0 0 var(--app-rail-width);
   width: var(--app-rail-width);
-  height: 812px;
+  height: 100vh;
 }
 
 .rail {
   display: flex;
   flex-direction: column;
   width: var(--app-rail-width);
-  height: 812px;
+  height: 100vh;
 }
 
 .rail-tab {
-  width: var(--app-rail-width);
-  padding: var(--app-space-24) 0 0;
+    width: 100%;
+    padding: var(--app-space-24) 0 0;
   border: 0;
   border-radius: 0 var(--app-radius-tab) var(--app-radius-tab) 0;
   background: var(--rail-fill);
