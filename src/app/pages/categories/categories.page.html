@@ -50,7 +50,7 @@
     <ng-template #categoryRow let-category>
       <article class="category-row">
         <span class="swatch" [attr.data-color]="category.colorToken"
-          ><ion-icon [icon]="icons.listOutline" aria-hidden="true"
+          ><ion-icon [icon]="iconFor(category)" aria-hidden="true"
         /></span>
         <div class="category-copy">
           <strong>{{ category.name }}</strong

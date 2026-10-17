@@ -65,6 +65,33 @@ describe('CategoriesPage', () => {
     ).not.toBeNull();
   });
 
+  it('resolves each category icon via iconFor and renders one ion-icon per row', async () => {
+    const { categories, fixture, page } = await setup();
+    await categories.upsert({
+      id: 'cart',
+      name: 'Shopping',
+      kind: 'list',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await categories.upsert({
+      id: 'home',
+      name: 'House',
+      kind: 'list',
+      icon: 'home',
+      colorToken: 'event',
+    });
+    expect(page.iconFor(categories.categories()[0])).toMatch(/^data:image\/svg/);
+    expect(page.iconFor(categories.categories()[1])).toMatch(/^data:image\/svg/);
+    expect(page.iconFor(categories.categories()[0])).not.toBe(
+      page.iconFor(categories.categories()[1]),
+    );
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelectorAll('.swatch ion-icon'),
+    ).toHaveLength(2);
+  });
+
   it('exposes retry that delegates to the store', async () => {
     const { page, categories } = await setup();
     const retry = jest.spyOn(categories, 'retry');

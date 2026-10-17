@@ -8,7 +8,8 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { IonContent, IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
-import { createOutline, listOutline } from 'ionicons/icons';
+import { createOutline } from 'ionicons/icons';
+import { resolveCategoryIcon } from '../../domain/category-icons';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { type Category } from '../../domain/category';
 import { CategoryStore } from '../../store/category';
@@ -41,7 +42,7 @@ export class CategoriesPage implements OnInit {
   readonly tasks = inject(TaskStore);
   readonly flags = inject(RemoteConfigService);
   readonly feedback = inject(ActionFeedback);
-  readonly icons = { createOutline, listOutline };
+  readonly icons = { createOutline };
   readonly shouldVirtualize = computed(
     () => this.store.categories().length >= VIRTUAL_SCROLL_THRESHOLD,
   );
@@ -67,6 +68,10 @@ export class CategoriesPage implements OnInit {
 
   openEditSheet(category: Category): void {
     this.store.openCategorySheet({ mode: 'edit', draft: category });
+  }
+
+  iconFor(category: Category): string {
+    return resolveCategoryIcon(category.icon);
   }
 
   async retry(): Promise<void> {
