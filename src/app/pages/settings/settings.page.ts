@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  effect,
+  inject,
+} from '@angular/core';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IonContent, IonToggle } from '@ionic/angular/standalone';
 import { DebugTaskSeed } from '../tasks/debug-task-seed';
@@ -18,7 +24,13 @@ import { THEME_PREFERENCE } from '../../../theme/theme-preference';
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrl: './settings.page.scss',
-  imports: [IonContent, IonToggle, TranslatePipe, PageHeaderComponent],
+  imports: [
+    IonContent,
+    IonToggle,
+    TranslatePipe,
+    PageHeaderComponent,
+    ReactiveFormsModule,
+  ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -28,6 +40,9 @@ export class SettingsPage {
   private readonly feedback = inject(ActionFeedback);
   private readonly systemDark = inject(SYSTEM_DARK);
   readonly languages = APP_LANGUAGE;
+  readonly languageControl = new FormControl(this.preferences.language(), {
+    nonNullable: true,
+  });
   readonly darkEnabled = (): boolean => {
     const theme = this.preferences.theme();
     if (theme === THEME_PREFERENCE.DARK) {
@@ -38,6 +53,14 @@ export class SettingsPage {
     }
     return this.systemDark;
   };
+
+  constructor() {
+    effect(() => {
+      this.languageControl.setValue(this.preferences.language(), {
+        emitEvent: false,
+      });
+    });
+  }
 
   async setDarkFromToggle(event: Event): Promise<void> {
     await this.setDark(readToggleChecked(event));

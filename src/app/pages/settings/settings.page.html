@@ -19,7 +19,7 @@
       <label class="setting-row">
         <span>{{ 'settings.language' | translate }}</span>
         <select
-          [value]="preferences.language()"
+          [formControl]="languageControl"
           (change)="setLanguageFromSelect($event)"
           [attr.aria-label]="'settings.language' | translate"
         >
