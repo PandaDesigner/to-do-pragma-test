@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import en from '../../../assets/i18n/en.json';
+import { taskFixture } from '../../testing/task.fixture';
 import { CategoriesPage } from './categories.page';
 import { configurePageTesting } from '../../testing/page.fixture';
 
@@ -90,6 +91,18 @@ describe('CategoriesPage', () => {
     expect(
       fixture.nativeElement.querySelectorAll('.swatch ion-icon'),
     ).toHaveLength(2);
+  });
+
+  it('counts tasks per category including uncategorized ones', async () => {
+    const { page, tasks } = await setup();
+    await tasks.upsertMany([
+      taskFixture({ id: 't1', categoryId: 'cart', dueDate: '2026-01-01' }),
+      taskFixture({ id: 't2', categoryId: 'cart', dueDate: '2026-01-02' }),
+      taskFixture({ id: 't3', categoryId: null, dueDate: '2026-01-03' }),
+    ]);
+    fixture: void page.taskCounts();
+    expect(page.taskCounts().get('cart')).toBe(2);
+    expect(page.taskCounts().get(null)).toBe(1);
   });
 
   it('exposes retry that delegates to the store', async () => {
