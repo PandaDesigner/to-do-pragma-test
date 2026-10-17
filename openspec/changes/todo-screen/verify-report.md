@@ -4,6 +4,14 @@
 
 El change sigue abierto. Esta revisión corrige las regresiones de estilos reportadas en el navegador. No acredita todavía la coincidencia visual completa con Figma ni la tolerancia de 2 px.
 
+## Revisión con Impeccable y UI UX Pro Max
+
+Se aplicaron las guías de acabado visual y la revisión de accesibilidad, controles y adaptación. Las recomendaciones genéricas de nueva paleta y React Native no se aplican: el proyecto conserva Ionic/Angular y Figma como fuente visual.
+
+La lectura directa de Figma 4:1560 confirmó `color/primary: #8B7FC0`, `color/on-primary: #FFFFFF` y `color/surface: #1E1A2B`. El contraste blanco/morado es 3,56:1; no alcanza 4,5:1 para texto pequeño. El usuario aprobó `#786AAD` exclusivamente para fondos de acciones (4,70:1 con blanco), conservando los acentos actuales y el modo claro.
+
+El orden aprobado es actualizar primero Figma y después la app. Durante la inspección posterior, `get_libraries` y `use_figma` devolvieron el límite de llamadas del plan Starter. No se realizó ninguna escritura en Figma ni se modificaron colores en la app. El color aprobado aún no forma parte de `docs/design.json`, los mocks ni los tokens implementados. La tarea 4.6 permanece abierta hasta disponer de edición operativa o de una actualización manual verificada del diseño.
+
 ## Regresiones reproducidas y corregidas
 
 - El `ion-router-outlet` anidado ocupaba x=0..375 y cubría el rail. Se mantiene dentro del layout flex, en x=27..375. More vuelve a recibir clics.

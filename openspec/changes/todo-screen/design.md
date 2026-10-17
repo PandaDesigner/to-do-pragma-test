@@ -76,6 +76,7 @@ Estado vacío: ilustración 68 y el botón de 239x50. Chips: punto de 8 y hueco 
 7. Los iconos se exportan de los nodos de Figma a `src/assets/icon`. No se sustituyen por ionicons.
 8. Las etiquetas del rail se quedan como en Figma. El resto de textos nuevos entra en `es.json` y `en.json`. La tolerancia de 2 px se mide en inglés contra el mock. El español se captura para demostrar la traducción, no para igualar un marco inglés.
 9. Los componentes nuevos se generan con el CLI de Ionic. No se añaden dependencias.
+10. Revisión con Impeccable y UI UX Pro Max: el usuario aprobó separar el fondo de acciones de los acentos. El fondo oscuro aprobado es `#786AAD` con texto blanco (4,70:1); los acentos conservan `#8B7FC0` (4,76:1 sobre `#1E1A2B`). La paleta clara no cambia. El nuevo color se registra primero en Figma y después se sincroniza con la app. Sigue pendiente: Figma MCP agotó la cuota antes de crear o aplicar el token. No se cambia `color/primary` globalmente, porque oscurecer también los acentos reduciría su contraste.
 
 ## Risks / Trade-offs
 

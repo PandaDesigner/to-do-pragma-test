@@ -28,6 +28,7 @@
 - [x] 4.3 RED: tests de SET-02.1 y APP-11 para el botón ausente en tareas y presente en Ajustes.
 - [x] 4.4 GREEN: mover la depuración a Ajustes.
 - [x] 4.5 Extraer `page-header` y usarlo en Ajustes y Categorías.
+- [ ] 4.6 Registrar primero en Figma el fondo de acciones oscuro aprobado `#786AAD`, mantener acentos y paleta clara, y sincronizar la app con prueba de contraste mínimo 4,5:1. Bloqueado por cuota de Figma MCP; no se ha aplicado el token.
 
 ## 5. Cierre
 
