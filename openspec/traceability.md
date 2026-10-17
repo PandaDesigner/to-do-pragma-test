@@ -17,10 +17,10 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | 4:1267 | new-task-modal | docs/mocks/new-task-modal.png | TASK-00 | registro | F6 | pendiente | pendiente | pendiente |
 | 4:1365 | new-task-sheet-panel | docs/mocks/new-task-modal.png | TASK-00 | registro | F6 | pendiente | pendiente | pendiente |
 | 4:1404 | todo-swipe-delete-confirm | docs/mocks/todo-swipe-delete-confirm.png | TODO-00 | registro | F6 | pendiente | pendiente | pendiente |
-| 4:1496 | more-settings | docs/mocks/more-settings.png | SET-01 | SET-01.1 | i18n | src/app/pages/settings/settings.page.spec.ts:[SET-01.1] | pendiente | pendiente |
-| 4:1496 | more-settings | docs/mocks/more-settings.png | SET-01 | SET-01.2 | i18n | src/app/pages/settings/settings.page.spec.ts:[SET-01.2] | pendiente | pendiente |
-| 4:1496 | more-settings | docs/mocks/more-settings.png | I18N-01 | I18N-01.1 | i18n | src/app/pages/settings/settings.page.spec.ts:[I18N-01.1] | pendiente | pendiente |
-| 4:1496 | more-settings | docs/mocks/more-settings.png | I18N-01 | I18N-01.2 | i18n | src/app/core/settings/translations.spec.ts:[I18N-01.2] | pendiente | pendiente |
+| 4:1496 | more-settings | docs/mocks/more-settings.png | SET-01 | SET-01.1 | i18n | src/app/pages/settings/settings.page.spec.ts:[SET-01.1] | openspec/changes/archive/2026-10-17-i18n/evidence/more-settings-{light,dark}-{es,en}.png | #11 |
+| 4:1496 | more-settings | docs/mocks/more-settings.png | SET-01 | SET-01.2 | i18n | src/app/pages/settings/settings.page.spec.ts:[SET-01.2] | openspec/changes/archive/2026-10-17-i18n/evidence/more-settings-{light,dark}-{es,en}.png | #11 |
+| 4:1496 | more-settings | docs/mocks/more-settings.png | I18N-01 | I18N-01.1 | i18n | src/app/pages/settings/settings.page.spec.ts:[I18N-01.1] | openspec/changes/archive/2026-10-17-i18n/evidence/more-settings-{light,dark}-{es,en}.png | #11 |
+| 4:1496 | more-settings | docs/mocks/more-settings.png | I18N-01 | I18N-01.2 | i18n | src/app/core/settings/translations.spec.ts:[I18N-01.2] | openspec/changes/archive/2026-10-17-i18n/evidence/more-settings-{light,dark}-{es,en}.png | #11 |
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.1 | theme-aliases | src/theme/dark.spec.ts:[UI-22.1] | pendiente | pendiente |
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.2 | theme-aliases | src/theme/dark.spec.ts:[UI-22.2] | pendiente | pendiente |
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.3 | theme-aliases | src/theme/theme-preference.spec.ts:[UI-22.3] | pendiente | pendiente |
