@@ -137,6 +137,26 @@ describe('SettingsPage', () => {
     ).rejects.toThrow(/idioma/);
   });
 
+  it('accepts a valid dark mode toggle event and persists the new value', async () => {
+    const { fixture, preferences } = setup();
+    const event = { detail: { checked: true } } as CustomEvent;
+    await fixture.componentInstance.setDarkFromToggle(event);
+    expect(preferences.setTheme).toHaveBeenCalledWith(THEME_PREFERENCE.DARK);
+  });
+
+  it('accepts a valid language select event and persists the new value', async () => {
+    const { fixture, preferences } = setup();
+    const select = document.createElement('select');
+    select.value = 'en';
+    Object.defineProperty(select, 'value', {
+      configurable: true,
+      get: () => 'en',
+    });
+    const event = { target: select } as unknown as Event;
+    await fixture.componentInstance.setLanguageFromSelect(event);
+    expect(preferences.language()).toBe(APP_LANGUAGE.EN);
+  });
+
   it('triggers debug seed and deletion when the buttons are pressed', async () => {
     const { fixture } = setup();
     await fixture.componentInstance.generateFiveThousand();
