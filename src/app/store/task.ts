@@ -21,6 +21,7 @@ import {
   type CategorySection,
 } from '../domain/category/category-section';
 import type { Category } from '../domain/category';
+import { PAGE_SIZE, pageCount } from '../domain/pagination';
 import { TaskStateMachine } from '../data/states/task-state-machine';
 import {
   createOperationRunner,
@@ -37,7 +38,7 @@ interface TaskStoreState extends OperationStatus {
   pageCount: number;
 }
 
-const TASK_PAGE_SIZE = 8;
+const TASK_PAGE_SIZE = PAGE_SIZE;
 
 const initialState: TaskStoreState = {
   tasks: [],
@@ -67,8 +68,11 @@ export const TaskStore = signalStore(
         ),
         { kind: TASK_SORT.DUE_DATE },
       );
-      const limit = store.pageSize() * store.pageCount();
-      return filtered.slice(0, limit);
+      const size = store.pageSize();
+      const totalPages = pageCount(filtered.length, size);
+      const current = Math.min(Math.max(1, store.pageCount()), totalPages);
+      const start = (current - 1) * size;
+      return filtered.slice(start, start + size);
     }),
     availableCategories: computed(() =>
       store
@@ -80,7 +84,8 @@ export const TaskStore = signalStore(
   })),
   withComputed((store) => ({
     hasMoreTasks: computed(
-      () => store.visibleTasks().length < store.tasks().length,
+      () =>
+        store.pageCount() < pageCount(store.tasks().length, store.pageSize()),
     ),
   })),
   withMethods(
@@ -131,9 +136,14 @@ export const TaskStore = signalStore(
         async remove(id: string): Promise<void> {
           await operations.run(async () => {
             await repository.remove(id);
-            patchState(store, ({ tasks }) => ({
-              tasks: tasks.filter((task) => task.id !== id),
-            }));
+            patchState(store, ({ tasks, pageCount: currentPage }) => {
+              const next = tasks.filter((task) => task.id !== id);
+              const totalPages = pageCount(next.length, store.pageSize());
+              return {
+                tasks: next,
+                pageCount: Math.min(Math.max(1, currentPage), totalPages),
+              };
+            });
           });
         },
         async removeAll(): Promise<void> {
@@ -163,16 +173,25 @@ export const TaskStore = signalStore(
         },
         actionsFor: (task: Task) => machine.actionsFor(task),
         setStatuses(statuses: readonly TaskStatus[]): void {
-          patchState(store, { statuses: [...statuses] });
+          patchState(store, { statuses: [...statuses], pageCount: 1 });
         },
         setCategory(categoryId: string | null | undefined): void {
           patchState(store, { categoryId, pageCount: 1 });
         },
-        loadMore(): void {
-          patchState(store, { pageCount: store.pageCount() + 1 });
-        },
         setSection(section: CategorySection): void {
-          patchState(store, { section, categoryId: undefined });
+          patchState(store, { section, categoryId: undefined, pageCount: 1 });
+        },
+        loadMore(): void {
+          this.setPage(store.pageCount() + 1);
+        },
+        setPage(page: number): void {
+          const totalPages = pageCount(store.tasks().length, store.pageSize());
+          const target = Math.min(Math.max(1, page), totalPages);
+          patchState(store, { pageCount: target });
+        },
+        setPageSize(size: number): void {
+          const safe = size > 0 ? Math.floor(size) : PAGE_SIZE;
+          patchState(store, { pageSize: safe, pageCount: 1 });
         },
         setCategories(categories: readonly Category[]): void {
           patchState(store, { categories });
