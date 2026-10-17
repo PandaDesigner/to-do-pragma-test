@@ -32,6 +32,7 @@
         </select>
       </label>
     </section>
+    @if (flags.debugActionsEnabled()) {
     <section class="debug" aria-label="Debug">
       <h2>{{ 'settings.debug' | translate }}</h2>
       <p>{{ 'settings.debugHint' | translate }}</p>
@@ -43,5 +44,6 @@
         {{ 'settings.debugAction' | translate }}
       </button>
     </section>
+    }
   </main>
 </ion-content>

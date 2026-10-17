@@ -19,6 +19,7 @@ import {
   SYSTEM_DARK,
 } from '../../core/settings/settings-preferences';
 import { THEME_PREFERENCE } from '../../../theme/theme-preference';
+import { RemoteConfigService } from '../../core/config/remote-config';
 
 @Component({
   selector: 'app-settings',
@@ -36,6 +37,7 @@ import { THEME_PREFERENCE } from '../../../theme/theme-preference';
 })
 export class SettingsPage {
   readonly preferences = inject(SettingsPreferences);
+  readonly flags = inject(RemoteConfigService);
   private readonly seed = inject(DebugTaskSeed);
   private readonly feedback = inject(ActionFeedback);
   private readonly systemDark = inject(SYSTEM_DARK);
