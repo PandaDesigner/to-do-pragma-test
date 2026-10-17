@@ -4,15 +4,12 @@
       <p class="overline">{{ 'settings.overline' | translate }}</p>
       <h1>{{ 'settings.title' | translate }}</h1>
     </header>
-    <section
-      class="settings-list"
-      [attr.aria-label]="'settings.title' | translate"
-    >
+    <section class="settings-list" aria-label="Settings">
       <label class="setting-row">
         <span>{{ 'settings.darkMode' | translate }}</span>
         <ion-toggle
           [checked]="darkEnabled()"
-          (ionChange)="setDarkFromToggle($event)"
+          (ionChange)="setDark($any($event).detail.checked)"
           [attr.aria-label]="'settings.darkMode' | translate"
         />
       </label>
@@ -20,7 +17,7 @@
         <span>{{ 'settings.language' | translate }}</span>
         <select
           [value]="preferences.language()"
-          (change)="setLanguageFromSelect($event)"
+          (change)="setLanguage($any($event.target).value)"
           [attr.aria-label]="'settings.language' | translate"
         >
           <option [value]="languages.ES">

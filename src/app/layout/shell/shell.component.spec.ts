@@ -1,7 +1,5 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
-import { provideTranslateService, TranslateService } from '@ngx-translate/core';
-import { APP_LANGUAGE } from '../../core/settings/app-language';
 import { configurePageTesting } from '../../testing/page.fixture';
 import { taskFixture } from '../../testing/task.fixture';
 import { RemoteConfigService } from '../../core/config/remote-config';
@@ -14,14 +12,8 @@ import { ShellComponent } from './shell.component';
 describe('Shell and categories guard', () => {
   function setup() {
     const dependencies = configurePageTesting({
-      providers: [
-        provideRouter([]),
-        provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
-      ],
+      providers: [provideRouter([])],
     });
-    const translate = TestBed.inject(TranslateService);
-    translate.setTranslation(APP_LANGUAGE.ES, { settings: { tab: 'Ajustes' } });
-    translate.use(APP_LANGUAGE.ES);
     const fixture = TestBed.createComponent(ShellComponent);
     fixture.detectChanges();
     return { ...dependencies, fixture, router: TestBed.inject(Router) };

@@ -18,7 +18,6 @@ import {
   provideIonicAngular,
 } from '@ionic/angular/standalone';
 
-import { APP_LANGUAGE } from './app/core/settings/app-language';
 import { provideLocalRepositories } from './app/core/di/storage-initializer';
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
@@ -29,7 +28,7 @@ bootstrapApplication(AppComponent, {
     provideIonicAngular(),
     provideHttpClient(),
     provideTranslateService({
-      fallbackLang: APP_LANGUAGE.EN,
+      fallbackLang: 'en',
       loader: provideTranslateHttpLoader({
         prefix: './assets/i18n/',
         suffix: '.json',

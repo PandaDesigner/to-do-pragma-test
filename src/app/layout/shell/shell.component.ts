@@ -14,14 +14,13 @@ import {
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { APP_ROUTE } from '../../core/guards/categories-enabled-guard';
 import { TaskStore } from '../../store/task';
-import { TranslatePipe } from '@ngx-translate/core';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 
 @Component({
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
-  imports: [IonTabs, IonTabBar, IonTabButton, IonLabel, TranslatePipe],
+  imports: [IonTabs, IonTabBar, IonTabButton, IonLabel],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
