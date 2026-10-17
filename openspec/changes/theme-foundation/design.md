@@ -1,6 +1,6 @@
 ## Context
 
-La aplicación existe con Ionic 8 y Angular 22, usa Jest y Cordova. La descripción de config.yaml que dice solo documentación está desactualizada; no se modifica en este cambio. Los estilos usan tokens parciales `--color-*`, media queries de oscuro y literales locales. No hay fuentes empaquetadas ni Stylelint.
+La aplicación existe con Ionic 8 y Angular 22, usa Jest y Cordova. La descripción de config.yaml que dice solo documentación está desactualizada; no se modifica en este cambio. Los estilos usan tokens parciales `--color-*`, media queries de oscuro y literales locales. Las fuentes Inter y DM Serif Display están empaquetadas en `src/assets/fonts` con su OFL y SHA-256 documentados, pero su `@font-face` y la sustitución de la pila `--ion-font-family` se aplican en la tarea 4.2. No hay Stylelint.
 
 ## Goals / Non-Goals
 

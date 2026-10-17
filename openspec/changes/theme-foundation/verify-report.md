@@ -88,6 +88,30 @@ Comprobaciones ejecutadas el 2026-10-16, aproximadamente 18:17 COT, sobre el est
 
 El script de estilos ausente es un bloqueo adicional, no una regresión introducida por este informe. Se observó también que el package.json existente declara cordova.platforms como android e ios, no como la lista vacía solicitada. Esta ejecución no modificó package.json ni plataformas. Ninguna tarea se marca como completada y no se abre PR.
 
+## Correcciones C0.5 aplicadas al código (2026-10-16 18:58 COT)
+
+Origen: comparación del código de `develop` con Figma 4:440 y `docs/design.md` mediante revisión read-only. Diez correcciones se aplican en C0.5; tres quedan en C1/C2.
+
+Aplicadas en `src/theme/notebook.scss`:
+
+- `.notebook-page` padding-top: 32 → 55 px (Figma `Content topPadding 55`).
+- `.page-header` padding-bottom: 20 → 15 px (Figma `title-rule 15`).
+- `.page-header::after` radius: 2 → 1.5 px (Figma `radius/accentUnderline 1.5`).
+- `.page-header::after` posición: `bottom: -2px` → `top: -1.5px` (Figma acento solapa la parte superior del divider en y=177).
+- `h1` line-height: 1.15 → normal (Figma `lineHeight 100% (normal)` y código Figma `leading-[normal]`).
+- `h1` margin: 4/8 → 3/15 px (Figma `headerOverlineToTitle 3`, `title-rule 15`).
+- `@media (min-width: 768px)` padding-top: 48 → 55 px.
+
+Aplicadas en `src/app/shared/components/task-item/task-item.component.scss`:
+
+- `.task-row` gap: 10 → 13 px (Figma `checkToText 13`); media `max-width: 480px` gap: 2 → 4 px.
+- Checkbox Square: 26×26 → 29×29 px y `var(--color-primary)` → `var(--color-primary-dark)` (Figma 29 px y borde 1.5 primary-dark).
+- Meta font-size 12 → 14 px y color `var(--color-text-muted)` → `var(--color-text)` (Figma `Body/Meta 14 / 400`, `color/text`).
+
+Fuera de C0.5 (C1/C2): swatch 32 → 27 px de CategoryRow (C2), rail con 5 pestañas, FAB, panel, TodayBadge, top actions, fecha "23.Mon" (C1).
+
+Comprobaciones posteriores (18:58 COT): `npx --no-install prettier --check` exit 0, `openspec validate theme-foundation --strict` exit 0, `git diff --check` exit 0, `npm run typecheck` exit 0, `npm run lint` exit 0, `npm run test` 23 suites y 147 tests exit 0. Las nuevas tripletas de la fase B siguen pendientes y no se marcan como completadas.
+
 ## Reanudación autorizada: artefactos creados
 
 El usuario autorizó crear los artefactos faltantes, ajustar la spec y después implementar, manteniendo Figma, docs/design.json y docs/design.md como fuentes obligatorias para colores, tamaños y tipografía.
