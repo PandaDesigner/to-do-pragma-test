@@ -44,6 +44,10 @@ import { formatDayTitle, formatLongDate } from './day-title';
 import { taskBelongsToSection } from './section-helpers';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
+
+const DURATION_PRESETS = [
+  15, 30, 45, 60, 75, 90, 105, 120,
+] as const;
 const VIEW_STATUSES = [
   TASK_STATUS.PENDING,
   TASK_STATUS.OVERDUE,
@@ -242,7 +246,7 @@ export class TasksPage implements OnInit {
             ? input.durationMin
               ? Number(input.durationMin)
               : undefined
-            : input.durationPreset,
+            : Number(input.durationPreset),
         reminderMin: input.reminderMin ? Number(input.reminderMin) : undefined,
         status: existing?.status ?? TASK_STATUS.PENDING,
         categoryId: this.flags.categoriesEnabled()
@@ -267,7 +271,9 @@ export class TasksPage implements OnInit {
     const durationPreset =
       duration === undefined
         ? 30
-        : [15, 30, 45, 60, 75, 90, 105, 120].includes(duration)
+        : DURATION_PRESETS.includes(
+            duration as (typeof DURATION_PRESETS)[number],
+          )
           ? duration
           : 'custom';
     this.form.reset({
