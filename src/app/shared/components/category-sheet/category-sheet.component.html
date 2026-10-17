@@ -27,13 +27,13 @@
           <legend class="meta">Icon</legend>
           <div class="icon-grid__row">
             @for (entry of icons; track entry.key) {
-            <app-icon-option
-              [icon]="entry.key"
-              [iconName]="entry.icon"
-              [label]="entry.label"
-              [selected]="icon() === entry.key"
-              (choose)="chooseIcon(entry.key)"
-            />
+              <app-icon-option
+                [icon]="entry.key"
+                [iconName]="entry.icon"
+                [label]="entry.label"
+                [selected]="icon() === entry.key"
+                (choose)="chooseIcon(entry.key)"
+              />
             }
           </div>
         </fieldset>
@@ -42,13 +42,13 @@
           <legend class="meta">Color</legend>
           <div class="color-row__track">
             @for (entry of colors; track entry.key) {
-            <app-color-swatch
-              [colorToken]="entry.token"
-              [fillColor]="fillColor(entry.key)"
-              [ariaLabel]="entry.key"
-              [selected]="colorToken() === entry.key"
-              (choose)="chooseColor(entry.key)"
-            />
+              <app-color-swatch
+                [colorToken]="entry.token"
+                [fillColor]="fillColor(entry.key)"
+                [ariaLabel]="entry.key"
+                [selected]="colorToken() === entry.key"
+                (choose)="chooseColor(entry.key)"
+              />
             }
           </div>
         </fieldset>
@@ -57,11 +57,11 @@
           <legend class="meta">Section</legend>
           <div class="section-row__track">
             @for (entry of sectionLabels; track entry.key) {
-            <app-chip
-              [label]="entry.label"
-              [selected]="section() === entry.key"
-              (choose)="chooseSection(entry.key)"
-            />
+              <app-chip
+                [label]="entry.label"
+                [selected]="section() === entry.key"
+                (choose)="chooseSection(entry.key)"
+              />
             }
           </div>
         </fieldset>
@@ -70,10 +70,20 @@
           <span class="meta">Preview</span>
           <app-chip
             [label]="name() || 'Shopping'"
-            [colorToken]="colorToken() === 'primary' ? 'primary' : colorToken() === 'more-gray' ? 'more' : colorToken()"
+            [colorToken]="
+              colorToken() === 'primary'
+                ? 'primary'
+                : colorToken() === 'more-gray'
+                  ? 'more'
+                  : colorToken()
+            "
             [selected]="false"
           >
-            <ion-icon appChipIcon [icon]="selectedIconName()" aria-hidden="true"></ion-icon>
+            <ion-icon
+              appChipIcon
+              [icon]="selectedIconName()"
+              aria-hidden="true"
+            ></ion-icon>
           </app-chip>
         </div>
 
@@ -87,9 +97,9 @@
             {{ mode() === 'edit' ? 'Save changes' : 'Save category' }}
           </button>
           @if (mode() === 'edit') {
-          <button type="button" class="danger-link" (click)="remove()">
-            Delete category
-          </button>
+            <button type="button" class="danger-link" (click)="remove()">
+              Delete category
+            </button>
           }
         </div>
       </section>

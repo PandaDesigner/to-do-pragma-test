@@ -7,7 +7,12 @@ import {
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { IonContent, IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonIcon,
+} from '@ionic/angular/standalone';
 import { createOutline } from 'ionicons/icons';
 import { resolveCategoryIcon } from '../../domain/category-icons';
 import { RemoteConfigService } from '../../core/config/remote-config';

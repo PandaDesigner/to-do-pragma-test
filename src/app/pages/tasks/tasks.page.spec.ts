@@ -225,9 +225,7 @@ describe('TasksPage', () => {
     });
     await tasks.upsert(taskFixture({ categoryId: 'c', dueDate: '2026-01-03' }));
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector('.category-dot'),
-    ).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.category-dot')).not.toBeNull();
     enabled.set(false);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('select')).toBeNull();

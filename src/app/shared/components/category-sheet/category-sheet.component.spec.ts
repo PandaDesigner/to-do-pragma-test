@@ -1,7 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { InMemoryRepository } from '../../../data/repositories/in-memory-repository';
-import { CLOCK, CATEGORY_REPOSITORY, TASK_REPOSITORY } from '../../../core/di/tokens';
+import {
+  CLOCK,
+  CATEGORY_REPOSITORY,
+  TASK_REPOSITORY,
+} from '../../../core/di/tokens';
 import { CATEGORY_KIND, type Category } from '../../../domain/category';
 import type { Task } from '../../../domain/task';
 import { TaskStore } from '../../../store/task';
@@ -110,9 +114,14 @@ describe('CategorySheetComponent', () => {
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
     expect(fixture.componentInstance.colors).toHaveLength(6);
-    expect(
-      fixture.componentInstance.colors.map((entry) => entry.key),
-    ).toEqual(['routine', 'event', 'my', 'more', 'more-gray', 'primary']);
+    expect(fixture.componentInstance.colors.map((entry) => entry.key)).toEqual([
+      'routine',
+      'event',
+      'my',
+      'more',
+      'more-gray',
+      'primary',
+    ]);
     expect(fixture.componentInstance.colorToken()).toBe('routine');
   });
 
@@ -171,7 +180,9 @@ describe('CategorySheetComponent', () => {
     store.openCategorySheet({ mode: 'edit', draft });
     fixture.detectChanges();
     await fixture.whenStable();
-    await new Promise<void>((resolve) => (resolve as (v: void) => void)(undefined));
+    await new Promise<void>((resolve) =>
+      (resolve as (v: void) => void)(undefined),
+    );
     fixture.detectChanges();
     const remove = jest.spyOn(fixture.componentInstance.delete, 'emit');
     fixture.componentInstance.remove();
@@ -184,7 +195,9 @@ describe('CategorySheetComponent', () => {
     store.openCategorySheet({ mode: 'create' });
     fixture.detectChanges();
     await fixture.whenStable();
-    await new Promise<void>((resolve) => (resolve as (v: void) => void)(undefined));
+    await new Promise<void>((resolve) =>
+      (resolve as (v: void) => void)(undefined),
+    );
     fixture.detectChanges();
     const remove = jest.spyOn(fixture.componentInstance.delete, 'emit');
     fixture.componentInstance.remove();
@@ -196,7 +209,9 @@ describe('CategorySheetComponent', () => {
     store.openCategorySheet({ mode: 'edit', draft });
     fixture.detectChanges();
     await fixture.whenStable();
-    await new Promise<void>((resolve) => (resolve as (v: void) => void)(undefined));
+    await new Promise<void>((resolve) =>
+      (resolve as (v: void) => void)(undefined),
+    );
     fixture.detectChanges();
     expect(fixture.componentInstance.sectionLabels).toHaveLength(3);
     expect(fixture.componentInstance.section()).toBe('routine');
@@ -233,7 +248,9 @@ describe('CategorySheetComponent', () => {
     store.openCategorySheet({ mode: 'edit', draft: stored });
     fixture.detectChanges();
     await fixture.whenStable();
-    await new Promise<void>((resolve) => (resolve as (v: void) => void)(undefined));
+    await new Promise<void>((resolve) =>
+      (resolve as (v: void) => void)(undefined),
+    );
     fixture.detectChanges();
     const save = jest.spyOn(fixture.componentInstance.save, 'emit');
     fixture.componentInstance.submit();

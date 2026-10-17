@@ -173,7 +173,9 @@ describe('Shell and categories guard', () => {
       colorToken: 'routine',
       kind: 'list',
     } as never);
-    const saved = categories.categories().find((category) => category.name === 'Shopping');
+    const saved = categories
+      .categories()
+      .find((category) => category.name === 'Shopping');
     expect(saved?.id).toBeTruthy();
     expect(saved?.icon).toBe('cart');
   });
