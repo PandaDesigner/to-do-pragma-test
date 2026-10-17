@@ -196,6 +196,7 @@ export class TasksPage implements OnInit {
       dueDate: task.dueDate,
       categoryId: task.categoryId ?? '',
     });
+    this.openSheet();
   }
 
   cancelEdit(): void {

@@ -146,9 +146,12 @@ describe('TasksPage', () => {
     jest
       .spyOn(taskRepository, 'save')
       .mockRejectedValueOnce(new Error('Storage lleno'));
+    page.openSheet();
     page.form.patchValue({ title: 'Test', dueDate: '2026-01-03' });
     await page.saveTask();
     expect(page.feedback.error()).toBe('Storage lleno');
+    expect(page.sheetOpen()).toBe(true);
+    expect(page.form.controls.title.value).toBe('Test');
     expect(tasks.tasks()).toEqual([]);
     await page.retry();
     expect(tasks.tasks()).toHaveLength(1);

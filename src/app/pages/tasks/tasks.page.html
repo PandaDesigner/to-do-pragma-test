@@ -122,40 +122,53 @@
     </ng-template>
   </main>
 </ion-content>
-<ion-modal [isOpen]="sheetOpen()" (didDismiss)="closeSheet()">
+<ion-modal
+  [isOpen]="sheetOpen()"
+  (didDismiss)="closeSheet()"
+  aria-labelledby="task-editor-title"
+>
   <ng-template>
-    <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor">
-      <h2>{{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}</h2>
-      <label
-        >Título<input
-          formControlName="title"
-          autocomplete="off"
-          maxlength="240"
-      /></label>
-      @if (form.controls.title.touched && form.controls.title.invalid) {
-      <p class="error" role="alert">Escribe un título.</p>
-      }
-      <div class="form-row">
-        <label
-          >Fecha<input type="date" formControlName="dueDate" required
-        /></label>
-        @if (flags.categoriesEnabled()) {
-        <label
-          >Categoría<select formControlName="categoryId">
-            <option value="">Sin categoría</option>
-            @for (category of categories.categories(); track category.id) {
-            <option [value]="category.id">{{ category.name }}</option>
-            }
-          </select></label
-        >
+    <ion-content>
+      <section class="notebook-page task-editor">
+        @if (feedback.error()) {
+        <p class="error-notice" role="alert">{{ feedback.error() }}</p>
         }
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="primary" [disabled]="store.busy()">
-          {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}
-        </button>
-        <button type="button" (click)="closeSheet()">Cancelar</button>
-      </div>
-    </form>
+        <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor">
+          <h2 id="task-editor-title">
+            {{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}
+          </h2>
+          <label
+            >Título<input
+              formControlName="title"
+              autocomplete="off"
+              maxlength="240"
+          /></label>
+          @if (form.controls.title.touched && form.controls.title.invalid) {
+          <p class="error" role="alert">Escribe un título.</p>
+          }
+          <div class="form-row">
+            <label
+              >Fecha<input type="date" formControlName="dueDate" required
+            /></label>
+            @if (flags.categoriesEnabled()) {
+            <label
+              >Categoría<select formControlName="categoryId">
+                <option value="">Sin categoría</option>
+                @for (category of categories.categories(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select></label
+            >
+            }
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="primary" [disabled]="store.busy()">
+              {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}
+            </button>
+            <button type="button" (click)="closeSheet()">Cancelar</button>
+          </div>
+        </form>
+      </section>
+    </ion-content>
   </ng-template>
 </ion-modal>

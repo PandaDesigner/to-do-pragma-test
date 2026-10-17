@@ -2,6 +2,24 @@
   padding-right: 0;
 }
 
+.task-editor {
+  padding: var(--app-space-24);
+}
+
+.task-editor .editor {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.task-editor h2 {
+  margin-bottom: var(--app-space-24);
+  color: var(--app-primary-dark);
+  font-family: var(--app-font-display);
+  font-size: var(--app-font-size-title);
+  font-weight: 400;
+}
+
 .task-viewport {
   height: auto;
   min-height: 0;
