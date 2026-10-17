@@ -19,6 +19,7 @@ import {
   IonContent,
   IonFab,
   IonFabButton,
+  IonIcon,
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -67,6 +68,7 @@ export const PENDING_PANEL = {
     IonModal,
     IonFab,
     IonFabButton,
+    IonIcon,
     ReactiveFormsModule,
     ScrollingModule,
     NgTemplateOutlet,

@@ -137,12 +137,12 @@
       />
     </ng-template>
   </main>
-  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-    <ion-fab-button (click)="openSheet()" aria-label="Nueva tarea">
-      +
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
+  <ion-fab-button (click)="openSheet()" aria-label="Nueva tarea">
+    <ion-icon name="add" aria-hidden="true"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
 <ion-modal
   [isOpen]="sheetOpen()"
   (didDismiss)="closeSheet()"

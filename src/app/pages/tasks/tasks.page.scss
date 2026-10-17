@@ -143,6 +143,42 @@ summary {
   overflow-x: auto;
 }
 
+.pager {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--app-space-4);
+  padding: var(--app-space-12) var(--app-space-8);
+
+  &__btn {
+    min-width: 32px;
+    min-height: 32px;
+    padding: 0 var(--app-space-8);
+    border: 0;
+    background: transparent;
+    color: var(--app-text);
+    border-radius: var(--app-radius-input, 8px);
+    cursor: pointer;
+    flex: 1 0 auto;
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    &--active {
+      background: var(--app-primary);
+      color: var(--app-on-primary, #fff);
+    }
+  }
+
+  &__ellipsis {
+    padding: 0 var(--app-space-4);
+    color: var(--app-text-muted);
+  }
+}
+
 .today-badge {
   display: inline-flex;
   align-items: center;
