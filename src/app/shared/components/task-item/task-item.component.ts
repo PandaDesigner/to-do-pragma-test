@@ -15,6 +15,7 @@ import {
 } from 'ionicons/icons';
 import type { Task } from '../../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../../domain/task-state';
+import { resolveCategoryIcon } from '../../../domain/category-icons';
 
 const ACTION_LABEL: Record<TaskEvent, string> = {
   COMPLETE: 'Completar',
@@ -44,6 +45,14 @@ export class TaskItemComponent {
   readonly task = input.required<Task>();
   readonly actions = input<readonly TaskEvent[]>([]);
   readonly categoryName = input<string>();
+  readonly categoryIcon = input<string>();
+  readonly resolvedCategoryIcon = computed(() => {
+    const key = this.categoryIcon();
+    if (!key) {
+      return null;
+    }
+    return resolveCategoryIcon(key);
+  });
   readonly showCategories = input(true);
   readonly disabled = input(false);
   readonly taskToggle = output<string>();

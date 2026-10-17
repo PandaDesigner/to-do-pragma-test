@@ -23,7 +23,7 @@ const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   [RAIL_TAB.TODO]: APP_ROUTE.TASKS,
   [RAIL_TAB.ROUTINE]: APP_ROUTE.ROUTINE,
   [RAIL_TAB.EVENT]: APP_ROUTE.EVENT,
-  [RAIL_TAB.MY]: APP_ROUTE.CATEGORIES,
+  [RAIL_TAB.CATEGORY]: APP_ROUTE.CATEGORIES,
   [RAIL_TAB.MORE]: APP_ROUTE.SETTINGS,
 };
 
@@ -69,7 +69,7 @@ export class ShellComponent {
       return RAIL_TAB.EVENT;
     }
     if (this.router.url.startsWith(APP_ROUTE.CATEGORIES)) {
-      return RAIL_TAB.MY;
+      return RAIL_TAB.CATEGORY;
     }
     if (this.router.url.startsWith(APP_ROUTE.SETTINGS)) {
       return RAIL_TAB.MORE;

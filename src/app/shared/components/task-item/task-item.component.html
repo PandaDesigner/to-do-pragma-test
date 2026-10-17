@@ -13,9 +13,12 @@
     <small
       >{{ task().dueDate }}
       @if (showCategories() && categoryName()) {
-        <span class="category-chip" [attr.title]="categoryName()">{{
-          categoryName()
-        }}</span>
+        <span class="category-chip" [attr.title]="categoryName()">
+          @if (resolvedCategoryIcon(); as icon) {
+            <ion-icon [icon]="icon" aria-hidden="true"></ion-icon>
+          }
+          <span>{{ categoryName() }}</span>
+        </span>
       }
     </small>
   </div>

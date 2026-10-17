@@ -10,43 +10,16 @@ import {
 } from '@angular/core';
 import { IonContent, IonIcon, IonModal } from '@ionic/angular/standalone';
 import {
-  airplaneOutline,
-  barbellOutline,
-  bookOutline,
-  briefcaseOutline,
-  cartOutline,
-  cashOutline,
-  heartOutline,
-  homeOutline,
-  musicalNotesOutline,
-  pawOutline,
-  restaurantOutline,
-  starOutline,
-} from 'ionicons/icons';
-import {
   CATEGORY_SECTION,
   type Category,
   type CategorySection,
 } from '../../../domain/category';
+import {
+  CATEGORY_ICONS,
+  type CategoryIconKey,
+} from '../../../domain/category-icons';
 import { CategoryStore } from '../../../store/category';
 import { ChipComponent } from '../chip/chip.component';
-
-const CATEGORY_ICONS: readonly { key: string; label: string; icon: string }[] = [
-  { key: 'cart', label: 'Cart', icon: cartOutline },
-  { key: 'home', label: 'Home', icon: homeOutline },
-  { key: 'briefcase', label: 'Briefcase', icon: briefcaseOutline },
-  { key: 'heart', label: 'Heart', icon: heartOutline },
-  { key: 'book', label: 'Book', icon: bookOutline },
-  { key: 'plane', label: 'Plane', icon: airplaneOutline },
-  { key: 'fork', label: 'Dining', icon: restaurantOutline },
-  { key: 'muscle', label: 'Fitness', icon: barbellOutline },
-  { key: 'music', label: 'Music', icon: musicalNotesOutline },
-  { key: 'paw', label: 'Pets', icon: pawOutline },
-  { key: 'money', label: 'Money', icon: cashOutline },
-  { key: 'star', label: 'Star', icon: starOutline },
-];
-
-export type CategoryIconKey = (typeof CATEGORY_ICONS)[number]['key'];
 
 const CATEGORY_COLORS = [
   { key: 'routine', token: 'routine' },
@@ -233,6 +206,10 @@ export class CategorySheetComponent {
   readonly title = computed(() =>
     this.mode() === 'edit' ? 'Edit category' : 'New category',
   );
+  readonly selectedIconName = computed(() => {
+    const current = this.icons.find((entry) => entry.key === this.icon());
+    return current?.icon ?? this.icons[0].icon;
+  });
 
   constructor() {
     effect(() => this.syncFromRequest());
@@ -252,11 +229,6 @@ export class CategorySheetComponent {
 
   fillColor(key: CategoryColorKey): string {
     return COLOR_FILL[key];
-  }
-
-  selectedIconName(): string {
-    const current = this.icons.find((entry) => entry.key === this.icon());
-    return current?.icon ?? this.icons[0].icon;
   }
 
   onName(value: string): void {

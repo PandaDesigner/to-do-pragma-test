@@ -52,7 +52,7 @@ export const routes: Routes = [
         loadComponent: loadTasksPage,
       },
       {
-        path: 'my',
+        path: 'category',
         canMatch: [categoriesEnabledGuard],
         loadComponent: () =>
           import('./pages/categories/categories.page').then(

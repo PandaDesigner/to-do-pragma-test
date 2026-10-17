@@ -135,6 +135,15 @@ export class TasksPage implements OnInit {
         ]),
       ),
   );
+  readonly categoryIcons = computed(
+    () =>
+      new Map(
+        this.availableCategories().map((category) => [
+          category.id,
+          category.icon,
+        ]),
+      ),
+  );
   readonly dayTitle = computed(() => formatDayTitle(this.clock.today()));
   readonly longDate = computed(() => formatLongDate(this.clock.today()));
   readonly earlierTasks = computed(() =>
