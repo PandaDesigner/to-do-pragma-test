@@ -38,13 +38,13 @@ Estas capturas documentan la regresión; no sustituyen las capturas ni el diff p
 
 ## Pruebas y revisión
 
-`src/theme/todo-layout.spec.ts` añade seis contratos de estilos y estructura para TODO-01.1, TODO-01.2, TODO-02.1, TODO-03.1, TODO-05.1 y TODO-06.2. Se comprobó su fallo antes de aplicar la implementación. Son pruebas del código Sass y del template; la geometría y los clics se comprobaron aparte en Chrome. `tasks.page.spec.ts` también protege la apertura del modal al editar y la cancelación sin guardar.
+`src/theme/todo-layout.spec.ts` añade nueve contratos de estilos y estructura para TODO-01.1, TODO-01.2, TODO-02.1, TODO-03.1, TODO-05.1 y TODO-06.2. Se comprobó su fallo antes de aplicar la implementación. Son pruebas del código Sass y del template; la geometría y los clics se comprobaron aparte en Chrome. `tasks.page.spec.ts` también protege la apertura del modal al editar y la cancelación sin guardar.
 
 Pasaron:
 
 - Prettier en los archivos modificados y `git diff --check`.
 - `npm run typecheck`, `npm run lint` y `npm run lint:styles`.
-- `npm run test`: 38 suites, 279 pruebas; sin reducir los umbrales existentes.
+- `npm run test`: 38 suites, 282 pruebas; sin reducir los umbrales existentes.
 - `npm run build`.
 - `npm run trace:check` y `npx openspec validate --all --strict`.
 - Revisión del diff contra las guías Sideroom. El helper de prueba separa la lectura del archivo de cada contrato; no requiere otra descomposición. No se refactoriza código ajeno al defecto.
@@ -68,6 +68,19 @@ Capturas a 375×812, español:
 - [Editar tarea, claro](evidence/edit-task-modal-light-es.png)
 
 La revisión Sideroom de esta corrección no requiere otra separación por intención: `editTask` prepara el formulario y delega la apertura en `openSheet`. No cambian las reglas de guardado, la persistencia ni el tratamiento de errores.
+
+## Márgenes internos y texto del filtro de categorías
+
+La revisión de Todo, My, More y el modal no cambia la alineación izquierda de títulos y listas que define Figma. El modal conserva sus 24 px de espacio interior por lado. No se centra la página entera ni se desplaza el rail.
+
+En el estado vacío faltaban los 24 px de espacio interior derecho del grupo. El dibujo, el título, la ayuda y el botón estaban centrados en x=219,5 en lugar de x=207,5. Se añade ese espacio y se limita la ayuda a 240 px, conforme a las coordenadas de Figma 4:1062. Chrome confirma que los cuatro elementos comparten x=207,5 a 375 px; a 427 px comparten x=233,5. El CTA queda en x=88 con ancho 239 a 375 px. Esto acredita su alineación horizontal, no su posición vertical completa ni la ilustración pendiente.
+
+El filtro seleccionado usaba `--app-surface` como color de texto, que en oscuro es morado oscuro. Ahora usa `--app-on-primary`, blanco en ambos temas, igual que el CTA del estado vacío. Los filtros tienen 8 px de separación y desplazamiento horizontal; los nombres largos no se comprimen ni se parten, y el punto conserva sus 8 px. La revisión Sideroom no requiere descomposición adicional: son reglas locales de presentación, sin cambios en eventos, filtros ni almacenamiento.
+
+Se comprobaron estos valores calculados en Chrome a 375×812 y 427×952, claro y oscuro. Capturas a 375×812, español:
+
+- [Filtro y márgenes, oscuro](evidence/category-insets-dark-es.png)
+- [Filtro y márgenes, claro](evidence/category-insets-light-es.png)
 
 ## Pendiente para el cierre
 

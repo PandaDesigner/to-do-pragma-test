@@ -45,6 +45,13 @@ summary {
   padding-bottom: 32px;
 }
 
+.chips {
+  display: flex;
+  align-items: center;
+  gap: var(--app-space-8);
+  overflow-x: auto;
+}
+
 .today-badge {
   display: inline-flex;
   align-items: center;

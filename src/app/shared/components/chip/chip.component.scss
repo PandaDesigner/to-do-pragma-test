@@ -1,6 +1,12 @@
+:host {
+  display: block;
+  flex-shrink: 0;
+}
+
 .chip {
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
   gap: var(--app-space-8);
   padding: var(--app-space-8) var(--app-space-12);
   border: 1px solid var(--app-border);
@@ -12,10 +18,11 @@
 .chip.selected {
   border-color: var(--app-primary);
   background: var(--app-primary);
-  color: var(--app-surface);
+  color: var(--app-on-primary);
 }
 
 .dot {
+  flex-shrink: 0;
   width: 8px;
   height: 8px;
   border-radius: var(--app-radius-round);
