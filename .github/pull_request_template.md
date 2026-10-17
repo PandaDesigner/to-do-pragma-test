@@ -10,7 +10,8 @@ Aplica siempre en cada PR, al abrirlo:
 - [ ] `project`
 - [ ] `milestone`
 - [ ] `development`
-- [ ] `todo`
+
+Asocia también el PR al milestone correspondiente desde la barra lateral.
 
 ## Comprobaciones
 
