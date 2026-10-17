@@ -6,6 +6,26 @@ function readAppStyles(relativePath: string): string {
 }
 
 describe('Todo layout regression contracts', () => {
+  it('[TODO-04.1] uses pill corners and a separate touch target conforme a Figma 4:973', () => {
+    const styles = readAppStyles('shared/components/chip/chip.component.scss');
+    expect(styles).toMatch(/border-radius:\s*var\(--app-radius-pill\);/);
+    expect(styles).toMatch(/height:\s*var\(--app-chip-height\);/);
+    expect(styles).toMatch(/min-height:\s*var\(--app-touch-target\);/);
+    expect(styles).toContain('.chip::before');
+  });
+
+  it('[TODO-01.1] shares notebook insets while keeping the day and modal variants conforme a Figma 4:440', () => {
+    const notebook = readFileSync(resolve(__dirname, '_notebook.scss'), 'utf8');
+    const tasks = readAppStyles('pages/tasks/tasks.page.scss');
+    const settings = readAppStyles('pages/settings/settings.page.scss');
+    const categories = readAppStyles('pages/categories/categories.page.scss');
+    expect(notebook).toContain('var(--app-content-page-top)');
+    expect(notebook).toContain('var(--app-content-inset-start)');
+    expect(tasks).toContain('var(--app-content-day-top)');
+    expect(settings).toContain('var(--app-content-inset-end)');
+    expect(categories).toContain('var(--app-content-inset-end)');
+  });
+
   it('[TODO-06.2] gives the modal a scrollable notebook container after Ionic reparents it', () => {
     const template = readFileSync(
       resolve(__dirname, '../app/pages/tasks/tasks.page.html'),
