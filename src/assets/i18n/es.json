@@ -6,6 +6,19 @@
     "darkMode": "Modo oscuro",
     "language": "Idioma",
     "spanish": "Español",
-    "english": "English"
+    "english": "English",
+    "debug": "Debug",
+    "debugHint": "Crea 5.000 tareas de prueba para medir el rendimiento (virtual scroll).",
+    "debugAction": "generar 5000 tareas"
+  },
+  "todo": {
+    "today": "HOY ›",
+    "pending": "Tareas pendientes",
+    "reschedule": "Reprogramar para hoy",
+    "all": "Todas",
+    "emptyTitle": "No hay tareas para hoy",
+    "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
+    "emptyAction": "Añadir tarea",
+    "quickAdd": "Añadir tarea"
   }
 }

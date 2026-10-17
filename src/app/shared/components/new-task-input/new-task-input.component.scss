@@ -1,0 +1,29 @@
+.quick-add {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+}
+
+.check {
+  width: 29px;
+  height: 29px;
+  border: 1.5px solid var(--app-primary-dark);
+  border-radius: var(--app-radius-checkbox);
+}
+
+input {
+  width: 252px;
+  height: 69px;
+  border: 0;
+  border-radius: var(--app-radius-input);
+  background: var(--app-surface-muted);
+  color: var(--app-text);
+}
+
+button {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}

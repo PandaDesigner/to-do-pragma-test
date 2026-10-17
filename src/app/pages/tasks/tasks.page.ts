@@ -14,31 +14,37 @@ import {
   Validators,
 } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import { IonContent } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonModal,
+} from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 import { CLOCK, CREATE_ID } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
-import { LogAction } from '../../core/decorators/log-action';
-import {
-  TASK_STATUS,
-  TASK_STATUSES,
-  type Task,
-  type TaskStatus,
-} from '../../domain/task';
+import { TASK_STATUS, type Task } from '../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../domain/task-state';
 import { TaskStore } from '../../store/task';
 import { CategoryStore } from '../../store/category';
 import { TaskItemComponent } from '../../shared/components/task-item/task-item.component';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
+import { ChipComponent } from '../../shared/components/chip/chip.component';
+import { NewTaskInputComponent } from '../../shared/components/new-task-input/new-task-input.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
+import { formatDayTitle, formatLongDate } from './day-title';
 
 const VIRTUAL_SCROLL_THRESHOLD = 200;
-const DEBUG_TASK_COUNT = 5000;
-const STATUS_FILTERS = [
-  { label: 'Pendientes', statuses: [TASK_STATUS.PENDING, TASK_STATUS.OVERDUE] },
-  { label: 'Completadas', statuses: [TASK_STATUS.COMPLETED] },
-  { label: 'Archivadas', statuses: [TASK_STATUS.ARCHIVED] },
-  { label: 'Todas', statuses: TASK_STATUSES },
-] satisfies { label: string; statuses: readonly TaskStatus[] }[];
+export const PENDING_PANEL = {
+  LEFT: 62,
+  TOP: 187,
+  WIDTH: 300,
+  HEADER_HEIGHT: 60,
+  CLOSED_HEIGHT: 62,
+  LIST_GAP: 83,
+} as const;
 
 @Component({
   selector: 'app-tasks',
@@ -46,10 +52,18 @@ const STATUS_FILTERS = [
   styleUrl: './tasks.page.scss',
   imports: [
     IonContent,
+    IonModal,
+    IonFab,
+    IonFabButton,
     ReactiveFormsModule,
     ScrollingModule,
     NgTemplateOutlet,
+    TranslatePipe,
     TaskItemComponent,
+    PageHeaderComponent,
+    EmptyStateComponent,
+    ChipComponent,
+    NewTaskInputComponent,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -63,7 +77,9 @@ export class TasksPage implements OnInit {
   private readonly clock = inject(CLOCK);
   private readonly createId = inject(CREATE_ID);
   readonly editingId = signal<string | null>(null);
-  readonly filters = STATUS_FILTERS;
+  readonly panelOpen = signal(true);
+  readonly sheetOpen = signal(false);
+  readonly panel = PENDING_PANEL;
   readonly form = new FormGroup({
     title: new FormControl('', {
       nonNullable: true,
@@ -86,6 +102,11 @@ export class TasksPage implements OnInit {
           .map((category) => [category.id, category.name]),
       ),
   );
+  readonly dayTitle = computed(() => formatDayTitle(this.clock.today()));
+  readonly longDate = computed(() => formatLongDate(this.clock.today()));
+  readonly earlierTasks = computed(() =>
+    this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
+  );
   readonly shouldVirtualize = computed(
     () => this.store.visibleTasks().length >= VIRTUAL_SCROLL_THRESHOLD,
   );
@@ -97,31 +118,43 @@ export class TasksPage implements OnInit {
     });
   }
 
-  @LogAction
-  async generateFiveThousand(): Promise<void> {
+  togglePanel(): void {
+    this.panelOpen.update((open) => !open);
+  }
+
+  openSheet(): void {
+    this.sheetOpen.set(true);
+  }
+
+  closeSheet(): void {
+    this.sheetOpen.set(false);
+    this.cancelEdit();
+  }
+
+  async addQuickTask(title: string): Promise<void> {
     if (this.store.busy()) {
       return;
     }
-    await this.feedback.run(async () => {
-      const tasks = this.createDebugTasks();
-      this.store.setCategory(undefined);
-      this.store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
-      await this.store.upsertMany(tasks);
-    });
+    const now = this.clock.now();
+    await this.feedback.run(() =>
+      this.store.upsert({
+        id: this.createId(),
+        title,
+        status: TASK_STATUS.PENDING,
+        categoryId: null,
+        dueDate: this.clock.today(),
+        createdAt: now,
+        updatedAt: now,
+      }),
+    );
   }
 
-  private createDebugTasks(): Task[] {
-    const now = this.clock.now();
-    const dueDate = this.clock.today();
-    return Array.from({ length: DEBUG_TASK_COUNT }, (_, index) => ({
-      id: this.createId(),
-      title: `Tarea de prueba ${index + 1}`,
-      status: TASK_STATUS.PENDING,
-      categoryId: null,
-      dueDate,
-      createdAt: now,
-      updatedAt: now,
-    }));
+  async rescheduleEarlier(): Promise<void> {
+    await this.feedback.run(async () => {
+      for (const task of this.earlierTasks()) {
+        await this.rescheduleOne(task);
+      }
+    });
   }
 
   async saveTask(): Promise<void> {
@@ -152,6 +185,7 @@ export class TasksPage implements OnInit {
       };
       await this.store.upsert(task);
       this.cancelEdit();
+      this.sheetOpen.set(false);
     });
   }
 
@@ -196,5 +230,30 @@ export class TasksPage implements OnInit {
 
   async retry(): Promise<void> {
     await this.feedback.run(() => this.store.retry());
+  }
+
+  private isEarlierOpenTask(task: Task): boolean {
+    if (task.dueDate >= this.clock.today()) {
+      return false;
+    }
+    if (this.store.categoryId() === null && task.categoryId !== null) {
+      return false;
+    }
+    if (
+      typeof this.store.categoryId() === 'string' &&
+      task.categoryId !== this.store.categoryId()
+    ) {
+      return false;
+    }
+    return (
+      task.status === TASK_STATUS.PENDING || task.status === TASK_STATUS.OVERDUE
+    );
+  }
+
+  private async rescheduleOne(task: Task): Promise<void> {
+    if (task.status === TASK_STATUS.PENDING) {
+      await this.store.dispatch(task.id, TASK_EVENT.EXPIRE);
+    }
+    await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
 }

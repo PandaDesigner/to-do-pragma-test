@@ -22,3 +22,41 @@ summary {
 .task-list {
   padding-bottom: 32px;
 }
+
+.today-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 63px;
+  height: 21px;
+  border: 1px solid var(--app-accent-link);
+  border-radius: var(--app-radius-badge);
+  color: var(--app-accent-link);
+  font-size: var(--app-font-size-badge);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.pending-panel {
+  position: absolute;
+  z-index: 2;
+  border: 1px solid var(--app-card-border);
+  border-radius: var(--app-radius-card);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-card);
+}
+
+.panel-header,
+.reschedule {
+  border: 0;
+  background: transparent;
+  color: var(--app-text);
+}
+
+ion-fab {
+  position: absolute;
+  left: 292px;
+  top: 730px;
+  width: 68px;
+  height: 68px;
+}

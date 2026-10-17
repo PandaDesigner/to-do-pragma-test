@@ -31,9 +31,9 @@ describe('Shell and categories guard', () => {
     const { fixture } = setup();
     const rail = fixture.nativeElement.querySelector('[role="tablist"]');
     expect(rail).not.toBeNull();
-    const labels = [
-      ...rail.querySelectorAll('[role="tab"]'),
-    ].map((tab: HTMLElement) => tab.textContent?.trim());
+    const labels = [...rail.querySelectorAll('[role="tab"]')].map(
+      (tab: HTMLElement) => tab.textContent?.trim(),
+    );
     expect(labels).toEqual(['Todo', 'Routine', 'Event', 'My', 'More']);
     expect(
       (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
@@ -58,9 +58,7 @@ describe('Shell and categories guard', () => {
     expect(tasks.visibleTasks()).toHaveLength(1);
     enabled.set(false);
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector('[data-tab="my"]'),
-    ).toBeNull();
+    expect(fixture.nativeElement.querySelector('[data-tab="my"]')).toBeNull();
     expect(
       fixture.nativeElement.querySelector('[data-tab="todo"]'),
     ).not.toBeNull();

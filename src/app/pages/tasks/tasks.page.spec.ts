@@ -1,13 +1,27 @@
 import { TestBed } from '@angular/core/testing';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { TasksPage } from './tasks.page';
+import { DebugTaskSeed } from './debug-task-seed';
 import { configurePageTesting } from '../../testing/page.fixture';
 import { taskFixture } from '../../testing/task.fixture';
+import { CLOCK } from '../../core/di/tokens';
 import { TASK_STATUS, TASK_STATUSES } from '../../domain/task';
 import { TASK_EVENT } from '../../domain/task-state';
+import en from '../../../assets/i18n/en.json';
 
 describe('TasksPage', () => {
-  async function setup() {
-    const dependencies = configurePageTesting();
+  async function setup(
+    providers: Parameters<typeof configurePageTesting>[0] = {},
+  ) {
+    const dependencies = configurePageTesting({
+      providers: [
+        provideTranslateService({ fallbackLang: 'en' }),
+        ...(providers.providers ?? []),
+      ],
+    });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', en);
+    translate.use('en');
     const fixture = TestBed.createComponent(TasksPage);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -26,7 +40,7 @@ describe('TasksPage', () => {
     );
     tasks.setStatuses([TASK_STATUS.COMPLETED]);
     tasks.setCategory('missing');
-    await page.generateFiveThousand();
+    await TestBed.inject(DebugTaskSeed).generateFiveThousand();
     fixture.detectChanges();
     expect(tasks.tasks()).toHaveLength(5005);
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
@@ -39,9 +53,12 @@ describe('TasksPage', () => {
       fixture.nativeElement.querySelectorAll('app-task-item').length,
     ).toBeLessThan(200);
     expect(log).toHaveBeenCalledWith({
-      name: 'TasksPage.generateFiveThousand',
+      name: 'DebugTaskSeed.generateFiveThousand',
       args: [],
     });
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).toBeNull();
     log.mockRestore();
   });
 
@@ -74,7 +91,7 @@ describe('TasksPage', () => {
     await page.removeTask(id);
     expect(await taskRepository.list()).toEqual([]);
     fixture.detectChanges();
-    expect(fixture.nativeElement.textContent).toContain('No hay tareas');
+    expect(fixture.nativeElement.textContent).toContain('No tasks for today');
   });
 
   it('switches from normal to bounded virtual rendering at exactly 200 and tracks IDs', async () => {
@@ -145,5 +162,140 @@ describe('TasksPage', () => {
     expect(page.feedback.error()).toContain('ya no existe');
     page.cancelEdit();
     expect(page.editingId()).toBeNull();
+  });
+
+  it('[TODO-01.2] shows the day title and today badge from the clock', async () => {
+    const { fixture } = await setup({
+      providers: [
+        {
+          provide: CLOCK,
+          useValue: { now: () => 100, today: () => '2026-02-23' },
+        },
+      ],
+    });
+    expect(fixture.nativeElement.textContent).toContain('23.Mon');
+    expect(
+      fixture.nativeElement.querySelector('.today-badge').textContent,
+    ).toContain('TODAY');
+  });
+
+  it('[TODO-02.1] floats the earlier-task panel at the Figma position', async () => {
+    const { fixture, tasks } = await setup();
+    await tasks.upsert(
+      taskFixture({ title: 'Clean my flat', dueDate: '2026-01-01' }),
+    );
+    fixture.detectChanges();
+    const panel: HTMLElement =
+      fixture.nativeElement.querySelector('.pending-panel');
+    expect(panel.style.left).toBe('62px');
+    expect(panel.style.top).toBe('187px');
+    expect(panel.style.width).toBe('300px');
+    expect(
+      panel.querySelector('.panel-header')?.getAttribute('style'),
+    ).toContain('60px');
+  });
+
+  it('[TODO-02.2] collapses the panel to 62 and offsets the list', async () => {
+    const { fixture, tasks } = await setup();
+    await tasks.upsert(taskFixture({ dueDate: '2026-01-01' }));
+    fixture.detectChanges();
+    (
+      fixture.nativeElement.querySelector('.panel-header') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    const panel: HTMLElement =
+      fixture.nativeElement.querySelector('.pending-panel');
+    expect(panel.style.height).toBe('62px');
+    expect(
+      fixture.nativeElement.querySelector('.task-list').style.marginTop,
+    ).toBe('83px');
+  });
+
+  it('[TODO-03.1] strikes through a completed task and checks its box', async () => {
+    const { fixture, tasks } = await setup();
+    await tasks.upsert(
+      taskFixture({ title: 'Clean my flat', status: TASK_STATUS.COMPLETED }),
+    );
+    tasks.setStatuses([TASK_STATUS.COMPLETED]);
+    fixture.detectChanges();
+    const row: HTMLElement =
+      fixture.nativeElement.querySelector('app-task-item');
+    expect(row.querySelector('input')?.checked).toBe(true);
+    expect(row.querySelector('.completed strong')?.textContent).toContain(
+      'Clean my flat',
+    );
+  });
+
+  it('[TODO-04.1] filters the list when a category chip is selected', async () => {
+    const { fixture, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'shopping',
+      name: 'Shopping',
+      kind: 'shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'groceries',
+        title: 'Buy groceries',
+        categoryId: 'shopping',
+      }),
+      taskFixture({ id: 'flat', title: 'Clean my flat', categoryId: null }),
+    ]);
+    fixture.detectChanges();
+    const chips = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ] as HTMLButtonElement[];
+    chips.find((chip) => chip.textContent?.includes('Shopping'))?.click();
+    fixture.detectChanges();
+    expect(tasks.visibleTasks().map((task) => task.id)).toEqual(['groceries']);
+    expect(
+      chips.find((chip) => chip.textContent?.includes('Shopping'))?.classList,
+    ).toContain('selected');
+  });
+
+  it('[TODO-05.1] shows the illustrated empty state and no embedded editor', async () => {
+    const { fixture } = await setup();
+    const illustration: HTMLElement =
+      fixture.nativeElement.querySelector('.illustration');
+    const action: HTMLElement = fixture.nativeElement.querySelector(
+      '.empty-state button',
+    );
+    expect(illustration.style.width).toBe('68px');
+    expect(action.style.width).toBe('239px');
+    expect(action.style.height).toBe('50px');
+    expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
+  });
+
+  it('[TODO-06.1] creates a task for today from the quick input', async () => {
+    const { fixture, tasks } = await setup();
+    const input: HTMLInputElement = fixture.nativeElement.querySelector(
+      'app-new-task-input input',
+    );
+    input.value = 'Clean my flat';
+    input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    (
+      fixture.nativeElement.querySelector(
+        'app-new-task-input button',
+      ) as HTMLButtonElement
+    ).click();
+    await fixture.whenStable();
+    expect(tasks.tasks()[0]).toMatchObject({
+      title: 'Clean my flat',
+      dueDate: '2026-01-02',
+    });
+  });
+
+  it('[TODO-06.2] opens the form in a modal and keeps it off the page', async () => {
+    const { fixture, page } = await setup();
+    (
+      fixture.nativeElement.querySelector('ion-fab-button') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(page.sheetOpen()).toBe(true);
+    expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
+    expect(fixture.nativeElement.querySelector('ion-modal')).not.toBeNull();
   });
 });

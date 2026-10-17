@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { IonContent, IonToggle } from '@ionic/angular/standalone';
+import { DebugTaskSeed } from '../tasks/debug-task-seed';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { ActionFeedback } from '../../shared/services/action-feedback';
 import {
   APP_LANGUAGE,
   parseAppLanguage,
@@ -15,11 +18,14 @@ import { THEME_PREFERENCE } from '../../../theme/theme-preference';
   selector: 'app-settings',
   templateUrl: './settings.page.html',
   styleUrl: './settings.page.scss',
-  imports: [IonContent, IonToggle, TranslatePipe],
+  imports: [IonContent, IonToggle, TranslatePipe, PageHeaderComponent],
+  providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SettingsPage {
   readonly preferences = inject(SettingsPreferences);
+  private readonly seed = inject(DebugTaskSeed);
+  private readonly feedback = inject(ActionFeedback);
   private readonly systemDark = inject(SYSTEM_DARK);
   readonly languages = APP_LANGUAGE;
   readonly darkEnabled = (): boolean => {
@@ -52,6 +58,10 @@ export class SettingsPage {
 
   async setLanguage(language: string): Promise<void> {
     await this.preferences.setLanguage(parseAppLanguage(language));
+  }
+
+  async generateFiveThousand(): Promise<void> {
+    await this.feedback.run(() => this.seed.generateFiveThousand());
   }
 }
 

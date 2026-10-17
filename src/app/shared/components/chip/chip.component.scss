@@ -1,0 +1,23 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--app-space-8);
+  padding: var(--app-space-8) var(--app-space-12);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-round);
+  background: var(--app-surface);
+  color: var(--app-text);
+}
+
+.chip.selected {
+  border-color: var(--app-primary);
+  background: var(--app-primary);
+  color: var(--app-surface);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--app-radius-round);
+  background: var(--app-category-1);
+}

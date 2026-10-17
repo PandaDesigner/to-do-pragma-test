@@ -26,6 +26,8 @@ import {
 } from '../../domain/category';
 import { CategoryStore } from '../../store/category';
 import { TaskStore } from '../../store/task';
+import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 
@@ -38,6 +40,8 @@ const VIRTUAL_SCROLL_THRESHOLD = 200;
   imports: [
     IonContent,
     IonIcon,
+    PageHeaderComponent,
+    EmptyStateComponent,
     ReactiveFormsModule,
     ScrollingModule,
     NgTemplateOutlet,

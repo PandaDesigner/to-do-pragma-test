@@ -15,6 +15,7 @@ import {
   type ThemePreference,
 } from '../../../theme/theme-preference';
 import { SettingsPage } from './settings.page';
+import { DebugTaskSeed } from '../tasks/debug-task-seed';
 import en from '../../../assets/i18n/en.json';
 import es from '../../../assets/i18n/es.json';
 
@@ -38,6 +39,12 @@ describe('SettingsPage', () => {
         provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
         { provide: SettingsPreferences, useValue: preferences },
         { provide: SYSTEM_DARK, useValue: false },
+        {
+          provide: DebugTaskSeed,
+          useValue: {
+            generateFiveThousand: jest.fn().mockResolvedValue(undefined),
+          },
+        },
       ],
     });
     const translate = TestBed.inject(TranslateService);
@@ -61,6 +68,13 @@ describe('SettingsPage', () => {
     const { fixture, preferences } = setup();
     await fixture.componentInstance.setDark(true);
     expect(preferences.setTheme).toHaveBeenCalledWith(THEME_PREFERENCE.DARK);
+  });
+
+  it('[SET-02.1] shows the debug button on settings', () => {
+    const { fixture } = setup();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).not.toBeNull();
   });
 
   it('[I18N-01.1] switches the visible language immediately', async () => {

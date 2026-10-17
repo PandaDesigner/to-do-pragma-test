@@ -64,12 +64,6 @@ export const RAIL_TABS: readonly RailTab[] = [
   },
 ];
 
-const TAB_ROUTE_KEY = {
-  [RAIL_TAB.TODO]: RAIL_TAB.TODO,
-  [RAIL_TAB.MY]: RAIL_TAB.MY,
-  [RAIL_TAB.MORE]: RAIL_TAB.MORE,
-} as const;
-
 @Component({
   selector: 'app-side-tab-rail',
   templateUrl: './side-tab-rail.component.html',
@@ -95,9 +89,6 @@ export class SideTabRailComponent {
 
   choose(tab: RailTab): void {
     if (tab.disabled) {
-      return;
-    }
-    if (!(tab.id in TAB_ROUTE_KEY)) {
       return;
     }
     this.selected.emit(tab.id);

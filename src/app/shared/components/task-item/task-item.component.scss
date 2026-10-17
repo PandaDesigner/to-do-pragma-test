@@ -48,7 +48,7 @@ small {
 }
 .completed strong {
   text-decoration: line-through;
-  color: var(--app-text-muted);
+  color: var(--app-primary-dark);
 }
 .category-chip {
   max-width: 100px;
@@ -87,9 +87,4 @@ input:disabled {
 :focus-visible {
   outline: 2px solid var(--app-primary);
   outline-offset: 2px;
-}
-@media (max-width: 480px) {
-  .task-row {
-    gap: 4px;
-  }
 }

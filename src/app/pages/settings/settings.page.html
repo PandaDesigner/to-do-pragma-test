@@ -1,9 +1,9 @@
 <ion-content>
   <main class="notebook-page">
-    <header class="page-header">
-      <p class="overline">{{ 'settings.overline' | translate }}</p>
-      <h1>{{ 'settings.title' | translate }}</h1>
-    </header>
+    <app-page-header
+      [overline]="'settings.overline' | translate"
+      [title]="'settings.title' | translate"
+    />
     <section
       class="settings-list"
       [attr.aria-label]="'settings.title' | translate"
@@ -31,6 +31,17 @@
           </option>
         </select>
       </label>
+    </section>
+    <section class="debug" aria-label="Debug">
+      <h2>{{ 'settings.debug' | translate }}</h2>
+      <p>{{ 'settings.debugHint' | translate }}</p>
+      <button
+        type="button"
+        data-testid="generate-tasks"
+        (click)="generateFiveThousand()"
+      >
+        {{ 'settings.debugAction' | translate }}
+      </button>
     </section>
   </main>
 </ion-content>
