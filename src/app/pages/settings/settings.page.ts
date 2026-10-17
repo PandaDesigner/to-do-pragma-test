@@ -1,8 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
   inject,
+  signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -39,6 +41,11 @@ export class SettingsPage {
   readonly preferences = inject(SettingsPreferences);
   readonly flags = inject(RemoteConfigService);
   private readonly seed = inject(DebugTaskSeed);
+  private readonly debugSeedCap = 2;
+  readonly debugSeedCount = signal(0);
+  readonly debugSeedExhausted = computed(
+    () => this.debugSeedCount() >= this.debugSeedCap,
+  );
   private readonly feedback = inject(ActionFeedback);
   private readonly systemDark = inject(SYSTEM_DARK);
   readonly languages = APP_LANGUAGE;
@@ -86,7 +93,11 @@ export class SettingsPage {
   }
 
   async generateFiveThousand(): Promise<void> {
+    if (this.debugSeedExhausted()) {
+      return;
+    }
     await this.feedback.run(() => this.seed.generateFiveThousand());
+    this.debugSeedCount.update((current) => current + 1);
   }
 
   async removeAllTasks(): Promise<void> {
