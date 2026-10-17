@@ -270,23 +270,24 @@ describe('TaskStore', () => {
     expect(await repository.list()).toEqual([]);
   });
 
-  it('TSK-13 setPage grows pageCount to the requested page and clamps out-of-range values', async () => {
+  it('TSK-13 setPage switches the visible slice to the requested page and clamps the range', async () => {
     const { store } = setup();
     const many = Array.from({ length: 130 }, (_, index) => ({
       ...future,
       id: `task-${index}`,
     }));
     await store.upsertMany(many);
+    expect(store.visibleTasks()[0].id).toBe('task-0');
     expect(store.visibleTasks().length).toBe(20);
     expect(store.hasMoreTasks()).toBe(true);
     (store as unknown as { setPage(page: number): void }).setPage(2);
-    expect(store.visibleTasks().length).toBe(40);
-    expect(store.hasMoreTasks()).toBe(true);
+    expect(store.visibleTasks().length).toBe(20);
+    expect(store.visibleTasks()[0].id).toBe('task-20');
     (store as unknown as { setPage(page: number): void }).setPage(99);
-    expect(store.visibleTasks().length).toBe(130);
+    expect(store.visibleTasks()[0].id).toBe('task-120');
     expect(store.hasMoreTasks()).toBe(false);
     (store as unknown as { setPage(page: number): void }).setPage(0);
-    expect(store.visibleTasks().length).toBe(20);
+    expect(store.visibleTasks()[0].id).toBe('task-0');
   });
 
   it('TSK-14 setPageSize resizes the page and resets to page 1', async () => {
@@ -297,9 +298,32 @@ describe('TaskStore', () => {
     }));
     await store.upsertMany(many);
     (store as unknown as { setPage(page: number): void }).setPage(2);
-    expect(store.visibleTasks().length).toBe(40);
+    expect(store.visibleTasks().length).toBe(20);
+    expect(store.visibleTasks()[0].id).toBe('task-20');
     (store as unknown as { setPageSize(size: number): void }).setPageSize(50);
     expect(store.pageSize()).toBe(50);
     expect(store.visibleTasks().length).toBe(50);
+    expect(store.visibleTasks()[0].id).toBe('task-0');
+  });
+
+  it('TSK-15 visibleTasks returns the slice for the current page, not a cumulative list', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 50 }, (_, index) => ({
+      ...future,
+      id: `task-${index}`,
+    }));
+    await store.upsertMany(many);
+    expect(store.pageCount()).toBe(1);
+    expect(store.visibleTasks().map((task) => task.id)).toEqual(
+      Array.from({ length: 20 }, (_, index) => `task-${index}`),
+    );
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    expect(store.visibleTasks().map((task) => task.id)).toEqual(
+      Array.from({ length: 20 }, (_, index) => `task-${20 + index}`),
+    );
+    (store as unknown as { setPage(page: number): void }).setPage(3);
+    expect(store.visibleTasks().map((task) => task.id)).toEqual(
+      Array.from({ length: 10 }, (_, index) => `task-${40 + index}`),
+    );
   });
 });

@@ -43,8 +43,6 @@ import { DeletionConfirmation } from '../../shared/services/deletion-confirmatio
 import { formatDayTitle, formatLongDate } from './day-title';
 import { taskBelongsToSection } from './section-helpers';
 
-const VIRTUAL_SCROLL_THRESHOLD = 200;
-
 const DURATION_PRESETS = [15, 30, 45, 60, 75, 90, 105, 120] as const;
 const VIEW_STATUSES = [
   TASK_STATUS.PENDING,
@@ -165,9 +163,6 @@ export class TasksPage implements OnInit {
   readonly longDate = computed(() => formatLongDate(this.clock.today()));
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
-  );
-  readonly shouldVirtualize = computed(
-    () => this.store.visibleTasks().length >= VIRTUAL_SCROLL_THRESHOLD,
   );
   readonly totalPages = computed(() => {
     const total = this.store.tasks().length;

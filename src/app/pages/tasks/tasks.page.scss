@@ -1,4 +1,8 @@
 main.notebook-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
   padding-top: var(--app-content-day-top);
 }
 
@@ -124,7 +128,12 @@ summary {
 }
 
 .task-list {
-  padding-bottom: 32px;
+  // Bounded-height scroll container so the pager and FAB stay put while the list grows.
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-bottom: var(--app-space-32, 32px);
 }
 
 .chips {

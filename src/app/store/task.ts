@@ -67,8 +67,8 @@ export const TaskStore = signalStore(
         ),
         { kind: TASK_SORT.DUE_DATE },
       );
-      const limit = store.pageSize() * store.pageCount();
-      return filtered.slice(0, limit);
+      const start = (store.pageCount() - 1) * store.pageSize();
+      return filtered.slice(start, start + store.pageSize());
     }),
     availableCategories: computed(() =>
       store
@@ -80,7 +80,9 @@ export const TaskStore = signalStore(
   })),
   withComputed((store) => ({
     hasMoreTasks: computed(
-      () => store.visibleTasks().length < store.tasks().length,
+      () =>
+        store.pageCount() <
+        Math.max(1, Math.ceil(store.tasks().length / store.pageSize())),
     ),
   })),
   withMethods(

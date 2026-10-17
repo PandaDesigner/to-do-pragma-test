@@ -152,7 +152,7 @@ describe('TasksPage', () => {
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
   });
 
-  it('adds 5,000 debug tasks to five existing ones and activates bounded virtual rendering', async () => {
+  it('adds 5,000 debug tasks and paginates the visible slice instead of virtualising', async () => {
     const log = jest.spyOn(console, 'info').mockImplementation(() => undefined);
     const { page, tasks, fixture } = await setup();
     await tasks.upsertMany(
@@ -167,25 +167,24 @@ describe('TasksPage', () => {
     expect(tasks.tasks()).toHaveLength(5005);
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
     expect(tasks.visibleTasks()).toHaveLength(20);
-    while (tasks.visibleTasks().length < tasks.tasks().length) {
-      tasks.loadMore();
-    }
+    expect(page.totalPages()).toBe(251);
+    expect(page.currentPage()).toBe(1);
+    page.goToPage(251);
+    expect(page.currentPage()).toBe(251);
+    expect(tasks.visibleTasks().length).toBe(5);
+    expect(tasks.hasMoreTasks()).toBe(false);
     fixture.detectChanges();
-    expect(tasks.visibleTasks()).toHaveLength(5005);
-    expect(page.shouldVirtualize()).toBe(true);
     expect(
       fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
-    ).not.toBeNull();
-    expect(
-      fixture.nativeElement.querySelectorAll('app-task-item').length,
-    ).toBeLessThan(200);
+    ).toBeNull();
+    expect(fixture.nativeElement.querySelector('.task-list')).not.toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-item').length).toBe(
+      5,
+    );
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',
       args: [],
     });
-    expect(
-      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
-    ).toBeNull();
     log.mockRestore();
   });
 

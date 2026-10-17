@@ -1,5 +1,5 @@
-<ion-content [scrollY]="!shouldVirtualize()">
-  <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
+<ion-content [scrollY]="false">
+  <main class="notebook-page">
     <div class="top-actions">
       <span class="today-badge">{{ 'todo.today' | translate }}</span>
     </div>
@@ -60,22 +60,7 @@
         Reintentar
       </button>
     </div>
-    } @if (shouldVirtualize()) {
-    <cdk-virtual-scroll-viewport
-      [itemSize]="65"
-      class="task-viewport"
-      aria-label="Tareas"
-    >
-      <ng-container
-        *cdkVirtualFor="let task of store.visibleTasks(); trackBy: trackById"
-      >
-        <ng-container
-          [ngTemplateOutlet]="taskRow"
-          [ngTemplateOutletContext]="{ $implicit: task }"
-        />
-      </ng-container>
-    </cdk-virtual-scroll-viewport>
-    } @else {
+    }
     <section
       aria-label="Tareas"
       class="task-list"
@@ -132,16 +117,10 @@
       </nav>
       }
     </section>
-    }
     <app-new-task-input
       [label]="'todo.quickAdd' | translate"
       (submitted)="addQuickTask($event)"
     />
-    <ion-fab vertical="bottom" horizontal="end">
-      <ion-fab-button (click)="openSheet()" aria-label="Nueva tarea">
-        +
-      </ion-fab-button>
-    </ion-fab>
     <ng-template #taskRow let-task>
       <app-task-item
         [task]="task"
@@ -158,6 +137,11 @@
       />
     </ng-template>
   </main>
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button (click)="openSheet()" aria-label="Nueva tarea">
+      +
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
 <ion-modal
   [isOpen]="sheetOpen()"
