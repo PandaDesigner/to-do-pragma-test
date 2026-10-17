@@ -269,4 +269,37 @@ describe('TaskStore', () => {
     expect(store.tasks()).toEqual([]);
     expect(await repository.list()).toEqual([]);
   });
+
+  it('TSK-13 setPage grows pageCount to the requested page and clamps out-of-range values', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 130 }, (_, index) => ({
+      ...future,
+      id: `task-${index}`,
+    }));
+    await store.upsertMany(many);
+    expect(store.visibleTasks().length).toBe(20);
+    expect(store.hasMoreTasks()).toBe(true);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    expect(store.visibleTasks().length).toBe(40);
+    expect(store.hasMoreTasks()).toBe(true);
+    (store as unknown as { setPage(page: number): void }).setPage(99);
+    expect(store.visibleTasks().length).toBe(130);
+    expect(store.hasMoreTasks()).toBe(false);
+    (store as unknown as { setPage(page: number): void }).setPage(0);
+    expect(store.visibleTasks().length).toBe(20);
+  });
+
+  it('TSK-14 setPageSize resizes the page and resets to page 1', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 60 }, (_, index) => ({
+      ...future,
+      id: `task-${index}`,
+    }));
+    await store.upsertMany(many);
+    (store as unknown as { setPage(page: number): void }).setPage(2);
+    expect(store.visibleTasks().length).toBe(40);
+    (store as unknown as { setPageSize(size: number): void }).setPageSize(50);
+    expect(store.pageSize()).toBe(50);
+    expect(store.visibleTasks().length).toBe(50);
+  });
 });
