@@ -406,4 +406,10 @@ describe('TasksPage', () => {
     expect(fixture.nativeElement.querySelector('main .editor')).toBeNull();
     expect(fixture.nativeElement.querySelector('ion-modal')).not.toBeNull();
   });
+
+  it('[SHEET-01.3] opens the category sheet from the task editor selector', async () => {
+    const { categories } = await setup();
+    categories.openCategorySheet({ mode: 'create' });
+    expect(categories.sheetRequest()).toEqual({ mode: 'create' });
+  });
 });

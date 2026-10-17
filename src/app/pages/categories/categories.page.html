@@ -2,48 +2,6 @@
   <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
     <app-page-header overline="Mis listas" title="Categorías" />
     @if (flags.categoriesEnabled()) {
-    <form [formGroup]="form" (ngSubmit)="saveCategory()" class="editor">
-      <h2>{{ editingId() ? 'Editar categoría' : 'Nueva categoría' }}</h2>
-      <label
-        >Nombre<input formControlName="name" maxlength="120" autocomplete="off"
-      /></label>
-      @if (form.controls.name.touched && form.controls.name.invalid) {
-      <p class="error" role="alert">Escribe un nombre.</p>
-      }
-      <div class="form-row">
-        <label
-          >Tipo<select formControlName="kind">
-            @for (kind of kinds; track kind) {
-            <option [value]="kind">{{ kind }}</option>
-            }
-          </select></label
-        >
-        <label
-          >Color<select formControlName="colorToken">
-            @for (color of colors; track color) {
-            <option [value]="color">{{ color }}</option>
-            }
-          </select></label
-        >
-      </div>
-      <label class="section-field">
-        {{ 'category.section' | translate }}
-        <select formControlName="section">
-          @for (section of sections; track section) {
-          <option [value]="section">
-            {{ ('category.sections.' + section) | translate }}
-          </option>
-          }
-        </select>
-      </label>
-      <div class="form-actions">
-        <button type="submit" class="primary" [disabled]="store.busy()">
-          {{ editingId() ? 'Guardar cambios' : 'Crear categoría' }}
-        </button>
-        @if (editingId()) {
-        <button type="button" (click)="cancelEdit()">Cancelar</button> }
-      </div>
-    </form>
     @if (feedback.error() || store.error()) {
     <div class="error-notice" role="alert">
       <p>{{ feedback.error() || store.error() }}</p>
@@ -81,6 +39,14 @@
       }
     </section>
     }
+    <ion-fab vertical="bottom" horizontal="end">
+      <ion-fab-button
+        (click)="openCreateSheet()"
+        aria-label="Nueva categoría"
+      >
+        +
+      </ion-fab-button>
+    </ion-fab>
     <ng-template #categoryRow let-category>
       <article class="category-row">
         <span class="swatch" [attr.data-color]="category.colorToken"
@@ -94,18 +60,9 @@
           type="button"
           [disabled]="store.busy()"
           [attr.aria-label]="'Editar ' + category.name"
-          (click)="editCategory(category)"
+          (click)="openEditSheet(category)"
         >
           <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          class="danger"
-          [disabled]="store.busy()"
-          [attr.aria-label]="'Eliminar ' + category.name"
-          (click)="removeCategory(category)"
-        >
-          <ion-icon [icon]="icons.trashOutline" aria-hidden="true" />
         </button>
       </article>
     </ng-template>

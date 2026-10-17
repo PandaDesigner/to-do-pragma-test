@@ -158,7 +158,11 @@
                 @for (category of availableCategories(); track category.id) {
                 <option [value]="category.id">{{ category.name }}</option>
                 }
-              </select></label
+              </select>
+              <button type="button" class="link" (click)="openCategorySheet()">
+                Crear categoría
+              </button>
+              </label
             >
             }
           </div>

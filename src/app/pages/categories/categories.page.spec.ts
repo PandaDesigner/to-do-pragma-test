@@ -3,7 +3,6 @@ import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import en from '../../../assets/i18n/en.json';
 import { CategoriesPage } from './categories.page';
 import { configurePageTesting } from '../../testing/page.fixture';
-import { taskFixture } from '../../testing/task.fixture';
 
 describe('CategoriesPage', () => {
   async function setup() {
@@ -21,62 +20,24 @@ describe('CategoriesPage', () => {
     return { ...dependencies, fixture, page: fixture.componentInstance };
   }
 
-  it('validates, creates and edits categories and leaves assigned tasks uncategorized on delete', async () => {
-    const { page, categories, tasks, confirm } = await setup();
-    await page.saveCategory();
-    expect(categories.categories()).toEqual([]);
-    page.form.controls.name.setValue(' Compras ');
-    await page.saveCategory();
-    const category = categories.categories()[0];
-    expect(category.name).toBe('Compras');
-    await tasks.upsert(
-      taskFixture({ categoryId: category.id, dueDate: '2026-01-03' }),
-    );
-    expect(page.taskCounts().get(category.id)).toBe(1);
-    page.editCategory(category);
-    page.form.controls.name.setValue('Shopping');
-    await page.saveCategory();
-    expect(categories.categories()).toHaveLength(1);
-    expect(categories.categories()[0].name).toBe('Shopping');
-    confirm.mockResolvedValueOnce(false);
-    await page.removeCategory(category);
-    expect(categories.categories()).toHaveLength(1);
-    await page.removeCategory(category);
-    expect(categories.categories()).toEqual([]);
-    expect(tasks.tasks()[0].categoryId).toBeNull();
+  it('[SHEET-01.1] opens the sheet in Create mode from the FAB', async () => {
+    const { page, categories } = await setup();
+    page.openCreateSheet();
+    expect(categories.sheetRequest()).toEqual({ mode: 'create' });
   });
 
-  it('[CAT-SEC-01.1] saves and restores the category section conforme a Figma 4:869', async () => {
-    const { page, categories, categoryRepository, fixture } = await setup();
-    page.form.patchValue({ name: 'Rutina', section: 'routine' });
-    await page.saveCategory();
-    const category = categories.categories()[0];
-    expect(category.section).toBe('routine');
-    expect((await categoryRepository.list())[0].section).toBe('routine');
-    page.editCategory(category);
-    expect(page.form.controls.section.value).toBe('routine');
-    page.form.patchValue({
-      name: 'Evento',
-      colorToken: 'todo',
-      section: 'event',
-    });
-    await page.saveCategory();
-    expect(categories.categories()[0]).toMatchObject({
-      section: 'event',
-      colorToken: 'todo',
-    });
-    fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector('[formcontrolname="section"]'),
-    ).not.toBeNull();
-  });
-
-  it('[CAT-SEC-01.4] rejects invalid form sections without saving conforme a Figma 4:869', async () => {
-    const { page, categoryRepository } = await setup();
-    page.form.patchValue({ name: 'Inválida', section: 'unknown' });
-    await page.saveCategory();
-    expect(page.feedback.error()).toContain('Sección de categoría no válida');
-    expect(await categoryRepository.list()).toEqual([]);
+  it('[SHEET-01.2] opens the sheet in Edit mode with the selected draft', async () => {
+    const { page, categories } = await setup();
+    const draft = {
+      id: 'c1',
+      name: 'Shopping',
+      kind: 'list' as const,
+      icon: 'cart',
+      colorToken: 'routine',
+    };
+    await categories.upsert(draft);
+    page.openEditSheet(draft);
+    expect(categories.sheetRequest()).toEqual({ mode: 'edit', draft });
   });
 
   it('virtualizes from 200 categories and tracks IDs', async () => {
@@ -104,41 +65,10 @@ describe('CategoriesPage', () => {
     ).not.toBeNull();
   });
 
-  it('prevents writes when disabled and rejects invalid kind/color and vanished categories', async () => {
-    const { page, enabled, fixture } = await setup();
-    page.form.controls.name.setValue('Test');
-    enabled.set(false);
-    await page.saveCategory();
-    expect(page.feedback.error()).toContain('deshabilitadas');
-    fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('form')).toBeNull();
-    await page.removeCategory({
-      id: 'c',
-      name: 'C',
-      kind: 'list',
-      icon: 'list',
-      colorToken: 'my',
-    });
-    expect(page.feedback.error()).toContain('deshabilitadas');
-    enabled.set(true);
-    page.form.controls.kind.setValue('invalid');
-    await page.saveCategory();
-    expect(page.feedback.error()).toContain('no válido');
-    page.form.controls.kind.setValue('list');
-    page.editingId.set('missing');
-    await page.saveCategory();
-    expect(page.feedback.error()).toContain('ya no existe');
-  });
-
-  it('exposes write failures and permits retry', async () => {
-    const { page, categoryRepository, categories } = await setup();
-    jest
-      .spyOn(categoryRepository, 'save')
-      .mockRejectedValueOnce(new Error('offline'));
-    page.form.controls.name.setValue('Test');
-    await page.saveCategory();
-    expect(page.feedback.error()).toBe('offline');
+  it('exposes retry that delegates to the store', async () => {
+    const { page, categories } = await setup();
+    const retry = jest.spyOn(categories, 'retry');
     await page.retry();
-    expect(categories.categories()).toHaveLength(1);
+    expect(retry).toHaveBeenCalled();
   });
 });

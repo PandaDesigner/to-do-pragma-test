@@ -225,6 +225,10 @@ export class TasksPage implements OnInit {
     });
   }
 
+  openCategorySheet(): void {
+    this.categories.openCategorySheet({ mode: 'create' });
+  }
+
   editTask(task: Task): void {
     this.editingId.set(task.id);
     this.form.reset({
