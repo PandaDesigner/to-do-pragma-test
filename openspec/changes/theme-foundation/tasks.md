@@ -19,26 +19,26 @@ La fase A del workflow exige completar las correcciones offline auditadas y la m
 
 ## 1. Infraestructura de verificación (fase B, tripleta TDD)
 
-- [ ] 1.1 RED: `npx jest src/theme/theme.spec.ts` esperando que `angular.json` y los targets aplicables expongan exactamente `src/theme/global.scss` y `src/theme/variables.scss` sin referencias a `src/global.scss` (UI-23.1, UI-23.2) → falla esperado.
-- [ ] 1.2 GREEN: mover `src/global.scss` a `src/theme/global.scss` y actualizar las entradas de angular.json → pasa.
-- [ ] 1.3 REFACTOR: retirar `@import` Sass propio en `src/**` sin tocar CSS Ionic; nueva ejecución de `npx jest src/theme` y `npm run build` (UI-23.1, UI-23.2) → verde.
+- [x] 1.1 RED: `npx jest src/theme/theme.spec.ts` esperando que `angular.json` y los targets aplicables expongan exactamente `src/theme/global.scss` y `src/theme/variables.scss` sin referencias a `src/global.scss` (UI-23.1, UI-23.2) → falla esperado. Cubierto por el test `src/theme/theme.spec.ts` añadido en `a18a4fd`.
+- [x] 1.2 GREEN: mover `src/global.scss` a `src/theme/global.scss` y actualizar las entradas de angular.json → pasa. Aplicado en `a18a4fd feat(theme): move global entry to src/theme (UI-23)`.
+- [x] 1.3 REFACTOR: retirar `@import` Sass propio en `src/**` sin tocar CSS Ionic; nueva ejecución de `npx jest src/theme` y `npm run build` (UI-23.1, UI-23.2) → verde. `src/theme/global.scss` y `src/theme/variables.scss` solo usan `@use`/`@forward`; no quedan `@import` de Sass propio en `src/**`; `npm test` y `npm run build` exit 0.
 
 ## 2. Tokens y puente Ionic (fase B, tripleta TDD)
 
-- [ ] 2.1 RED: `npx jest src/theme/theme.spec.ts` esperando tokens crudos en `_tokens.scss`, exposición en `variables.scss` y propagación sin reescribir hojas de consumidor (UI-20.1, UI-20.3) → falla.
-- [ ] 2.2 GREEN: crear `src/theme/_tokens.scss` y reescribir `variables.scss` con `@use`/`@forward` para `--app-*` y puente Ionic; mapa `light`/`medium`/`dark` con sus variantes (UI-21.2) → pasa.
-- [ ] 2.3 REFACTOR: prueba de contraste ≥ 4.5 para los pares no exceptuados y exclusión explícita de muted oscuro (UI-21.3); nueva ejecución de `npx jest src/theme` → verde.
+- [x] 2.1 RED: `npx jest src/theme/theme.spec.ts` esperando tokens crudos en `_tokens.scss`, exposición en `variables.scss` y propagación sin reescribir hojas de consumidor (UI-20.1, UI-20.3) → falla. Cubierto por `src/theme/tokens.spec.ts` en `de21325` (UI-20, UI-21).
+- [x] 2.2 GREEN: crear `src/theme/_tokens.scss` y reescribir `variables.scss` con `@use`/`@forward` para `--app-*` y puente Ionic; mapa `light`/`medium`/`dark` con sus variantes (UI-21.2) → pasa. Aplicado en `de21325 feat(theme): centralize tokens in _tokens.scss (UI-20, UI-21)`.
+- [x] 2.3 REFACTOR: prueba de contraste ≥ 4.5 para los pares no exceptuados y exclusión explícita de muted oscuro (UI-21.3); nueva ejecución de `npx jest src/theme` → verde. Aplicado en `fc07e5b test(theme): verify WCAG AA contrast for Figma token pairs (UI-21.3)`.
 
 ## 3. Modo oscuro (fase B, tripleta TDD)
 
-- [ ] 3.1 RED: `npx jest src/theme/dark.spec.ts` esperando `prefers-color-scheme: dark` y `.ion-palette-dark` con valores de Figma 4:1560, y retorno al sistema al retirar la clase (UI-22.1, UI-22.2, UI-22.3) → falla.
-- [ ] 3.2 GREEN: `src/theme/_dark.scss` con reglas por sistema y por clase; retirar `dark.system.css` de Ionic; cuerpo solo del tema, sin forzado manual → pasa.
-- [ ] 3.3 REFACTOR: añadir capturas 375x812 light/dark de pantallas afectadas en `openspec/changes/theme-foundation/evidence/` junto a `get_screenshot` de 4:440 y 4:1560; enlazar en verify-report.md; nueva ejecución de `npx jest src/theme` (UI-28.1) → verde.
+- [x] 3.1 RED: `npx jest src/theme/dark.spec.ts` esperando `prefers-color-scheme: dark` y `.ion-palette-dark` con valores de Figma 4:1560, y retorno al sistema al retirar la clase (UI-22.1, UI-22.2, UI-22.3) → falla. Cubierto por `src/theme/dark.spec.ts` en `c24a96e`.
+- [x] 3.2 GREEN: `src/theme/_dark.scss` con reglas por sistema y por clase; retirar `dark.system.css` de Ionic; cuerpo solo del tema, sin forzado manual → pasa. Aplicado en `c24a96e feat(theme): consolidate dark palette in _dark.scss (UI-22)`.
+- [x] 3.3 REFACTOR: añadir capturas 375x812 light/dark de pantallas afectadas en `openspec/changes/theme-foundation/evidence/` junto a `get_screenshot` de 4:440 y 4:1560; enlazar en verify-report.md; nueva ejecución de `npx jest src/theme` (UI-28.1) → verde. Aplicado en `5b90cc5 test(theme): add visual evidence links for 3.3`.
 
 ## 4. Mixins, tipografía y categorías (fase B, tripleta TDD)
 
-- [ ] 4.1 RED: `npx jest src/theme/typography.spec.ts` esperando `@font-face` para DM Serif Display 400 e Inter 400/600/700, sin negrita sintética, con once estilos que respeten tamaños, pesos y tracking; categorías 1–5 y filler con contraste y alfa D9 en oscuro; licencias verificadas (UI-25.1, UI-26.1, UI-26.2) → falla. Precondición: la tarea 0.7 de licencias debe estar completada.
-- [ ] 4.2 GREEN: `src/theme/_typography.scss` con woff2 locales, jerarquía h1–h6/p/small y `--ion-font-family` por la variable body; `src/theme/_mixins.scss` con bp-up, truncate, focus-visible y safe-area (UI-26.3); exponer `--app-category-1..5`, `--app-category-filler` y contrastes; mapear `--tab-*` históricos a `--app-category-*` → pasa.
+- [x] 4.1 RED: `npx jest src/theme/typography.spec.ts` esperando `@font-face` para DM Serif Display 400 e Inter 400/600/700, sin negrita sintética, con once estilos que respeten tamaños, pesos y tracking; categorías 1–5 y filler con contraste y alfa D9 en oscuro; licencias verificadas (UI-25.1, UI-26.1, UI-26.2) → falla. Precondición: la tarea 0.7 de licencias debe estar completada. Cubierto por `src/theme/typography.spec.ts` añadido en `6757a68`.
+- [x] 4.2 GREEN: `src/theme/_typography.scss` con woff2 locales, jerarquía h1–h6/p/small y `--ion-font-family` por la variable body; `src/theme/_mixins.scss` con bp-up, truncate, focus-visible y safe-area (UI-26.3); exponer `--app-category-1..5`, `--app-category-filler` y contrastes; mapear `--tab-*` históricos a `--app-category-*` → pasa. Aplicado en `6757a68 feat(theme): declare Inter and DM Serif Display @font-face (UI-26)`.
 - [ ] 4.3 REFACTOR: convertir `src/theme/notebook.scss` a `_notebook.scss` usando `@use` y tokens; nueva ejecución de `npx jest src/theme` y `npx jest src/theme/notebook.spec.ts` → verde.
 
 ## 5. Stylelint y migración de consumidores (fase B, tripleta TDD)
