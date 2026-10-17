@@ -41,3 +41,10 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.1 | theme-aliases | src/theme/dark.spec.ts:[UI-22.1] | pendiente | pendiente |
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.2 | theme-aliases | src/theme/dark.spec.ts:[UI-22.2] | pendiente | pendiente |
 | 4:1560 | todo-dark-mode | docs/mocks/todo-dark-mode.png | UI-22 | UI-22.3 | theme-aliases | src/theme/theme-preference.spec.ts:[UI-22.3] | pendiente | pendiente |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-16 | TSK-16.1 | fix-tasks-fab-pager-layout | src/theme/todo-layout.spec.ts:[TSK-16.1] | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-16 | TSK-16.2 | fix-tasks-fab-pager-layout | src/app/pages/tasks/tasks.page.spec.ts:contextual | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-17 | TSK-17.1 | fix-tasks-fab-pager-layout | src/app/domain/pagination.spec.ts:variants | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-17 | TSK-17.2 | fix-tasks-fab-pager-layout | src/app/pages/tasks/tasks.page.spec.ts:[TSK-17.2] | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-17 | TSK-17.3 | fix-tasks-fab-pager-layout | src/app/store/task.spec.ts:[TSK-17.3] | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-17 | TSK-17.4 | fix-tasks-fab-pager-layout | src/app/store/task.spec.ts:[TSK-17.4] | pendiente (ausente: sin emulador) | #34 |
+| -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-18 | TSK-18.1 | fix-tasks-fab-pager-layout | src/theme/todo-layout.spec.ts:[TSK-18.1] | pendiente (ausente: sin emulador) | #34 |
