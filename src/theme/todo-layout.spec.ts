@@ -53,6 +53,31 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/ion-fab-button\s*\{[^}]*height:\s*100%;/);
   });
 
+  it('[TODO-04.1] uses the on-primary text token for the selected category conforme a Figma 4:973', () => {
+    const styles = readAppStyles('shared/components/chip/chip.component.scss');
+    expect(styles).toMatch(
+      /\.chip\.selected\s*\{[^}]*color:\s*var\(--app-on-primary\);/,
+    );
+  });
+
+  it('[TODO-04.1] separates category filters in a horizontally scrollable row conforme a Figma 4:973', () => {
+    const styles = readAppStyles('pages/tasks/tasks.page.scss');
+    expect(styles).toMatch(/\.chips\s*\{[^}]*display:\s*flex;/);
+    expect(styles).toMatch(/\.chips\s*\{[^}]*gap:\s*var\(--app-space-8\);/);
+    expect(styles).toMatch(/\.chips\s*\{[^}]*overflow-x:\s*auto;/);
+  });
+
+  it('[TODO-05.1] centers content inside the empty-state inset conforme a Figma 4:1062', () => {
+    const styles = readAppStyles(
+      'shared/components/empty-state/empty-state.component.scss',
+    );
+    expect(styles).toMatch(/padding-inline-end:\s*var\(--app-space-24\);/);
+    expect(styles).toMatch(
+      /max-width:\s*min\(100%, var\(--app-empty-copy-width\)\);/,
+    );
+    expect(styles).toMatch(/color:\s*var\(--app-on-primary\);/);
+  });
+
   it('[TODO-05.1] centers the empty-state content conforme a Figma 4:1062', () => {
     const styles = readAppStyles(
       'shared/components/empty-state/empty-state.component.scss',
