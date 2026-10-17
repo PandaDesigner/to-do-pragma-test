@@ -8,7 +8,11 @@ const REQUIRED_STYLE_ENTRIES = [
 ] as const;
 
 function readAngularStyles(): string[] {
-  const config: { projects: { app: { architect: { build: { options: { styles: string[] } } } } } } = JSON.parse(
+  const config: {
+    projects: {
+      app: { architect: { build: { options: { styles: string[] } } } };
+    };
+  } = JSON.parse(
     readFileSync(resolve(__dirname, '..', '..', ANGULAR_CONFIG), 'utf8'),
   );
   return config.projects.app.architect.build.options.styles;
