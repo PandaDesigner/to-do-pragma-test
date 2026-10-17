@@ -111,6 +111,21 @@ Capturas a 375×812:
 - [Idioma inglés, oscuro](evidence/language-return-dark-en.png)
 - [Idioma español, oscuro](evidence/language-return-dark-es.png)
 
+## Diff visual 375x812
+
+Capturas de los cinco marcos (Todo, Routine, Event, My, Settings) en `prefers-color-scheme: light` y `dark` y en `en` y `es`, todas a 375x812. Comparación junto al mock con tolerancia de 2 px. Se aplican las medidas de Figma 4:440, 4:520, 4:664, 4:973, 4:1062 y 4:1496. La tolerancia se aplica al rail, al panel, a la fila y a la cabecera; los colores fuera de la paleta se documentan en su sección.
+
+- [Todo claro en](evidence/visual-diff/todo-light-en.png) y [Todo oscuro en](evidence/visual-diff/todo-dark-en.png)
+- [Todo claro es](evidence/visual-diff/todo-light-es.png) y [Todo oscuro es](evidence/visual-diff/todo-dark-es.png)
+- [Routine claro en](evidence/visual-diff/routine-light-en.png) y [Routine oscuro en](evidence/visual-diff/routine-dark-en.png)
+- [Routine claro es](evidence/visual-diff/routine-light-es.png) y [Routine oscuro es](evidence/visual-diff/routine-dark-es.png)
+- [Event claro en](evidence/visual-diff/event-light-en.png) y [Event oscuro en](evidence/visual-diff/event-dark-en.png)
+- [Event claro es](evidence/visual-diff/event-light-es.png) y [Event oscuro es](evidence/visual-diff/event-dark-es.png)
+- [My claro en](evidence/visual-diff/my-light-en.png) y [My oscuro en](evidence/visual-diff/my-dark-en.png)
+- [My claro es](evidence/visual-diff/my-light-es.png) y [My oscuro es](evidence/visual-diff/my-dark-es.png)
+- [Settings claro en](evidence/visual-diff/settings-light-en.png) y [Settings oscuro en](evidence/visual-diff/settings-dark-en.png)
+- [Settings claro es](evidence/visual-diff/settings-light-es.png) y [Settings oscuro es](evidence/visual-diff/settings-dark-es.png)
+
 ## Pendiente para el cierre
 
 - Exportar los iconos y la ilustración desde Figma. La ilustración actual sigue siendo un recuadro, no el dibujo aprobado.

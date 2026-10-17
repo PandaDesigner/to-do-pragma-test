@@ -44,7 +44,7 @@
 ## 5. Cierre
 
 - [ ] 5.1 Exportar los iconos de Figma a `src/assets/icon` y quitar literales visuales.
-- [ ] 5.2 Capturas 375x812 en claro y oscuro, es y en, con diff visual en `verify-report.md`.
+- [x] 5.2 Capturas 375x812 en claro y oscuro, es y en, con diff visual en `verify-report.md`.
 - [x] 5.3 Actualizar `openspec/traceability.md` y la fila de Notion, o anotar que el servidor no está conectado.
 - [x] 5.4 Pasar tipos, lint, estilos, tests con cobertura, build, `trace:check` y `openspec validate --strict`.
 - [x] 5.5 Actualizar README con rutas, secciones, filtros, idiomas, feature flag, comandos y limitaciones verificadas.
