@@ -107,4 +107,8 @@ ion-fab-button {
   --background: var(--app-primary);
   --color: var(--app-on-primary);
   --box-shadow: var(--app-shadow-fab);
+  ion-icon {
+    width: 32px;
+    height: 32px;
+  }
 }
