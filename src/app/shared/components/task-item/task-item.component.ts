@@ -77,6 +77,17 @@ export class TaskItemComponent {
     }
     return `var(--app-category-${mapColorTokenToIndex(token)})`;
   });
+  readonly metaTitle = computed(() => {
+    const parts: string[] = [];
+    const task = this.task();
+    if (task.durationMin) {
+      parts.push(`Duración: ${task.durationMin} min`);
+    }
+    if (task.reminderMin) {
+      parts.push(`Aviso: ${task.reminderMin} min antes`);
+    }
+    return parts.join(' · ');
+  });
   readonly showCategories = input(true);
   readonly disabled = input(false);
   readonly taskToggle = output<string>();

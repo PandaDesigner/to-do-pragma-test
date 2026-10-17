@@ -11,8 +11,13 @@
   </label>
   <div class="task-copy">
     <strong class="task-title" [attr.title]="task().title">{{ task().title }}</strong>
-    <div class="task-meta">
-      <span class="task-due" [attr.title]="task().dueDate">{{ task().dueDate }}</span>
+    <div class="task-meta" [attr.title]="metaTitle()">
+      <span class="task-due">
+        <span class="task-due__date">{{ task().dueDate }}</span>
+        @if (task().time) {
+        <span class="task-due__time">{{ task().time }}</span>
+        }
+      </span>
       @if (showCategories() && categoryName()) {
         <span
           class="category-dot"

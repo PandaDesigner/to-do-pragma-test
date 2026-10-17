@@ -57,9 +57,16 @@ input:checked {
   font-size: var(--app-font-size-meta);
 }
 .task-due {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--app-space-4);
   white-space: nowrap;
   font-size: var(--app-font-size-tab);
   color: var(--app-text-muted);
+}
+.task-due__time {
+  font-weight: 600;
+  color: var(--app-text);
 }
 .completed .task-title {
   text-decoration: line-through;
