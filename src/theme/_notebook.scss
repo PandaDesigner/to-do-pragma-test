@@ -6,7 +6,7 @@ ion-content {
 .notebook-page {
   max-width: 880px;
   margin: 0 auto;
-  padding: var(--app-content-page-top) 0 var(--app-space-32)
+  padding: var(--app-content-page-top) 12px var(--app-space-32)
     var(--app-content-inset-start);
   color: var(--app-text);
   .page-header {
