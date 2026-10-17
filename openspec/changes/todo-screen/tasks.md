@@ -5,8 +5,8 @@
 
 ## 2. Rail y cabecera
 
-- [ ] 2.1 RED: test de TODO-01.1 que falle porque el rail de cinco pestañas no existe.
-- [ ] 2.2 GREEN: rail en el shell, con Routine y Event deshabilitadas, y sin `ion-tab-bar`.
+- [x] 2.1 RED: test de TODO-01.1 que falle porque el rail de cinco pestañas no existe.
+- [x] 2.2 GREEN: rail en el shell, con Routine y Event deshabilitadas, y sin `ion-tab-bar`.
 - [ ] 2.3 RED: test de TODO-01.2 que falle porque la fecha no sale del reloj.
 - [ ] 2.4 GREEN: cabecera `23.Mon` y badge de hoy con los tokens del design.
 
