@@ -33,8 +33,8 @@
 ## 4A. Ampliación aprobada: Routine y Event
 
 - [x] 4.7 Documentar categorías General/Routine/Event, rutas, estados visibles, flag y alta contextual; actualizar glosario.
-- [ ] 4.8 RED: pruebas de CAT-SEC-01.1 a CAT-SEC-01.4 para sección, compatibilidad y validación.
-- [ ] 4.9 GREEN: sección persistida en categoría y selector en su formulario, independiente del color y tipo.
+- [x] 4.8 RED: pruebas de CAT-SEC-01.1 a CAT-SEC-01.4 para sección, compatibilidad y validación.
+- [x] 4.9 GREEN: sección persistida en categoría y selector en su formulario, independiente del color y tipo.
 - [ ] 4.10 RED: pruebas de TODO-07.1 a TODO-08.2 para navegación, listas, panel, estados y guard.
 - [ ] 4.11 GREEN: rutas propias y rail activo, filtros por sección, completadas visibles y desactivación con el flag.
 - [ ] 4.12 RED: pruebas de TODO-09.1 a TODO-09.4 para creación contextual y sección sin categorías.

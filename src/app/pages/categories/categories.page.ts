@@ -7,6 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
   FormControl,
   FormGroup,
@@ -21,6 +22,10 @@ import { RemoteConfigService } from '../../core/config/remote-config';
 import {
   CATEGORY_KIND,
   CATEGORY_KINDS,
+  CATEGORY_SECTION,
+  CATEGORY_SECTIONS,
+  getCategorySection,
+  parseCategorySection,
   isCategoryKind,
   type Category,
 } from '../../domain/category';
@@ -45,6 +50,7 @@ const VIRTUAL_SCROLL_THRESHOLD = 200;
     ReactiveFormsModule,
     ScrollingModule,
     NgTemplateOutlet,
+    TranslatePipe,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -58,6 +64,7 @@ export class CategoriesPage implements OnInit {
   private readonly confirmation = inject(DeletionConfirmation);
   readonly editingId = signal<string | null>(null);
   readonly kinds = CATEGORY_KINDS;
+  readonly sections = CATEGORY_SECTIONS;
   readonly colors = ['my', 'event', 'todo', 'routine', 'more'];
   readonly icons = { createOutline, trashOutline, listOutline };
   readonly form = new FormGroup({
@@ -67,6 +74,9 @@ export class CategoriesPage implements OnInit {
     }),
     kind: new FormControl<string>(CATEGORY_KIND.LIST, { nonNullable: true }),
     colorToken: new FormControl('my', { nonNullable: true }),
+    section: new FormControl<string>(CATEGORY_SECTION.GENERAL, {
+      nonNullable: true,
+    }),
   });
   readonly shouldVirtualize = computed(
     () => this.store.categories().length >= VIRTUAL_SCROLL_THRESHOLD,
@@ -97,6 +107,7 @@ export class CategoriesPage implements OnInit {
         throw new Error('Las categorías están deshabilitadas.');
       }
       const input = this.form.getRawValue();
+      const section = parseCategorySection(input.section);
       if (
         !isCategoryKind(input.kind) ||
         !this.colors.includes(input.colorToken)
@@ -115,6 +126,7 @@ export class CategoriesPage implements OnInit {
         icon: existing?.icon ?? 'list',
         kind: input.kind,
         colorToken: input.colorToken,
+        section,
       });
       this.cancelEdit();
     });
@@ -126,12 +138,18 @@ export class CategoriesPage implements OnInit {
       name: category.name,
       kind: category.kind,
       colorToken: category.colorToken,
+      section: getCategorySection(category),
     });
   }
 
   cancelEdit(): void {
     this.editingId.set(null);
-    this.form.reset({ name: '', kind: CATEGORY_KIND.LIST, colorToken: 'my' });
+    this.form.reset({
+      name: '',
+      kind: CATEGORY_KIND.LIST,
+      colorToken: 'my',
+      section: CATEGORY_SECTION.GENERAL,
+    });
   }
 
   async removeCategory(category: Category): Promise<void> {

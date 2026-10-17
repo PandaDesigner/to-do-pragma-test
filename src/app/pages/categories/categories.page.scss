@@ -2,6 +2,10 @@
   margin-inline-end: var(--app-content-inset-end);
 }
 
+.section-field {
+  margin-top: var(--app-space-16);
+}
+
 .category-viewport {
   height: 100%;
   min-height: 260px;

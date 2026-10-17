@@ -26,6 +26,16 @@
           </select></label
         >
       </div>
+      <label class="section-field">
+        {{ 'category.section' | translate }}
+        <select formControlName="section">
+          @for (section of sections; track section) {
+          <option [value]="section">
+            {{ ('category.sections.' + section) | translate }}
+          </option>
+          }
+        </select>
+      </label>
       <div class="form-actions">
         <button type="submit" class="primary" [disabled]="store.busy()">
           {{ editingId() ? 'Guardar cambios' : 'Crear categoría' }}

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { CATEGORY_REPOSITORY } from '../core/di/tokens';
-import type { Category } from '../domain/category';
+import { parseCategorySection, type Category } from '../domain/category';
 import { TaskStore } from './task';
 import {
   createOperationRunner,
@@ -33,7 +33,13 @@ export const CategoryStore = signalStore(
         retry: operations.retry,
         async refresh(): Promise<void> {
           await operations.run(async () => {
-            patchState(store, { categories: await repository.list() });
+            const categories = await repository.list();
+            for (const category of categories) {
+              if (category.section !== undefined) {
+                parseCategorySection(category.section);
+              }
+            }
+            patchState(store, { categories });
           });
         },
         async upsert(category: Category): Promise<void> {

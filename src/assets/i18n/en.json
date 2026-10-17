@@ -11,6 +11,14 @@
     "debugHint": "Create 5,000 test tasks to measure performance (virtual scroll).",
     "debugAction": "generar 5000 tareas"
   },
+  "category": {
+    "section": "Section",
+    "sections": {
+      "general": "General",
+      "routine": "Routine",
+      "event": "Event"
+    }
+  },
   "todo": {
     "today": "TODAY ›",
     "pending": "Uncompleted tasks",

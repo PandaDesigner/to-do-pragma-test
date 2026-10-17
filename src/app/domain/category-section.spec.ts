@@ -33,17 +33,21 @@ describe('Category sections', () => {
     '[CAT-SEC-01.4] rejects an unknown explicit section %s',
     (section) => {
       expect(isCategorySection(section)).toBe(false);
-      expect(() => parseCategorySection(section)).toThrow('Sección de categoría no válida');
+      expect(() => parseCategorySection(section)).toThrow(
+        'Sección de categoría no válida',
+      );
     },
   );
 
   it('[CAT-SEC-01.3] keeps the section independent of name, kind and color', () => {
-    expect(getCategorySection({
-      ...category,
-      name: 'Event',
-      kind: 'daily',
-      colorToken: 'event',
-      section: CATEGORY_SECTION.ROUTINE,
-    })).toBe(CATEGORY_SECTION.ROUTINE);
+    expect(
+      getCategorySection({
+        ...category,
+        name: 'Event',
+        kind: 'daily',
+        colorToken: 'event',
+        section: CATEGORY_SECTION.ROUTINE,
+      }),
+    ).toBe(CATEGORY_SECTION.ROUTINE);
   });
 });
