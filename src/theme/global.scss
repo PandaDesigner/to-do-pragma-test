@@ -1,15 +1,13 @@
-@use './theme/fonts';
-@use './theme/notebook';
+@use 'fonts';
+@use 'notebook';
 
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Estilos globales del tema. Las entradas se cargan únicamente desde
+ * `src/theme/global.scss` y `src/theme/variables.scss` (UI-23.1). El código
+ * Sass propio usa solo @use y @forward; los @import siguientes son CSS
+ * externos de Ionic.
  */
 
 /* Core CSS required for Ionic components to work properly */
@@ -31,10 +29,7 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
+ * Sustituido por `src/theme/_dark.scss` en la tarea 3.2 para tener un
+ * único origen de paleta y soportar `body.light` / `body.dark`.
  * https://ionicframework.com/docs/theming/dark-mode
  */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
