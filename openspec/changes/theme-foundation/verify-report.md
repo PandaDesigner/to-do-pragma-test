@@ -112,6 +112,26 @@ Fuera de C0.5 (C1/C2): swatch 32 → 27 px de CategoryRow (C2), rail con 5 pesta
 
 Comprobaciones posteriores (18:58 COT): `npx --no-install prettier --check` exit 0, `openspec validate theme-foundation --strict` exit 0, `git diff --check` exit 0, `npm run typecheck` exit 0, `npm run lint` exit 0, `npm run test` 23 suites y 147 tests exit 0. Las nuevas tripletas de la fase B siguen pendientes y no se marcan como completadas.
 
+## Evidencia visual 3.3
+
+Capturas de Figma descargadas en `openspec/changes/theme-foundation/evidence/` desde `get_screenshot` (MCP figma) y enlazadas por node id; ambas miden 375x812 y se usaron como referencia para el ajuste de C0.5 (commit `a7ce736`).
+
+- [Figma 4:440 todo-day-panel-open (light)](evidence/figma-4-440-light.png) - https://www.figma.com/api/mcp/asset/e566ff70-feee-4cfe-942c-b2e8a4fc1cf3.png
+- [Figma 4:1560 todo-dark-mode (dark)](evidence/figma-4-1560-dark.png) - https://www.figma.com/api/mcp/asset/4bcb5e4a-d4c9-4757-a437-9345c6401957.png
+
+Las URL anteriores quedaron expiradas y se regeneraron con `get_screenshot` desde codemode.
+
+## Avance de fase B (commits `a18a4fd`, `de21325`, `fc07e5b`, `c24a96e`)
+
+- 1.1 RED/GREEN (UI-23.1): `src/theme/theme.spec.ts` valida las entradas `src/theme/global.scss` y `src/theme/variables.scss` y rechaza la ruta legacy `src/global.scss`. Mover el SCSS y ajustar `angular.json` deja los 2 tests en verde.
+- 1.2 GREEN/REFACTOR: `src/global.scss` queda eliminado; `src/theme/global.scss` reagrupa `@use 'fonts'`, `@use 'notebook'`, `@use 'dark'` y `@forward 'tokens'`. Los `@import` restantes son CSS de Ionic, no Sass propio.
+- 2.1 RED/GREEN: `src/theme/_tokens.scss` con valores crudos Figma; `variables.scss` con `@use 'tokens' as t` emite `--app-*` y el puente `--ion-color-primary*` con rgb `75, 63, 107` y shade `#3a2e5c`. 5 tests en `tokens.spec.ts` pasan.
+- 2.3 REFACTOR: `src/theme/contrast.spec.ts` calcula WCAG para `on-primary/primary`, `text/surface` y `text/surface-muted` (>= 4.5:1) y documenta la excepción de `text-muted` oscuro de Pedro.
+- 3.1 RED/GREEN: `src/theme/_dark.scss` aplica `prefers-color-scheme: dark` con la paleta de Figma 4:1560; `variables.scss` ya no duplica el bloque; `dark.spec.ts` lo verifica.
+- 3.2 GREEN: `src/theme/global.scss` retira `dark.system.css`; el único origen de paleta oscura es `_dark.scss`.
+
+Suite actual: 27 suites y 158 tests en verde. `npm run typecheck`, `npm run lint` y `npm run build -- --configuration production` pasan con la advertencia CommonJS esperada de `localforage` y `localforage-cordovasqlitedriver`.
+
 ## Reanudación autorizada: artefactos creados
 
 El usuario autorizó crear los artefactos faltantes, ajustar la spec y después implementar, manteniendo Figma, docs/design.json y docs/design.md como fuentes obligatorias para colores, tamaños y tipografía.
