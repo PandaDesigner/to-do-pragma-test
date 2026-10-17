@@ -288,6 +288,20 @@ describe('TasksPage', () => {
     });
   });
 
+  it('[TODO-06.2] opens editing in the modal and cancels without changing the task', async () => {
+    const { page, tasks } = await setup();
+    await tasks.upsert(taskFixture({ title: 'Original' }));
+    page.editTask(tasks.tasks()[0]);
+    expect(page.sheetOpen()).toBe(true);
+    expect(page.form.controls.title.value).toBe('Original');
+    page.form.controls.title.setValue('Unsaved');
+    page.closeSheet();
+    expect(page.sheetOpen()).toBe(false);
+    expect(page.editingId()).toBeNull();
+    expect(page.form.controls.title.value).toBe('');
+    expect(tasks.tasks()[0].title).toBe('Original');
+  });
+
   it('[TODO-06.2] opens the form in a modal and keeps it off the page', async () => {
     const { fixture, page } = await setup();
     (

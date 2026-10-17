@@ -6,6 +6,20 @@ function readAppStyles(relativePath: string): string {
 }
 
 describe('Todo layout regression contracts', () => {
+  it('[TODO-06.2] gives the modal a scrollable notebook container after Ionic reparents it', () => {
+    const template = readFileSync(
+      resolve(__dirname, '../app/pages/tasks/tasks.page.html'),
+      'utf8',
+    );
+    expect(template).toMatch(
+      /<ion-modal[^>]*>[\s\S]*?<ng-template>\s*<ion-content>\s*<section class="notebook-page task-editor">/,
+    );
+    const styles = readAppStyles('pages/tasks/tasks.page.scss');
+    expect(styles).toMatch(
+      /\.task-editor\s*\{[^}]*padding:\s*var\(--app-space-24\);/,
+    );
+  });
+
   it('[TODO-01.1] keeps the nested Ionic outlet in the flex layout conforme a Figma 4:440', () => {
     const styles = readAppStyles('layout/shell/shell.component.scss');
     expect(styles).toMatch(/ion-router-outlet\s*\{[^}]*position:\s*relative;/);
