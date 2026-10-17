@@ -57,16 +57,14 @@ describe('Repository clear', () => {
   it('ionic storage repository empties its list and persists after clear', async () => {
     const { IonicStorageRepository } =
       await import('./ionic-storage-repository');
-    const fakeStorage = { backing: new Map<string, unknown>() } as unknown as {
-      create(): Promise<void>;
-      get<T>(key: string): Promise<T | null>;
-      set<T>(key: string, value: T): Promise<void>;
-    };
-    fakeStorage.create = async () => undefined;
-    fakeStorage.get = async <T>(key: string) =>
-      fakeStorage.backing.has(key) ? (fakeStorage.backing.get(key) as T) : null;
-    fakeStorage.set = async <T>(key: string, value: T) => {
-      fakeStorage.backing.set(key, value as unknown);
+    const backing = new Map<string, unknown>();
+    const fakeStorage = {
+      create: async () => undefined,
+      get: async <T>(key: string): Promise<T | null> =>
+        backing.has(key) ? (backing.get(key) as T) : null,
+      set: async <T>(key: string, value: T) => {
+        backing.set(key, value as unknown);
+      },
     };
     const repository = new IonicStorageRepository<Category>('test.clear');
     await repository.init(fakeStorage as never);
@@ -86,7 +84,8 @@ describe('Repository clear', () => {
     });
     await repository.clear();
     expect(await repository.list()).toEqual([]);
-    const persisted = await fakeStorage.get<readonly Category[]>('test.clear');
+    const persisted =
+      (await fakeStorage.get<readonly Category[]>('test.clear')) ?? null;
     expect(persisted).toEqual([]);
   });
 });
