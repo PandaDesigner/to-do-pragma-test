@@ -39,6 +39,30 @@ describe('CategoriesPage', () => {
     expect(tasks.tasks()[0].categoryId).toBeNull();
   });
 
+  it('[CAT-SEC-01.1] saves and restores the category section conforme a Figma 4:869', async () => {
+    const { page, categories, categoryRepository, fixture } = await setup();
+    page.form.patchValue({ name: 'Rutina', section: 'routine' });
+    await page.saveCategory();
+    const category = categories.categories()[0];
+    expect(category.section).toBe('routine');
+    expect((await categoryRepository.list())[0].section).toBe('routine');
+    page.editCategory(category);
+    expect(page.form.controls.section.value).toBe('routine');
+    page.form.patchValue({ name: 'Evento', colorToken: 'todo', section: 'event' });
+    await page.saveCategory();
+    expect(categories.categories()[0]).toMatchObject({ section: 'event', colorToken: 'todo' });
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('[formcontrolname="section"]')).not.toBeNull();
+  });
+
+  it('[CAT-SEC-01.4] rejects invalid form sections without saving conforme a Figma 4:869', async () => {
+    const { page, categoryRepository } = await setup();
+    page.form.patchValue({ name: 'Inválida', section: 'unknown' });
+    await page.saveCategory();
+    expect(page.feedback.error()).toContain('Sección de categoría no válida');
+    expect(await categoryRepository.list()).toEqual([]);
+  });
+
   it('virtualizes from 200 categories and tracks IDs', async () => {
     const { page, categories, fixture } = await setup();
     const category = {
