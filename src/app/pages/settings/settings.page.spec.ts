@@ -15,13 +15,16 @@ import {
   type ThemePreference,
 } from '../../../theme/theme-preference';
 import { SettingsPage } from './settings.page';
+import { DebugTaskSeed } from '../tasks/debug-task-seed';
+import { RemoteConfigService } from '../../core/config/remote-config';
 import en from '../../../assets/i18n/en.json';
 import es from '../../../assets/i18n/es.json';
 
 describe('SettingsPage', () => {
-  function setup() {
+  function setup(options: { debugActionsEnabled?: boolean } = {}) {
     const theme = signal<ThemePreference>(THEME_PREFERENCE.SYSTEM);
     const language = signal<AppLanguage>(APP_LANGUAGE.EN);
+    const debugActionsEnabled = signal(options.debugActionsEnabled ?? true);
     const preferences = {
       theme: theme.asReadonly(),
       language: language.asReadonly(),
@@ -38,6 +41,19 @@ describe('SettingsPage', () => {
         provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
         { provide: SettingsPreferences, useValue: preferences },
         { provide: SYSTEM_DARK, useValue: false },
+        {
+          provide: DebugTaskSeed,
+          useValue: {
+            generateFiveThousand: jest.fn().mockResolvedValue(undefined),
+            removeAllTasks: jest.fn().mockResolvedValue(undefined),
+          },
+        },
+        {
+          provide: RemoteConfigService,
+          useValue: {
+            debugActionsEnabled: debugActionsEnabled.asReadonly(),
+          },
+        },
       ],
     });
     const translate = TestBed.inject(TranslateService);
@@ -48,6 +64,29 @@ describe('SettingsPage', () => {
     fixture.detectChanges();
     return { fixture, preferences };
   }
+
+  it.each([
+    [APP_LANGUAGE.EN, 'English'],
+    [APP_LANGUAGE.ES, 'Español'],
+  ] as const)(
+    '[I18N-01.1] keeps %s visibly selected after remounting Settings',
+    async (language, label) => {
+      const { fixture, preferences } = setup();
+      await fixture.componentInstance.setLanguage(language);
+      fixture.destroy();
+      const returned = TestBed.createComponent(SettingsPage);
+      returned.detectChanges();
+      await returned.whenStable();
+      returned.detectChanges();
+      const select = returned.nativeElement.querySelector(
+        'select',
+      ) as HTMLSelectElement;
+      expect(preferences.language()).toBe(language);
+      expect(select.value).toBe(language);
+      expect(select.selectedOptions[0]?.textContent?.trim()).toBe(label);
+      returned.destroy();
+    },
+  );
 
   it('[SET-01.1] shows the dark mode control and language selector', () => {
     const { fixture } = setup();
@@ -61,6 +100,27 @@ describe('SettingsPage', () => {
     const { fixture, preferences } = setup();
     await fixture.componentInstance.setDark(true);
     expect(preferences.setTheme).toHaveBeenCalledWith(THEME_PREFERENCE.DARK);
+  });
+
+  it('[SET-02.1] shows the debug buttons on settings', () => {
+    const { fixture } = setup();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
+    ).not.toBeNull();
+  });
+
+  it('[SET-02.2] hides the debug section when enable_debug_actions is false', () => {
+    const { fixture } = setup({ debugActionsEnabled: false });
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="generate-tasks"]'),
+    ).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-testid="delete-tasks"]'),
+    ).toBeNull();
+    expect(fixture.nativeElement.querySelector('.debug')).toBeNull();
   });
 
   it('[I18N-01.1] switches the visible language immediately', async () => {

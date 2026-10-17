@@ -20,4 +20,8 @@ export class InMemoryRepository<
   async remove(id: string): Promise<void> {
     this.items.delete(id);
   }
+
+  async clear(): Promise<void> {
+    this.items.clear();
+  }
 }

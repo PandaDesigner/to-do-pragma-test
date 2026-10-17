@@ -50,11 +50,18 @@ Capas: `pages → store → domain ← data`; `core/di` conecta implementaciones
 
 Patrones clave:
 
-- **Strategy**: `filterTasks` y `sortTasksByDueDate` son funciones puras en `domain/` que los stores componen.
+- **Strategy**: `filterTasks`, `sortTasksByDueDate` y `filterTasksBySection` son funciones puras en `domain/`; el `TaskStore` las compone con los filtros activos.
+- **Sections**: `CategorySection` en `general`/`routine`/`event`; las pestañas `Routine` y `Event` filtran por la sección. Las rutas `/tabs/routine` y `/tabs/event` comparten `TasksPage` y pasan la sección mediante `ROUTE_DATA`.
 - **State**: cuatro clases (`pending`, `completed`, `overdue`, `archived`) en `data/states/`; la máquina delega en ellas sin tabla de destinos.
 - **Decorator**: `@Debounce(ms)` agrupa llamadas por instancia; `@LogAction` registra nombre y argumentos.
 - **Repository + port**: `TaskRepository` y `CategoryRepository` viven en `domain/`; los tokens Angular `TASK_REPOSITORY` y `CATEGORY_REPOSITORY` viven en `core/di/`.
-- **SignalStore**: `TaskStore` y `CategoryStore` exponen `Signal`, `refresh`, `upsert`, `remove`.
+- **SignalStore**: `TaskStore` y `CategoryStore` exponen `Signal`, `refresh`, `upsert`, `remove`. `setSection` y `setCategories` sincronizan el filtro por sección.
+
+## Pestañas y secciones
+
+- Rail lateral con cinco pestañas: `Todo`, `Routine`, `Event`, `My`, `More`. Las dos primeras se ven y se desactivan solo cuando el flag `enable_categories` está en `false`.
+- En `My` se gestionan las categorías. Cada categoría tiene una `section` (`general` por defecto si no se indica) y un `colorToken` que la UI traduce a un color de la paleta. Las tareas asignadas a una categoría de la sección `routine` o `event` solo aparecen en su pestaña; el resto se ve en `Todo`.
+- La creación desde `Routine` o `Event` solo permite categorías de esa sección. Desde `Todo` se ofrece cualquier categoría y la opción `Sin categoría`.
 
 ## Cordova
 

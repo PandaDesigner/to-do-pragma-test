@@ -1,9 +1,6 @@
 <ion-content [scrollY]="!shouldVirtualize()">
   <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
-    <header class="page-header">
-      <p class="overline">Mis listas</p>
-      <h1>Categorías</h1>
-    </header>
+    <app-page-header overline="Mis listas" title="Categorías" />
     @if (flags.categoriesEnabled()) {
     <form [formGroup]="form" (ngSubmit)="saveCategory()" class="editor">
       <h2>{{ editingId() ? 'Editar categoría' : 'Nueva categoría' }}</h2>
@@ -29,6 +26,16 @@
           </select></label
         >
       </div>
+      <label class="section-field">
+        {{ 'category.section' | translate }}
+        <select formControlName="section">
+          @for (section of sections; track section) {
+          <option [value]="section">
+            {{ ('category.sections.' + section) | translate }}
+          </option>
+          }
+        </select>
+      </label>
       <div class="form-actions">
         <button type="submit" class="primary" [disabled]="store.busy()">
           {{ editingId() ? 'Guardar cambios' : 'Crear categoría' }}
@@ -67,10 +74,10 @@
         [ngTemplateOutletContext]="{ $implicit: category }"
       />
       } @empty {
-      <div class="empty-state">
-        <h2>Tu primera lista</h2>
-        <p>Crea una categoría para organizar tus tareas.</p>
-      </div>
+      <app-empty-state
+        title="Tu primera lista"
+        hint="Crea una categoría para organizar tus tareas."
+      />
       }
     </section>
     }

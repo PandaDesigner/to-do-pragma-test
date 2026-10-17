@@ -3,6 +3,16 @@
 - Cambios OpenSpec referenciados: `init`
 - Escenarios cubiertos: INIT-01, INIT-02, INIT-03, INIT-04, INIT-05
 
+## Labels obligatorias
+
+Aplica siempre en cada PR, al abrirlo:
+
+- [ ] `project`
+- [ ] `milestone`
+- [ ] `development`
+
+Asocia también el PR al milestone correspondiente desde la barra lateral.
+
 ## Comprobaciones
 
 - [ ] `npm test` (Jest, suites y tests actualizados)

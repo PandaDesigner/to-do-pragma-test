@@ -14,6 +14,13 @@ import {
   sortTasksByDueDate,
   TASK_SORT,
 } from '../domain/task-strategy';
+import { filterTasksBySection } from '../domain/category/filter-by-section';
+import { sectionContainsCategory } from './category/section';
+import {
+  CATEGORY_SECTION,
+  type CategorySection,
+} from '../domain/category/category-section';
+import type { Category } from '../domain/category';
 import { TaskStateMachine } from '../data/states/task-state-machine';
 import {
   createOperationRunner,
@@ -24,12 +31,16 @@ interface TaskStoreState extends OperationStatus {
   tasks: readonly Task[];
   statuses: readonly TaskStatus[];
   categoryId: string | null | undefined;
+  categories: readonly Category[];
+  section: CategorySection;
 }
 
 const initialState: TaskStoreState = {
   tasks: [],
-  statuses: [TASK_STATUS.PENDING, TASK_STATUS.OVERDUE],
+  statuses: [TASK_STATUS.PENDING, TASK_STATUS.OVERDUE, TASK_STATUS.COMPLETED],
   categoryId: undefined,
+  categories: [],
+  section: CATEGORY_SECTION.GENERAL,
   busy: false,
   error: null,
 };
@@ -40,12 +51,23 @@ export const TaskStore = signalStore(
   withComputed((store) => ({
     visibleTasks: computed(() =>
       sortTasksByDueDate(
-        filterTasks(store.tasks(), {
-          statuses: store.statuses(),
-          categoryId: store.categoryId(),
-        }),
+        filterTasksBySection(
+          filterTasks(store.tasks(), {
+            statuses: store.statuses(),
+            categoryId: store.categoryId(),
+          }),
+          store.categories(),
+          store.section(),
+        ),
         { kind: TASK_SORT.DUE_DATE },
       ),
+    ),
+    availableCategories: computed(() =>
+      store
+        .categories()
+        .filter((category) =>
+          sectionContainsCategory(store.section(), category),
+        ),
     ),
   })),
   withMethods(
@@ -100,6 +122,12 @@ export const TaskStore = signalStore(
             }));
           });
         },
+        async removeAll(): Promise<void> {
+          await operations.run(async () => {
+            await repository.clear?.();
+            patchState(store, { tasks: [] });
+          });
+        },
         async dispatch(id: string, event: TaskEvent): Promise<void> {
           const task = store.tasks().find((candidate) => candidate.id === id);
           if (!task) {
@@ -125,6 +153,12 @@ export const TaskStore = signalStore(
         },
         setCategory(categoryId: string | null | undefined): void {
           patchState(store, { categoryId });
+        },
+        setSection(section: CategorySection): void {
+          patchState(store, { section, categoryId: undefined });
+        },
+        setCategories(categories: readonly Category[]): void {
+          patchState(store, { categories });
         },
       };
     },

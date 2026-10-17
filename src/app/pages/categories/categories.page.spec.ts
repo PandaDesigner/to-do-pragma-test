@@ -1,11 +1,18 @@
 import { TestBed } from '@angular/core/testing';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import en from '../../../assets/i18n/en.json';
 import { CategoriesPage } from './categories.page';
 import { configurePageTesting } from '../../testing/page.fixture';
 import { taskFixture } from '../../testing/task.fixture';
 
 describe('CategoriesPage', () => {
   async function setup() {
-    const dependencies = configurePageTesting();
+    const dependencies = configurePageTesting({
+      providers: [provideTranslateService({ fallbackLang: 'en' })],
+    });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', en);
+    translate.use('en');
     const fixture = TestBed.createComponent(CategoriesPage);
     fixture.detectChanges();
     await fixture.whenStable();
@@ -37,6 +44,39 @@ describe('CategoriesPage', () => {
     await page.removeCategory(category);
     expect(categories.categories()).toEqual([]);
     expect(tasks.tasks()[0].categoryId).toBeNull();
+  });
+
+  it('[CAT-SEC-01.1] saves and restores the category section conforme a Figma 4:869', async () => {
+    const { page, categories, categoryRepository, fixture } = await setup();
+    page.form.patchValue({ name: 'Rutina', section: 'routine' });
+    await page.saveCategory();
+    const category = categories.categories()[0];
+    expect(category.section).toBe('routine');
+    expect((await categoryRepository.list())[0].section).toBe('routine');
+    page.editCategory(category);
+    expect(page.form.controls.section.value).toBe('routine');
+    page.form.patchValue({
+      name: 'Evento',
+      colorToken: 'todo',
+      section: 'event',
+    });
+    await page.saveCategory();
+    expect(categories.categories()[0]).toMatchObject({
+      section: 'event',
+      colorToken: 'todo',
+    });
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('[formcontrolname="section"]'),
+    ).not.toBeNull();
+  });
+
+  it('[CAT-SEC-01.4] rejects invalid form sections without saving conforme a Figma 4:869', async () => {
+    const { page, categoryRepository } = await setup();
+    page.form.patchValue({ name: 'Inválida', section: 'unknown' });
+    await page.saveCategory();
+    expect(page.feedback.error()).toContain('Sección de categoría no válida');
+    expect(await categoryRepository.list()).toEqual([]);
   });
 
   it('virtualizes from 200 categories and tracks IDs', async () => {

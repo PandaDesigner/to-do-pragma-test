@@ -1,0 +1,25 @@
+<nav class="rail" role="tablist" aria-label="Secciones">
+  @for (tab of visibleTabs(); track tab.id) {
+    <button
+      type="button"
+      role="tab"
+      class="rail-tab"
+      [class.active]="tab.id === active()"
+      [attr.data-tab]="tab.id"
+      [disabled]="isDisabled(tab)"
+      [attr.aria-selected]="tab.id === active()"
+      [style.height.px]="tab.height"
+      [style.--rail-fill]="tab.fill"
+      (click)="choose(tab)"
+    >
+      <span>{{ tab.label }}</span>
+    </button>
+    @if (showsFillerAfter(tab.id)) {
+      <div
+        class="filler"
+        aria-hidden="true"
+        [style.height.px]="fillerHeight"
+      ></div>
+    }
+  }
+</nav>

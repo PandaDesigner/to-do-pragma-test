@@ -6,7 +6,8 @@ ion-content {
 .notebook-page {
   max-width: 880px;
   margin: 0 auto;
-  padding: 55px 18px 32px 37px;
+  padding: var(--app-content-page-top) 12px var(--app-space-32)
+    var(--app-content-inset-start);
   color: var(--app-text);
   .page-header {
     margin-bottom: 20px;
@@ -131,10 +132,5 @@ ion-content {
   :focus-visible {
     outline: 2px solid var(--app-primary);
     outline-offset: 2px;
-  }
-}
-@media (min-width: 768px) {
-  .notebook-page {
-    padding-top: 55px;
   }
 }

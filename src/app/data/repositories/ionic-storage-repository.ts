@@ -57,6 +57,12 @@ export class IonicStorageRepository<
     await this.persist();
   }
 
+  async clear(): Promise<void> {
+    this.requireStorage();
+    this.items.clear();
+    await this.persist();
+  }
+
   private requireStorage(): Storage {
     if (!this.storage) {
       throw new Error('IonicStorageRepository not initialised');

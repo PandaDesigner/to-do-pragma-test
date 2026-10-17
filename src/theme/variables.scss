@@ -23,6 +23,14 @@
   --app-space-16: #{t.$space-16};
   --app-space-24: #{t.$space-24};
   --app-space-32: #{t.$space-32};
+  --app-content-inset-start: #{t.$content-inset-start};
+  --app-content-inset-end: #{t.$content-inset-end};
+  --app-content-day-top: #{t.$content-day-top};
+  --app-content-page-top: #{t.$content-page-top};
+  --app-day-actions-height: #{t.$day-actions-height};
+  --app-chip-height: #{t.$chip-height};
+  --app-chip-selected-height: #{t.$chip-selected-height};
+  --app-touch-target: #{t.$touch-target};
 
   --app-radius-badge: #{t.$radius-badge};
   --app-radius-checkbox: #{t.$radius-checkbox};
@@ -32,6 +40,7 @@
   --app-radius-input: #{t.$radius-input};
   --app-radius-accent-underline: #{t.$radius-accent-underline};
   --app-radius-round: 50%;
+  --app-radius-pill: #{t.$radius-pill};
 
   --app-stroke-checkbox: #{t.$stroke-checkbox};
   --app-stroke-divider: #{t.$stroke-divider};

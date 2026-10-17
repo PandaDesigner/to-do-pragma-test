@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="chip"
+  [class.selected]="selected()"
+  [attr.aria-pressed]="selected()"
+  (click)="choose.emit()"
+>
+  <span class="dot" [attr.data-color]="colorToken()" aria-hidden="true"></span>
+  <span>{{ label() }}</span>
+</button>

@@ -32,6 +32,7 @@ describe('TaskStore', () => {
       [future, overdue, today, completed].map((task) => repository.save(task)),
     );
     await store.refresh();
+    store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
     expect(store.visibleTasks().map((task) => task.id)).toEqual([
       'past',
       'today',
@@ -258,5 +259,14 @@ describe('TaskStore', () => {
     expect(store.tasks()).toEqual([expired]);
     expect(await repository.list()).toEqual([expired]);
     expect(store.error()).toBeNull();
+  });
+
+  it('TSK-12 clears the repository and the in-memory list when removeAll is called', async () => {
+    const { repository, store } = setup();
+    await store.upsertMany([future, { ...future, id: 'home' }]);
+    expect(await repository.list()).toHaveLength(2);
+    await store.removeAll();
+    expect(store.tasks()).toEqual([]);
+    expect(await repository.list()).toEqual([]);
   });
 });

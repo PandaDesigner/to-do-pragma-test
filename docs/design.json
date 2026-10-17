@@ -115,7 +115,8 @@
       "tab": 8,
       "card": 10,
       "input": 10,
-      "round": "50% (999 en Figma)",
+      "round": "50% (elementos circulares)",
+      "pill": 999,
       "accentUnderline": 1.5,
       "sheetTop": "estimado 16",
       "handle": 2.5
@@ -5200,7 +5201,7 @@
     "Body/Regular usaba cssVar --fs-regular; corregido a --fs-body según Figma 4:440.",
     "Display/Title usaba cssVar --fs-title; corregido a --fs-display-title según Figma 4:788 y 4:1267.",
     "Interlineado: la copia offline registra '100% (normal)'; Figma devuelve metadatos 100 y código leading-[normal]. La consulta reiterada en 4:440, 4:788 y 4:1267 confirma que Figma exporta el valor como 100 y CSS como 'normal'. Para C0.5 se documenta la unidad CSS normal como referencia, sin fijar un cierre de pixel exacto: el navegador aplica 'normal' según la fuente y el tamaño. Verificado contra 4:440/4:788/4:1267.",
-    "Radio round: Figma documenta 999; la copia offline y design.md registran 50 %. Decisión de C0.5: usar 50 % para elementos circulares sin exponer el radio como token; el valor 999 se documenta solo si una consulta posterior confirma el uso fuera de círculos.",
+    "Radio round: se conserva 50 % para círculos. La consulta posterior de Figma 4:1560 confirmó el valor 999; CategoryChip usa radio de píldora, no porcentaje elíptico. Se añade radius/pill=999 y --app-radius-pill sin cambiar los círculos.",
     "Sheets 4:947 y 4:1365 faltan en screens[]; documentar como child de 4:869 y 4:1267 en una corrección posterior. En 4:1267 el sheet es 4:1365 con altura 487, padding lateral 24, handle 36x5 y radius 10; el color 50% de Figma coincide con el token round 50 % cerrado en C0.5."
   ]
 }

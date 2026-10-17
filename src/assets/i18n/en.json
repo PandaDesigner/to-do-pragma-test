@@ -6,6 +6,28 @@
     "darkMode": "Dark mode",
     "language": "Language",
     "spanish": "Español",
-    "english": "English"
+    "english": "English",
+    "debug": "Debug",
+    "debugHint": "Create 5,000 test tasks to measure performance (virtual scroll).",
+    "debugAction": "Generate 5,000 test tasks",
+    "debugDelete": "Delete all tasks"
+  },
+  "category": {
+    "section": "Section",
+    "sections": {
+      "general": "General",
+      "routine": "Routine",
+      "event": "Event"
+    }
+  },
+  "todo": {
+    "today": "TODAY ›",
+    "pending": "Uncompleted tasks",
+    "reschedule": "Reschedule to Today",
+    "all": "All",
+    "emptyTitle": "No tasks for today",
+    "emptyHint": "Tap + or write in the field below to add your first task.",
+    "emptyAction": "Add a task",
+    "quickAdd": "Add task"
   }
 }

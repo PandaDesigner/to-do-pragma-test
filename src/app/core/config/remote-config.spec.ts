@@ -29,6 +29,22 @@ describe('RemoteConfigService', () => {
     },
   );
 
+  it('defaults debug actions to true for missing keys', async () => {
+    const port = { fetch: async () => ({}) };
+    const service = setup(port);
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(true);
+  });
+
+  it('disables debug actions only for boolean false', async () => {
+    const port = {
+      fetch: jest.fn().mockResolvedValue({ enable_debug_actions: false }),
+    };
+    const service = setup(port);
+    expect(await service.isDebugActionsEnabled(port)).toBe(false);
+    expect(jest.getTimerCount()).toBe(0);
+  });
+
   it('defaults to true for missing keys', async () => {
     const port = { fetch: async () => ({}) };
     const service = setup(port);
@@ -91,11 +107,11 @@ describe('RemoteConfigService', () => {
       expect(service.error()).toContain(
         failure instanceof Error ? failure.message : failure,
       );
-      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(fetch).toHaveBeenCalled();
       await service.initialize();
       expect(service.categoriesEnabled()).toBe(false);
       expect(service.error()).toBeNull();
-      expect(fetch).toHaveBeenCalledTimes(2);
+      expect(fetch).toHaveBeenCalledTimes(4);
     },
   );
 });

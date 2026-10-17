@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { signalStore, withState, withMethods, patchState } from '@ngrx/signals';
 import { CATEGORY_REPOSITORY } from '../core/di/tokens';
-import type { Category } from '../domain/category';
+import { parseCategorySection, type Category } from '../domain/category';
 import { TaskStore } from './task';
 import {
   createOperationRunner,
@@ -16,6 +16,22 @@ const initialState: CategoryStoreState = {
   busy: false,
   error: null,
 };
+
+function mergeCategory(
+  categories: readonly Category[],
+  category: Category,
+): readonly Category[] {
+  const map = new Map(categories.map((existing) => [existing.id, existing]));
+  map.set(category.id, category);
+  return [...map.values()];
+}
+
+function removeCategoryById(
+  categories: readonly Category[],
+  id: string,
+): readonly Category[] {
+  return categories.filter((category) => category.id !== id);
+}
 
 export const CategoryStore = signalStore(
   { providedIn: 'root' },
@@ -33,19 +49,25 @@ export const CategoryStore = signalStore(
         retry: operations.retry,
         async refresh(): Promise<void> {
           await operations.run(async () => {
-            patchState(store, { categories: await repository.list() });
+            const categories = await repository.list();
+            for (const category of categories) {
+              if (category.section !== undefined) {
+                parseCategorySection(category.section);
+              }
+            }
+            patchState(store, { categories });
+            tasks.setCategories(categories);
           });
         },
         async upsert(category: Category): Promise<void> {
           await operations.run(async () => {
             await repository.save(category);
+            let nextCategories: readonly Category[] = [];
             patchState(store, ({ categories }) => {
-              const merged = new Map(
-                categories.map((existing) => [existing.id, existing]),
-              );
-              merged.set(category.id, category);
-              return { categories: [...merged.values()] };
+              nextCategories = mergeCategory(categories, category);
+              return { categories: nextCategories };
             });
+            tasks.setCategories(nextCategories);
           });
         },
         async remove(id: string): Promise<void> {
@@ -56,9 +78,12 @@ export const CategoryStore = signalStore(
             if (tasks.categoryId() === id) {
               tasks.setCategory(undefined);
             }
-            patchState(store, ({ categories }) => ({
-              categories: categories.filter((category) => category.id !== id),
-            }));
+            let nextCategories: readonly Category[] = [];
+            patchState(store, ({ categories }) => {
+              nextCategories = removeCategoryById(categories, id);
+              return { categories: nextCategories };
+            });
+            tasks.setCategories(nextCategories);
           });
         },
       };

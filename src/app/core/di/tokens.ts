@@ -34,3 +34,7 @@ export const TASK_REPOSITORY = new InjectionToken<TaskRepository>(
 export const CATEGORY_REPOSITORY = new InjectionToken<CategoryRepository>(
   'CATEGORY_REPOSITORY',
 );
+export const ROUTE_DATA = new InjectionToken<Record<string, unknown>>(
+  'ROUTE_DATA',
+  { factory: () => ({}) },
+);
