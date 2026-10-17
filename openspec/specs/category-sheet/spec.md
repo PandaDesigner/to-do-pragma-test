@@ -1,5 +1,8 @@
-## ADDED Requirements
+# category-sheet Specification
 
+## Purpose
+TBD - created by archiving change category-sheet. Update Purpose after archive.
+## Requirements
 ### Requirement: SHEET-01 Hoja modal reutilizable para crear y editar categoría
 
 `CategorySheetComponent` MUST ser un único `ion-modal` que se abra en modo `Create` desde el FAB de `CategoriesPage` y desde el botón "Crear categoría" del selector del NewTaskModal, y en modo `Edit` desde la fila de la categoría en `CategoriesPage`. La hoja MUST compartir la misma composición visual en ambos modos y solo cambiar el título ("New category" o "Edit category"), el texto del botón primario ("Save category" o "Save changes") y la presencia de la acción "Delete category". Figma: [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869) y [4:947](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-947).
@@ -172,16 +175,3 @@ El sheet MUST incluir el campo Sección como cuarta fila con tres chips General/
 - **THEN** el chip General aparece activo
 - **AND** al guardar, la sección se conserva o se queda en `undefined` para interpretarse como General, sin reescribir datos.
 
-## MODIFIED Requirements
-
-### Requirement: CAT-SEC-01 Sección explícita de categoría
-
-El selector de Sección MUST ofrecerse en el sheet `CategorySheetComponent` en lugar de en un `<select>` inline de `CategoriesPage`. El comportamiento de la sección (independencia del nombre, tipo y color; persistencia; compatibilidad con General; rechazo de valores desconocidos) MUST mantenerse idéntico. Figma: 4:869.
-
-#### Scenario: CAT-SEC-01.5 Selector de Sección dentro del sheet
-
-- **GIVEN** el sheet de categoría abierto en modo `Edit` con una categoría persistida con sección Routine
-- **WHEN** se renderiza el campo Section
-- **THEN** aparecen tres chips General/Routine/Event
-- **AND** el chip Routine está activo
-- **AND** al guardar con la sección cambiada a Event, la nueva sección se persiste y las tareas de la categoría se muestran en Event sin reescribir sus identificadores.

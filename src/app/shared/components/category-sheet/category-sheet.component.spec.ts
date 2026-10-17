@@ -7,7 +7,9 @@ import {
   TASK_REPOSITORY,
 } from '../../../core/di/tokens';
 import { CATEGORY_KIND, type Category } from '../../../domain/category';
-import type { Task } from '../../../domain/task';
+import { CATEGORY_SECTION } from '../../../domain/category/category-section';
+import { filterTasksBySection } from '../../../domain/category/filter-by-section';
+import { TASK_STATUS, type Task } from '../../../domain/task';
 import { TaskStore } from '../../../store/task';
 import { CategoryStore } from '../../../store/category';
 import { CategorySheetComponent } from './category-sheet.component';
@@ -125,6 +127,22 @@ describe('CategorySheetComponent', () => {
     expect(fixture.componentInstance.colorToken()).toBe('routine');
   });
 
+  it('[SHEET-03.2] moves the ring and check to the chosen swatch conforme a Figma 4:869', async () => {
+    const { store, fixture } = await setup();
+    store.openCategorySheet({ mode: 'edit', draft });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    fixture.componentInstance.chooseColor('primary');
+    fixture.detectChanges();
+    expect(fixture.componentInstance.colorToken()).toBe('primary');
+    expect(
+      fixture.componentInstance.colors
+        .filter((entry) => entry.key === fixture.componentInstance.colorToken())
+        .map((entry) => entry.key),
+    ).toEqual(['primary']);
+  });
+
   it('[SHEET-04.1] derives the preview label from the current name signal conforme a Figma 4:869', async () => {
     const { store, fixture } = await setup();
     store.openCategorySheet({ mode: 'edit', draft });
@@ -215,6 +233,66 @@ describe('CategorySheetComponent', () => {
     fixture.detectChanges();
     expect(fixture.componentInstance.sectionLabels).toHaveLength(3);
     expect(fixture.componentInstance.section()).toBe('routine');
+  });
+
+  it('[SHEET-07.2] treats a legacy category without section as General and does not rewrite tasks conforme a Figma 4:869', async () => {
+    const { store, fixture, repository } = await setup();
+    const legacy: Category = {
+      id: 'legacy',
+      name: 'Old',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: CATEGORY_KIND.LIST,
+    };
+    await repository.save(legacy);
+    await store.refresh();
+    store.openCategorySheet({ mode: 'edit', draft: legacy });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    expect(fixture.componentInstance.section()).toBe(CATEGORY_SECTION.GENERAL);
+    const save = jest.spyOn(fixture.componentInstance.save, 'emit');
+    fixture.componentInstance.onName('Old');
+    fixture.componentInstance.submit();
+    expect(save).toHaveBeenCalledWith(
+      expect.objectContaining({
+        id: 'legacy',
+        section: CATEGORY_SECTION.GENERAL,
+      }),
+    );
+    expect(await repository.list()).toEqual([legacy]);
+  });
+
+  it('[CAT-SEC-01.5] persists a section change to Event and keeps task ids conforme a Figma 4:869', async () => {
+    const { store, fixture } = await setup();
+    const task: Task = {
+      id: 't1',
+      title: 'Buy milk',
+      status: TASK_STATUS.PENDING,
+      categoryId: draft.id,
+      dueDate: '2026-01-02',
+      createdAt: 100,
+      updatedAt: 100,
+    };
+    await store.upsert(draft);
+    store.openCategorySheet({ mode: 'edit', draft });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    fixture.componentInstance.chooseSection(CATEGORY_SECTION.EVENT);
+    const save = jest.spyOn(fixture.componentInstance.save, 'emit');
+    fixture.componentInstance.submit();
+    const saved = save.mock.calls[0][0] as Category;
+    expect(saved.section).toBe(CATEGORY_SECTION.EVENT);
+    expect(saved.id).toBe(draft.id);
+    const visible = filterTasksBySection(
+      [task],
+      [{ ...draft, section: saved.section }],
+      CATEGORY_SECTION.EVENT,
+    );
+    expect(visible.map((item) => item.id)).toEqual(['t1']);
+    expect(task.id).toBe('t1');
+    expect(task.categoryId).toBe(draft.id);
   });
 
   it('dismisses the sheet and resets internal state', async () => {

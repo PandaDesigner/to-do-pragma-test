@@ -1,6 +1,6 @@
 # Todo Notebook
 
-App de tareas con Ionic 8 + Angular 22 standalone, Cordova (sin Capacitor), `@ngrx/signals` y Firebase Remote Config. Esta rama (`feature/app-base-2`) entrega la app funcional sobre el scaffolding de `init`: dominio, persistencia, stores, UI con virtual scroll y cobertura por capa.
+App de tareas con Ionic 8 + Angular 22 standalone, Cordova (sin Capacitor), `@ngrx/signals` y Firebase Remote Config. `develop` entrega la demo de la prueba: lista de tareas, categorías, feature flag, persistencia local y builds Android e iOS.
 
 ## Requisitos
 
@@ -44,6 +44,22 @@ npm run requirements           # cordova requirements --verbose (necesita SDK + 
 | Restaurar plataformas Cordova      | `npx cordova platform add android` y `ios`  |
 | Resetear `cordova.platforms`       | `npm run clean:platforms`                   |
 
+## Entrega de la prueba
+
+La fuente funcional es `docs/prueba-tecnica.pdf`.
+
+1. **Versionado.** Repositorio Git. La rama de entrega es `develop`.
+2. **Híbrido con Cordova.** Android e iOS. Cómo compilar está en [Build nativo](#build-nativo). En el navegador: `npm ci` y `npm start`.
+3. **Firebase Remote Config.** El flag `enable_categories` muestra u oculta Routine, Event y My. Si la red falla o tarda más de 3 s, el flag queda en `true`. El valor vivo se ve en el aviso `enable_categories` del shell.
+4. **Rendimiento.** Persistencia con `@Debounce(300)`, virtual scroll desde 200 tareas y OnPush. Detalle en [Optimizaciones](#optimizaciones).
+5. **APK e IPA.** Los comandos están abajo. Un APK firmado y un IPA firmado necesitan keystore y cuenta de Apple Developer en la máquina local. Esos secretos no están en el repo. Sin ellos el build de iOS puede validar el `.app` con `npm run build:ios` (`CODE_SIGNING_ALLOWED=NO`), y ese binario no se instala en un dispositivo.
+
+### Respuestas
+
+- **Desafíos.** Cordova reescribe `cordova.platforms` al añadir una plataforma (`npm run clean:platforms` lo devuelve a `android` e `ios`). El release de Android no puede versionar contraseñas: `scripts/build-android-release.cjs` las toma de `.env.local` y restaura `build.json`. Una cuenta Apple ID gratuita no emite provisioning profile, así que el IPA firmado queda bloqueado sin el Developer Program. TypeScript 6 exige `paths` relativos al `tsconfig`.
+- **Optimización.** Una ráfaga de guardados escribe una sola vez en SQLite. Listas grandes no montan todas las filas: `cdk-virtual-scroll-viewport` entra a partir de 200 tareas. El flag remoto no deja la UI colgada: corta a 3 s y no aplica una respuesta tardía.
+- **Calidad.** Jest con umbrales por capa (global 80 %, dominio 95 %, data y store 90 %), `tsc --noEmit`, ESLint y Prettier. El dominio no importa Angular ni Cordova. Cada escenario de OpenSpec lleva su id en el título del test. La matriz está en `openspec/traceability.md`.
+
 ## Arquitectura
 
 Capas: `pages → store → domain ← data`; `core/di` conecta implementaciones. Componentes `shared` solo input/output. SignalStore para el estado. Aliases TypeScript: `@core/*`, `@domain/*`, `@data/*`, `@store/*`, `@pages/*`, `@shared/*`.
@@ -66,8 +82,8 @@ Patrones clave:
 ## Cordova
 
 - Identificador de app: `io.github.pandadesigner.todonotebook`.
-- Plugin: `cordova-sqlite-storage`.
-- Plataformas: `cordova platform add android` e `ios` ejecutadas; `platforms/` está en `.gitignore`.
+- Plugin: `cordova-sqlite-storage` ^7.0.0. Ya está instalado: dependencia en `package.json`, copia en `plugins/cordova-sqlite-storage` y declaración en `config.xml`. No hace falta volver a correr `cordova plugin add` salvo que se borre `plugins/`.
+- Plataformas: `cordova platform add android` e `ios`; `platforms/` está en `.gitignore`.
 
 ## Build nativo
 
@@ -170,7 +186,7 @@ Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcwo
 - **LSP y tipado estricto**: `tsc --noEmit` se ejecuta en CI y en el script `typecheck`. Sin `any` salvo en adaptadores de infraestructura explícitamente comentados.
 - **ESLint con `angular-eslint`**: reglas para standalone components, signals y decoradores. El linter pasa en todo el repo.
 - **Prettier con configuración del proyecto**: `npm run format` aplica el formato; `format:check` lo verifica. CI falla si hay drift.
-- **Tests RED→GREEN documentados en `verify-report.md`**: cada tarea de `tasks.md` deja evidencia de qué falla antes, qué pasa después, y qué覆盖率 queda.
+- **Tests RED→GREEN documentados en `verify-report.md`**: cada tarea de `tasks.md` deja evidencia de qué falla antes, qué pasa después y qué cobertura queda.
 - **Dominio sin Angular ni Cordova**: `src/app/domain/` no importa `@angular/*` ni `cordova-*`. Verificado en revisión de código de cada tarea. Esto permite probar todo el dominio con Jest puro sin `TestBed`.
 - **Contrato `Repository<T>` verificado contra dos implementaciones**: la misma suite de 5 pruebas corre contra InMemory y contra Ionic Storage con almacenamiento simulado. Si añades un nuevo repositorio (por ejemplo, REST), basta con implementar `list/save/remove` y la suite te dice si cumple el contrato.
 
@@ -178,10 +194,8 @@ Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcwo
 
 El comando `npm audit` informa avisos heredados de `tar`, `@grpc/grpc-js`, `basic-ftp`, `braces`, `tmp` y `sprintf-js` (ver `openspec/changes/init/verify-report.md`). No afectan al bundle del navegador pero quedan pendientes de un cambio dedicado.
 
-## Estado del cambio OpenSpec
+## Estado OpenSpec
 
-Este repositorio implementa los cambios `init` y `app-base`. La trazabilidad vive en:
+No hay changes activos. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
 
-- `openspec/changes/init/{tasks.md,verify-report.md}`
-- `openspec/changes/app-base/{tasks.md,verify-report.md,design.md,proposal.md,specs/}`
-- `.github/pull_request_template.md`
+Las filas `registro` de F6 siguen abiertas a propósito: anotan nodos de Figma que todavía no tienen escenario. La evidencia visual del sheet de categorías y del pager quedó ausente porque esta máquina no tenía simulador firmado.

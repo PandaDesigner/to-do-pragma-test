@@ -11,6 +11,7 @@
     <allow-intent href="sms:*" />
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
+    <plugin name="cordova-sqlite-storage" spec="^7.0.0" />
     <!-- scheme y hostname fijan el origen de Ionic Storage. No cambiarlos después de guardar datos reales. -->
     <preference name="scheme" value="app" />
     <preference name="hostname" value="localhost" />
