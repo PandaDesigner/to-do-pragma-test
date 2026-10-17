@@ -269,4 +269,18 @@ describe('TaskStore', () => {
     expect(store.tasks()).toEqual([]);
     expect(await repository.list()).toEqual([]);
   });
+
+  it('TSK-13 loadAllTasks grows pageCount to drain the visible list and clears hasMoreTasks', async () => {
+    const { store } = setup();
+    const many = Array.from({ length: 30 }, (_, index) => ({
+      ...future,
+      id: `task-${index}`,
+    }));
+    await store.upsertMany(many);
+    expect(store.hasMoreTasks()).toBe(true);
+    expect(store.visibleTasks().length).toBe(8);
+    (store as unknown as { loadAllTasks(): void }).loadAllTasks();
+    expect(store.visibleTasks().length).toBe(30);
+    expect(store.hasMoreTasks()).toBe(false);
+  });
 });
