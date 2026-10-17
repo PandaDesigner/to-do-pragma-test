@@ -135,38 +135,43 @@
         @if (feedback.error()) {
         <p class="error-notice" role="alert">{{ feedback.error() }}</p>
         }
-        <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor">
+        <form [formGroup]="form" (ngSubmit)="saveTask()" class="editor editor-form">
           <h2 id="task-editor-title">
             {{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}
           </h2>
-          <label
-            >Título<input
+          <label class="form-field">
+            <span class="form-field__label">Título</span>
+            <input
               formControlName="title"
               autocomplete="off"
               maxlength="240"
-          /></label>
+            />
+          </label>
           @if (form.controls.title.touched && form.controls.title.invalid) {
           <p class="error" role="alert">Escribe un título.</p>
           }
-          <div class="form-row">
-            <label
-              >Fecha<input type="date" formControlName="dueDate" required
-            /></label>
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label">Fecha</span>
+              <input type="date" formControlName="dueDate" required />
+            </label>
             @if (flags.categoriesEnabled()) {
-            <label
-              >Categoría<select formControlName="categoryId">
+            <label class="form-field">
+              <span class="form-field__label">Categoría</span>
+              <select formControlName="categoryId">
                 <option value="">Sin categoría</option>
                 @for (category of availableCategories(); track category.id) {
                 <option [value]="category.id">{{ category.name }}</option>
                 }
               </select>
-              <button type="button" class="link" (click)="openCategorySheet()">
-                Crear categoría
-              </button>
-              </label
-            >
+            </label>
             }
           </div>
+          @if (flags.categoriesEnabled()) {
+          <button type="button" class="link form-link" (click)="openCategorySheet()">
+            Crear categoría
+          </button>
+          }
           <div class="form-actions">
             <button type="submit" class="primary" [disabled]="store.busy()">
               {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}
