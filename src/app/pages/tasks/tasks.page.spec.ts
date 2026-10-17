@@ -166,6 +166,11 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     expect(tasks.tasks()).toHaveLength(5005);
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
+    expect(tasks.visibleTasks()).toHaveLength(8);
+    while (tasks.visibleTasks().length < tasks.tasks().length) {
+      tasks.loadMore();
+    }
+    fixture.detectChanges();
     expect(tasks.visibleTasks()).toHaveLength(5005);
     expect(page.shouldVirtualize()).toBe(true);
     expect(

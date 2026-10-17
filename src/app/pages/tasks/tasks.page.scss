@@ -74,6 +74,20 @@ main.notebook-page {
   min-height: 50px;
 }
 
+.editor-form .form-helper {
+  margin: 0;
+  font-size: var(--app-font-size-tab);
+  color: var(--app-text-muted);
+}
+
+.editor-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236b6580' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--app-space-12) center;
+  padding-right: var(--app-space-32);
+}
+
 .task-editor .editor {
   margin: 0;
   padding: 0;

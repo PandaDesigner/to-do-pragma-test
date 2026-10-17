@@ -33,7 +33,11 @@ interface TaskStoreState extends OperationStatus {
   categoryId: string | null | undefined;
   categories: readonly Category[];
   section: CategorySection;
+  pageSize: number;
+  pageCount: number;
 }
+
+const TASK_PAGE_SIZE = 8;
 
 const initialState: TaskStoreState = {
   tasks: [],
@@ -41,6 +45,8 @@ const initialState: TaskStoreState = {
   categoryId: undefined,
   categories: [],
   section: CATEGORY_SECTION.GENERAL,
+  pageSize: TASK_PAGE_SIZE,
+  pageCount: 1,
   busy: false,
   error: null,
 };
@@ -49,8 +55,8 @@ export const TaskStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
   withComputed((store) => ({
-    visibleTasks: computed(() =>
-      sortTasksByDueDate(
+    visibleTasks: computed(() => {
+      const filtered = sortTasksByDueDate(
         filterTasksBySection(
           filterTasks(store.tasks(), {
             statuses: store.statuses(),
@@ -60,14 +66,21 @@ export const TaskStore = signalStore(
           store.section(),
         ),
         { kind: TASK_SORT.DUE_DATE },
-      ),
-    ),
+      );
+      const limit = store.pageSize() * store.pageCount();
+      return filtered.slice(0, limit);
+    }),
     availableCategories: computed(() =>
       store
         .categories()
         .filter((category) =>
           sectionContainsCategory(store.section(), category),
         ),
+    ),
+  })),
+  withComputed((store) => ({
+    hasMoreTasks: computed(
+      () => store.visibleTasks().length < store.tasks().length,
     ),
   })),
   withMethods(
@@ -105,6 +118,7 @@ export const TaskStore = signalStore(
             const byId = new Map(updated.map((task) => [task.id, task]));
             patchState(store, {
               tasks: loaded.map((task) => byId.get(task.id) ?? task),
+              pageCount: 1,
             });
           });
         },
@@ -152,7 +166,10 @@ export const TaskStore = signalStore(
           patchState(store, { statuses: [...statuses] });
         },
         setCategory(categoryId: string | null | undefined): void {
-          patchState(store, { categoryId });
+          patchState(store, { categoryId, pageCount: 1 });
+        },
+        loadMore(): void {
+          patchState(store, { pageCount: store.pageCount() + 1 });
         },
         setSection(section: CategorySection): void {
           patchState(store, { section, categoryId: undefined });
