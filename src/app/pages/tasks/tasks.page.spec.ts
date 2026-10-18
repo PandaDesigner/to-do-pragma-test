@@ -219,6 +219,12 @@ describe('TasksPage', () => {
         categoryId: 'e-cat',
         dueDate: '2026-02-03',
       }),
+      taskFixture({
+        id: 'event-b',
+        title: 'Event two',
+        categoryId: 'e-cat',
+        dueDate: '2026-02-04',
+      }),
     ]);
     tasks.setPageSize(1);
 
@@ -262,6 +268,59 @@ describe('TasksPage', () => {
     routine.detectChanges();
     expect(routinePage.currentPage()).toBe(1);
     expect(eventPage.currentPage()).toBe(2);
+    expect(titles(event.nativeElement)).toEqual(['Event two']);
+  });
+
+  it('[TSK-19.1] pages the filtered list and hides the pager when one page remains conforme a Figma 4:520', async () => {
+    const { tasks, categories, fixture, page } = await setup();
+    await categories.upsert({
+      id: 'focus',
+      name: 'Focus',
+      kind: 'list',
+      colorToken: 'my',
+      icon: 'list',
+    });
+    await tasks.upsertMany([
+      ...Array.from({ length: 45 }, (_, index) =>
+        taskFixture({
+          id: `general-${index}`,
+          title: `General ${index}`,
+          categoryId: null,
+          dueDate: '2026-02-01',
+        }),
+      ),
+      ...Array.from({ length: 5 }, (_, index) =>
+        taskFixture({
+          id: `focus-${index}`,
+          title: `Focus ${index}`,
+          categoryId: 'focus',
+          dueDate: '2026-02-02',
+        }),
+      ),
+    ]);
+    const event = TestBed.createComponent(EventTabHost);
+    event.detectChanges();
+    await event.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    event.detectChanges();
+
+    expect(event.nativeElement.querySelector('.pager')).toBeNull();
+    expect(page.totalPages()).toBe(3);
+    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
+
+    page.goToPage(3);
+    fixture.detectChanges();
+    const focus = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) => chip.textContent?.includes('Focus')) as HTMLButtonElement;
+    focus.click();
+    fixture.detectChanges();
+    expect(page.currentPage()).toBe(1);
+    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
+      5,
+    );
   });
 
   it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {

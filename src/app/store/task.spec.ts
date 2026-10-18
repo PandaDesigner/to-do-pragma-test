@@ -270,6 +270,23 @@ describe('TaskStore', () => {
     expect(await repository.list()).toEqual([]);
   });
 
+  it('[TSK-19.2] clamps setPage to the filtered list', async () => {
+    const { store } = setup();
+    await store.upsertMany(
+      Array.from({ length: 25 }, (_, index) =>
+        taskFixture({
+          id: `t-${index}`,
+          dueDate: '2026-02-01',
+          status: index < 5 ? TASK_STATUS.PENDING : TASK_STATUS.COMPLETED,
+        }),
+      ),
+    );
+    store.setStatuses([TASK_STATUS.PENDING]);
+    store.setPage(3);
+    expect(store.pageCount()).toBe(1);
+    expect(store.visibleTasks()).toHaveLength(5);
+  });
+
   it('TSK-17.3 setCategory/setStatuses/setSection reset pageCount to 1', async () => {
     const { store } = setup();
     const many = Array.from({ length: 60 }, (_, index) => ({

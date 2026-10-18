@@ -45,3 +45,20 @@ Si el catálogo está vacío, Todo MUST listar solo tareas con `categoryId === n
 - **GIVEN** un catálogo vacío, conforme a Figma 4:520
 - **WHEN** se filtra por Rutina o por Evento
 - **THEN** la lista está vacía
+
+### Requirement: TSK-19 El paginador usa la lista filtrada
+
+El paginador MUST contar solo las tareas visibles de esa pestaña. Una sección vacía, o un filtro que deja una sola página, MUST NOT mostrar el paginador. La lista MUST dejar espacio para el paginador y el FAB. Figma: 4:520.
+
+#### Scenario: [TSK-19.1] Evento no pagina las tareas de Todo
+
+- **GIVEN** 45 tareas sueltas y 5 de una categoría general, conforme a Figma 4:520
+- **WHEN** se abren Todo y Evento
+- **THEN** Todo muestra 3 páginas y Evento no muestra paginador
+- **AND** al filtrar Todo a 5 tareas, vuelve a la página 1 y oculta el paginador
+
+#### Scenario: [TSK-20.1] La lista no queda debajo del paginador
+
+- **GIVEN** los estilos de la lista, conforme a Figma 4:520
+- **WHEN** se compilan
+- **THEN** el relleno inferior es `calc(var(--app-pager-height) + var(--app-fab-size) + var(--app-space-16))`
