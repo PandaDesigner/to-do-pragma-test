@@ -243,3 +243,16 @@ que Cancelar y Aplicar, que comparten un cuarto.
 - [x] 29.4 Verificar en navegador que ninguna etiqueta se recorta: en inglés 179/97/90 y en español 151/118/97
 - [x] 29.5 Evidencia capturada en oscuro y español
 - [x] 29.6 Suite completa (565 tests), stylelint, `trace:check` y `openspec validate` en verde
+
+## 30. Tamaño de display del título del modal
+
+Medido: el título estaba a 16 px, del tamaño de una nota. Se probaron 48 px y quedó
+demasiado grande: el modal parecía un cartel y la pista y el calendario parecían
+texto secundario. El tamaño final es 32 px.
+
+- [x] 30.1 `test`: `[DATE-FILTER-02.17]` falla con el título al tamaño de nota
+- [x] 30.2 Declarar el escenario `DATE-FILTER-02.17` y el token `--app-font-size-modal-title`
+- [x] 30.3 `fix`: el token pasa a 32 px tras revisar 48 px en el navegador
+- [x] 30.4 Verificar en ambos idiomas que la etiqueta no se desborda: "Filtrar por fecha" ocupa 231 px de 382
+- [x] 30.5 Evidencia capturada en oscuro, en español y en inglés
+- [x] 30.6 Suite completa (566 tests), stylelint, `trace:check` y `openspec validate` en verde

@@ -175,7 +175,7 @@ El botón rápido de hoy MUST fijar el filtro de fecha al día actual, además d
 
 ### Requirement: DATE-FILTER-05 Jerarquía visual de la cabecera del modal
 
-La cabecera del modal de rango de fechas MUST presentar el título con una jerarquía visual claramente superior a la de la pista que lo acompaña, de modo que ambas piezas no se confundan entre sí al leerse en conjunto. El título MUST escalar por encima del tamaño de texto de la pista. La separación entre el título y el borde superior del cuerpo MUST ser mayor que el espaciado interno que separa al resto de piezas del modal, para que el título no parezca pegado al borde. El título MUST conservar el peso que le impone su familia tipográfica de display, que solo existe en un único peso. Figma: 4:440.
+La cabecera del modal de rango de fechas MUST presentar el título con una jerarquía visual claramente superior a la de la pista que lo acompaña, de modo que ambas piezas no se confundan entre sí al leerse en conjunto. El título MUST usar un tamaño de display de 32 px, muy por encima del tamaño de texto de la pista pero sin dominar el modal. La separación entre el título y el borde superior del cuerpo MUST ser mayor que el espaciado interno que separa al resto de piezas del modal, para que el título no parezca pegado al borde. El título MUST caber en una sola línea con la etiqueta más larga de los dos idiomas, «Filtrar por fecha», sin desbordar el ancho del cuerpo. El título MUST conservar el peso que le impone su familia tipográfica de display, que solo existe en un único peso. Figma: 4:440.
 
 #### Scenario: DATE-FILTER-02.15 El título del modal destaca sobre la pista
 
@@ -183,6 +183,13 @@ La cabecera del modal de rango de fechas MUST presentar el título con una jerar
 - **WHEN** se renderiza su cabecera
 - **THEN** el título declara un tamaño de texto mayor que el de la pista
 - **AND** su separación respecto del borde superior es mayor que el espaciado interno del cuerpo
+
+#### Scenario: DATE-FILTER-02.17 El título usa tamaño de display y no se desborda
+
+- **GIVEN** el modal de rango de fechas abierto en cualquiera de los dos idiomas
+- **WHEN** se renderiza la cabecera
+- **THEN** el título declara el token de tamaño de display de 32 px
+- **AND** la etiqueta más larga de los dos idiomas cabe en el ancho del cuerpo sin desbordarse
 
 ### Requirement: DATE-FILTER-06 Reparto del ancho de los botones de acción
 

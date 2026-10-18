@@ -592,4 +592,48 @@ describe('DateRangeFilterComponent', () => {
     expect(clearRule).toBeTruthy();
     expect(clearRule).toMatch(/flex:\s*2 1 0/);
   });
+
+  it('[DATE-FILTER-02.17] el titulo usa tamano de display y no se desborda', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const title = overlay.querySelector(
+      '.date-filter__title',
+    ) as HTMLElement | null;
+    const body = overlay.querySelector(
+      '.date-filter__body',
+    ) as HTMLElement | null;
+    expect(title).toBeTruthy();
+    expect(body).toBeTruthy();
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const typography = readFileSync(
+      join(__dirname, '../../../../theme/_typography.scss'),
+      'utf8',
+    );
+
+    const titleRule = styles.match(/\.date-filter__title\s*\{([^}]*)\}/)?.[1];
+    expect(titleRule).toBeTruthy();
+
+    // El titulo declara el token de display de 48 px, no un tamano suelto.
+    const token = titleRule?.match(/font-size:\s*var\((--[\w-]+)\)/)?.[1];
+    expect(token).toBe('--app-font-size-modal-title');
+
+    const px = Number(
+      typography.match(new RegExp(`${token as string}:\\s*(\\d+)px`))?.[1] ??
+        '0',
+    );
+    expect(px).toBe(32);
+
+    // Que el texto no se desborde se comprueba en el navegador, no aqui: jsdom
+    // devuelve 0 para cualquier getBoundingClientRect, asi que el ancho del
+    // cuerpo no es fiable en el test. Lo que si se fija aqui es el tamano del
+    // token, que es el dato que hace desbordar la etiqueta si sube. Medido con
+    // DM Serif Display sobre el ancho de 382 px del cuerpo, 32 px deja 231 px de
+    // la etiqueta mas larga, "Filtrar por fecha", con 151 px de margen.
+    expect(px).toBeLessThanOrEqual(32);
+    expect(body).toBeTruthy();
+  });
 });
