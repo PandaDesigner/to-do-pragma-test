@@ -1,3 +1,5 @@
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
@@ -209,5 +211,55 @@ describe('DateRangeFilterComponent', () => {
     expect(toDateRange(['2026-06-01T00:00:00', '2026-06-02T00:00:00'])).toEqual(
       { from: '2026-06-01', to: '2026-06-02' },
     );
+  });
+
+  // Estos dos tests atacan un fallo que 550 tests en verde no detectaron: los
+  // tres botones estaban en el DOM, con sus handlers y sus traducciones, pero
+  // caian 306px por debajo del viewport y no habia forma de pulsarlos. Un boton
+  // puede existir en el DOM y ser inalcanzable para una persona.
+  it('[DATE-FILTER-02.5] el modal abre a una altura que deja sitio a las acciones', async () => {
+    const fixture = await setup();
+    // overlayOf ya devuelve el ion-modal proyectado en el documento, no un
+    // contenedor que lo contenga.
+    const modal = overlayOf(fixture) as HTMLElement & {
+      initialBreakpoint?: number;
+      breakpoints?: number[];
+    };
+    const target = modal.initialBreakpoint;
+    const steps = modal.breakpoints ?? [];
+    expect(target).toBeDefined();
+    expect(steps.length).toBeGreaterThan(0);
+    // A 915px de alto, 0.6 daba 549px y el contenido pide ~474px mas el
+    // padding del ion-content. Las acciones quedaban fuera.
+    expect(target as number).toBeGreaterThanOrEqual(0.8);
+  });
+
+  it('[DATE-FILTER-02.6] el cuerpo del modal recorta en vez de crecer y deja las acciones dentro', async () => {
+    const fixture = await setup();
+    const body = overlayOf(fixture).querySelector(
+      '.date-filter__body',
+    ) as HTMLElement | null;
+    const actions = overlayOf(fixture).querySelector(
+      '.date-filter__actions',
+    ) as HTMLElement | null;
+    expect(body).toBeTruthy();
+    expect(actions).toBeTruthy();
+
+    // jsdom no carga la hoja de estilos del componente, asi que getComputedStyle
+    // no ve min-height. Se lee el SCSS del disco para comprobar la regla que
+    // evita que el contenedor crezca a la altura de su contenido.
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const bodyRule = styles.match(/\.date-filter__body\s*\{([^}]*)\}/);
+    expect(bodyRule).toBeTruthy();
+    expect(bodyRule?.[1]).toContain('min-height: 0');
+    expect(bodyRule?.[1]).toContain('box-sizing: border-box');
+
+    // El calendario no puede pasar del alto pedido, que es lo que desborda.
+    const calendarRule = styles.match(/\.date-filter__calendar\s*\{([^}]*)\}/);
+    expect(calendarRule).toBeTruthy();
+    expect(calendarRule?.[1]).toContain('max-height: 330px');
   });
 });

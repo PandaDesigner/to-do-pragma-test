@@ -54,6 +54,21 @@ El selector de rango MUST presentarse en un `ion-alert` que monta un calendario 
 - **WHEN** la selección no contiene una fecha de inicio
 - **THEN** se descarta el rango y el filtro de fecha queda sin valor
 
+#### Scenario: DATE-FILTER-02.5 El modal abre a una altura que deja sitio a las acciones
+
+- **GIVEN** el modal de rango de fechas abierto en una pantalla de móvil
+- **WHEN** se mide la posición de las acciones de limpiar, cancelar y aplicar
+- **THEN** el modal abre a un breakpoint que deja sitio al calendario y a las acciones dentro del viewport
+- **AND** las tres acciones quedan dentro del área visible sin necesidad de desplazarse
+
+#### Scenario: DATE-FILTER-02.6 El cuerpo del modal recorta en vez de crecer
+
+- **GIVEN** el modal de rango de fechas abierto
+- **WHEN** el alto disponible es menor que la suma del título, la pista, el calendario y las acciones
+- **THEN** el cuerpo del modal limita su altura en lugar de crecer hasta la altura de su contenido
+- **AND** el calendario no supera el alto solicitado
+- **AND** las acciones permanecen dentro del área visible
+
 ### Requirement: DATE-FILTER-03 Filtro por rango en el store
 
 El store de tareas MUST aceptar un rango de fechas con la misma forma que el resto de sus filtros: aplicar el estado y restablecer la paginación a la página 1. El filtro MUST ser inclusivo en ambos extremos, por el campo de vencimiento, y MUST combinarse por conjunción con el filtro de estados y el de categoría. Figma: 4:440.

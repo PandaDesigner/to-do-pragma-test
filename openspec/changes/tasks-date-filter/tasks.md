@@ -127,3 +127,18 @@
 - [x] 20.1 Push de la rama y PR hacia `develop`
 - [x] 20.2 Cuerpo del PR con sección `Reutilización` y enlace a los nodos de Figma
 - [x] 20.3 El PR queda abierto, sin archivar y sin fusionar
+
+## 21. Corrección de acciones inalcanzables
+
+Detectado en revisión visual sobre `localhost:8100`: los tres botones existían en el DOM, con sus
+handlers y sus traducciones, pero quedaban 306px por debajo del viewport sin scroll posible. El
+filtro no se podía aplicar ni limpiar. Ninguno de los 550 tests previos lo detectó porque
+comprobaban presencia en el DOM, no posición respecto al área visible.
+
+- [x] 21.1 `test`: `[DATE-FILTER-02.5]` falla con el breakpoint anterior, exige `>= 0.8`
+- [x] 21.2 `test`: `[DATE-FILTER-02.6]` falla con el SCSS anterior, exige `min-height: 0` en el cuerpo y `max-height` en el calendario
+- [x] 21.3 Declarar ambos escenarios en el spec delta de `tasks-date-filter`
+- [x] 21.4 `fix`: subir el breakpoint del modal a `0.85`
+- [x] 21.5 `fix`: añadir `min-height: 0` al cuerpo y `max-height: 330px` al calendario
+- [x] 21.6 Verificar en navegador: los tres botones dentro del viewport (`top: 570`, `bottom: 606`, viewport 915)
+- [x] 21.7 Suite completa, lint, formato, tipos, `trace:check` y `openspec validate --all --strict` en verde
