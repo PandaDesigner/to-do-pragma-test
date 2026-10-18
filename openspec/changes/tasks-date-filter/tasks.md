@@ -112,7 +112,7 @@
 
 ## 18. Evidencia visual
 
-- [ ] 18.1 Capturas de `tasks-filter` en light y dark, en español e inglés, a 375x812
+- [x] 18.1 Capturas de `tasks-filter` en light y dark, en español e inglés, a 375x812. Resuelta tras vencer el bloqueo de la 18.2: `ng serve` ya arranca fuera del sandbox. Cuatro capturas en `evidence/tasks-filter-{light,dark}-{es,en}.png`
 - [x] 18.2 **BLOCKED**: se intentó capturar y no fue posible. `ng serve` muere con `EMFILE` de chokidar en
       el sandbox; servido el build estatico de `www/` con un servidor node propio, responde 200 en
       `127.0.0.1:4292`, pero el navegador del entorno no alcanza el loopback (devuelve `chrome-error`) y tampoco

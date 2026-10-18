@@ -18,6 +18,6 @@
 ## 3. Entrega
 
 - [x] 3.1 PR a `develop` con sección Reutilización. https://github.com/PandaDesigner/to-do-pragma-test/pull/54
-- [ ] 3.2 Merge con merge commit y borrado de rama
-- [ ] 3.3 `chore/archive-fix-chevron-icon-binding`, `openspec archive`, PR propio, checks y merge
-- [ ] 3.4 Línea en `docs/progress-log.md`
+- [x] 3.2 Merge con merge commit y borrado de rama. Hecho: PR #54 fusionado en `5fca61c`; la rama se borra al archivar este change
+- [x] 3.3 `chore/archive-fix-chevron-icon-binding`, `openspec archive`, PR propio, checks y merge. Archivado con `openspec archive fix-chevron-icon-binding` en este mismo PR
+- [x] 3.4 Línea en `docs/progress-log.md`
