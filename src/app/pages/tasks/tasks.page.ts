@@ -121,8 +121,8 @@ export class TasksPage implements OnInit {
       .categories()
       .filter((category) => sectionContainsCategory(this.section, category)),
   );
-  readonly visibleTasks = computed(() => {
-    const filtered = sortTasksByDueDate(
+  readonly filteredTasks = computed(() =>
+    sortTasksByDueDate(
       filterTasksBySection(
         filterTasks(this.store.tasks(), {
           statuses: this.store.statuses(),
@@ -132,12 +132,18 @@ export class TasksPage implements OnInit {
         this.section,
       ),
       { kind: TASK_SORT.DUE_DATE },
-    );
+    ),
+  );
+  readonly totalPages = computed(() =>
+    pageCount(this.filteredTasks().length, this.store.pageSize()),
+  );
+  readonly currentPage = computed(() =>
+    Math.min(Math.max(1, this.tabPage()), this.totalPages()),
+  );
+  readonly visibleTasks = computed(() => {
     const size = this.store.pageSize();
-    const total = Math.max(1, pageCount(filtered.length, size));
-    const current = Math.min(Math.max(1, this.tabPage()), total);
-    const start = (current - 1) * size;
-    return filtered.slice(start, start + size);
+    const start = (this.currentPage() - 1) * size;
+    return this.filteredTasks().slice(start, start + size);
   });
   readonly sectionLabel = computed(() => 'section.' + this.section);
   readonly emptyStateTitle = computed(
@@ -200,10 +206,6 @@ export class TasksPage implements OnInit {
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
-  readonly totalPages = computed(() =>
-    pageCount(this.store.tasks().length, this.store.pageSize()),
-  );
-  readonly currentPage = computed(() => this.tabPage());
   readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
     buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
@@ -365,8 +367,9 @@ export class TasksPage implements OnInit {
   }
 
   goToPage(page: number): void {
-    this.tabPage.set(page);
-    this.store.setPage(page);
+    const target = Math.min(Math.max(1, page), this.totalPages());
+    this.tabPage.set(target);
+    this.store.setPage(target);
     queueMicrotask(() => this.scrollListToTop());
   }
 

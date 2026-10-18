@@ -116,6 +116,9 @@ main.notebook-page {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
+  padding-bottom: calc(
+    var(--app-pager-height) + var(--app-fab-size) + var(--app-space-16)
+  );
 }
 
 .pager {

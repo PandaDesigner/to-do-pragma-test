@@ -4,7 +4,12 @@ import { InMemoryRepository } from '../data/repositories/in-memory-repository';
 import { TASK_STATUS, type Task, type TaskStatus } from '../domain/task';
 import { TASK_EVENT, InvalidTransitionError } from '../domain/task-state';
 import { taskFixture } from '../testing/task.fixture';
+import type { Category } from '../domain/category';
 import { TaskStore } from './task';
+
+function catalog(id: string): Category {
+  return { id, name: id, kind: 'list', colorToken: 'my', icon: 'list' };
+}
 
 describe('TaskStore', () => {
   function setup() {
@@ -130,6 +135,7 @@ describe('TaskStore', () => {
     });
     await store.upsert(work);
     await store.upsert(home);
+    store.setCategories([catalog('work'), catalog('home')]);
     expect(store.tasks()).toEqual([work, home]);
     expect(await repository.list()).toEqual([work, home]);
 
@@ -165,6 +171,7 @@ describe('TaskStore', () => {
     const { store } = setup();
     const work = { ...future, id: 'work', categoryId: 'work' };
     await store.upsertMany([future, work]);
+    store.setCategories([catalog('work')]);
     store.setCategory('work');
     expect(store.visibleTasks()).toEqual([work]);
     store.setCategory(null);

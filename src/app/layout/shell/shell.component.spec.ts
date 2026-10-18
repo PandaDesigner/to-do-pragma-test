@@ -105,6 +105,9 @@ describe('Shell and categories guard', () => {
       taskFixture({ id: 'assigned', categoryId: 'c', dueDate: '2026-01-03' }),
       taskFixture({ id: 'unassigned', dueDate: '2026-01-03' }),
     ]);
+    tasks.setCategories([
+      { id: 'c', name: 'C', kind: 'list', colorToken: 'my', icon: 'list' },
+    ]);
     tasks.setCategory('c');
     fixture.detectChanges();
     expect(
