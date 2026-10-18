@@ -49,15 +49,15 @@
     <nav class="chips" [attr.aria-label]="'todo.filterLabel' | translate">
       <app-chip
         [label]="'todo.all' | translate"
-        [selected]="store.categoryId() === undefined"
-        (choose)="store.setCategory(undefined)"
+        [selected]="selectedCategoryId() === undefined"
+        (choose)="chooseCategory(undefined)"
       />
       @for (category of availableCategories(); track category.id) {
       <app-chip
         [label]="category.name"
         [colorToken]="category.colorToken"
-        [selected]="store.categoryId() === category.id"
-        (choose)="store.setCategory(category.id)"
+        [selected]="selectedCategoryId() === category.id"
+        (choose)="chooseCategory(category.id)"
       />
       }
     </nav>
@@ -76,7 +76,7 @@
           earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
         "
     >
-      @for (task of store.visibleTasks(); track task.id) {
+      @for (task of visibleTasks(); track task.id) {
       <ng-container
         [ngTemplateOutlet]="taskRow"
         [ngTemplateOutletContext]="{ $implicit: task }"

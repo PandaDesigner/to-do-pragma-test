@@ -20,6 +20,13 @@ import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../domain/task-state';
+import {
+  filterTasks,
+  sortTasksByDueDate,
+  TASK_SORT,
+} from '../../domain/task-strategy';
+import { filterTasksBySection } from '../../domain/category/filter-by-section';
+import { sectionContainsCategory } from '../../store/category/section';
 import { CATEGORY_KIND } from '../../domain/category';
 import {
   CATEGORY_SECTION,
@@ -107,21 +114,45 @@ export class TasksPage implements OnInit {
     categoryId: new FormControl('', { nonNullable: true }),
   });
   readonly section = this.readSection();
-  readonly availableCategories = this.store.availableCategories;
-  readonly sectionLabel = computed(() => 'section.' + this.store.section());
+  readonly selectedCategoryId = signal<string | null | undefined>(undefined);
+  readonly tabPage = signal(1);
+  readonly availableCategories = computed(() =>
+    this.store
+      .categories()
+      .filter((category) => sectionContainsCategory(this.section, category)),
+  );
+  readonly visibleTasks = computed(() => {
+    const filtered = sortTasksByDueDate(
+      filterTasksBySection(
+        filterTasks(this.store.tasks(), {
+          statuses: this.store.statuses(),
+          categoryId: this.selectedCategoryId(),
+        }),
+        this.store.categories(),
+        this.section,
+      ),
+      { kind: TASK_SORT.DUE_DATE },
+    );
+    const size = this.store.pageSize();
+    const total = Math.max(1, pageCount(filtered.length, size));
+    const current = Math.min(Math.max(1, this.tabPage()), total);
+    const start = (current - 1) * size;
+    return filtered.slice(start, start + size);
+  });
+  readonly sectionLabel = computed(() => 'section.' + this.section);
   readonly emptyStateTitle = computed(
-    () => 'todo.sections.' + this.store.section() + '.emptyTitle',
+    () => 'todo.sections.' + this.section + '.emptyTitle',
   );
   readonly emptyStateHint = computed(
-    () => 'todo.sections.' + this.store.section() + '.emptyHint',
+    () => 'todo.sections.' + this.section + '.emptyHint',
   );
   readonly emptyStateAction = computed(
-    () => 'todo.sections.' + this.store.section() + '.emptyAction',
+    () => 'todo.sections.' + this.section + '.emptyAction',
   );
   readonly canCreate = computed(
     () =>
       (this.flags.categoriesEnabled() &&
-        this.store.section() === CATEGORY_SECTION.GENERAL) ||
+        this.section === CATEGORY_SECTION.GENERAL) ||
       !this.flags.categoriesEnabled() ||
       this.availableCategories().length > 0,
   );
@@ -153,7 +184,7 @@ export class TasksPage implements OnInit {
       ),
   );
   readonly notesCategory = computed(() => {
-    const id = this.store.categoryId();
+    const id = this.selectedCategoryId();
     if (!id) {
       return null;
     }
@@ -172,7 +203,7 @@ export class TasksPage implements OnInit {
   readonly totalPages = computed(() =>
     pageCount(this.store.tasks().length, this.store.pageSize()),
   );
-  readonly currentPage = computed(() => this.store.pageCount());
+  readonly currentPage = computed(() => this.tabPage());
   readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
     buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
@@ -191,10 +222,16 @@ export class TasksPage implements OnInit {
   }
 
   focusToday(): void {
-    this.store.setCategory(undefined);
+    this.chooseCategory(undefined);
     this.store.setStatuses([...VIEW_STATUSES]);
     this.panelOpen.set(true);
     this.scrollListToTop();
+  }
+
+  chooseCategory(categoryId: string | null | undefined): void {
+    this.selectedCategoryId.set(categoryId);
+    this.tabPage.set(1);
+    this.store.setCategory(categoryId);
   }
 
   readonly durationPreset = computed(
@@ -328,6 +365,7 @@ export class TasksPage implements OnInit {
   }
 
   goToPage(page: number): void {
+    this.tabPage.set(page);
     this.store.setPage(page);
     queueMicrotask(() => this.scrollListToTop());
   }
@@ -356,21 +394,15 @@ export class TasksPage implements OnInit {
     if (task.dueDate >= this.clock.today()) {
       return false;
     }
-    if (
-      !taskBelongsToSection(
-        task,
-        this.store.section(),
-        this.availableCategories(),
-      )
-    ) {
+    if (!taskBelongsToSection(task, this.section, this.availableCategories())) {
       return false;
     }
-    if (this.store.categoryId() === null && task.categoryId !== null) {
+    if (this.selectedCategoryId() === null && task.categoryId !== null) {
       return false;
     }
     if (
-      typeof this.store.categoryId() === 'string' &&
-      task.categoryId !== this.store.categoryId()
+      typeof this.selectedCategoryId() === 'string' &&
+      task.categoryId !== this.selectedCategoryId()
     ) {
       return false;
     }
