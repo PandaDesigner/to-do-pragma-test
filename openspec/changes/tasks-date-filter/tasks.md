@@ -231,3 +231,15 @@ Medido: los tres botones ocupaban 127 px cada uno, un tercio exacto del calendar
 - [x] 28.4 `test`: `[DATE-FILTER-02.14]` pasa a comprobar la alineación con el ancho del calendario, que es lo que sobrevive del reparto por tercios
 - [x] 28.5 Verificar en navegador: los tres en 100 px, huecos de 8 px, sin texto recortado (CANCEL necesita 57 px)
 - [x] 28.6 Suite completa (565 tests), lint, stylelint, `trace:check` y `openspec validate` en verde
+
+## 29. Quitar ocupa el doble que los otros dos
+
+Medido: los tres en 100 px iguales. Pedido: que Quitar se lleve el doble de ancho
+que Cancelar y Aplicar, que comparten un cuarto.
+
+- [x] 29.1 `test`: `[DATE-FILTER-02.16]` falla sin `flex: 2 1 0` en el botón de Quitar
+- [x] 29.2 Reescribir el requisito `DATE-FILTER-06` y el escenario `DATE-FILTER-02.16` para el reparto 2:1:1
+- [x] 29.3 `fix`: `flex: 1 1 0` en la fila y `flex: 2 1 0` en Quitar por `data-testid`
+- [x] 29.4 Verificar en navegador que ninguna etiqueta se recorta: en inglés 179/97/90 y en español 151/118/97
+- [x] 29.5 Evidencia capturada en oscuro y español
+- [x] 29.6 Suite completa (565 tests), stylelint, `trace:check` y `openspec validate` en verde

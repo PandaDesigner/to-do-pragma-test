@@ -184,14 +184,14 @@ La cabecera del modal de rango de fechas MUST presentar el título con una jerar
 - **THEN** el título declara un tamaño de texto mayor que el de la pista
 - **AND** su separación respecto del borde superior es mayor que el espaciado interno del cuerpo
 
-### Requirement: DATE-FILTER-06 Tamaño de los botones de acción
+### Requirement: DATE-FILTER-06 Reparto del ancho de los botones de acción
 
-Los botones de acción del modal MUST ocupar una fracción del ancho del calendario, sin estirarse hasta cubrirlo por completo, de modo que la fila no se lea como una banda continua pegada al borde. Los tres botones MUST mantener el mismo ancho entre sí y MUST separarse por un hueco. La fila MUST alinearse al inicio del ancho del calendario. Figma: 4:440.
+Los botones de acción del modal MUST repartirse el ancho del calendario en proporción de dos partes para Quitar y una parte para cada uno de los otros dos, de modo que la acción de limpiar tenga más presencia sin desplazar a las demás. El reparto MUST ser idéntico en ambos idiomas, y ninguno MUST recortar su etiqueta. Figma: 4:440.
 
-#### Scenario: DATE-FILTER-02.16 Los botones son más pequeños, iguales y separados
+#### Scenario: DATE-FILTER-02.16 Quitar ocupa el doble que Cancelar y Aplicar
 
 - **GIVEN** el modal de rango de fechas abierto
 - **WHEN** se renderiza la fila de acciones
-- **THEN** cada botón declara el mismo ancho fijo y menor que un tercio del calendario
-- **AND** la fila deja un hueco entre los botones
-- **AND** la fila se alinea al inicio del ancho del calendario
+- **THEN** Quitar declara el doble de factor de crecimiento que los otros dos
+- **AND** los otros dos reparten el resto del ancho a partes iguales
+- **AND** ninguna etiqueta se recorta en español ni en inglés

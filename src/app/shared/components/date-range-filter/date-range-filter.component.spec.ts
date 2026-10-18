@@ -550,7 +550,7 @@ describe('DateRangeFilterComponent', () => {
     );
   });
 
-  it('[DATE-FILTER-02.16] los botones son mas pequenos, iguales y separados', async () => {
+  it('[DATE-FILTER-02.16] los botones reparten el ancho en Clear doble, Cancel y Apply simple', async () => {
     const fixture = await setup();
     const overlay = overlayOf(fixture);
     const actions = overlay.querySelector(
@@ -565,38 +565,31 @@ describe('DateRangeFilterComponent', () => {
       join(__dirname, 'date-range-filter.component.scss'),
       'utf8',
     );
-    const buttonRule = styles.match(
+    const rowRule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/)?.[1];
+    expect(rowRule).toBeTruthy();
+
+    // La fila reparte el ancho con flex, no con anchos fijos: Clear toma el
+    // doble que Cancel y Apply, que comparten un cuarto cada uno.
+    const rowDeclarations = (rowRule as string)
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//'))
+      .join('\n');
+    expect(rowDeclarations).not.toMatch(/justify-content:\s*flex-start/);
+
+    // Cancel y Apply toman un cuarto cada uno: basis 0 reparte por igual y grow 1
+    // les da su parte. Clear declara grow 2 para llevarse dos partes.
+    const baseRule = styles.match(
       /\.date-filter__actions\s+ion-button\s*\{([^}]*)\}/,
     )?.[1];
-    expect(buttonRule).toBeTruthy();
+    expect(baseRule).toBeTruthy();
+    expect(baseRule).toMatch(/flex:\s*1 1 0/);
 
-    // Ancho fijo y menor que un tercio del calendario (382 / 3 = 127.33): los
-    // botones dejan de estirarse hasta cubrir la fila entera, que se leia como
-    // una banda continua pegada al borde. 100 px deja aire de sobra para la
-    // etiqueta mas larga, CANCEL, que ocupa 57 px con el padding de Ionic.
-    const width = Number(buttonRule?.match(/width:\s*(\d+)px/)?.[1] ?? '0');
-    expect(width).toBeGreaterThan(0);
-    expect(width).toBeLessThan(127);
-
-    // El mismo ancho para los tres: dejan de crecer segun su texto, que es lo
-    // que los hacia medir 136, 97 y 80 px. Se mira la declaracion, no el
-    // comentario que explica por que se quito el reparto por flex.
-    const declarations = (buttonRule as string)
-      .split('\n')
-      .filter((line) => !line.trim().startsWith('//'))
-      .join('\n');
-    expect(declarations).not.toContain('flex: 1 1 0');
-    expect(declarations).toContain('flex: 0 0 auto');
-
-    // Y la fila los separa con un hueco en vez de pegarlos, alineados al inicio.
-    const rule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/)?.[1];
-    expect(rule).toBeTruthy();
-    const rowDeclarations = (rule as string)
-      .split('\n')
-      .filter((line) => !line.trim().startsWith('//'))
-      .join('\n');
-    expect(rowDeclarations).not.toContain('gap: 0');
-    expect(rowDeclarations).toMatch(/gap:\s*var\(--app-space-\d+\)/);
-    expect(rowDeclarations).toMatch(/justify-content:\s*flex-start/);
+    // El selector acepta comillas simples o dobles: prettier las reescribe a
+    // simples y un test atado a las dobles falla sin que cambie el estilo.
+    const clearRule = styles.match(
+      /\.date-filter__actions\s+ion-button\[data-testid=["']date-filter-clear["']\]\s*\{([^}]*)\}/,
+    )?.[1];
+    expect(clearRule).toBeTruthy();
+    expect(clearRule).toMatch(/flex:\s*2 1 0/);
   });
 });
