@@ -1,44 +1,45 @@
 ## ADDED Requirements
 
-### Requirement: Swipe reveals delete
+### Requirement: FIN-01 El borrado de una fila de nota usa la opción final de Ionic
 
-A task row MUST reveal a trailing delete control after a horizontal drag of at least 80px to the left. The gesture MUST NOT emit removal. Activating the revealed control MUST emit the same remove event as the trash button. Figma: 4:440.
+La fila MUST usar `ion-item-sliding` con `ion-item-options` en `side="end"`. Abrir la opción MUST NOT emitir el borrado. Pulsarla MUST emitir `remove` con el id de la tarea. Una fila con `variant` `note` MUST NOT renderizar `input` de checkbox y MUST renderizar el bullet de nota. Figma: 4:440 y 4:1404.
 
-#### Scenario: [SWIPE-02.1] An 80px swipe opens delete on a note row
+#### Scenario: [FIN-01.1] La opción final borra la nota solo al pulsarla
 
-- **GIVEN** a row rendered with `variant` `note`, conforme a Figma 4:440
-- **WHEN** the pointer moves 100px to the left and is released
-- **THEN** the checkbox is absent, the note bullet is present, and the trailing delete control is open
-- **AND** clicking that control emits `remove` with the task id
+- **GIVEN** una fila con `variant` `note`, conforme a Figma 4:440
+- **WHEN** se renderiza
+- **THEN** existe `ion-item-sliding` con `ion-item-options` en `side="end"`
+- **AND** no hay `input` y sí hay `.note-bullet`
+- **AND** no se emite `remove` hasta pulsar `ion-item-option`
 
-### Requirement: Shopping categories render as notes
+### Requirement: FIN-02 Una categoría de tipo shopping se muestra como notas
 
-When the selected category kind is `shopping`, the tasks page MUST show the notes overline and the category name, MUST hide the pending-day panel, and MUST render rows as notes. Filtering MUST still limit the list to that category. Figma: 4:440.
+La página de tareas MUST decidir la variante de la lista a partir del `kind` de la categoría seleccionada. Con `kind` `shopping` MUST mostrar el overline de notas, el nombre de la categoría y filas `note`, MUST ocultar el panel de pendientes y MUST NOT renderizar checkbox ni meta de fecha. El filtro MUST seguir limitando la lista a esa categoría y la lista MUST seguir paginada. Figma: 4:617 y 4:440.
 
-#### Scenario: [TODO-04.2] A shopping chip switches the list to notes
+#### Scenario: [TODO-04.2] Un chip de shopping cambia la lista a notas
 
-- **GIVEN** a shopping category with an earlier open task, conforme a Figma 4:440
-- **WHEN** its chip is selected
-- **THEN** the page shows "My notes" in English
-- **AND** the pending panel is absent
-- **AND** the row has a note bullet and no checkbox
+- **GIVEN** una categoría de tipo `shopping` con una tarea anterior a hoy, conforme a Figma 4:440
+- **WHEN** se elige su chip
+- **THEN** la página muestra "My notes" en inglés
+- **AND** el panel de pendientes está ausente
+- **AND** la fila tiene bullet de nota y no tiene checkbox
 
-### Requirement: TODAY resets the day view
+### Requirement: FIN-03 El badge de hoy restablece la vista del día
 
-The today badge MUST be a button. Activating it MUST clear the category filter, restore the default view statuses, reopen the pending panel, and scroll the list to the top. Figma: 4:440.
+El badge de hoy MUST ser un botón. Al activarlo MUST limpiar el filtro de categoría, restaurar los estados de vista por defecto, reabrir el panel de pendientes y llevar la lista al inicio. MUST NOT navegar a otra ruta. La lista MUST conservar su paginación. Figma: 4:440.
 
-#### Scenario: [TODO-01.3] TODAY leaves notes mode and reopens the pending panel
+#### Scenario: [TODO-01.3] HOY sale del modo notas y reabre el panel
 
-- **GIVEN** a shopping category is selected and the pending panel is closed, conforme a Figma 4:440
-- **WHEN** the today badge is activated
-- **THEN** the category filter is cleared
-- **AND** the pending panel is visible
+- **GIVEN** una categoría de tipo `shopping` elegida y el panel de pendientes cerrado, conforme a Figma 4:440
+- **WHEN** se activa el badge de hoy
+- **THEN** el filtro de categoría queda vacío
+- **AND** el panel de pendientes está visible
 
-### Requirement: Remaining chrome uses the locale files
+### Requirement: FIN-04 El cromo restante lee las claves de idioma
 
-The rail, shell retry, categories page, category sheet, task row, and task editor MUST read their labels from `src/assets/i18n/en.json` and `src/assets/i18n/es.json`. Figma: 4:440.
+El rail, el reintento del shell, la página de categorías, el sheet de categoría, la fila de tarea y el editor de tarea MUST tomar sus etiquetas de `src/assets/i18n/es.json` y `src/assets/i18n/en.json`. Las claves MUST ser las mismas en ambos idiomas. Figma: 4:440.
 
-#### Scenario: [TODO-01.1] The Spanish rail uses the locale labels
+#### Scenario: [I18N-01.3] El rail en español usa las claves del idioma
 
-- **GIVEN** the shell is rendered in Spanish, conforme a Figma 4:440
-- **THEN** the rail labels are Todo, Rutina, Evento, Categoría, and Más
+- **GIVEN** el shell renderizado en español, conforme a Figma 4:440
+- **THEN** las etiquetas del rail son Todo, Rutina, Evento, Categoría y Más
