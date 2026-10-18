@@ -1,10 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import en from '../../../assets/i18n/en.json';
 import { taskFixture } from '../../testing/task.fixture';
 import { add } from 'ionicons/icons';
 import { CategoriesPage } from './categories.page';
 import { configurePageTesting } from '../../testing/page.fixture';
+import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 
 describe('CategoriesPage', () => {
   async function setup() {
@@ -137,11 +139,15 @@ describe('CategoriesPage', () => {
 
   it('[CAT-UI-01.1] renders the empty state with illustration and action label', async () => {
     const { fixture } = await setup();
+    const host = fixture.debugElement.query(
+      By.directive(EmptyStateComponent),
+    );
+    expect(host).not.toBeNull();
+    expect(host.componentInstance.illustrated()).toBe(true);
+    expect(host.componentInstance.actionLabel()).toBe('Create a category');
     const empty = fixture.nativeElement.querySelector(
       'app-empty-state',
-    ) as HTMLElement & { illustrated?: unknown };
-    expect(empty).not.toBeNull();
-    expect(empty.illustrated).toBe(true);
+    ) as HTMLElement;
     const illustration = empty.querySelector('.illustration ion-icon');
     expect(illustration).not.toBeNull();
     const button = empty.querySelector('button');
