@@ -79,20 +79,8 @@ jobs:
           name: android-debug-apk
           path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
-      - name: Upload debug APK to Appetize
-        if: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && env.APPETIZE_API_TOKEN != '' }}
-        env:
-          APPETIZE_API_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
-        uses: appetizeio/github-action-appetize@v1.1.0
-        with:
-          apiToken: ${{ env.APPETIZE_API_TOKEN }}
-          publicKey: ${{ secrets.APPETIZE_PUBLIC_KEY }}
-          appFile: platforms/android/app/build/outputs/apk/debug/app-debug.apk
-          platform: android
-          note: ${{ github.ref_name }} @ ${{ github.sha }}
-
   ios:
-    name: Cordova iOS (no signing)
+    name: Cordova iOS and Appetize simulator build
     runs-on: macos-latest
     env:
       CODE_SIGNING_ALLOWED: 'NO'
@@ -121,6 +109,20 @@ jobs:
         run: npx --no-install cordova platform add ios
       - name: Build unsigned iOS archive
         run: npm run build:ios
+      - name: Build iOS Simulator app for Appetize
+        run: |
+          xcodebuild \
+            -workspace platforms/ios/App.xcworkspace \
+            -scheme App \
+            -sdk iphonesimulator \
+            -configuration Debug \
+            -derivedDataPath platforms/ios/build/appetize \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO
+          test -d "platforms/ios/build/Debug-iphonesimulator/Todo Notebook.app"
+          ditto -c -k --sequesterRsrc --keepParent \
+            "platforms/ios/build/Debug-iphonesimulator/Todo Notebook.app" \
+            platforms/ios/build/Todo-Notebook-simulator.zip
       - name: Upload iOS build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -128,4 +130,17 @@ jobs:
           path: |
             platforms/ios/build/Release-iphoneos/*.app
             platforms/ios/build/Release-iphoneos/*.xcarchive
+            platforms/ios/build/Todo-Notebook-simulator.zip
           if-no-files-found: error
+      - name: Upload iOS Simulator app to Appetize
+        if: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && env.APPETIZE_API_TOKEN != '' }}
+        env:
+          APPETIZE_API_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
+        uses: appetizeio/github-action-appetize@v1.1.0
+        with:
+          apiToken: ${{ env.APPETIZE_API_TOKEN }}
+          publicKey: ${{ secrets.APPETIZE_IOS_PUBLIC_KEY }}
+          appFile: platforms/ios/build/Todo-Notebook-simulator.zip
+          platform: ios
+          fileType: zip
+          note: ${{ github.ref_name }} @ ${{ github.sha }}
