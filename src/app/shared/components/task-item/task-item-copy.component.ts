@@ -61,6 +61,9 @@ export function taskTitleTail(title: string): string {
   styleUrl: './task-item.component.scss',
   imports: [IonIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.completed]': 'item.task().status === "completed"',
+  },
 })
 export class TaskItemCopyComponent {
   readonly item = inject(TASK_ITEM);

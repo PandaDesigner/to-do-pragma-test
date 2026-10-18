@@ -126,7 +126,7 @@ describe('TaskItemComponent', () => {
     expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*min-width:\s*0;/);
     expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*overflow:\s*hidden;/);
     expect(styles).toMatch(
-      /\.completed \.task-title__text\s*\{[^}]*text-decoration:\s*line-through;/,
+      /:host\.completed \.task-title__text\s*\{[^}]*text-decoration-line:\s*line-through;/,
     );
     expect(styles).toMatch(
       /\.task-title__text\s*\{[^}]*white-space:\s*nowrap;/,
@@ -200,7 +200,9 @@ describe('TaskItemComponent', () => {
     );
     fixture.detectChanges();
     expect(
-      fixture.nativeElement.querySelector('.completed .task-title__text'),
+      fixture.nativeElement.querySelector(
+        'app-task-item-copy.completed .task-title__text',
+      ),
     ).not.toBeNull();
   });
 

@@ -113,15 +113,15 @@ app-task-item-copy {
   font-weight: 600;
   color: var(--app-text);
 }
-.completed .task-title {
+:host.completed .task-title {
   color: var(--app-category-tint, var(--app-primary-dark));
   opacity: 0.7;
 }
-.completed .task-title__text {
-  text-decoration: line-through;
+:host.completed .task-title__text {
+  text-decoration-line: line-through;
 }
-.completed .task-title__end {
-  text-decoration: line-through;
+:host.completed .task-title__end {
+  text-decoration-line: line-through;
 }
 .category-dot {
   display: inline-grid;
