@@ -114,9 +114,9 @@
 
 - [ ] 18.1 Capturas de `tasks-filter` en light y dark, en español e inglés, a 375x812
 - [x] 18.2 **BLOCKED**: se intentó capturar y no fue posible. `ng serve` muere con `EMFILE` de chokidar en
-  el sandbox; servido el build estatico de `www/` con un servidor node propio, responde 200 en
-  `127.0.0.1:4292`, pero el navegador del entorno no alcanza el loopback (devuelve `chrome-error`) y tampoco
-  acepta `file://` por restricción de seguridad. No se inventan archivos. Detalle en `verify-report.md`, seccion 4
+      el sandbox; servido el build estatico de `www/` con un servidor node propio, responde 200 en
+      `127.0.0.1:4292`, pero el navegador del entorno no alcanza el loopback (devuelve `chrome-error`) y tampoco
+      acepta `file://` por restricción de seguridad. No se inventan archivos. Detalle en `verify-report.md`, seccion 4
 
 ## 19. Notion
 
@@ -209,3 +209,13 @@ cada uno tomaba lo que necesitaba su texto.
 - [x] 26.4 `fix`: acortar la etiqueta `todo.dateFilter.clear` a "CLEAR" / "Quitar", porque el texto largo flotaba en un botón de 127 px
 - [x] 26.5 Verificar en navegador: los tres en 127 px, contiguos de 16 a 398, sin huecos
 - [x] 26.6 Suite completa (560 tests), lint, stylelint, tipos, `trace:check` y `openspec validate` en verde
+
+## 27. Jerarquía visual del título del modal
+
+Medido: el título medía 21 px de alto con 16 px de aire arriba y compartía tamaño con la
+pista, así que ambas piezas se leían como una sola línea y no se distinguía el título.
+
+- [x] 27.1 `test`: `[DATE-FILTER-02.15]` falla con el título al tamaño de la pista y sin margen propio
+- [x] 27.2 Declarar el escenario `DATE-FILTER-02.15` y el requisito `DATE-FILTER-05` en el spec delta
+- [x] 27.3 `fix`: título a `--app-font-size-note-title` y `margin: var(--app-space-24) 0 var(--app-space-4) 0`
+- [x] 27.4 Suite completa (564 tests), lint, stylelint, tipos, `trace:check` y prettier en verde
