@@ -11,4 +11,4 @@
 
 ## 3. Notas
 
-- [ ] 3.1 Nota de Notion. No hay servidor Notion en esta sesión.
+- [x] 3.1 Nota de Notion. Hecho el 2026-10-18: el conector de Notion sí autenticó en la sesión de cierre y las notas se escribieron al final de las filas de `todo-screen` (P-06, P-28 y 5.1). Este change no tiene fila propia en el tablero.
