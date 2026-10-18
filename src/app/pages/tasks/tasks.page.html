@@ -227,14 +227,30 @@
                 >{{ 'todo.editor.duration' | translate }}</span
               >
               <select formControlName="durationPreset">
-                <option [value]="15">15 min</option>
-                <option [value]="30">30 min</option>
-                <option [value]="45">45 min</option>
-                <option [value]="60">1 h</option>
-                <option [value]="75">1 h 15 min</option>
-                <option [value]="90">1 h 30 min</option>
-                <option [value]="105">1 h 45 min</option>
-                <option [value]="120">2 h</option>
+                <option [value]="15">
+                  {{ 'todo.editor.duration15' | translate }}
+                </option>
+                <option [value]="30">
+                  {{ 'todo.editor.duration30' | translate }}
+                </option>
+                <option [value]="45">
+                  {{ 'todo.editor.duration45' | translate }}
+                </option>
+                <option [value]="60">
+                  {{ 'todo.editor.duration60' | translate }}
+                </option>
+                <option [value]="75">
+                  {{ 'todo.editor.duration75' | translate }}
+                </option>
+                <option [value]="90">
+                  {{ 'todo.editor.duration90' | translate }}
+                </option>
+                <option [value]="105">
+                  {{ 'todo.editor.duration105' | translate }}
+                </option>
+                <option [value]="120">
+                  {{ 'todo.editor.duration120' | translate }}
+                </option>
                 <option value="custom">
                   {{ 'todo.editor.custom' | translate }}
                 </option>
@@ -304,14 +320,17 @@
             class="link form-link"
             (click)="openCategorySheet()"
           >
-            Crear categoría
+            {{ 'todo.editor.newCategory' | translate }}
           </button>
           }
           <div class="form-actions">
             <button type="submit" class="primary" [disabled]="store.busy()">
-              {{ editingId() ? 'Guardar cambios' : 'Añadir tarea' }}
+              {{ (editingId() ? 'todo.editor.saveChanges' : 'todo.editor.save' )
+              | translate }}
             </button>
-            <button type="button" (click)="closeSheet()">Cancelar</button>
+            <button type="button" (click)="closeSheet()">
+              {{ 'todo.editor.cancel' | translate }}
+            </button>
           </div>
         </form>
       </section>

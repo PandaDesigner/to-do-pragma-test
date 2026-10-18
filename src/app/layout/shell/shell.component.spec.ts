@@ -35,6 +35,7 @@ describe('Shell and categories guard', () => {
       fixture,
       router: TestBed.inject(Router),
       createToast: create,
+      translate,
     };
   }
 
@@ -77,6 +78,17 @@ describe('Shell and categories guard', () => {
     expect(
       (rail.querySelector('[data-tab="event"]') as HTMLButtonElement).disabled,
     ).toBe(false);
+  });
+
+  it('[I18N-01.3] reads the rail labels from the locale files conforme a Figma 4:440', () => {
+    const { fixture, translate } = setup();
+    const rail = fixture.nativeElement.querySelector('[role="tablist"]');
+    const labels = [...rail.querySelectorAll('[role="tab"]')].map(
+      (tab: HTMLElement) => tab.textContent?.trim(),
+    );
+    expect(labels).toEqual(['Todo', 'Rutina', 'Evento', 'Categoría', 'Más']);
+    expect(translate.instant('rail.todo')).toBe('Todo');
+    expect(translate.instant('rail.category')).toBe('Categoría');
   });
 
   it.each([

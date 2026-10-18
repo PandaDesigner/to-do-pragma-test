@@ -227,4 +227,21 @@ describe('TaskItemComponent', () => {
     option.click();
     expect(remove).toHaveBeenCalledWith(task.id);
   });
+
+  it('[FIN-01.1] keeps the note row on the end sliding option conforme a Figma 4:440', () => {
+    const fixture = TestBed.createComponent(TaskItemComponent);
+    fixture.componentRef.setInput('task', taskFixture({ title: 'Cat tower' }));
+    fixture.componentRef.setInput('variant', 'note');
+    const remove = jest.fn();
+    fixture.componentInstance.remove.subscribe(remove);
+    fixture.detectChanges();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('ion-item-sliding')).not.toBeNull();
+    expect(root.querySelector('ion-item-options')?.getAttribute('side')).toBe(
+      'end',
+    );
+    expect(root.querySelector('input')).toBeNull();
+    expect(root.querySelector('.note-bullet')).not.toBeNull();
+    expect(remove).not.toHaveBeenCalled();
+  });
 });
