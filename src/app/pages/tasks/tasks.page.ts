@@ -170,6 +170,9 @@ export class TasksPage implements OnInit {
     return this.filteredTasks().slice(start, start + size);
   });
   readonly hasMore = computed(() => this.currentPage() < this.totalPages());
+  readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
+    buildPagerNumbers(this.currentPage(), this.totalPages(), 2),
+  );
   readonly sectionLabel = computed(() => 'section.' + this.section);
   readonly emptyStateTitle = computed(
     () => 'todo.sections.' + this.section + '.emptyTitle',
@@ -471,4 +474,28 @@ export class TasksPage implements OnInit {
     }
     await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
+}
+
+function buildPagerNumbers(
+  current: number,
+  total: number,
+  window: number,
+): readonly (number | 'ellipsis')[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, index) => index + 1);
+  }
+  const range: (number | 'ellipsis')[] = [1];
+  const start = Math.max(2, current - window);
+  const end = Math.min(total - 1, current + window);
+  if (start > 2) {
+    range.push('ellipsis');
+  }
+  for (let page = start; page <= end; page += 1) {
+    range.push(page);
+  }
+  if (end < total - 1) {
+    range.push('ellipsis');
+  }
+  range.push(total);
+  return range;
 }

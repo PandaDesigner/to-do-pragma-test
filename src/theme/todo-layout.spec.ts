@@ -111,7 +111,10 @@ describe('Todo layout regression contracts', () => {
     expect(template).toMatch(
       /class="task-scroll"[\s\S]*<ion-content[\s\S]*<ion-infinite-scroll[\s\S]*\(ionInfinite\)="loadMore\(\$event\)"[\s\S]*<ion-infinite-scroll-content/,
     );
-    expect(template).not.toContain('class="pager"');
+    expect(template).toMatch(
+      /class="task-scroll"[\s\S]*<\/ion-content>\s*<\/div>\s*@if \(totalPages\(\) > 1\) \{\s*<nav class="pager"/,
+    );
+    expect(styles).toMatch(/\.pager\s*\{[^}]*display:\s*flex;/);
     expect(styles).toMatch(/\.chips\s*\{[^}]*flex-wrap:\s*wrap;/);
   });
 

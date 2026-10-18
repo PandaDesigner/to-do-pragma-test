@@ -420,6 +420,7 @@ describe('TasksPage', () => {
     expect(eventScroll.disabled).toBe(true);
     expect(page.totalPages()).toBe(3);
     expect(scroll.disabled).toBe(false);
+    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
     expect(
       fixture.nativeElement.querySelectorAll('app-task-item'),
     ).toHaveLength(20);
@@ -478,7 +479,7 @@ describe('TasksPage', () => {
       fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
     ).toBeNull();
     expect(fixture.nativeElement.querySelector('.task-list')).not.toBeNull();
-    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
     expect(
       fixture.nativeElement.querySelectorAll('app-task-item'),
     ).toHaveLength(20);
@@ -490,6 +491,11 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     expect(page.currentPage()).toBe(2);
     expect(page.visibleTasks()).toHaveLength(20);
+    expect(
+      fixture.nativeElement
+        .querySelector('.pager__btn--active')
+        ?.textContent?.trim(),
+    ).toBe('2');
     expect(tasks.hasMoreTasks()).toBe(true);
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',

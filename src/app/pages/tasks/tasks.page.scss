@@ -137,6 +137,44 @@ main.notebook-page {
   );
 }
 
+.pager {
+  display: flex;
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--app-space-4);
+  margin-top: var(--app-space-8);
+  padding: var(--app-space-8) 0;
+  background: var(--app-surface);
+}
+
+.pager__btn {
+  min-width: var(--app-touch-target);
+  min-height: var(--app-touch-target);
+  padding: 0 var(--app-space-8);
+  border: 0;
+  border-radius: var(--app-radius-input);
+  background: transparent;
+  color: var(--app-text);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pager__btn--active {
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+}
+
+.pager__ellipsis {
+  padding: 0 var(--app-space-4);
+  color: var(--app-text-muted);
+}
+
 .chips {
   display: flex;
   flex-wrap: wrap;
