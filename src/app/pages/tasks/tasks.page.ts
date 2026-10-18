@@ -14,7 +14,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { IonContent, IonModal } from '@ionic/angular/standalone';
+import {
+  IonContent,
+  IonInfiniteScroll,
+  IonInfiniteScrollContent,
+  IonModal,
+} from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
@@ -73,6 +78,8 @@ export const PENDING_PANEL = {
   styleUrl: './tasks.page.scss',
   imports: [
     IonContent,
+    IonInfiniteScroll,
+    IonInfiniteScrollContent,
     IonModal,
     FabButtonComponent,
     ReactiveFormsModule,
@@ -159,9 +166,9 @@ export class TasksPage implements OnInit {
   );
   readonly visibleTasks = computed(() => {
     const size = this.store.pageSize();
-    const start = (this.currentPage() - 1) * size;
-    return this.filteredTasks().slice(start, start + size);
+    return this.filteredTasks().slice(0, this.currentPage() * size);
   });
+  readonly hasMore = computed(() => this.currentPage() < this.totalPages());
   readonly sectionLabel = computed(() => 'section.' + this.section);
   readonly emptyStateTitle = computed(
     () => 'todo.sections.' + this.section + '.emptyTitle',
@@ -222,9 +229,6 @@ export class TasksPage implements OnInit {
   readonly longDate = computed(() => formatLongDate(this.clock.today()));
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
-  );
-  readonly pageNumbers = computed<readonly (number | 'ellipsis')[]>(() =>
-    buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
 
@@ -397,6 +401,15 @@ export class TasksPage implements OnInit {
     queueMicrotask(() => this.scrollListToTop());
   }
 
+  loadMore(event: { target: { complete: () => void } }): void {
+    if (this.hasMore()) {
+      const next = this.currentPage() + 1;
+      this.tabPage.set(next);
+      this.store.setPage(next);
+    }
+    void event.target.complete();
+  }
+
   scrollListToTop(): void {
     const list = document.querySelector<HTMLElement>('app-tasks .task-list');
     if (list) {
@@ -450,30 +463,4 @@ export class TasksPage implements OnInit {
     }
     await this.store.dispatch(task.id, TASK_EVENT.RESCHEDULE);
   }
-}
-
-function buildPagerNumbers(
-  current: number,
-  total: number,
-): readonly (number | 'ellipsis')[] {
-  if (total <= 1) {
-    return [];
-  }
-  if (total <= 7) {
-    return Array.from({ length: total }, (_, index) => index + 1);
-  }
-  // Ventana hacia adelante: hasta 3 numeros empezando en `current`, luego
-  // ellipsis + last si hay huecos entre el segmento y total.
-  const safeCurrent = Math.min(Math.max(1, current), total);
-  const range: (number | 'ellipsis')[] = [safeCurrent];
-  if (safeCurrent + 1 <= total) {
-    range.push(safeCurrent + 1);
-  }
-  if (safeCurrent + 2 <= total && safeCurrent + 2 !== total) {
-    range.push(safeCurrent + 2);
-  }
-  if ((range[range.length - 1] as number) < total) {
-    range.push('ellipsis', total);
-  }
-  return range;
 }

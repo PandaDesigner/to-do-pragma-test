@@ -124,43 +124,13 @@
       />
     </ng-template>
   </main>
+  <ion-infinite-scroll
+    [disabled]="!hasMore()"
+    (ionInfinite)="loadMore($event)"
+  >
+    <ion-infinite-scroll-content></ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 </ion-content>
-
-@if (totalPages() > 1) {
-<nav class="pager" [attr.aria-label]="'tasks.pager.label' | translate">
-  <button
-    type="button"
-    class="pager__btn"
-    [disabled]="currentPage() === 1"
-    (click)="goToPage(currentPage() - 1)"
-    [attr.aria-label]="'tasks.pager.prev' | translate"
-  >
-    ‹
-  </button>
-  @for (item of pageNumbers(); track item) { @if (item === 'ellipsis') {
-  <span class="pager__ellipsis" aria-hidden="true">…</span>
-  } @else {
-  <button
-    type="button"
-    class="pager__btn"
-    [class.pager__btn--active]="item === currentPage()"
-    (click)="goToPage(item)"
-    [attr.aria-current]="item === currentPage() ? 'page' : null"
-  >
-    {{ item }}
-  </button>
-  } }
-  <button
-    type="button"
-    class="pager__btn"
-    [disabled]="currentPage() === totalPages()"
-    (click)="goToPage(currentPage() + 1)"
-    [attr.aria-label]="'tasks.pager.next' | translate"
-  >
-    ›
-  </button>
-</nav>
-}
 
 <app-fab-button
   [ariaLabel]="'tasks.fab.new' | translate"

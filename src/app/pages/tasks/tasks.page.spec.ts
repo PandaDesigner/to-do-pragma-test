@@ -370,9 +370,11 @@ describe('TasksPage', () => {
 
     eventPage.goToPage(2);
     routine.detectChanges();
+    event.detectChanges();
     expect(routinePage.currentPage()).toBe(1);
     expect(eventPage.currentPage()).toBe(2);
-    expect(titles(event.nativeElement)).toEqual(['Event two']);
+    expect(titles(routine.nativeElement)).toEqual(['Routine one']);
+    expect(titles(event.nativeElement)).toEqual(['Event one', 'Event two']);
   });
 
   it('[TSK-19.1] pages the filtered list and hides the pager when one page remains conforme a Figma 4:520', async () => {
@@ -409,22 +411,46 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     event.detectChanges();
 
-    expect(event.nativeElement.querySelector('.pager')).toBeNull();
+    const eventScroll = event.nativeElement.querySelector(
+      'ion-infinite-scroll',
+    ) as HTMLElement & { disabled?: boolean };
+    const scroll = fixture.nativeElement.querySelector(
+      'ion-infinite-scroll',
+    ) as HTMLElement & { disabled?: boolean };
+    expect(eventScroll.disabled).toBe(true);
     expect(page.totalPages()).toBe(3);
-    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
+    expect(scroll.disabled).toBe(false);
+    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
+      20,
+    );
 
-    page.goToPage(3);
+    const complete = jest.fn();
+    page.loadMore({ target: { complete } } as never);
     fixture.detectChanges();
+    expect(complete).toHaveBeenCalled();
+    expect(page.currentPage()).toBe(2);
+    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
+      40,
+    );
+    page.loadMore({ target: { complete: jest.fn() } } as never);
+    fixture.detectChanges();
+    expect(page.currentPage()).toBe(3);
+    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
+      50,
+    );
+    expect(scroll.disabled).toBe(true);
+
     const focus = [
       ...fixture.nativeElement.querySelectorAll('app-chip button'),
     ].find((chip) => chip.textContent?.includes('Focus')) as HTMLButtonElement;
     focus.click();
     fixture.detectChanges();
     expect(page.currentPage()).toBe(1);
-    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
+    expect(scroll.disabled).toBe(true);
     expect(
       fixture.nativeElement.querySelectorAll('app-task-item'),
     ).toHaveLength(5);
+    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
   });
 
   it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {
@@ -443,19 +469,25 @@ describe('TasksPage', () => {
     expect(new Set(tasks.tasks().map((task) => task.id)).size).toBe(5005);
     expect(tasks.visibleTasks()).toHaveLength(20);
     expect(page.totalPages()).toBe(251);
-    page.goToPage(251);
-    expect(page.currentPage()).toBe(251);
-    expect(tasks.visibleTasks().length).toBe(5);
-    expect(tasks.hasMoreTasks()).toBe(false);
+    expect(page.visibleTasks()).toHaveLength(20);
     fixture.detectChanges();
     expect(
       fixture.nativeElement.querySelector('cdk-virtual-scroll-viewport'),
     ).toBeNull();
     expect(fixture.nativeElement.querySelector('.task-list')).not.toBeNull();
-    expect(fixture.nativeElement.querySelectorAll('app-task-item').length).toBe(
-      5,
+    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
+    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
+      20,
     );
-    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
+    const scroll = fixture.nativeElement.querySelector(
+      'ion-infinite-scroll',
+    ) as HTMLElement & { disabled?: boolean };
+    expect(scroll.disabled).toBe(false);
+    page.loadMore({ target: { complete: jest.fn() } } as never);
+    fixture.detectChanges();
+    expect(page.currentPage()).toBe(2);
+    expect(page.visibleTasks()).toHaveLength(40);
+    expect(tasks.hasMoreTasks()).toBe(true);
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',
       args: [],

@@ -92,15 +92,19 @@ describe('Todo layout regression contracts', () => {
     },
   );
 
-  it('[TSK-18.1] only .task-list scrolls: header and pager stay put', () => {
+  it('[TSK-18.1] lets ion-content scroll the task list for infinite scroll conforme a Figma 4:520', () => {
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
+    const template = readFileSync(
+      resolve(__dirname, '../app/pages/tasks/tasks.page.html'),
+      'utf8',
+    );
     expect(styles).toMatch(/main\.notebook-page\s*\{[^}]*display:\s*flex;/);
     expect(styles).toMatch(/\.task-list\s*\{[^}]*flex:\s*1\s*1\s*auto;/);
-    expect(styles).toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
-    expect(styles).toMatch(/\.pager\s*\{[^}]*position:\s*fixed;/);
-    expect(styles).toMatch(
-      /\.pager\s*\{[^}]*background:\s*var\(--app-surface\);/,
+    expect(styles).not.toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
+    expect(template).toMatch(
+      /<ion-infinite-scroll[\s\S]*\(ionInfinite\)="loadMore\(\$event\)"[\s\S]*<ion-infinite-scroll-content/,
     );
+    expect(template).not.toContain('class="pager"');
     expect(styles).toMatch(/\.chips\s*\{[^}]*flex-wrap:\s*wrap;/);
   });
 
