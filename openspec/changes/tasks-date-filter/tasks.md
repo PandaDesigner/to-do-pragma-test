@@ -99,21 +99,24 @@
 
 ## 17. Trazabilidad y verificación
 
-- [ ] 17.1 `openspec/traceability.md` con una fila por escenario: nodo, pantalla, mock, requisito, escenario, tarea, test y evidencia
-- [ ] 17.2 `npm run trace:check`
-- [ ] 17.3 `npx jest --runInBand --watchman=false`
-- [ ] 17.4 `npm run lint`
-- [ ] 17.5 `npm run lint:styles`
-- [ ] 17.6 `npm run format:check`
-- [ ] 17.7 `npm run typecheck`
-- [ ] 17.8 `npm run build`
-- [ ] 17.9 `npx openspec validate --all --strict`
-- [ ] 17.10 Escribir `verify-report.md` con los resultados reales
+- [x] 17.1 `openspec/traceability.md` con una fila por escenario: nodo, pantalla, mock, requisito, escenario, tarea, test y evidencia
+- [x] 17.2 `npm run trace:check`
+- [x] 17.3 `npx jest --runInBand --watchman=false`
+- [x] 17.4 `npm run lint`
+- [x] 17.5 `npm run lint:styles`
+- [x] 17.6 `npm run format:check`
+- [x] 17.7 `npm run typecheck`
+- [x] 17.8 `npm run build`
+- [x] 17.9 `npx openspec validate --all --strict`
+- [x] 17.10 Escribir `verify-report.md` con los resultados reales
 
 ## 18. Evidencia visual
 
 - [ ] 18.1 Capturas de `tasks-filter` en light y dark, en español e inglés, a 375x812
-- [ ] 18.2 **BLOCKED**: las capturas dependen de levantar el servidor y de un navegador. Si no hay servidor, queda Blocked y no se inventan archivos. Reportado en `verify-report.md`
+- [x] 18.2 **BLOCKED**: se intentó capturar y no fue posible. `ng serve` muere con `EMFILE` de chokidar en
+  el sandbox; servido el build estatico de `www/` con un servidor node propio, responde 200 en
+  `127.0.0.1:4292`, pero el navegador del entorno no alcanza el loopback (devuelve `chrome-error`) y tampoco
+  acepta `file://` por restricción de seguridad. No se inventan archivos. Detalle en `verify-report.md`, seccion 4
 
 ## 19. Notion
 
@@ -121,6 +124,6 @@
 
 ## 20. Entrega
 
-- [ ] 20.1 Push de la rama y PR hacia `develop`
+- [x] 20.1 Push de la rama y PR hacia `develop`
 - [ ] 20.2 Cuerpo del PR con sección `Reutilización` y enlace a los nodos de Figma
-- [ ] 20.3 El PR queda abierto, sin archivar y sin fusionar
+- [x] 20.3 El PR queda abierto, sin archivar y sin fusionar
