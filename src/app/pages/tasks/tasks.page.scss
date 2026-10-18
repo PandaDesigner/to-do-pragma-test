@@ -138,14 +138,20 @@ main.notebook-page {
 }
 
 .pager {
+  position: fixed;
+  right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  left: var(--app-rail-width);
+  z-index: 3;
   display: flex;
-  flex: 0 0 auto;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: var(--app-space-4);
-  margin-top: var(--app-space-8);
-  padding: var(--app-space-8) 0;
+  height: var(--app-pager-height);
+  margin: 0;
+  padding: 0 var(--app-space-8);
+  overflow-x: auto;
   background: var(--app-surface);
 }
 
