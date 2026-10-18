@@ -120,10 +120,10 @@
 
 ## 19. Notion
 
-- [ ] 19.1 Actualizar Status y Note de la fila del change, solo al terminar
+- [x] 19.1 Actualizar Status y Note de la fila del change, solo al terminar
 
 ## 20. Entrega
 
 - [x] 20.1 Push de la rama y PR hacia `develop`
-- [ ] 20.2 Cuerpo del PR con sección `Reutilización` y enlace a los nodos de Figma
+- [x] 20.2 Cuerpo del PR con sección `Reutilización` y enlace a los nodos de Figma
 - [x] 20.3 El PR queda abierto, sin archivar y sin fusionar
