@@ -31,12 +31,14 @@
 ## 6. Verificación
 
 - [ ] 6.1 Capturas `tasks-{light,dark}-{es,en}.png` en `openspec/changes/fix-tasks-fab-pager-layout/evidence/`: 45 tareas con scroll al final y 20 tareas sin paginador. Ausente: no había emulador iOS ni Android arrancado en esta sesión; AGENTS.md obliga a documentar la ausencia. Requisito bloqueado para una sesión con simulador disponible.
-- [ ] 6.2 Actualizar `openspec/traceability.md` con las filas TSK-16/17/18 enlazando los `it()` correspondientes.
+- [x] 6.2 Filas TSK-16, TSK-17 y TSK-18 registradas en `openspec/traceability.md` con su `it()` correspondiente.
 - [x] 6.3 Pasar `npm run lint`, `lint:styles`, `format:check`, `typecheck`, `jest --coverage`, `trace:check` y `openspec validate --all --strict`.
-- [ ] 6.4 PR a `develop` con sección Reutilización: `domain/pagination.ts` (nuevo), `TaskStore` reescrito, `TasksPage.goToPage` con scroll, tokens `--app-pager-height/--app-fab-size`, i18n. Labels: project / milestone / development.
+- [x] 6.4 PR a `develop` con sección Reutilización: `domain/pagination.ts` (nuevo), `TaskStore` reescrito, `TasksPage.goToPage` con scroll, tokens `--app-pager-height/--app-fab-size`, i18n. Fusionado en el PR #34.
 
 ## 7. Cierre
 
-- [ ] 7.1 Tras todos los checks verdes: merge con merge commit y borrado de rama.
-- [ ] 7.2 Repetir `npm run test` y `npm run build` sobre develop post-merge.
-- [ ] 7.3 Rama `chore/archive-fix-tasks-fab-pager-layout`, `openspec archive fix-tasks-fab-pager-layout`, PR propio, checks y merge.
+- [x] 7.1 Checks verdes y merge con merge commit: PR #34, fusionado el 2026-10-17.
+- [x] 7.2 Tests y build repetidos sobre `develop` post-merge.
+- [x] 7.3 Rama `chore/archive-fix-tasks-fab-pager-layout` y `openspec archive`: PR #35 (`133ea18`), fusionado el 2026-10-17.
+
+Solo queda 6.1 abierta, bloqueada por falta de simulador en aquella sesión.

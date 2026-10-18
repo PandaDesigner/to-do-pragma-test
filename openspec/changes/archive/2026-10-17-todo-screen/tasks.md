@@ -43,7 +43,7 @@
 
 ## 5. Cierre
 
-- [ ] 5.1 Exportar los iconos de Figma a `src/assets/icon` y quitar literales visuales.
+- [ ] 5.1 Exportar los iconos de Figma a `src/assets/icon` y quitar literales visuales. La segunda mitad ya está cumplida: no queda ningún color literal ni `rgba()` en `src/app`, todo sale de `var(--app-*)` y `var(--ion-*)`. Queda solo la exportación, pendiente de una sesión con Figma disponible.
 - [x] 5.2 Capturas 375x812 en claro y oscuro, es y en, con diff visual en `verify-report.md`.
 - [x] 5.3 Actualizar `openspec/traceability.md` y la fila de Notion, o anotar que el servidor no está conectado.
 - [x] 5.4 Pasar tipos, lint, estilos, tests con cobertura, build, `trace:check` y `openspec validate --strict`.

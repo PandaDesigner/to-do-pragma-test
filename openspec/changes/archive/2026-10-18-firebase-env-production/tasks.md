@@ -137,8 +137,8 @@
 
 ## 6. Notion
 
-- [ ] 6.1 Añadir nota al final de P-06 `3fccb441977381a593e5f50f6f970545`
-- [ ] 6.2 Añadir nota al final de P-28 `3fccb441977381dbaf8cf4d5bb4dfbaf`
+- [x] 6.1 Nota añadida al final de P-06 `3fccb441977381a593e5f50f6f970545` (`todo-screen`)
+- [x] 6.2 Nota añadida al final de P-28 `3fccb441977381dbaf8cf4d5bb4dfbaf` (`todo-screen 4.6`, sigue `Blocked`)
 - [x] 6.3 No crear filas para NUEVA-01 ni NUEVA-02
 
 ## 7. Fuera de este apply

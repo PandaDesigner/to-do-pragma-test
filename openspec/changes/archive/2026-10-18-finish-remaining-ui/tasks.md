@@ -11,7 +11,7 @@
 - [x] 2.2 `node scripts/trace-check.mjs` passed
 - [x] 2.3 Prettier and stylelint on the touched files
 - [x] 2.4 Visual captures at 375x812 light/dark es/en in `evidence/`. Browser captures of the task screen and the shopping-notes state, not a 2px Figma diff and not a simulator.
-- [ ] 2.5 Notion row — the Notion connector is not authenticated in this session
+- [ ] 2.5 Notion row — el conector de Notion autenticó el 2026-10-18 y se escribieron las notas de cierre en las filas de `todo-screen`. La fila propia de este change no se pudo crear: la propiedad de título de la base es `Task name` y el MCP truncaría la clave al serializar el espacio. Queda pendiente crearla a mano en el tablero.
 - [x] 2.6 Browser pass of TODAY, shopping notes, swipe confirm, and task create on `ng serve`
 
 ## 3. Delivery
