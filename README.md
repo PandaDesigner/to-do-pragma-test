@@ -215,6 +215,6 @@ Para la demo, abrí https://console.firebase.google.com/project/to-do-pragma/con
 
 ## Estado OpenSpec
 
-Changes activos: `finish-remaining-ui`. `firebase-env-production`, `fix-delivery-functional` y `regularize-direct-commits` quedaron archivados el 2026-10-18. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`, `fix-delivery-functional`, `firebase-env-production`, `regularize-direct-commits`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
+Changes activos: ninguno. `finish-remaining-ui` quedó archivado el 2026-10-18 en el PR #45, junto a `firebase-env-production`, `fix-delivery-functional` y `regularize-direct-commits`. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`, `fix-delivery-functional`, `firebase-env-production`, `regularize-direct-commits`, `finish-remaining-ui`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
 
-Las filas `registro` de F6 siguen abiertas a propósito: anotan nodos de Figma que todavía no tienen escenario. La evidencia visual del sheet de categorías y del pager quedó ausente porque esta máquina no tenía simulador firmado.
+Las filas `registro` de F6 siguen abiertas a propósito: anotan nodos de Figma que todavía no tienen escenario. La evidencia visual del sheet de categorías y del pager quedó ausente porque esa máquina no tenía simulador firmado.
