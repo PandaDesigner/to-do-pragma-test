@@ -18,3 +18,14 @@ La fila MUST usar `ion-item-sliding` con `ion-item-options` en `side="end"`. Abr
 - **THEN** el título es "Delete task?"
 - **AND** el mensaje dice que "Finish reports" se eliminará de forma permanente
 - **AND** los botones son "Cancel" y "Delete"
+
+### Requirement: TODO-09 Cada pestaña conserva su sección
+
+Una página de tareas MUST filtrar por la sección de su propia ruta. Otra pestaña cacheada MUST NOT cambiar esa lista, el chip elegido ni la página del paginador. Figma: 4:520.
+
+#### Scenario: [TODO-09.1] Rutina y Evento no comparten la vista
+
+- **GIVEN** dos páginas cacheadas, Rutina y Evento, sobre el mismo store, conforme a Figma 4:520
+- **WHEN** Evento queda activa y elige un chip o una página
+- **THEN** Rutina sigue listando solo sus tareas
+- **AND** su chip y su página no cambian

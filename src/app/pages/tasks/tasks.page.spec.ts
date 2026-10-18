@@ -1,5 +1,7 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { EnvironmentProviders, Provider } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { CATEGORY_SECTION, type CategorySection } from '../../domain/category';
 import { ROUTE_DATA } from '../../core/di/tokens';
@@ -14,6 +16,32 @@ import { TASK_EVENT } from '../../domain/task-state';
 import en from '../../../assets/i18n/en.json';
 import { add } from 'ionicons/icons';
 import { clipboardCheck } from '../../shared/icons/app-icons';
+
+@Component({
+  selector: 'app-routine-tab-host',
+  imports: [TasksPage],
+  template: '<app-tasks />',
+  providers: [
+    {
+      provide: ROUTE_DATA,
+      useValue: { categorySection: CATEGORY_SECTION.ROUTINE },
+    },
+  ],
+})
+class RoutineTabHost {}
+
+@Component({
+  selector: 'app-event-tab-host',
+  imports: [TasksPage],
+  template: '<app-tasks />',
+  providers: [
+    {
+      provide: ROUTE_DATA,
+      useValue: { categorySection: CATEGORY_SECTION.EVENT },
+    },
+  ],
+})
+class EventTabHost {}
 
 describe('TasksPage', () => {
   async function setup(
@@ -152,6 +180,86 @@ describe('TasksPage', () => {
     ]);
     page.store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
+  });
+
+  it('[TODO-09.1] keeps a cached tab on its own section, chip and page conforme a Figma 4:520', async () => {
+    const { tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'r-cat',
+      name: 'Blue category',
+      kind: 'daily',
+      colorToken: 'event',
+      icon: 'list',
+      section: CATEGORY_SECTION.ROUTINE,
+    });
+    await categories.upsert({
+      id: 'e-cat',
+      name: 'Coral category',
+      kind: 'list',
+      colorToken: 'routine',
+      icon: 'list',
+      section: CATEGORY_SECTION.EVENT,
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'routine-a',
+        title: 'Routine one',
+        categoryId: 'r-cat',
+        dueDate: '2026-02-01',
+      }),
+      taskFixture({
+        id: 'routine-b',
+        title: 'Routine two',
+        categoryId: 'r-cat',
+        dueDate: '2026-02-02',
+      }),
+      taskFixture({
+        id: 'event-a',
+        title: 'Event one',
+        categoryId: 'e-cat',
+        dueDate: '2026-02-03',
+      }),
+    ]);
+    tasks.setPageSize(1);
+
+    const routine = TestBed.createComponent(RoutineTabHost);
+    const event = TestBed.createComponent(EventTabHost);
+    routine.detectChanges();
+    event.detectChanges();
+    await routine.whenStable();
+    await event.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    routine.detectChanges();
+    event.detectChanges();
+
+    const routinePage = routine.debugElement.query(By.directive(TasksPage))
+      .componentInstance as TasksPage;
+    const eventPage = event.debugElement.query(By.directive(TasksPage))
+      .componentInstance as TasksPage;
+    const titles = (root: HTMLElement): string[] =>
+      [...root.querySelectorAll('.task-title')].map(
+        (node) => node.textContent?.trim() ?? '',
+      );
+
+    expect(titles(routine.nativeElement)).toEqual(['Routine one']);
+    expect(titles(event.nativeElement)).toEqual(['Event one']);
+
+    const coral = [...event.nativeElement.querySelectorAll('app-chip button')].find(
+      (chip) => chip.textContent?.includes('Coral category'),
+    ) as HTMLButtonElement;
+    coral.click();
+    routine.detectChanges();
+    event.detectChanges();
+    expect(titles(routine.nativeElement)).toEqual(['Routine one']);
+    const routineAll = [
+      ...routine.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) => chip.textContent?.includes('All')) as HTMLButtonElement;
+    expect(routineAll.getAttribute('aria-pressed')).toBe('true');
+
+    eventPage.goToPage(2);
+    routine.detectChanges();
+    expect(routinePage.currentPage()).toBe(1);
+    expect(eventPage.currentPage()).toBe(2);
   });
 
   it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {
