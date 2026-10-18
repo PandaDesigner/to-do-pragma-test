@@ -374,7 +374,7 @@ describe('TasksPage', () => {
     expect(routinePage.currentPage()).toBe(1);
     expect(eventPage.currentPage()).toBe(2);
     expect(titles(routine.nativeElement)).toEqual(['Routine one']);
-    expect(titles(event.nativeElement)).toEqual(['Event one', 'Event two']);
+    expect(titles(event.nativeElement)).toEqual(['Event two']);
   });
 
   it('[TSK-19.1] pages the filtered list and hides the pager when one page remains conforme a Figma 4:520', async () => {
@@ -420,24 +420,27 @@ describe('TasksPage', () => {
     expect(eventScroll.disabled).toBe(true);
     expect(page.totalPages()).toBe(3);
     expect(scroll.disabled).toBe(false);
-    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
-      20,
-    );
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(20);
 
     const complete = jest.fn();
     page.loadMore({ target: { complete } } as never);
     fixture.detectChanges();
     expect(complete).toHaveBeenCalled();
     expect(page.currentPage()).toBe(2);
-    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
-      40,
-    );
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(20);
+    expect(
+      fixture.nativeElement.querySelector('.task-title')?.textContent?.trim(),
+    ).toBe('General 20');
     page.loadMore({ target: { complete: jest.fn() } } as never);
     fixture.detectChanges();
     expect(page.currentPage()).toBe(3);
-    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
-      50,
-    );
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(10);
     expect(scroll.disabled).toBe(true);
 
     const focus = [
@@ -476,9 +479,9 @@ describe('TasksPage', () => {
     ).toBeNull();
     expect(fixture.nativeElement.querySelector('.task-list')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
-    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
-      20,
-    );
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(20);
     const scroll = fixture.nativeElement.querySelector(
       'ion-infinite-scroll',
     ) as HTMLElement & { disabled?: boolean };
@@ -486,7 +489,7 @@ describe('TasksPage', () => {
     page.loadMore({ target: { complete: jest.fn() } } as never);
     fixture.detectChanges();
     expect(page.currentPage()).toBe(2);
-    expect(page.visibleTasks()).toHaveLength(40);
+    expect(page.visibleTasks()).toHaveLength(20);
     expect(tasks.hasMoreTasks()).toBe(true);
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',

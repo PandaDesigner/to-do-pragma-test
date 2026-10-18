@@ -166,7 +166,8 @@ export class TasksPage implements OnInit {
   );
   readonly visibleTasks = computed(() => {
     const size = this.store.pageSize();
-    return this.filteredTasks().slice(0, this.currentPage() * size);
+    const start = (this.currentPage() - 1) * size;
+    return this.filteredTasks().slice(start, start + size);
   });
   readonly hasMore = computed(() => this.currentPage() < this.totalPages());
   readonly sectionLabel = computed(() => 'section.' + this.section);
@@ -406,11 +407,18 @@ export class TasksPage implements OnInit {
       const next = this.currentPage() + 1;
       this.tabPage.set(next);
       this.store.setPage(next);
+      queueMicrotask(() => this.scrollListToTop());
     }
     void event.target.complete();
   }
 
   scrollListToTop(): void {
+    const content = document.querySelector<
+      HTMLElement & { scrollToTop?: (duration?: number) => Promise<void> }
+    >('app-tasks .task-scroll ion-content');
+    if (typeof content?.scrollToTop === 'function') {
+      void content.scrollToTop(0);
+    }
     const list = document.querySelector<HTMLElement>('app-tasks .task-list');
     if (list) {
       list.scrollTop = 0;

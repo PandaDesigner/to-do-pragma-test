@@ -103,8 +103,8 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(
       /main\.notebook-page\s*\{[^}]*padding-bottom:\s*var\(--app-pager-height\);/,
     );
-    expect(styles).toMatch(/\.task-scroll\s*\{[^}]*flex:\s*0\s*1\s*60vw;/);
-    expect(styles).toMatch(/\.task-scroll\s*\{[^}]*max-height:\s*60vw;/);
+    expect(styles).toMatch(/\.task-scroll\s*\{[^}]*flex:\s*0\s*1\s*60vh;/);
+    expect(styles).toMatch(/\.task-scroll\s*\{[^}]*max-height:\s*60vh;/);
     expect(styles).not.toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
     expect(template).toMatch(/<ion-content[^>]*\[scrollY\]="false"/);
     expect(template).toMatch(
