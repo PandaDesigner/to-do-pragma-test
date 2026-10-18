@@ -119,9 +119,10 @@ jobs:
             -derivedDataPath platforms/ios/build/appetize \
             CODE_SIGNING_ALLOWED=NO \
             CODE_SIGNING_REQUIRED=NO
+          test -d "platforms/ios/build/Debug-iphonesimulator/Todo Notebook.app"
           ditto -c -k --sequesterRsrc --keepParent \
-            platforms/ios/build/appetize/Build/Products/Debug-iphonesimulator/App.app \
-            platforms/ios/build/App-simulator.zip
+            "platforms/ios/build/Debug-iphonesimulator/Todo Notebook.app" \
+            platforms/ios/build/Todo-Notebook-simulator.zip
       - name: Upload iOS build artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -129,7 +130,7 @@ jobs:
           path: |
             platforms/ios/build/Release-iphoneos/*.app
             platforms/ios/build/Release-iphoneos/*.xcarchive
-            platforms/ios/build/App-simulator.zip
+            platforms/ios/build/Todo-Notebook-simulator.zip
           if-no-files-found: error
       - name: Upload iOS Simulator app to Appetize
         if: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && env.APPETIZE_API_TOKEN != '' }}
@@ -139,7 +140,7 @@ jobs:
         with:
           apiToken: ${{ env.APPETIZE_API_TOKEN }}
           publicKey: ${{ secrets.APPETIZE_IOS_PUBLIC_KEY }}
-          appFile: platforms/ios/build/App-simulator.zip
+          appFile: platforms/ios/build/Todo-Notebook-simulator.zip
           platform: ios
           fileType: zip
           note: ${{ github.ref_name }} @ ${{ github.sha }}
