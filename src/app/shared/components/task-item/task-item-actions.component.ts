@@ -33,19 +33,6 @@ import { TASK_ITEM } from './task-item.state';
           </button>
         }
       }
-      @if (item.presentation().showsDelete()) {
-        <button
-          type="button"
-          class="danger"
-          [disabled]="item.disabled()"
-          [attr.aria-label]="
-            'task.delete' | translate: { title: item.task().title }
-          "
-          (click)="item.emitRemove(item.task().id)"
-        >
-          <ion-icon [icon]="item.icons.trashOutline" aria-hidden="true" />
-        </button>
-      }
     </div>
   `,
   styleUrl: './task-item.component.scss',

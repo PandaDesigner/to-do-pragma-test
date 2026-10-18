@@ -7,7 +7,6 @@ export interface TaskItemState {
   leading(): 'check' | 'bullet';
   showsMeta(): boolean;
   showsEdit(): boolean;
-  showsDelete(): boolean;
   showsExtraActions(): boolean;
   showsSwipe(): boolean;
   toggleEvents(): readonly TaskEvent[];
@@ -22,9 +21,6 @@ export class TaskRowState implements TaskItemState {
     return true;
   }
   showsEdit(): boolean {
-    return true;
-  }
-  showsDelete(): boolean {
     return true;
   }
   showsExtraActions(): boolean {
@@ -49,9 +45,6 @@ export class NoteRowState implements TaskItemState {
   showsEdit(): boolean {
     return true;
   }
-  showsDelete(): boolean {
-    return true;
-  }
   showsExtraActions(): boolean {
     return true;
   }
@@ -72,9 +65,6 @@ export class PendingRowState implements TaskItemState {
     return true;
   }
   showsEdit(): boolean {
-    return false;
-  }
-  showsDelete(): boolean {
     return false;
   }
   showsExtraActions(): boolean {

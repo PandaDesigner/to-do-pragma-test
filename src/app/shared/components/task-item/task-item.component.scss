@@ -9,6 +9,8 @@
   --padding-bottom: 0;
   --border-width: 0;
   --min-height: var(--app-task-row-height);
+  height: var(--app-task-row-height);
+  max-height: var(--app-task-row-height);
 }
 ion-item-option {
   width: var(--app-swipe-action-width);
@@ -26,6 +28,8 @@ ion-item-option {
   gap: var(--app-space-12);
   box-sizing: border-box;
   height: var(--app-task-row-height);
+  max-height: var(--app-task-row-height);
+  min-height: 0;
   overflow: hidden;
   border-bottom: 1px solid var(--app-border);
 }
@@ -58,12 +62,10 @@ input:checked {
   gap: var(--app-space-4);
 }
 .task-title {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  line-clamp: 1;
+  display: block;
   overflow: hidden;
-  overflow-wrap: break-word;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   font-size: var(--app-font-size-task-title);
   font-weight: 700;
   color: var(--app-text);
@@ -129,9 +131,6 @@ button:hover {
 ion-icon {
   width: 18px;
   height: 18px;
-}
-.danger {
-  color: var(--ion-color-danger);
 }
 button:disabled,
 input:disabled {

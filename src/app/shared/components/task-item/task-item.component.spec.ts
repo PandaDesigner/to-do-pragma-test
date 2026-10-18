@@ -66,7 +66,7 @@ describe('TaskItemComponent', () => {
     expect(fixture.nativeElement.querySelector('.category-dot')).toBeNull();
   });
 
-  it('emits edit, delete and State actions; archived tasks cannot toggle', () => {
+  it('emits edit and State actions; archived tasks cannot toggle and the row has no delete button', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = taskFixture({ status: 'archived' });
     fixture.componentRef.setInput('task', task);
@@ -79,18 +79,19 @@ describe('TaskItemComponent', () => {
     fixture.componentInstance.remove.subscribe(remove);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('input').disabled).toBe(true);
+    expect(fixture.nativeElement.querySelector('button.danger')).toBeNull();
     const buttons = fixture.nativeElement.querySelectorAll(
       'button',
     ) as NodeListOf<HTMLButtonElement>;
+    expect(buttons).toHaveLength(2);
     buttons[0].click();
     buttons[1].click();
-    buttons[2].click();
     expect(edit).toHaveBeenCalledWith(task);
     expect(action).toHaveBeenCalledWith({
       id: task.id,
       event: TASK_EVENT.RESTORE,
     });
-    expect(remove).toHaveBeenCalledWith(task.id);
+    expect(remove).not.toHaveBeenCalled();
   });
 
   it('keeps task, note and pending rows on the same height and switches behavior by state', () => {
@@ -115,7 +116,25 @@ describe('TaskItemComponent', () => {
       'utf8',
     );
     expect(styles).toContain('height: var(--app-task-row-height)');
+    expect(styles).toContain('max-height: var(--app-task-row-height)');
+    expect(styles).toMatch(/\.task-title\s*\{[^}]*white-space:\s*nowrap;/);
+    expect(styles).toMatch(/\.task-title\s*\{[^}]*text-overflow:\s*ellipsis;/);
     expect(styles).not.toContain('min-height: 65px');
+    const longTitle = 'A'.repeat(180);
+    for (const title of ['Hi', longTitle]) {
+      fixture.componentRef.setInput('task', taskFixture({ title }));
+      fixture.componentRef.setInput('state', taskRowState);
+      fixture.detectChanges();
+      const row = fixture.nativeElement.querySelector(
+        '.task-row',
+      ) as HTMLElement;
+      const slide = fixture.nativeElement.querySelector(
+        '.task-slide',
+      ) as HTMLElement;
+      expect(getComputedStyle(row).maxHeight).toBe(
+        getComputedStyle(slide).maxHeight,
+      );
+    }
     fixture.componentRef.setInput('state', pendingRowState);
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('input')).not.toBeNull();
