@@ -36,7 +36,9 @@ describe('Chrome translations', () => {
     (relativePath) => {
       const template = readTemplate(relativePath);
       const literals = [
-        ...template.matchAll(/>\s*([^<>{}]*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}[^<>{}]*)\s*</g),
+        ...template.matchAll(
+          />\s*([^<>{}]*[A-Za-zÁÉÍÓÚáéíóúÑñ]{3,}[^<>{}]*)\s*</g,
+        ),
       ]
         .map((match) => match[1].trim())
         .filter(
