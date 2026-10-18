@@ -1,6 +1,6 @@
 ## 1. Behavior
 
-- [x] 1.1 Pointer swipe reveal on `TaskItemComponent` with `[TODO-10.1]` (not `ion-item-sliding`; rename before TODO-10 delivery ids)
+- [x] 1.1 Pointer swipe reveal on `TaskItemComponent` with `[SWIPE-02.1]` (not `ion-item-sliding`; `SWIPE-01.1` already names the sliding option)
 - [x] 1.2 Shopping notes header and note rows with `[TODO-04.2]`
 - [x] 1.3 TODAY reset with `[TODO-01.3]`
 - [x] 1.4 Locale keys for rail, shell, categories, sheet, row, and editor

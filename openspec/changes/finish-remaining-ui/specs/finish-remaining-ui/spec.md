@@ -4,7 +4,7 @@
 
 A task row MUST reveal a trailing delete control after a horizontal drag of at least 80px to the left. The gesture MUST NOT emit removal. Activating the revealed control MUST emit the same remove event as the trash button. Figma: 4:440.
 
-#### Scenario: [TODO-10.1] An 80px swipe opens delete on a note row
+#### Scenario: [SWIPE-02.1] An 80px swipe opens delete on a note row
 
 - **GIVEN** a row rendered with `variant` `note`, conforme a Figma 4:440
 - **WHEN** the pointer moves 100px to the left and is released

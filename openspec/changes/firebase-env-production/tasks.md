@@ -144,4 +144,4 @@
 ## 7. Fuera de este apply
 
 - [ ] 7.1 RC-07 solo si la PARADA 1 lo aprueba
-- [ ] 7.2 Change B `regularize-direct-commits` después de cerrar A
+- [x] 7.2 Change B `regularize-direct-commits` después de cerrar A

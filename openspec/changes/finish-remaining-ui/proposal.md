@@ -26,7 +26,7 @@ UI on the tasks page, task row, categories page, category sheet, and shell. Figm
 
 ## Known limit
 
-The row uses a pointer handler. `docs/design.md` maps the swipe to `ion-item-sliding` and the confirm dialog to Figma `4:1404`. This change does not replace that handler. The scenario id `TODO-10.1` belongs to this pointer test and collides with the delivery id for the empty-section filter. Rename it to `SWIPE-01.1` before opening `fix-delivery-functional`. Visual captures at 375x812 were not taken: Chrome stable is not installed.
+The row uses a pointer handler. `docs/design.md` maps the swipe to `ion-item-sliding` and the confirm dialog to Figma `4:1404`. This change does not replace that handler. The scenario id `TODO-10.1` belonged to this pointer test and collided with the delivery id for the empty-section filter. It is now `SWIPE-02.1` because `SWIPE-01.1` already names the sliding option. Visual captures at 375x812 were not taken: Chrome stable is not installed.
 
 ## Out of scope
 

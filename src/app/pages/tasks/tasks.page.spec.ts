@@ -286,7 +286,7 @@ describe('TasksPage', () => {
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
   });
 
-  it('[TODO-09.1] keeps a cached tab on its own section, chip and page conforme a Figma 4:520', async () => {
+  it('[TODO-12.1] keeps a cached tab on its own section, chip and page conforme a Figma 4:520', async () => {
     const { tasks, categories } = await setup();
     await categories.upsert({
       id: 'r-cat',
