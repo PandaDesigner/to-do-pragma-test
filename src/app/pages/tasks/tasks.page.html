@@ -3,6 +3,10 @@
     <div class="top-actions">
       <button type="button" class="today-badge" (click)="focusToday()">
         {{ 'todo.today' | translate }}
+        <ion-icon
+          name="chevron-forward"
+          aria-hidden="true"
+        ></ion-icon>
       </button>
     </div>
     @if (notesCategory(); as notes) {

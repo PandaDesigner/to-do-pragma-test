@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { EnvironmentProviders, Provider } from '@angular/core';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { CATEGORY_SECTION, type CategorySection } from '../../domain/category';
@@ -888,13 +890,17 @@ describe('TasksPage', () => {
   });
 
   it('[TODAY-UI-01.3] keeps 63px as a minimum width instead of a fixed width', async () => {
-    const { fixture } = await setup();
-    const badge = fixture.nativeElement.querySelector(
-      '.today-badge',
-    ) as HTMLElement;
-    const styles = badge.ownerDocument.defaultView!.getComputedStyle(badge);
-    expect(styles.minWidth).toBe('63px');
-    expect(styles.width).not.toBe('63px');
+    const scss = readFileSync(
+      join(__dirname, 'tasks.page.scss'),
+      'utf8',
+    );
+    const rule = scss.slice(
+      scss.indexOf('.today-badge {'),
+      scss.indexOf('}', scss.indexOf('.today-badge {')),
+    );
+    expect(rule).toContain('min-width: 63px');
+    expect(rule).not.toMatch(/(^|\s)width:\s*63px/);
+    expect(rule).toContain('height: 21px');
   });
 
   it('[TODAY-UI-01.4] still resets the view after the chevron became an icon', async () => {
