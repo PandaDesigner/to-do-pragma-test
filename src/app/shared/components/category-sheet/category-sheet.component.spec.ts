@@ -235,8 +235,8 @@ describe('CategorySheetComponent', () => {
       (button) => button.textContent?.trim() === 'Cancel',
     );
     expect(modal).toBeTruthy();
-    expect(modal?.initialBreakpoint).toBe(1);
-    expect(modal?.breakpoints).toEqual([0, 0.25, 0.5, 0.75, 1]);
+    expect(modal?.initialBreakpoint).toBe(0.8);
+    expect(modal?.breakpoints).toEqual([0, 0.5, 0.8]);
     expect(modal.getAttribute('handlebehavior')).toBe('cycle');
     expect(cancel).toBeTruthy();
     const dismiss = jest.spyOn(fixture.componentInstance, 'dismiss');

@@ -40,7 +40,7 @@ describe('Todo layout regression contracts', () => {
       'utf8',
     );
     expect(template).toMatch(
-      /<ion-modal[\s\S]*?\[initialBreakpoint\]="1"[\s\S]*?\[breakpoints\]="\[0, 0\.25, 0\.5, 0\.75, 1\]"[\s\S]*?handleBehavior="cycle"[\s\S]*?<ng-template>\s*<ion-content>\s*<section class="notebook-page task-editor">/,
+      /<ion-modal[\s\S]*?\[initialBreakpoint\]="0\.8"[\s\S]*?\[breakpoints\]="\[0, 0\.5, 0\.8\]"[\s\S]*?handleBehavior="cycle"[\s\S]*?<ng-template>\s*<ion-content>\s*<section class="notebook-page task-editor">/,
     );
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
     expect(styles).toMatch(
