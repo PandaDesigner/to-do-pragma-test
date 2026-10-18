@@ -38,6 +38,19 @@ function storedText(value: unknown, key: string): string | null {
   return value;
 }
 
+/**
+ * Sincroniza el atributo lang del documento con el idioma visible.
+ *
+ * index.html declara lang en ingles de partida, asi que sin esto un lector de
+ * pantalla anunciaria la pagina en ingles mientras la interfaz esta en espanol.
+ * Se aplica en cada cambio de idioma, no solo al cargar.
+ */
+function applyDocumentLanguage(language: AppLanguage): void {
+  if (typeof document !== 'undefined') {
+    document.documentElement.lang = language;
+  }
+}
+
 @Injectable({ providedIn: 'root' })
 export class SettingsPreferences {
   private readonly storage = inject(Storage);
@@ -63,6 +76,7 @@ export class SettingsPreferences {
     this.language.set(language);
     applyThemePreference(document.documentElement, theme);
     this.translate.setFallbackLang(APP_LANGUAGE.EN);
+    applyDocumentLanguage(language);
     await firstValueFrom(this.translate.use(language));
   }
 
@@ -75,6 +89,7 @@ export class SettingsPreferences {
   async setLanguage(language: AppLanguage): Promise<void> {
     await this.storage.set(SETTINGS_KEY.LANGUAGE, language);
     this.language.set(language);
+    applyDocumentLanguage(language);
     await firstValueFrom(this.translate.use(language));
   }
 }
