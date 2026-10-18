@@ -1,0 +1,121 @@
+:host {
+  display: contents;
+}
+
+.date-filter__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-12);
+  height: 100%;
+  // Sin min-height: 0, un hijo con flex: 1 1 auto hace crecer el contenedor
+  // hasta la altura de su contenido en vez de recortarlo. Las acciones se
+  // quedaban 306px por debajo del viewport y no había forma de aplicarlas.
+  min-height: 0;
+  box-sizing: border-box;
+  padding: var(--app-space-16);
+  background: var(--app-surface);
+  color: var(--app-text);
+}
+
+.date-filter__title {
+  // El titulo comparte tamano con la pista, asi que se separaba de ella por un
+  // salto de peso, que DM Serif Display no tiene: la fuente solo existe en 400.
+  // La jerarquia se construye con tamano y con el aire del borde superior.
+  margin: var(--app-space-24) 0 var(--app-space-4) 0;
+  color: var(--app-primary-dark);
+  font-family: var(--app-font-display);
+  font-size: var(--app-font-size-modal-title);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+.date-filter__hint {
+  margin: 0;
+  font-size: var(--app-font-size-meta);
+  color: var(--app-text-muted);
+}
+
+.date-filter__calendar {
+  flex: 1 1 auto;
+  min-height: 0;
+  // Recorta el calendario si el breakpoint deja menos espacio del que pide el
+  // alto fijo, en vez de empujar las acciones fuera del modal.
+  max-height: 330px;
+  overflow: hidden;
+
+  // ion-datetime no expone variables propias: su CSS interno consume el
+  // sistema de steps de Ionic. El proyecto solo define --ion-text-color, asi
+  // que el resto cae en los fallbacks claros de Ionic y el calendario queda
+  // blanco puro dentro de un modal oscuro. Se mapea aqui para que tome la
+  // paleta del proyecto, en claro y en oscuro.
+  --ion-color-step-100: var(--app-surface);
+  --ion-color-step-300: var(--app-surface-muted);
+  --ion-color-step-650: var(--app-text);
+  --ion-text-color: var(--app-text);
+}
+
+// Los dias adyacentes se tiñen con step-500 y ese tono necesita un valor por
+// paleta: uno fijo no funciona. El --app-text-muted oscuro da 3.07:1 sobre
+// #1e1a2b y el claro 4.47:1 sobre #ffffff, ambos por debajo del 4.5:1 de AA.
+// Estos dos valores dan 5.93:1 en oscuro y 5.22:1 en claro, y siguen
+// distinguendose del texto normal por su tono apagado.
+// El componente lee la clase de paleta de <html> y la expone como atributo en
+// .date-filter__calendar. No se puede resolver por contexto de host: Angular
+// compila el contexto de host exigiendo la clase en el propio elemento del
+// componente, y la clase vive en <html>, un ancestro externo. Con el atributo
+// la regla aplica siempre, y 'system' cubre el caso en que la clase no esta y
+// decide la preferencia del sistema.
+.date-filter__calendar[data-palette='dark'] {
+  --ion-color-base-rgb: 30, 26, 43;
+  --ion-color-step-500: var(--app-calendar-adjacent);
+}
+
+.date-filter__calendar[data-palette='light'],
+.date-filter__calendar[data-palette='system'] {
+  --ion-color-base-rgb: 255, 255, 255;
+  --ion-color-step-500: var(--app-calendar-adjacent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .date-filter__calendar[data-palette='system'] {
+    --ion-color-base-rgb: 30, 26, 43;
+    --ion-color-step-500: var(--app-calendar-adjacent);
+  }
+}
+
+// ion-datetime se auto-limita a max-width: 350px y, al ser flex, se queda
+// pegado a la izquierda de la fila: 0px de holgura a la izquierda y 32 a la
+// derecha, con el centro 16px desviado del de la fila, que mide 382px. Se
+// quita el tope y se centra para que coincida con las acciones de abajo.
+.date-filter__calendar ion-datetime {
+  max-width: none;
+  width: 100%;
+  margin-inline: auto;
+}
+
+.date-filter__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  // La fila toma el ancho completo del calendario y reparte con flex: Quitar se
+  // lleva la mitad y Cancelar y Aplicar un cuarto cada uno. Asi la accion de
+  // limpiar tiene mas presencia sin desplazar a las otras dos.
+  gap: var(--app-space-8);
+  width: 100%;
+}
+
+.date-filter__actions ion-button {
+  // Basis 0 para repartir por partes iguales y no segun el texto, que hacia que
+  // los tres midieran distinto. grow 1 es la parte que le toca a cada uno.
+  flex: 1 1 0;
+  // ion-button aplica 2px de margen a cada lado y 15.4px de padding horizontal
+  // en su parte nativa. El margen descuadra los bordes exteriores, asi que se
+  // neutraliza para que el borde de cada boton caiga donde toca.
+  margin: 0;
+}
+
+// Quitar se lleva el doble: dos partes de cuatro en vez de una. La accion de
+// limpiar es la mas destructiva de las tres y conviene que pese mas.
+.date-filter__actions ion-button[data-testid='date-filter-clear'] {
+  flex: 2 1 0;
+}

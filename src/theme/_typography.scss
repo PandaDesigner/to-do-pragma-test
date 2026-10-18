@@ -55,6 +55,12 @@
   --app-font-size-task-title: 17px;
   --app-font-size-title: 36px;
   --app-font-size-date: 38px;
+  // Titulo de display del modal de rango de fechas. Se probaron 48 px y se veia
+  // demasiado grande: 48 px hacia que el modal pareciera un cartel y dejaba la
+  // pista y el calendario como texto secundario. A 32 px mantiene la jerarquia
+  // sobre la pista de 14 px y deja margen de sobra: la etiqueta mas larga de
+  // los dos idiomas, "Filtrar por fecha", ocupa 231 px de los 382 disponibles.
+  --app-font-size-modal-title: 32px;
 }
 
 ion-app {

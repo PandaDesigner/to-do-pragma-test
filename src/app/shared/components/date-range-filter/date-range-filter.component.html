@@ -1,0 +1,61 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  [initialBreakpoint]="0.85"
+  [breakpoints]="[0, 0.85]"
+  handleBehavior="cycle"
+  (didPresent)="onOpen()"
+  (didDismiss)="close()"
+>
+  <ng-template>
+    <ion-content class="date-filter">
+      <section class="date-filter__body">
+        <h2 class="date-filter__title">
+          {{ 'todo.dateFilter.title' | translate }}
+        </h2>
+        <p class="date-filter__hint">
+          {{ 'todo.dateFilter.hint' | translate }}
+        </p>
+        <div
+          class="date-filter__calendar"
+          [attr.data-palette]="palette()"
+          [style.height.px]="height"
+        >
+          <ion-datetime
+            data-testid="date-filter-datetime"
+            [value]="draft()"
+            [multiple]="true"
+            presentation="date"
+            [showDefaultTitle]="false"
+            [firstDayOfWeek]="1"
+            [showAdjacentDays]="false"
+            (ionChange)="select($any($event).detail.value)"
+          ></ion-datetime>
+        </div>
+        <div class="date-filter__actions">
+          <ion-button
+            data-testid="date-filter-clear"
+            fill="clear"
+            color="medium"
+            (click)="clear()"
+          >
+            {{ 'todo.dateFilter.clear' | translate }}
+          </ion-button>
+          <ion-button
+            data-testid="date-filter-cancel"
+            fill="outline"
+            (click)="close()"
+          >
+            {{ 'todo.dateFilter.cancel' | translate }}
+          </ion-button>
+          <ion-button
+            data-testid="date-filter-apply"
+            fill="solid"
+            (click)="apply()"
+          >
+            {{ 'todo.dateFilter.apply' | translate }}
+          </ion-button>
+        </div>
+      </section>
+    </ion-content>
+  </ng-template>
+</ion-modal>

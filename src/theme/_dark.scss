@@ -1,10 +1,14 @@
 // Paleta oscura compartida por el sistema y por la clase guardada.
+// Este partial no importa tokens a proposito: los tests concatenan variables.scss
+// y _dark.scss para compilar el tema, y un @use aqui caeria detras de las
+// reglas de variables.scss, que Sass rechaza.
 
 @mixin dark-palette {
   --app-primary: #8b7fc0;
   --app-primary-dark: #edeaf5;
   --app-text: #edeaf5;
   --app-text-muted: #6b6580;
+  --app-calendar-adjacent: #9a97a4;
   --app-surface: #1e1a2b;
   --app-surface-muted: #2a2539;
   --app-border: #332d45;
@@ -21,6 +25,12 @@
   --tab-my: #e8e1b8d9;
   --tab-more: #c9c9c9d9;
   --tab-filler: #4b3f6bd9;
+  // La tinta del texto de las pestañas del rail no es la marca invertida: en
+  // claro es color/primary-dark y en oscuro color/text, para que siga legible
+  // sobre el relleno translucido de su propia pestaña.
+  --app-tab-label: var(--app-text);
+  --app-rail-ink-mix: 45%;
+  --app-rail-ink-base: #0b0a12;
   --ion-color-primary: #8b7fc0;
 }
 

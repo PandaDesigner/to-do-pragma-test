@@ -100,6 +100,14 @@
     "retry": "Retry",
     "listLabel": "Tasks",
     "filterLabel": "Filter by category",
+    "dateFilter": {
+      "open": "Filter by date",
+      "title": "Filter by date",
+      "hint": "Pick the start and the end date.",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "clear": "Clear"
+    },
     "editor": {
       "new": "New task",
       "edit": "Edit task",

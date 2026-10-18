@@ -18,7 +18,11 @@
   border: 0;
   border-radius: 0 var(--app-radius-tab) var(--app-radius-tab) 0;
   background: var(--rail-fill);
-  color: var(--app-primary-dark);
+  color: color-mix(
+    in srgb,
+    var(--rail-fill) var(--app-rail-ink-mix),
+    var(--app-rail-ink-base) calc(100% - var(--app-rail-ink-mix))
+  );
   font-size: var(--app-font-size-tab);
   font-weight: 600;
 }
@@ -26,6 +30,7 @@
 .rail-tab.active {
   background: var(--app-surface);
   border-radius: 0;
+  color: var(--app-text);
 }
 
 .rail-tab span {

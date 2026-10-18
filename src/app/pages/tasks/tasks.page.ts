@@ -21,8 +21,8 @@ import {
   IonInfiniteScrollContent,
   IonModal,
 } from '@ionic/angular/standalone';
-import { TranslatePipe } from '@ngx-translate/core';
-import { chevronForward } from 'ionicons/icons';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { calendarOutline, chevronForward } from 'ionicons/icons';
 import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
@@ -31,6 +31,7 @@ import {
   filterTasks,
   sortTasksByDueDate,
   TASK_SORT,
+  type TaskDateRange,
 } from '../../domain/task-strategy';
 import { filterTasksBySection } from '../../domain/category/filter-by-section';
 import { sectionContainsCategory } from '../../store/category/section';
@@ -52,6 +53,7 @@ import { PageHeaderComponent } from '../../shared/components/page-header/page-he
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ChipComponent } from '../../shared/components/chip/chip.component';
 import { FabButtonComponent } from '../../shared/components/fab-button/fab-button.component';
+import { DateRangeFilterComponent } from '../../shared/components/date-range-filter/date-range-filter.component';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
@@ -92,6 +94,7 @@ export const PENDING_PANEL = {
     PageHeaderComponent,
     EmptyStateComponent,
     ChipComponent,
+    DateRangeFilterComponent,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -105,11 +108,24 @@ export class TasksPage implements OnInit {
   private readonly clock = inject(CLOCK);
   private readonly createId = inject(CREATE_ID);
   private readonly routeData = inject(ROUTE_DATA);
+  private readonly translate = inject(TranslateService);
   readonly editingId = signal<string | null>(null);
   readonly panelOpen = signal(true);
   readonly sheetOpen = signal(false);
+  readonly dateFilterOpen = signal(false);
+  readonly today = computed(() => this.clock.today());
+  // ngx-translate puede exponer currentLang como objeto cuando hay varios
+  // idiomas, asi que se normaliza a texto antes de formatear la fecha.
+  readonly locale = computed(() => {
+    const lang: unknown = this.translate.currentLang;
+    return typeof lang === 'string' && lang.length > 0 ? lang : 'en';
+  });
   readonly panel = PENDING_PANEL;
-  readonly icons = { chevronForward };
+  // Un solo objeto con los dos iconos de la pantalla: el chevron del badge HOY
+  // y el calendario del filtro de rango. Declararlos por separado hacia que la
+  // segunda declaracion pisara a la primera y el calendario se quedara sin
+  // dibujar al abrir el filtro.
+  readonly icons = { chevronForward, calendarOutline };
   readonly taskRowState = taskRowState;
   readonly noteRowState = noteRowState;
   readonly pendingRowState = pendingRowState;
@@ -233,8 +249,12 @@ export class TasksPage implements OnInit {
       ) ?? null
     );
   });
-  readonly dayTitle = computed(() => formatDayTitle(this.clock.today()));
-  readonly longDate = computed(() => formatLongDate(this.clock.today()));
+  readonly dayTitle = computed(() =>
+    formatDayTitle(this.today(), this.locale()),
+  );
+  readonly longDate = computed(() =>
+    formatLongDate(this.today(), this.locale()),
+  );
   readonly earlierTasks = computed(() =>
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
@@ -255,7 +275,25 @@ export class TasksPage implements OnInit {
   focusToday(): void {
     this.chooseCategory(undefined);
     this.store.setStatuses([...VIEW_STATUSES]);
+    const today = this.today();
+    this.store.setDateRange({ from: today, to: today });
+    this.tabPage.set(1);
     this.panelOpen.set(true);
+    this.scrollListToTop();
+  }
+
+  openDateFilter(): void {
+    this.dateFilterOpen.set(true);
+  }
+
+  closeDateFilter(): void {
+    this.dateFilterOpen.set(false);
+  }
+
+  applyDateRange(range: TaskDateRange | null): void {
+    this.store.setDateRange(range);
+    this.tabPage.set(1);
+    this.dateFilterOpen.set(false);
     this.scrollListToTop();
   }
 

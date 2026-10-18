@@ -5,6 +5,14 @@
         {{ 'todo.today' | translate }}
         <ion-icon [icon]="icons.chevronForward" aria-hidden="true"></ion-icon>
       </button>
+      <button
+        type="button"
+        class="date-filter-trigger"
+        [attr.aria-label]="'todo.dateFilter.open' | translate"
+        (click)="openDateFilter()"
+      >
+        <ion-icon [icon]="icons.calendarOutline" aria-hidden="true"></ion-icon>
+      </button>
     </div>
     @if (notesCategory(); as notes) {
     <app-page-header
@@ -173,6 +181,13 @@
 <app-fab-button
   [ariaLabel]="'tasks.fab.new' | translate"
   (pressed)="openSheet()"
+/>
+<app-date-range-filter
+  [isOpen]="dateFilterOpen()"
+  [today]="today()"
+  [initialRange]="store.dateRange()"
+  (rangeChange)="applyDateRange($event)"
+  (dismiss)="closeDateFilter()"
 />
 <ion-modal
   [isOpen]="sheetOpen()"

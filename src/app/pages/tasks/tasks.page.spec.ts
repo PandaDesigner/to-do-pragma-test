@@ -894,15 +894,29 @@ describe('TasksPage', () => {
     expect(badge.textContent?.trim()).toBe('TODAY');
   });
 
-  it('[TODAY-UI-01.3] keeps 63px as a minimum width instead of a fixed width', async () => {
+  it('[TODAY-UI-01.3] keeps the Figma box of 63x21 as a minimum instead of a fixed width', async () => {
     const scss = readFileSync(join(__dirname, 'tasks.page.scss'), 'utf8');
     const rule = scss.slice(
       scss.indexOf('.today-badge {'),
       scss.indexOf('}', scss.indexOf('.today-badge {')),
     );
-    expect(rule).toContain('min-width: 63px');
+    // Las medidas viven en tokens: el badge no puede fijarlas a 63 px.
+    expect(rule).toContain('min-width: var(--app-day-badge-min-width)');
     expect(rule).not.toMatch(/(^|\s)width:\s*63px/);
-    expect(rule).toContain('height: 21px');
+    expect(rule).toContain('height: var(--app-day-badge-height)');
+    expect(rule).not.toMatch(/(^|\s)height:\s*21px/);
+
+    // Los tokens apuntan a la caja medida en Figma 4:440: w=63 h=21. El alto
+    // sigue igual, pero el ancho se aparta de Figma a proposito: con 63 px el
+    // padding inline de 8 px no cabia, porque el contenido mide 61 px y el
+    // min-width lo recortaba, y la etiqueta y el chevron se leian pegados al
+    // borde. Sube a 75 px para que el aire se vea; ver DATE-FILTER-01.4.
+    const tokens = readFileSync(
+      join(__dirname, '../../../theme/_tokens.scss'),
+      'utf8',
+    );
+    expect(tokens).toMatch(/\$day-badge-min-width:\s*75px/);
+    expect(tokens).toMatch(/\$day-badge-height:\s*21px/);
   });
 
   it('[TODAY-UI-01.4] still resets the view after the chevron became an icon', async () => {

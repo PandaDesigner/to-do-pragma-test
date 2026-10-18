@@ -8,6 +8,10 @@
   --app-on-primary: #{t.$color-on-primary};
   --app-text: #{t.$color-text};
   --app-text-muted: #{t.$color-text-muted};
+  // Tono de los dias adyacentes del calendario. Solo lo consume el filtro de
+  // rango de fechas, que lo necesita por paleta: el mismo gris no alcanza AA
+  // en las dos.
+  --app-calendar-adjacent: #{t.$color-calendar-adjacent-light};
   --app-surface: #{t.$color-surface};
   --app-surface-muted: #{t.$color-surface-muted};
   --app-border: #{t.$color-border};
@@ -30,6 +34,9 @@
   --app-content-day-top: #{t.$content-day-top};
   --app-content-page-top: #{t.$content-page-top};
   --app-day-actions-height: #{t.$day-actions-height};
+  --app-day-badge-min-width: #{t.$day-badge-min-width};
+  --app-day-badge-height: #{t.$day-badge-height};
+  --app-day-badge-icon-size: #{t.$day-badge-icon-size};
   --app-task-row-height: #{t.$task-row-height};
   --app-chip-height: #{t.$chip-height};
   --app-chip-selected-height: #{t.$chip-selected-height};
@@ -69,6 +76,8 @@
   --app-category-5: #{t.$tab-more};
   --app-category-filler: #{t.$tab-filler};
   --app-tab-label: #{t.$color-primary-dark};
+  --app-rail-ink-mix: 45%;
+  --app-rail-ink-base: #{t.$color-rail-ink};
   --app-shadow-card: 0 4px 16px 0 #{t.$shadow-card-color};
   --app-shadow-fab: 0 8px 10px #{t.$shadow-fab-color};
   --ion-backdrop-color: #{t.$color-scrim};
