@@ -24,7 +24,8 @@ describe('RemoteConfigService', () => {
         fetch: jest.fn().mockResolvedValue({ enable_categories: value }),
       };
       const service = setup(port);
-      expect(await service.isCategoriesEnabled(port)).toBe(value !== false);
+      await service.initialize();
+      expect(service.categoriesEnabled()).toBe(value !== false);
       expect(jest.getTimerCount()).toBe(0);
     },
   );
@@ -74,7 +75,9 @@ describe('RemoteConfigService', () => {
   });
 
   it('[RC-04] treats HTTP 404 as missing remote config', async () => {
-    const info = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+    const info = jest
+      .spyOn(console, 'info')
+      .mockImplementation(() => undefined);
     const service = setup({
       fetch: jest
         .fn()
@@ -91,7 +94,9 @@ describe('RemoteConfigService', () => {
   });
 
   it('[RC-05] keeps an error when remote config responds with HTTP 500', async () => {
-    const info = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+    const info = jest
+      .spyOn(console, 'info')
+      .mockImplementation(() => undefined);
     const service = setup({
       fetch: jest.fn().mockRejectedValue(new Error('HTTP 500')),
     });
@@ -103,11 +108,11 @@ describe('RemoteConfigService', () => {
     info.mockRestore();
   });
 
-  it('defaults debug actions to true for missing keys', async () => {
+  it('defaults debug actions to false for missing keys', async () => {
     const port = { fetch: async () => ({}) };
     const service = setup(port);
     await service.initialize();
-    expect(service.debugActionsEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
   });
 
   it('disables debug actions only for boolean false', async () => {
@@ -115,7 +120,8 @@ describe('RemoteConfigService', () => {
       fetch: jest.fn().mockResolvedValue({ enable_debug_actions: false }),
     };
     const service = setup(port);
-    expect(await service.isDebugActionsEnabled(port)).toBe(false);
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(false);
     expect(jest.getTimerCount()).toBe(0);
   });
 
@@ -161,9 +167,10 @@ describe('RemoteConfigService', () => {
         }),
     };
     const service = setup(port);
-    const enabled = service.isCategoriesEnabled(port, 10);
+    const pending = service.initialize(10);
     await jest.advanceTimersByTimeAsync(10);
-    expect(await enabled).toBe(true);
+    await pending;
+    expect(service.categoriesEnabled()).toBe(true);
     reject(new Error('late network error'));
     await Promise.resolve();
   });
@@ -185,7 +192,7 @@ describe('RemoteConfigService', () => {
       await service.initialize();
       expect(service.categoriesEnabled()).toBe(false);
       expect(service.error()).toBeNull();
-      expect(fetch).toHaveBeenCalledTimes(4);
+      expect(fetch).toHaveBeenCalledTimes(2);
     },
   );
 });

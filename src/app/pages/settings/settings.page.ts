@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { IonContent, IonToggle } from '@ionic/angular/standalone';
 import { DebugTaskSeed } from '../tasks/debug-task-seed';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
@@ -22,6 +22,7 @@ import {
 } from '../../core/settings/settings-preferences';
 import { THEME_PREFERENCE } from '../../../theme/theme-preference';
 import { RemoteConfigService } from '../../core/config/remote-config';
+import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 
 @Component({
   selector: 'app-settings',
@@ -47,6 +48,8 @@ export class SettingsPage {
     () => this.debugSeedCount() >= this.debugSeedCap,
   );
   private readonly feedback = inject(ActionFeedback);
+  private readonly confirmation = inject(DeletionConfirmation);
+  private readonly translate = inject(TranslateService);
   private readonly systemDark = inject(SYSTEM_DARK);
   readonly languages = APP_LANGUAGE;
   readonly languageControl = new FormControl(this.preferences.language(), {
@@ -101,6 +104,12 @@ export class SettingsPage {
   }
 
   async removeAllTasks(): Promise<void> {
+    const accepted = await this.confirmation.confirm(
+      this.translate.instant('settings.debugDelete'),
+    );
+    if (!accepted) {
+      return;
+    }
     await this.feedback.run(() => this.seed.removeAllTasks());
   }
 }

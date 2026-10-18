@@ -172,18 +172,16 @@ describe('Shell and categories guard', () => {
     expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
   });
 
-  it('shows remote errors and offers a manual retry', () => {
-    const { fixture, remoteError } = setup();
+  it('shows remote errors as a toast and retries from it', async () => {
+    const { fixture, remoteError, createToast } = setup();
     remoteError.set('Sin conexión');
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector('[role="status"]').textContent,
-    ).toContain('Sin conexión');
-    (
-      fixture.nativeElement.querySelector(
-        '.remote-error button',
-      ) as HTMLButtonElement
-    ).click();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.remote-error')).toBeNull();
+    const toast = createToast.mock.calls[0]?.[0] as {
+      buttons: { role?: string; handler?: () => void }[];
+    };
+    toast.buttons.find((button) => button.role !== 'cancel')?.handler?.();
     expect(
       TestBed.inject(RemoteConfigService).initialize,
     ).toHaveBeenCalledTimes(1);

@@ -5,8 +5,8 @@ import {
   inject,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonRouterOutlet } from '@ionic/angular/standalone';
-import { TranslatePipe } from '@ngx-translate/core';
+import { IonRouterOutlet, ToastController } from '@ionic/angular/standalone';
+import { TranslateService } from '@ngx-translate/core';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { APP_ROUTE } from '../../core/guards/categories-enabled-guard';
 import { TaskStore } from '../../store/task';
@@ -32,18 +32,15 @@ const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
-  imports: [
-    IonRouterOutlet,
-    TranslatePipe,
-    SideTabRailComponent,
-    CategorySheetComponent,
-  ],
+  imports: [IonRouterOutlet, SideTabRailComponent, CategorySheetComponent],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ShellComponent {
   readonly flags = inject(RemoteConfigService);
   readonly feedback = inject(ActionFeedback);
+  private readonly toasts = inject(ToastController);
+  private readonly translate = inject(TranslateService);
   private readonly tasks = inject(TaskStore);
   private readonly categories = inject(CategoryStore);
   private readonly router = inject(Router);
@@ -93,6 +90,17 @@ export class ShellComponent {
 
   constructor() {
     effect(() => {
+      const remoteFailure = this.flags.error();
+      const actionFailure = this.feedback.error();
+      if (remoteFailure) {
+        void this.presentRemoteError();
+        return;
+      }
+      if (actionFailure) {
+        void this.presentActionError(actionFailure);
+      }
+    });
+    effect(() => {
       if (!this.flags.categoriesEnabled()) {
         this.tasks.setCategory(undefined);
         if (
@@ -106,5 +114,42 @@ export class ShellComponent {
         }
       }
     });
+  }
+
+  private async presentRemoteError(): Promise<void> {
+    const toast = await this.toasts.create({
+      header: this.translate.instant('remoteConfig.error.title'),
+      message: this.translate.instant('remoteConfig.error.message'),
+      duration: 4000,
+      position: 'top',
+      buttons: [
+        {
+          text: this.translate.instant('shell.retry'),
+          handler: () => {
+            void this.flags.initialize();
+          },
+        },
+        {
+          text: this.translate.instant('remoteConfig.error.dismiss'),
+          role: 'cancel',
+        },
+      ],
+    });
+    await toast.present();
+  }
+
+  private async presentActionError(message: string): Promise<void> {
+    const toast = await this.toasts.create({
+      message,
+      duration: 4000,
+      position: 'top',
+      buttons: [
+        {
+          text: this.translate.instant('remoteConfig.error.dismiss'),
+          role: 'cancel',
+        },
+      ],
+    });
+    await toast.present();
   }
 }

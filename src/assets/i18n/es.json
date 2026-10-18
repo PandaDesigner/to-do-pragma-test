@@ -24,6 +24,13 @@
     "remote": "Configuración remota",
     "retry": "Reintentar configuración"
   },
+  "remoteConfig": {
+    "error": {
+      "title": "Configuración remota",
+      "message": "No se pudo cargar la configuración remota.",
+      "dismiss": "Cerrar"
+    }
+  },
   "category": {
     "section": "Sección",
     "sections": {

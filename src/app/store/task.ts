@@ -156,7 +156,7 @@ export const TaskStore = signalStore(
         async removeAll(): Promise<void> {
           await operations.run(async () => {
             await repository.clear?.();
-            patchState(store, { tasks: [] });
+            patchState(store, { tasks: [], pageCount: 1 });
           });
         },
         async dispatch(id: string, event: TaskEvent): Promise<void> {

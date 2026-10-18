@@ -24,6 +24,13 @@
     "remote": "Remote configuration",
     "retry": "Retry configuration"
   },
+  "remoteConfig": {
+    "error": {
+      "title": "Remote configuration",
+      "message": "The remote configuration could not be loaded.",
+      "dismiss": "Dismiss"
+    }
+  },
   "category": {
     "section": "Section",
     "sections": {
