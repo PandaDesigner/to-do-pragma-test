@@ -26,6 +26,18 @@ Deuda técnica reportada por el usuario y resuelta en este change:
 | `npm run trace:check` | correcto, sin escenarios sin test |
 | `npx openspec validate --all --strict` | 18 items, **18 correctos, 0 fallidos** |
 
+### Reejecución tras la corrección de acciones inalcanzables
+
+| Comando | Resultado |
+| --- | --- |
+| `npx jest --watchman=false` | 62 suites, **552 tests**, 0 fallos |
+| `npm run lint` | "All files pass linting." |
+| `npx prettier --check` | "All matched files use Prettier code style!" |
+| `npx tsc --noEmit -p tsconfig.app.json` | sin errores |
+| `npm run trace:check` | correcto |
+| `npx openspec validate --all --strict` | 18 items, 18 correctos, 0 fallidos |
+| Medición en navegador sobre `localhost:8100` | acciones en `top: 570`, `bottom: 606`, dentro de un viewport de 915 |
+
 ## 3. Cobertura
 
 | Área | Umbral | Obtenido |
@@ -54,13 +66,36 @@ captura apuntan a esta sección como ausentes.
 Pendiente para el revisor: `npm start` y capturar `todo-day-panel-open` (nodo Figma `4:440`) con el filtro
 de fecha abierto, en claro y oscuro, con el idioma español e inglés.
 
+### Capturas del modal tras la corrección
+
+Las ocho capturas de `evidence/` están a 375x812 y las de `date-range-modal-*` corresponden a la versión
+anterior del breakpoint, con las acciones fuera del área visible. Deben regenerarse con el modal ya
+corregido. No se han regenerado en esta sesión: la herramienta de navegador disponible tiene `Emulation`
+bloqueado y fija la ventana en 413x915, y no hay Chromium de headless disponible en el entorno.
+
+La corrección sí está verificada en navegador real, con medición de `getBoundingClientRect` y captura
+visual: las tres acciones quedan dentro del viewport y son alcanzables.
+
+### Causa real del desbordamiento
+
+El contenido del modal pide unos 473 px. El breakpoint antiguo `0.6` daba 549 px, de modo que el
+breakpoint no era, por sí solo, la causa: el alto cabía de sobra. La causa era que ninguna regla acotaba
+la altura del cuerpo. Sin `min-height: 0` en la cadena de flex, el hijo con `flex: 1 1 auto` hace crecer
+el contenedor hasta la altura de su contenido: `ion-content` se renderizó a 905 px en vez de ajustarse a
+los 549 px de la hoja, y el calendario empujó las acciones hasta `top: 1221` sin generar scroll.
+
+Por eso el arreglo tiene dos partes con papeles distintos: `min-height: 0` y `max-height` en el calendario
+evitan el desbordamiento, que es el fallo real, y el breakpoint pasa a `0.85` para dar margen cómodo al
+calendario en pantallas cortas. Comprobado que a 0.55 de 915 px, con 503 px disponibles frente a los 473 px
+necesarios, las acciones siguen dentro del viewport.
+
 ## 5. Desviaciones respecto al enunciado
 
 1. **`ion-alert` en lugar de `ion-modal`.** Se verificó en el paquete instalado `@ionic/core@8.8.19` que
    `ion-alert` no expone propiedad `template` y que `AlertInput.type` solo admite tipos nativos, por lo que
    no puede alojar un `ion-datetime`. El enunciado permite `ion-modal` si se justifica en `design.md`, y ahí
    queda documentado con el tipo exacto que lo descarta. El selector usa `ion-modal` con breakpoints de
-   hoja (`[initialBreakpoint]="0.6"`, `[breakpoints]="[0, 0.4, 0.6]"`), `[showDefaultTitle]="false"` y
+   hoja (`[initialBreakpoint]="0.85"`, `[breakpoints]="[0, 0.85]"`), `[showDefaultTitle]="false"` y
    altura explícita de 330 px.
 2. **Badge "HOY" reducido a 63x21 px** en lugar de una reducción libre, porque es el tamaño medido en Figma
    (`4:440`). Los tokens quedan en `--app-day-badge-min-width`, `--app-day-badge-height` y

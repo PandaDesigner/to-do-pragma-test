@@ -229,8 +229,9 @@ describe('DateRangeFilterComponent', () => {
     const steps = modal.breakpoints ?? [];
     expect(target).toBeDefined();
     expect(steps.length).toBeGreaterThan(0);
-    // A 915px de alto, 0.6 daba 549px y el contenido pide ~474px mas el
-    // padding del ion-content. Las acciones quedaban fuera.
+    // El contenido pide ~473px. Con 0.6 de 915px el modal daba 549px, asi que el
+    // breakpoint no era la causa del desbordamiento: lo era que nada acotaba la
+    // altura del cuerpo. El breakpoint sube para dar margen al calendario.
     expect(target as number).toBeGreaterThanOrEqual(0.8);
   });
 
