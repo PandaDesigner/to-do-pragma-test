@@ -52,7 +52,7 @@ La fuente funcional es `docs/prueba-tecnica.pdf`.
 2. **Híbrido con Cordova.** Android e iOS. Cómo compilar está en [Build nativo](#build-nativo). En el navegador: `npm ci` y `npm start`.
 3. **Firebase Remote Config.** El flag `enable_categories` queda en `true` salvo que el valor remoto sea el booleano `false` o el texto `false`. Un HTTP 404 o un corte a los 3 s también lo dejan en `true`. El shell no muestra el valor del flag. Con el flag en `false`, `Routine` y `Event` siguen visibles y deshabilitadas, y `My` se oculta.
 4. **Rendimiento.** Persistencia con `@Debounce(300)` y OnPush. La lista de tareas pagina de a 20 (`PAGE_SIZE` en `src/app/domain/pagination.ts`). Detalle en [Optimizaciones](#optimizaciones).
-5. **APK e IPA.** Los comandos están abajo. Un APK firmado y un IPA firmado necesitan keystore y cuenta de Apple Developer en la máquina local. Esos secretos no están en el repo. Sin ellos el build de iOS puede validar el `.app` con `npm run build:ios` (`CODE_SIGNING_ALLOWED=NO`), y ese binario no se instala en un dispositivo.
+5. **APK e IPA.** El APK sí va firmado y verificado; su ruta exacta está en [Android](#android-apk-firmado--aab). **No hay IPA firmado**: la cuenta es un Apple ID gratuito sin Apple Developer Program, que no puede emitir un perfil de distribución. Lo que sí existe es un `.xcarchive` de iOS **sin firmar**, que compila pero no se instala en ningún iPhone. Detalle y cómo verlo en un iPhone en [iOS](#ios-ipa-no-firmado-por-decision-de-entrega).
 
 ### Respuestas
 
@@ -112,12 +112,27 @@ Requisitos:
 
 Artefactos:
 
-- `platforms/android/app/build/outputs/bundle/release/app-release.aab` (App Bundle para Play Store).
-- `platforms/android/app/build/outputs/apk/release/app-release.apk` (APK firmado para distribución directa).
+- `platforms/android/app/build/outputs/bundle/release/app-release.aab` (App Bundle para Play Store), 5,8 MB.
+- `platforms/android/app/build/outputs/apk/release/app-release.apk` (APK firmado para distribución directa), 8.099.963 bytes.
 
-Firma verificada con `apksigner verify --verbose`: APK Signature Scheme v2 OK. El AAB se firma vía `:app:bundleRelease` automáticamente.
+Firma verificada con `apksigner verify --verbose --print-certs` sobre el APK reconstruido el 2026-10-18 desde `develop`:
 
-### iOS (IPA)
+```
+Verifies
+Verified using v2 scheme (APK Signature Scheme v2): true
+Signer #1 certificate DN: CN=Todo Notebook (app-base), OU=Mobile, O=PragmaDev, L=City, ST=State, C=US
+Signer #1 certificate SHA-256 digest: 96d8d72a4f4773f1040e102824b98519425b367f8a9c48a421b23000ca262511
+```
+
+SHA-256 del APK: `15216c0468c96863b310472d19879dd39b708abd11ae2b2cef91a753de1d9ef0`
+
+El APK empaqueta el bundle de producción vigente: `assets/www/main-JXVYDPZH.js`, SHA-256 `6d4fe7e0fbfe1521fccc4b50d164cc90bf441dde86dc49ae14d3ec46bcb8af30`, idéntico byte a byte al de `www/`. Comprobado con `unzip -p … | shasum -a 256`. Incluye la paginación de a 20 y el trabajo de `finish-remaining-ui`.
+
+El AAB se firma vía `:app:bundleRelease` automáticamente.
+
+Todavía **no hay enlace de descarga publicado**: cargar el APK en GitHub Releases no está autorizado en esta fase. Ver [Publicación pendiente](#publicación-pendiente).
+
+### iOS (IPA: no firmado, por decisión de entrega)
 
 `cordova-ios 8` genera el workspace con el nombre fijo `App.xcworkspace` dentro de `platforms/ios/`, no a partir del nombre de la app (`Todo Notebook` solo aparece como `CFBundleDisplayName` en el `Info.plist`). Tras `cordova platform add ios`, ábrelo así:
 
@@ -126,6 +141,54 @@ open platforms/ios/App.xcworkspace
 ```
 
 El bundle identifier es `io.github.pandadesigner.todonotebook` (de `config.xml`).
+
+#### Estado real de la entrega iOS
+
+**No se entrega IPA firmado, por decisión tomada y no por un fallo pendiente.** La cuenta de Apple de este proyecto es un Apple ID gratuito, sin inscripción en el [Apple Developer Program](https://developer.apple.com/programs/) (99 USD/año). Sin esa inscripción no existe un perfil de distribución, y por tanto no hay ningún `.ipa` instalable en un iPhone ajeno. Un IPA instalable exige una firma **Ad Hoc** (con los UDID registrados), **App Store / TestFlight** o **Enterprise**, y los tres los emite únicamente el Developer Program.
+
+Lo que sí existe, y sí se entrega como prueba de que el código compila para iOS:
+
+| Artefacto         | Ruta                                                    | Estado verificado                                                         |
+| ----------------- | ------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Archivo Xcode     | `platforms/ios/build/Release-iphoneos/App.xcarchive`    | `ARCHIVE SUCCEEDED`, 9,7 MB, contiene el bundle actual `main-JXVYDPZH.js` |
+| App iOS dentro    | `App.xcarchive/Products/Applications/Todo Notebook.app` | `codesign`: `code object is not signed at all`                            |
+| Bundle identifier | `io.github.pandadesigner.todonotebook`                  | versionCode 1, versionName 1.0.0, min iOS 15.0                            |
+
+Regenerarlo (no necesita cuenta de Apple, corre sin firmar):
+
+```bash
+npm run build                                        # bundle web de producción
+npx --no-install cordova prepare ios                 # copia el bundle a platforms/ios/www
+cd platforms/ios
+xcodebuild -workspace App.xcworkspace -scheme App \
+  -configuration Release -destination generic/platform=iOS \
+  -archivePath build/Release-iphoneos/App.xcarchive archive \
+  CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY=
+```
+
+> `npm run build:ios` **no** es equivalente en esta máquina: detecta las identidades `Apple Development` del Llavero y delega en `cordova build ios --release --device`, que exige Team ID y perfil de distribución y falla. El comando de arriba es el que realmente produce el `.xcarchive`.
+
+#### Cómo verlo en un iPhone con la cuenta personal
+
+El `.xcarchive` no se instala directamente. Para verlo en un iPhone hay que compilar desde Xcode con la Personal Team, que firma solo para el dispositivo conectado y durante **7 días**:
+
+1. `npm run build && npx cordova prepare ios`, y abre `platforms/ios/App.xcworkspace` (el `.xcworkspace`, no el `.xcodeproj`, por CocoaPods).
+2. En Xcode, _Settings → Accounts_ → añade el Apple ID y elige el Team «Pedro Fernandez (Personal Team)». Si Xcode dice que el bundle id está ocupado, cámbialo **solo localmente** y no lo commitees.
+3. Conecta el iPhone por cable, desbloquéalo y acepta _Confiar_. Activa después _Ajustes → Privacidad y seguridad → Modo de desarrollador_ (el móvil se reinicia).
+4. Elige el iPhone como destino y pulsa Run (⌘R). La primera vez, en el iPhone: _Ajustes → General → VPN y gestión de dispositivos_ → toca tu Apple ID → _Confiar_.
+5. A los 7 días el perfil caduca y la app deja de abrir: hay que reinstalarla desde Xcode.
+
+En un **simulador** no hace falta cuenta ninguna y es la vía más fiable para un revisor con Mac:
+
+```bash
+npx cordova build ios --emulator --debug
+xcrun simctl install booted "platforms/ios/build/Debug-iphonesimulator/Todo Notebook.app"
+xcrun simctl launch booted io.github.pandadesigner.todonotebook
+```
+
+#### Publicación pendiente
+
+No hay ningún enlace de descarga publicado. **Publicar el APK y cualquier otro artefacto en GitHub Releases no está autorizado todavía** y no se ha hecho. Cuando se autorice, el APK firmado es `platforms/android/app/build/outputs/apk/release/app-release.apk`.
 
 #### Team ID
 

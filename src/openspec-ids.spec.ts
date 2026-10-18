@@ -107,6 +107,8 @@ describe('OpenSpec identifiers', () => {
       'FAB-01.3',
       'FAB-01.4',
       'TSK-19.2',
+      'DOC-FB-01.7',
+      'DOC-FB-01.8',
     ]);
     const missing = [...cited].filter(
       (id) => !exceptions.has(id) && !defined.includes(id),

@@ -56,6 +56,32 @@ describe('Firebase delivery docs', () => {
     expect(read('src/assets/i18n/en.json')).not.toContain('virtual scroll');
   });
 
+  it('[DOC-FB-01.7] README states there is no signed IPA and does not promise a download', () => {
+    const readme = read('README.md');
+    // The honest statement of what is and is not delivered.
+    expect(readme).toContain('No se entrega IPA firmado');
+    expect(readme).toContain('Apple Developer Program');
+    expect(readme).toContain('App.xcarchive');
+    // The unsigned archive has to be locatable.
+    expect(readme).toContain(
+      'platforms/ios/build/Release-iphoneos/App.xcarchive',
+    );
+    // The signed APK has to be locatable too.
+    expect(readme).toContain(
+      'platforms/android/app/build/outputs/apk/release/app-release.apk',
+    );
+    // Publishing is not authorized, so no download link may be invented.
+    expect(readme).toMatch(/no está autorizado/i);
+    expect(readme).not.toMatch(/https:\/\/[^\s)]*\/releases\/download/);
+    expect(readme).not.toMatch(/https:\/\/[^\s)]*\/releases\/tag/);
+  });
+
+  it('[DOC-FB-01.8] the delivery guide agrees with the README about the unsigned iOS archive', () => {
+    const guide = read('docs/guia-apk-ipa.md');
+    expect(guide).toContain('App.xcarchive');
+    expect(guide).toMatch(/sin firmar/i);
+  });
+
   it('[DOC-FB-01.6] README OpenSpec status matches the active changes on disk', () => {
     const changes = readdirSync(resolve(root, 'openspec/changes'), {
       withFileTypes: true,
