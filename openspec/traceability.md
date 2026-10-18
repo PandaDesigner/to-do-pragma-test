@@ -53,7 +53,7 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | -- | tasks-page | docs/mocks/tasks-page-libre.png | TSK-18 | TSK-18.1 | fix-tasks-fab-pager-layout | src/theme/todo-layout.spec.ts:[TSK-18.1] | pendiente (ausente: sin emulador) | #34 |
 | 4:1404 | task-row | docs/mocks/todo-panel-closed.png | SWIPE-01 | SWIPE-01.1 | fix-delivery-functional | src/app/shared/components/task-item/task-item.component.spec.ts:[SWIPE-01.1] | ausente: sin captura en esta sesión | pendiente |
 | 4:1404 | task-row | docs/mocks/todo-panel-closed.png | SWIPE-01 | SWIPE-01.2 | fix-delivery-functional | src/app/shared/services/deletion-confirmation.spec.ts:[SWIPE-01.2] | ausente: sin captura en esta sesión | pendiente |
-| 4:520 | todo-panel-closed | docs/mocks/todo-panel-closed.png | TODO-09 | TODO-09.1 | fix-delivery-functional | src/app/pages/tasks/tasks.page.spec.ts:[TODO-09.1] | ausente: sin captura en esta sesión | pendiente |
+| 4:520 | todo-panel-closed | docs/mocks/todo-panel-closed.png | TODO-12 | TODO-12.1 | fix-delivery-functional | src/app/pages/tasks/tasks.page.spec.ts:[TODO-12.1] | ausente: sin captura en esta sesión | pendiente |
 | 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | TODO-10 | TODO-10.1 | fix-delivery-functional | src/app/pages/tasks/tasks.page.spec.ts:[TODO-10.1] | ausente: sin captura en esta sesión | pendiente |
 | 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | TODO-10 | TODO-10.2 | fix-delivery-functional | src/app/pages/tasks/tasks.page.spec.ts:[TODO-10.2] | ausente: sin captura en esta sesión | pendiente |
 | 4:973 | task-row | docs/mocks/todo-panel-closed.png | TODO-11 | TODO-11.1 | fix-delivery-functional | src/app/pages/tasks/tasks.page.spec.ts:[TODO-11.1] | ausente: sin captura en esta sesión | pendiente |
@@ -93,3 +93,12 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.4 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.4] | n/a | local |
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.5 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.5] | n/a | local |
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.6 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.6] | n/a | local |
+| 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | SHEET-90 | SHEET-90.1 | regularize-direct-commits | src/direct-commits.spec.ts:[SHEET-90.1] | n/a: caracterización, sin captura | local |
+| 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | PAGE-20 | PAGE-20.1 | regularize-direct-commits | src/direct-commits.spec.ts:[PAGE-20.1] | n/a: caracterización, sin captura | local |
+| 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | SCROLL-01 | SCROLL-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[SCROLL-01.1] | n/a: caracterización, sin captura | local |
+| 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | PAGER-01 | PAGER-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[PAGER-01.1] | n/a: caracterización, sin captura | local |
+| 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | ROW-01 | ROW-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[ROW-01.1] | n/a: caracterización, sin captura | local |
+| 4:1496 | settings | docs/mocks/todo-panel-closed.png | DEBUG-01 | DEBUG-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[DEBUG-01.1] | n/a: caracterización, sin captura | local |
+| -- | openspec | -- | SPEC-01 | SPEC-01.1 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.1] | n/a | local |
+| -- | openspec | -- | SPEC-01 | SPEC-01.2 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.2] | n/a | local |
+| -- | openspec | -- | SPEC-01 | SPEC-01.3 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.3] | n/a | local |
