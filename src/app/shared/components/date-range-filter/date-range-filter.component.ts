@@ -69,6 +69,12 @@ export class DateRangeFilterComponent {
   readonly draft = signal<string[]>([]);
 
   /**
+   * Marca que el borrador ya se sembró desde initialRange o today. Evita que
+   * cada reapertura sobrescriba la eleccion del usuario con el filtro aplicado.
+   */
+  private readonly seeded = signal(false);
+
+  /**
    * Paleta activa segun la clase que applyThemePreference deja en <html>.
    *
    * ion-datetime no expone variables propias: su CSS interno consume el
@@ -97,13 +103,22 @@ export class DateRangeFilterComponent {
     }
   }
 
+  /**
+   * El borrador se conserva entre aperturas. La primera vez se siembra con el
+   * filtro aplicado, o con hoy si aun no hay filtro; despues manda lo que el
+   * usuario haya elegido, se haya aplicado o no.
+   */
   onOpen(): void {
+    if (this.seeded()) {
+      return;
+    }
     const range = this.initialRange();
     this.draft.set(
       range
         ? [startOfDay(range.from), startOfDay(range.to)]
         : [startOfDay(this.today()), startOfDay(this.today())],
     );
+    this.seeded.set(true);
   }
 
   select(value: readonly string[] | null | undefined): void {
