@@ -101,7 +101,7 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/main\.notebook-page\s*\{[^}]*display:\s*flex;/);
     expect(styles).toMatch(/main\.notebook-page\s*\{[^}]*[^-]height:\s*100%;/);
     expect(styles).toMatch(
-      /main\.notebook-page\s*\{[^}]*padding-bottom:\s*var\(--app-pager-height\);/,
+      /main\.notebook-page\s*\{[^}]*padding-bottom:\s*calc\(\s*var\(--app-pager-height\)\s*\+\s*15px\s*\);/,
     );
     expect(styles).toMatch(/\.task-scroll\s*\{[^}]*flex:\s*0\s*1\s*60vh;/);
     expect(styles).toMatch(/\.task-scroll\s*\{[^}]*max-height:\s*60vh;/);
@@ -119,6 +119,13 @@ describe('Todo layout regression contracts', () => {
       /\.pager\s*\{[^}]*bottom:\s*env\(safe-area-inset-bottom,\s*0px\);/,
     );
     expect(styles).toMatch(/\.pager\s*\{[^}]*display:\s*flex;/);
+    expect(styles).toMatch(/\.pager\s*\{[^}]*flex-wrap:\s*nowrap;/);
+    expect(styles).toMatch(
+      /\.pager\s*\{[^}]*max-height:\s*var\(--app-pager-height\);/,
+    );
+    expect(styles).toMatch(/\.pager\s*\{[^}]*margin-bottom:\s*15px;/);
+    expect(styles).toMatch(/\.pager\s*\{[^}]*overflow:\s*hidden;/);
+    expect(styles).not.toMatch(/\.pager\s*\{[^}]*overflow-x:\s*auto;/);
     expect(styles).toMatch(/\.chips\s*\{[^}]*flex-wrap:\s*wrap;/);
   });
 

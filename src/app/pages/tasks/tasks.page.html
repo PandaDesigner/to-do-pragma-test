@@ -128,9 +128,7 @@
       >
         ‹
       </button>
-      @for (item of pageNumbers(); track $index) { @if (item === 'ellipsis') {
-      <span class="pager__ellipsis" aria-hidden="true">…</span>
-      } @else {
+      @for (item of pageNumbers(); track item) {
       <button
         type="button"
         class="pager__btn"
@@ -140,7 +138,7 @@
       >
         {{ item }}
       </button>
-      } }
+      }
       <button
         type="button"
         class="pager__btn"

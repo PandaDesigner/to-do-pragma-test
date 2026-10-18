@@ -5,7 +5,7 @@ main.notebook-page {
   height: 100%;
   min-height: 0;
   padding-top: var(--app-content-day-top);
-  padding-bottom: var(--app-pager-height);
+  padding-bottom: calc(var(--app-pager-height) + 15px);
 }
 
 .top-actions {
@@ -147,22 +147,31 @@ main.notebook-page {
   flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
-  gap: var(--app-space-4);
+  gap: var(--app-space-8);
+  box-sizing: border-box;
   height: var(--app-pager-height);
-  margin: 0;
+  max-height: var(--app-pager-height);
+  margin-bottom: 15px;
   padding: 0 var(--app-space-8);
-  overflow-x: auto;
+  overflow: hidden;
   background: var(--app-surface);
 }
 
 .pager__btn {
-  min-width: var(--app-touch-target);
-  min-height: var(--app-touch-target);
-  padding: 0 var(--app-space-8);
+  display: inline-flex;
+  flex: 0 0 var(--app-touch-target);
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--app-touch-target);
+  height: var(--app-touch-target);
+  padding: 0;
   border: 0;
   border-radius: var(--app-radius-input);
   background: transparent;
   color: var(--app-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
   cursor: pointer;
 
   &:disabled {
@@ -174,11 +183,6 @@ main.notebook-page {
 .pager__btn--active {
   background: var(--app-primary);
   color: var(--app-on-primary);
-}
-
-.pager__ellipsis {
-  padding: 0 var(--app-space-4);
-  color: var(--app-text-muted);
 }
 
 .chips {

@@ -496,6 +496,10 @@ describe('TasksPage', () => {
         .querySelector('.pager__btn--active')
         ?.textContent?.trim(),
     ).toBe('2');
+    expect(fixture.nativeElement.querySelectorAll('.pager__btn')).toHaveLength(
+      5,
+    );
+    expect(fixture.nativeElement.querySelector('.pager__ellipsis')).toBeNull();
     expect(tasks.hasMoreTasks()).toBe(true);
     expect(log).toHaveBeenCalledWith({
       name: 'DebugTaskSeed.generateFiveThousand',
