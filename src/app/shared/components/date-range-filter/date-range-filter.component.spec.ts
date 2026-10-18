@@ -448,17 +448,18 @@ describe('DateRangeFilterComponent', () => {
     expect(body).toContain('margin-inline: auto');
   });
 
-  it('[DATE-FILTER-02.14] los tres botones reparten el ancho del calendario', async () => {
+  it('[DATE-FILTER-02.14] los tres botones se alinean con el ancho del calendario', async () => {
     const fixture = await setup();
     const overlay = overlayOf(fixture);
     const actions = overlay.querySelector(
       '.date-filter__actions',
     ) as HTMLElement | null;
+    const calendar = overlay.querySelector(
+      '.date-filter__calendar',
+    ) as HTMLElement | null;
     expect(actions).toBeTruthy();
+    expect(calendar).toBeTruthy();
 
-    // Los botones miden ahora 136, 97 y 80 px, porque cada uno toma lo que
-    // necesita su texto. Hay que igualarlos a un tercio del calendario y
-    // repartirlos sin hueco: 382 / 3 = 127.33, tres de 127 con un resto de 1 px.
     const buttons = [...(actions?.querySelectorAll('ion-button') ?? [])];
     expect(buttons.length).toBe(3);
 
@@ -466,20 +467,11 @@ describe('DateRangeFilterComponent', () => {
       join(__dirname, 'date-range-filter.component.scss'),
       'utf8',
     );
-    // Cada boton ocupa un tercio exacto del ancho del calendario: basis 0 para
-    // repartir por igual y no segun el texto, con min-width: 0 para que el texto
-    // largo de Quitar no impida encogerse.
-    const buttonRule = styles.match(
-      /\.date-filter__actions\s+ion-button\s*\{([^}]*)\}/,
-    );
-    expect(buttonRule).toBeTruthy();
-    expect(buttonRule?.[1]).toContain('flex: 1 1 0');
-    expect(buttonRule?.[1]).toContain('min-width: 0');
-
-    // Y la fila no deja huecos entre ellos.
+    // La fila toma el ancho completo del calendario, para que los botones queden
+    // alineados con la rejilla de arriba y la fila no se descentre.
     const rule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/);
     expect(rule).toBeTruthy();
-    expect(rule?.[1]).toContain('gap: 0');
+    expect(rule?.[1]).toMatch(/width:\s*100%/);
   });
 
   it('[DATE-FILTER-02.15] el titulo del modal destaca sobre la pista', async () => {
@@ -556,5 +548,55 @@ describe('DateRangeFilterComponent', () => {
     expect(spaceOf(titleSpace as string)).toBeGreaterThan(
       spaceOf(bodySpace as string),
     );
+  });
+
+  it('[DATE-FILTER-02.16] los botones son mas pequenos, iguales y separados', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const actions = overlay.querySelector(
+      '.date-filter__actions',
+    ) as HTMLElement | null;
+    expect(actions).toBeTruthy();
+
+    const buttons = [...(actions?.querySelectorAll('ion-button') ?? [])];
+    expect(buttons.length).toBe(3);
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const buttonRule = styles.match(
+      /\.date-filter__actions\s+ion-button\s*\{([^}]*)\}/,
+    )?.[1];
+    expect(buttonRule).toBeTruthy();
+
+    // Ancho fijo y menor que un tercio del calendario (382 / 3 = 127.33): los
+    // botones dejan de estirarse hasta cubrir la fila entera, que se leia como
+    // una banda continua pegada al borde. 100 px deja aire de sobra para la
+    // etiqueta mas larga, CANCEL, que ocupa 57 px con el padding de Ionic.
+    const width = Number(buttonRule?.match(/width:\s*(\d+)px/)?.[1] ?? '0');
+    expect(width).toBeGreaterThan(0);
+    expect(width).toBeLessThan(127);
+
+    // El mismo ancho para los tres: dejan de crecer segun su texto, que es lo
+    // que los hacia medir 136, 97 y 80 px. Se mira la declaracion, no el
+    // comentario que explica por que se quito el reparto por flex.
+    const declarations = (buttonRule as string)
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//'))
+      .join('\n');
+    expect(declarations).not.toContain('flex: 1 1 0');
+    expect(declarations).toContain('flex: 0 0 auto');
+
+    // Y la fila los separa con un hueco en vez de pegarlos, alineados al inicio.
+    const rule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/)?.[1];
+    expect(rule).toBeTruthy();
+    const rowDeclarations = (rule as string)
+      .split('\n')
+      .filter((line) => !line.trim().startsWith('//'))
+      .join('\n');
+    expect(rowDeclarations).not.toContain('gap: 0');
+    expect(rowDeclarations).toMatch(/gap:\s*var\(--app-space-\d+\)/);
+    expect(rowDeclarations).toMatch(/justify-content:\s*flex-start/);
   });
 });

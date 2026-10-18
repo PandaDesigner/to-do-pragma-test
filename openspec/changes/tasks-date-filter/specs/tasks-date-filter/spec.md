@@ -183,3 +183,15 @@ La cabecera del modal de rango de fechas MUST presentar el título con una jerar
 - **WHEN** se renderiza su cabecera
 - **THEN** el título declara un tamaño de texto mayor que el de la pista
 - **AND** su separación respecto del borde superior es mayor que el espaciado interno del cuerpo
+
+### Requirement: DATE-FILTER-06 Tamaño de los botones de acción
+
+Los botones de acción del modal MUST ocupar una fracción del ancho del calendario, sin estirarse hasta cubrirlo por completo, de modo que la fila no se lea como una banda continua pegada al borde. Los tres botones MUST mantener el mismo ancho entre sí y MUST separarse por un hueco. La fila MUST alinearse al inicio del ancho del calendario. Figma: 4:440.
+
+#### Scenario: DATE-FILTER-02.16 Los botones son más pequeños, iguales y separados
+
+- **GIVEN** el modal de rango de fechas abierto
+- **WHEN** se renderiza la fila de acciones
+- **THEN** cada botón declara el mismo ancho fijo y menor que un tercio del calendario
+- **AND** la fila deja un hueco entre los botones
+- **AND** la fila se alinea al inicio del ancho del calendario
