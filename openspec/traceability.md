@@ -146,19 +146,19 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | -- | openspec | -- | SPEC-01 | SPEC-01.1 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.1] | n/a | local |
 | -- | openspec | -- | SPEC-01 | SPEC-01.2 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.2] | n/a | local |
 | -- | openspec | -- | SPEC-01 | SPEC-01.3 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.3] | n/a | local |
-| -- | tasks-date-filter | -- | QC-01 | QC-01.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.1] | n/a: comportamiento, sin captura | pendiente |
-| -- | tasks-date-filter | -- | QC-01 | QC-01.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.2] | n/a: comportamiento, sin captura | pendiente |
-| -- | tasks-date-filter | -- | QC-01 | QC-01.3 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.3] | n/a: comportamiento, sin captura | pendiente |
+| -- | tasks-date-filter | -- | QC-01 | QC-01.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.1] | evidence/qc-filter-light-es.png | #56 |
+| -- | tasks-date-filter | -- | QC-01 | QC-01.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.2] | evidence/qc-filter-dark-es.png | #56 |
+| -- | tasks-date-filter | -- | QC-01 | QC-01.3 | fix-qc-audit-findings | src/app/pages/tasks/tasks-date-filter.spec.ts:[QC-01.3] | evidence/qc-header-general-light-es.png | #56 |
 | -- | settings-language | -- | QC-02 | QC-02.1 | fix-qc-audit-findings | src/app/core/settings/settings-preferences.spec.ts:[QC-02.1] | n/a: comportamiento, sin captura | pendiente |
 | -- | settings-language | -- | QC-02 | QC-02.2 | fix-qc-audit-findings | src/app/core/settings/settings-preferences.spec.ts:[QC-02.2] | n/a: comportamiento, sin captura | pendiente |
 | -- | settings-language | -- | QC-02 | QC-02.3 | fix-qc-audit-findings | src/app/core/settings/settings-preferences.spec.ts:[QC-02.3] | n/a: comportamiento, sin captura | pendiente |
 | -- | date-range-picker | -- | QC-03 | QC-03.1 | fix-qc-audit-findings | src/app/shared/components/date-range-filter/date-range-filter.component.spec.ts:[QC-03.1] | n/a: comportamiento, sin captura | pendiente |
 | -- | date-range-picker | -- | QC-03 | QC-03.2 | fix-qc-audit-findings | src/app/shared/components/date-range-filter/date-range-filter.component.spec.ts:[QC-03.2] | n/a: comportamiento, sin captura | pendiente |
 | -- | date-range-picker | -- | QC-03 | QC-03.3 | fix-qc-audit-findings | src/app/shared/components/date-range-filter/date-range-filter.component.spec.ts:[QC-03.3] | n/a: comportamiento, sin captura | pendiente |
-| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.1] | n/a: comportamiento, sin captura | pendiente |
-| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.2] | n/a: comportamiento, sin captura | pendiente |
+| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.1] | evidence/qc-header-general-light-es.png | #56 |
+| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.2] | evidence/qc-header-routine-light-es.png | #56 |
 | 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.3 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.3] | n/a: comportamiento, sin captura | pendiente |
 | 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-04 | QC-04.4 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-04.4] | n/a: comportamiento, sin captura | pendiente |
-| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-05 | QC-05.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-05.1] | n/a: comportamiento, sin captura | pendiente |
-| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-05 | QC-05.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-05.2] | n/a: comportamiento, sin captura | pendiente |
+| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-05 | QC-05.1 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-05.1] | evidence/qc-filter-light-es.png | #56 |
+| 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-05 | QC-05.2 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-05.2] | evidence/qc-filter-light-en.png | #56 |
 | 4:440 | tasks-header | docs/mocks/todo-day-panel-open.png | QC-05 | QC-05.3 | fix-qc-audit-findings | src/app/pages/tasks/tasks-section-header.spec.ts:[QC-05.3] | n/a: comportamiento, sin captura | pendiente |

@@ -79,14 +79,38 @@ Sobre `http://localhost:8100` con la interfaz en español, en Chrome a 375×812:
 - **QC-04** — General muestra `General · 18 de octubre` y Rutina
   `Rutina · 18 de octubre`.
 - **QC-05** — `18.dom` en lugar de `18.Sun`.
+- **Tema oscuro** — durante la captura se midieron `--app-surface: #1e1a2b` y
+  `body: rgb(30, 26, 43)`. El hallazgo del auditor era un falso positivo.
+
+Se recorrieron los cinco flujos (Todo, Rutina, Evento, Categoría y Más) en
+español e inglés, en claro y oscuro. No se encontraron más defectos.
 
 ## Evidencia
 
-No se adjuntan capturas. Las cinco correcciones son de comportamiento y las
-verifiqué midiendo el DOM y el estado del store en la app en ejecución, no por
-inspección visual. La trazabilidad marca esas filas como `n/a: comportamiento,
-sin captura`. Las diferencias que sí son visuales (el nombre de sección en el
-sobretítulo) quedan cubiertas por la comprobación de texto renderizado.
+Seis capturas a 375x812, con tolerancia de 2 px, en `evidence/`:
+
+| Archivo | Qué demuestra |
+| --- | --- |
+| `qc-filter-light-es.png` | QC-01 y QC-05. Español, tema claro, rango `17-19 oct` aplicado: solo se ve la tarea dentro del rango, y la cabecera dice `General · 18 de octubre` con `18.dom` |
+| `qc-filter-dark-es.png` | La misma vista en tema oscuro |
+| `qc-filter-light-en.png` | La misma vista en inglés: `General · October 18` con `18.Sun` |
+| `qc-filter-dark-en.png` | La misma vista en inglés y oscuro |
+| `qc-header-general-light-es.png` | QC-04. La sección General nombra su propia cabecera |
+| `qc-header-routine-light-es.png` | QC-04. Rutina muestra `Rutina · 18 de octubre` frente a `General · 18 de octubre` |
+
+Las cuatro primeras cubren la matriz completa (light y dark por es y en) que
+exige la regla de evidencia. Para tomar la versión oscura hubo que quitar la
+clase `ion-palette-light` antes de añadir `ion-palette-dark`: con las dos clases
+a la vez gana la clara y el tema oscuro no se ve, que es probablemente lo que
+llevó al auditor a reportarlo como roto.
+
+Las dos últimas son la única diferencia puramente visual del change. Las
+correcciones de comportamiento se comprobaron midiendo el DOM y el estado del
+store, según se detalla arriba.
+
+Durante la captura del tema oscuro se midió `--app-surface: #1e1a2b`,
+`--app-text: #edeaf5` y `body: rgb(30, 26, 43)`, lo que confirma en vivo el
+descarte del hallazgo de tema oscuro.
 
 ## Reutilización
 
