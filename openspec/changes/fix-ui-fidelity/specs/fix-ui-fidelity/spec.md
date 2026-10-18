@@ -60,6 +60,26 @@ El badge de hoy MUST renderizar el chevron como un `ion-icon chevron-forward` he
 - **WHEN** se pulsa el badge de hoy con el chevron como icono
 - **THEN** el filtro se limpia y el panel de pendientes se reabre, igual que antes del cambio.
 
+#### Scenario: [TODAY-UI-01.5] El icono se entrega como SVG importado y no como nombre resuelto en tiempo de ejecución
+
+- **GIVEN** que `chevron-forward` no está registrado con `addIcons`
+- **WHEN** `TasksPage` expone su icono del badge
+- **THEN** entrega el SVG `chevronForward` importado de `ionicons/icons`
+- **AND** ese valor es una cadena de datos, no un nombre.
+
+#### Scenario: [TODAY-UI-01.6] El `ion-icon` del badge recibe el SVG por la entrada `[icon]`
+
+- **GIVEN** el badge de hoy renderizado
+- **WHEN** se inspecciona su `ion-icon`
+- **THEN** recibe el SVG por `[icon]`
+- **AND** no declara el atributo `name`, que Ionicons no resuelve sin `addIcons`.
+
+#### Scenario: [TODAY-UI-01.7] El nombre inexistente no reaparece en el marcado
+
+- **GIVEN** el marcado renderizado del badge
+- **WHEN** se busca el nombre `chevron-forward`
+- **THEN** no aparece, para que una regresión a `name=` vuelva a fallar los tests en rojo y no solo en la pantalla.
+
 ### Requirement: FID-03 El botón primario del sheet va antes que Cancelar
 
 El bloque `.form-actions` de `CategorySheetComponent` MUST presentar el botón primario antes que el de cancelar, igual que el editor de tareas. En modo `Edit` el orden MUST ser Guardar, Cancelar, Eliminar. El cambio MUST ser solo de orden en el DOM: `category-sheet.component.scss` MUST NOT modificarse y `.form-actions` MUST conservar `display: flex` con `flex-direction: column`. Figma: [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869).

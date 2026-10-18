@@ -56,6 +56,7 @@ import { DeletionConfirmation } from '../../shared/services/deletion-confirmatio
 import { formatDayTitle, formatLongDate } from './day-title';
 import { taskBelongsToSection } from './section-helpers';
 import { pageCount } from '../../domain/pagination';
+import { chevronForward } from 'ionicons/icons';
 
 const DURATION_PRESETS = [15, 30, 45, 60, 75, 90, 105, 120] as const;
 const VIEW_STATUSES = [
@@ -237,6 +238,7 @@ export class TasksPage implements OnInit {
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
+  readonly icons = { chevronForward };
 
   ngOnInit(): void {
     this.store.setSection(this.section);
