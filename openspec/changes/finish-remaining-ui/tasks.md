@@ -10,9 +10,9 @@
 - [x] 2.1 `npx jest --runInBand --coverage` — 48 suites, 417 tests, thresholds held (statements 93.28%, branches 85.26%)
 - [x] 2.2 `node scripts/trace-check.mjs` passed
 - [x] 2.3 Prettier on the touched templates and specs; stylelint on the task-item stylesheet
-- [ ] 2.4 Visual captures at 375x812 light/dark es/en — no simulator run in this session
+- [x] 2.4 Visual captures at 375x812 light/dark es/en in `evidence/`. Browser captures of the task screen and the shopping-notes state. Not a 2px Figma diff and not a simulator.
 - [ ] 2.5 Notion row — no Notion connection in this session
-- [ ] 2.6 Browser pass of TODAY, shopping notes, and swipe — `ng serve` compiled, Chrome stable is not installed, so the click path was not exercised
+- [x] 2.6 Browser pass of TODAY, shopping notes, swipe confirm, and task create on `ng serve`
 
 ## 3. Delivery
 
