@@ -55,27 +55,49 @@ input:checked {
   background: var(--app-category-tint, var(--app-primary));
   box-shadow: inset 0 0 0 4px var(--app-surface);
 }
-.task-copy {
-  flex: 1;
+app-task-item-copy {
+  flex: 1 1 0;
+  width: 0;
   min-width: 0;
+  overflow: hidden;
+}
+.task-copy {
   display: flex;
   flex-direction: column;
   gap: var(--app-space-4);
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
 }
 .task-title {
-  display: block;
+  display: flex;
+  align-items: baseline;
+  min-width: 0;
   overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   font-size: var(--app-font-size-task-title);
   font-weight: 700;
   color: var(--app-text);
+}
+.task-title__text {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.task-title--overflow .task-title__text {
+  text-overflow: clip;
+}
+.task-title__more {
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 .task-meta {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
   gap: var(--app-space-8);
+  min-width: 0;
+  overflow: hidden;
   color: var(--app-text-muted);
   font-size: var(--app-font-size-meta);
 }

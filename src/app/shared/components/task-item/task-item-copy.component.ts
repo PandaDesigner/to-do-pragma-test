@@ -1,14 +1,31 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  ElementRef,
+  afterNextRender,
+  effect,
+  inject,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 import { TASK_ITEM } from './task-item.state';
 
 @Component({
   selector: 'app-task-item-copy',
   template: `
     <div class="task-copy">
-      <strong class="task-title" [attr.title]="item.task().title">{{
-        item.task().title
-      }}</strong>
+      <strong
+        class="task-title"
+        [class.task-title--overflow]="titleOverflow()"
+        [attr.title]="item.task().title"
+      >
+        <span #titleText class="task-title__text">{{ item.task().title }}</span>
+        @if (titleOverflow()) {
+          <span class="task-title__more">… {{ 'task.more' | translate }}</span>
+        }
+      </strong>
       @if (item.presentation().showsMeta()) {
         <div class="task-meta" [attr.title]="item.metaTitle()">
           <span class="task-due">
@@ -38,9 +55,26 @@ import { TASK_ITEM } from './task-item.state';
     </div>
   `,
   styleUrl: './task-item.component.scss',
-  imports: [IonIcon],
+  imports: [IonIcon, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemCopyComponent {
   readonly item = inject(TASK_ITEM);
+  readonly titleOverflow = signal(false);
+  private readonly titleText = viewChild<ElementRef<HTMLElement>>('titleText');
+
+  constructor() {
+    afterNextRender(() => this.syncTitleOverflow());
+    effect(() => {
+      this.item.task().title;
+      queueMicrotask(() => this.syncTitleOverflow());
+    });
+  }
+
+  syncTitleOverflow(): void {
+    const element = this.titleText()?.nativeElement;
+    this.titleOverflow.set(
+      !!element && element.scrollWidth > element.clientWidth,
+    );
+  }
 }

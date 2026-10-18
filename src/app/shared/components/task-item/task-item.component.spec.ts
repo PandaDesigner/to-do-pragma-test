@@ -5,6 +5,7 @@ import en from '../../../../assets/i18n/en.json';
 import { TASK_EVENT } from '../../../domain/task-state';
 import { taskFixture } from '../../../testing/task.fixture';
 import { TaskItemComponent } from './task-item.component';
+import { TaskItemCopyComponent } from './task-item-copy.component';
 import { noteRowState, pendingRowState, taskRowState } from './task-item.state';
 
 describe('TaskItemComponent', () => {
@@ -121,8 +122,15 @@ describe('TaskItemComponent', () => {
     expect(styles).toMatch(
       /app-task-item-actions\s*\{[^}]*margin-inline-start:\s*auto;/,
     );
-    expect(styles).toMatch(/\.task-title\s*\{[^}]*white-space:\s*nowrap;/);
-    expect(styles).toMatch(/\.task-title\s*\{[^}]*text-overflow:\s*ellipsis;/);
+    expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*flex:\s*1\s*1\s*0;/);
+    expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*min-width:\s*0;/);
+    expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*overflow:\s*hidden;/);
+    expect(styles).toMatch(
+      /\.task-title__text\s*\{[^}]*white-space:\s*nowrap;/,
+    );
+    expect(styles).toMatch(
+      /\.task-title__text\s*\{[^}]*text-overflow:\s*ellipsis;/,
+    );
     expect(styles).not.toContain('min-height: 65px');
     const longTitle = 'A'.repeat(180);
     for (const title of ['Hi', longTitle]) {
@@ -147,6 +155,41 @@ describe('TaskItemComponent', () => {
     fixture.detectChanges();
     expect(fixture.nativeElement.querySelector('.note-bullet')).not.toBeNull();
     expect(fixture.nativeElement.querySelector('.task-meta')).toBeNull();
+  });
+
+  it('keeps the copy column fixed and shows more only when the title overflows', () => {
+    const fixture = TestBed.createComponent(TaskItemComponent);
+    fixture.componentRef.setInput('task', taskFixture({ title: 'Hi' }));
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.task-title__more')).toBeNull();
+
+    fixture.componentRef.setInput(
+      'task',
+      taskFixture({ title: 'A'.repeat(180) }),
+    );
+    fixture.detectChanges();
+    const text = fixture.nativeElement.querySelector(
+      '.task-title__text',
+    ) as HTMLElement;
+    Object.defineProperty(text, 'scrollWidth', {
+      configurable: true,
+      value: 480,
+    });
+    Object.defineProperty(text, 'clientWidth', {
+      configurable: true,
+      value: 120,
+    });
+    const copy = fixture.debugElement.query(
+      (node) => node.componentInstance instanceof TaskItemCopyComponent,
+    ).componentInstance as TaskItemCopyComponent;
+    copy.syncTitleOverflow();
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement
+        .querySelector('.task-title__more')
+        ?.textContent?.trim(),
+    ).toBe('… more');
+    expect(text.textContent?.trim()).toBe('A'.repeat(180));
   });
 
   it('[SWIPE-01.1] the end sliding option removes only when clicked and a note row stays a note', () => {
