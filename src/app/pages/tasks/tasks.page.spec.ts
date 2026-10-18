@@ -353,6 +353,72 @@ describe('TasksPage', () => {
     ).toContain('selected');
   });
 
+  it('[TODO-04.2] shows notes and hides the pending panel for a shopping category', async () => {
+    const { fixture, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'shopping',
+      name: 'Shopping',
+      kind: 'shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await tasks.upsert(
+      taskFixture({
+        id: 'groceries',
+        title: 'Buy groceries',
+        categoryId: 'shopping',
+        dueDate: '2026-01-01',
+      }),
+    );
+    fixture.detectChanges();
+    const chips = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ] as HTMLButtonElement[];
+    chips.find((chip) => chip.textContent?.includes('Shopping'))?.click();
+    fixture.detectChanges();
+    expect(fixture.nativeElement.textContent).toContain('My notes');
+    expect(fixture.nativeElement.querySelector('.pending-panel')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.note-bullet')).not.toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('app-task-item input'),
+    ).toBeNull();
+  });
+
+  it('[TODO-01.3] TODAY clears the category filter and reopens the pending panel', async () => {
+    const { fixture, page, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'shopping',
+      name: 'Shopping',
+      kind: 'shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await tasks.upsert(
+      taskFixture({
+        id: 'groceries',
+        title: 'Buy groceries',
+        categoryId: 'shopping',
+        dueDate: '2026-01-01',
+      }),
+    );
+    fixture.detectChanges();
+    const chips = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ] as HTMLButtonElement[];
+    chips.find((chip) => chip.textContent?.includes('Shopping'))?.click();
+    page.panelOpen.set(false);
+    fixture.detectChanges();
+    (
+      fixture.nativeElement.querySelector('.today-badge') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(tasks.categoryId()).toBeUndefined();
+    expect(page.panelOpen()).toBe(true);
+    expect(
+      fixture.nativeElement.querySelector('.pending-panel'),
+    ).not.toBeNull();
+  });
+
   it('[TODO-05.1] shows the illustrated empty state and no embedded editor', async () => {
     const { fixture } = await setup();
     const illustration: HTMLElement =

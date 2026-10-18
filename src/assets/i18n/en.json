@@ -12,12 +12,66 @@
     "debugAction": "Generate 5,000 test tasks",
     "debugDelete": "Delete all tasks"
   },
+  "rail": {
+    "label": "Sections",
+    "todo": "Todo",
+    "routine": "Routine",
+    "event": "Event",
+    "category": "Category",
+    "more": "More"
+  },
+  "shell": {
+    "remote": "Remote configuration",
+    "retry": "Retry configuration"
+  },
   "category": {
     "section": "Section",
     "sections": {
       "general": "General",
       "routine": "Routine",
       "event": "Event"
+    },
+    "overline": "My lists",
+    "title": "Categories",
+    "listLabel": "Categories",
+    "emptyTitle": "Your first list",
+    "emptyHint": "Create a category to organize your tasks.",
+    "disabled": "Categories are disabled by remote configuration.",
+    "count": "{{count}} tasks",
+    "edit": "Edit {{name}}",
+    "new": "New category",
+    "retry": "Retry",
+    "sheet": {
+      "new": "New category",
+      "edit": "Edit category",
+      "name": "Name",
+      "icon": "Icon",
+      "color": "Color",
+      "section": "Section",
+      "preview": "Preview",
+      "save": "Save category",
+      "saveChanges": "Save changes",
+      "delete": "Delete category"
+    }
+  },
+  "notes": {
+    "overline": "My notes"
+  },
+  "task": {
+    "complete": "Complete or reopen {{title}}",
+    "edit": "Edit {{title}}",
+    "delete": "Delete {{title}}",
+    "deleteAction": "Delete",
+    "duration": "Duration: {{minutes}} min",
+    "reminder": "Reminder: {{minutes}} min before",
+    "bullet": "Note",
+    "actions": {
+      "COMPLETE": "Complete",
+      "EXPIRE": "Expire",
+      "ARCHIVE": "Archive",
+      "REOPEN": "Reopen",
+      "RESCHEDULE": "Reschedule to today",
+      "RESTORE": "Restore"
     }
   },
   "todo": {
@@ -28,7 +82,30 @@
     "emptyTitle": "No tasks for today",
     "emptyHint": "Tap + or write in the field below to add your first task.",
     "emptyAction": "Add a task",
-    "quickAdd": "Add task"
+    "quickAdd": "Add task",
+    "retry": "Retry",
+    "listLabel": "Tasks",
+    "filterLabel": "Filter by category",
+    "editor": {
+      "new": "New task",
+      "edit": "Edit task",
+      "title": "Title",
+      "titleError": "Write a title.",
+      "date": "Date",
+      "time": "Time",
+      "duration": "Duration",
+      "custom": "Custom",
+      "durationMin": "Duration (min)",
+      "reminder": "Reminder (min before)",
+      "none": "No reminder",
+      "before5": "5 min before",
+      "before15": "15 min before",
+      "before30": "30 min before",
+      "before60": "1 h before",
+      "reminderHint": "Reminders need a push plugin and device credentials.",
+      "category": "Category",
+      "uncategorized": "No category"
+    }
   },
   "tasks": {
     "fab": {

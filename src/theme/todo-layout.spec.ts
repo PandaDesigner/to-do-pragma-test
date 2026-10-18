@@ -131,6 +131,24 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/color:\s*var\(--app-on-primary\);/);
   });
 
+  it('[TODO-05.1] keeps the clipboard ink visible on the light empty disc in dark mode conforme a Figma 4:1062', () => {
+    const styles = readAppStyles(
+      'shared/components/empty-state/empty-state.component.scss',
+    );
+    const variables = readFileSync(
+      resolve(__dirname, 'variables.scss'),
+      'utf8',
+    );
+    const dark = readFileSync(resolve(__dirname, '_dark.scss'), 'utf8');
+    expect(styles).toMatch(
+      /\.illustration\s*\{[^}]*color:\s*var\(--app-illustration-ink\);/,
+    );
+    expect(variables).toMatch(
+      /--app-illustration-ink:\s*#\{t\.\$color-primary-dark\};/,
+    );
+    expect(dark).not.toMatch(/--app-illustration-ink/);
+  });
+
   it('[TODO-05.1] centers the empty-state content conforme a Figma 4:1062', () => {
     const styles = readAppStyles(
       'shared/components/empty-state/empty-state.component.scss',

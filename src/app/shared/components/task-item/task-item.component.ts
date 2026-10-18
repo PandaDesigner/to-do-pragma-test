@@ -2,10 +2,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   output,
+  signal,
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   archiveOutline,
   createOutline,
@@ -33,13 +36,14 @@ function mapColorTokenToIndex(token: string): number {
 }
 
 const ACTION_LABEL: Record<TaskEvent, string> = {
-  COMPLETE: 'Completar',
-  EXPIRE: 'Vencer',
-  ARCHIVE: 'Archivar',
-  REOPEN: 'Reabrir',
-  RESCHEDULE: 'Reprogramar para hoy',
-  RESTORE: 'Restaurar',
+  COMPLETE: 'task.actions.COMPLETE',
+  EXPIRE: 'task.actions.EXPIRE',
+  ARCHIVE: 'task.actions.ARCHIVE',
+  REOPEN: 'task.actions.REOPEN',
+  RESCHEDULE: 'task.actions.RESCHEDULE',
+  RESTORE: 'task.actions.RESTORE',
 };
+const SWIPE_OPEN = -80;
 const ACTION_ICON: Record<TaskEvent, string> = {
   COMPLETE: refreshOutline,
   EXPIRE: calendarOutline,
@@ -53,11 +57,13 @@ const ACTION_ICON: Record<TaskEvent, string> = {
   selector: 'app-task-item',
   templateUrl: './task-item.component.html',
   styleUrl: './task-item.component.scss',
-  imports: [IonIcon],
+  imports: [IonIcon, TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemComponent {
+  private readonly translate = inject(TranslateService);
   readonly task = input.required<Task>();
+  readonly variant = input<'task' | 'note'>('task');
   readonly actions = input<readonly TaskEvent[]>([]);
   readonly categoryName = input<string>();
   readonly categoryIcon = input<string>();
@@ -80,13 +86,22 @@ export class TaskItemComponent {
     const parts: string[] = [];
     const task = this.task();
     if (task.durationMin) {
-      parts.push(`Duración: ${task.durationMin} min`);
+      parts.push(
+        this.translate.instant('task.duration', { minutes: task.durationMin }),
+      );
     }
     if (task.reminderMin) {
-      parts.push(`Aviso: ${task.reminderMin} min antes`);
+      parts.push(
+        this.translate.instant('task.reminder', { minutes: task.reminderMin }),
+      );
     }
     return parts.join(' · ');
   });
+  readonly offset = signal(0);
+  readonly revealed = signal(false);
+  private pointerId: number | null = null;
+  private origin = 0;
+  private dragging = false;
   readonly showCategories = input(true);
   readonly disabled = input(false);
   readonly taskToggle = output<string>();
@@ -107,4 +122,40 @@ export class TaskItemComponent {
       (event) => event !== TASK_EVENT.COMPLETE && event !== TASK_EVENT.REOPEN,
     ),
   );
+
+  onPointerDown(event: PointerEvent): void {
+    if (this.disabled() || event.button !== 0) {
+      return;
+    }
+    this.pointerId = event.pointerId;
+    this.origin = event.clientX;
+    this.dragging = false;
+  }
+
+  onPointerMove(event: PointerEvent): void {
+    if (this.pointerId !== event.pointerId) {
+      return;
+    }
+    const delta = event.clientX - this.origin;
+    if (!this.dragging && Math.abs(delta) < 8) {
+      return;
+    }
+    this.dragging = true;
+    const base = this.revealed() ? SWIPE_OPEN : 0;
+    this.offset.set(Math.max(-96, Math.min(0, base + delta)));
+  }
+
+  onPointerUp(event: PointerEvent): void {
+    if (this.pointerId !== event.pointerId) {
+      return;
+    }
+    this.pointerId = null;
+    if (!this.dragging) {
+      return;
+    }
+    this.dragging = false;
+    const open = this.offset() <= SWIPE_OPEN;
+    this.revealed.set(open);
+    this.offset.set(open ? SWIPE_OPEN : 0);
+  }
 }

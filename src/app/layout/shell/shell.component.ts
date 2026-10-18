@@ -6,6 +6,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonRouterOutlet } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { APP_ROUTE } from '../../core/guards/categories-enabled-guard';
 import { TaskStore } from '../../store/task';
@@ -31,7 +32,12 @@ const TAB_ROUTE: Partial<Record<RailTabId, string>> = {
   selector: 'app-shell',
   templateUrl: './shell.component.html',
   styleUrl: './shell.component.scss',
-  imports: [IonRouterOutlet, SideTabRailComponent, CategorySheetComponent],
+  imports: [
+    IonRouterOutlet,
+    TranslatePipe,
+    SideTabRailComponent,
+    CategorySheetComponent,
+  ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

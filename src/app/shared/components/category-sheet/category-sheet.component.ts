@@ -9,6 +9,7 @@ import {
   signal,
 } from '@angular/core';
 import { IonContent, IonIcon, IonModal } from '@ionic/angular/standalone';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   CATEGORY_SECTION,
   type Category,
@@ -33,10 +34,10 @@ const CATEGORY_COLORS = [
 
 export type CategoryColorKey = (typeof CATEGORY_COLORS)[number]['key'];
 
-const SECTION_LABELS: readonly { key: CategorySection; label: string }[] = [
-  { key: CATEGORY_SECTION.GENERAL, label: 'General' },
-  { key: CATEGORY_SECTION.ROUTINE, label: 'Routine' },
-  { key: CATEGORY_SECTION.EVENT, label: 'Event' },
+const SECTION_KEYS: readonly CategorySection[] = [
+  CATEGORY_SECTION.GENERAL,
+  CATEGORY_SECTION.ROUTINE,
+  CATEGORY_SECTION.EVENT,
 ];
 
 @Component({
@@ -182,6 +183,7 @@ const COLOR_FILL: Record<CategoryColorKey, string> = {
     ChipComponent,
     IconOptionComponent,
     ColorSwatchComponent,
+    TranslatePipe,
   ],
   templateUrl: './category-sheet.component.html',
   styleUrl: './category-sheet.component.scss',
@@ -189,13 +191,19 @@ const COLOR_FILL: Record<CategoryColorKey, string> = {
 })
 export class CategorySheetComponent {
   private readonly store = inject(CategoryStore);
+  private readonly translate = inject(TranslateService);
   readonly save = output<Category>();
   readonly delete = output<string>();
   readonly mode = computed(() => this.store.sheetRequest()?.mode ?? null);
   readonly isOpen = computed(() => this.store.sheetRequest() !== null);
   readonly icons = CATEGORY_ICONS;
   readonly colors = CATEGORY_COLORS;
-  readonly sectionLabels = SECTION_LABELS;
+  readonly sectionLabels = computed(() =>
+    SECTION_KEYS.map((key) => ({
+      key,
+      label: this.translate.instant(`category.sections.${key}`),
+    })),
+  );
 
   readonly name = signal('');
   readonly icon = signal<CategoryIconKey>('cart');
@@ -205,7 +213,9 @@ export class CategorySheetComponent {
 
   readonly canSave = computed(() => this.name().trim().length > 0);
   readonly title = computed(() =>
-    this.mode() === 'edit' ? 'Edit category' : 'New category',
+    this.translate.instant(
+      this.mode() === 'edit' ? 'category.sheet.edit' : 'category.sheet.new',
+    ),
   );
   readonly selectedIconName = computed(() => {
     const current = this.icons.find((entry) => entry.key === this.icon());

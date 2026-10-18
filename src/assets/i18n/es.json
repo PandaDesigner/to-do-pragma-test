@@ -12,12 +12,66 @@
     "debugAction": "Generar 5.000 tareas de prueba",
     "debugDelete": "Eliminar todas las tareas"
   },
+  "rail": {
+    "label": "Secciones",
+    "todo": "Todo",
+    "routine": "Rutina",
+    "event": "Evento",
+    "category": "Categoría",
+    "more": "Más"
+  },
+  "shell": {
+    "remote": "Configuración remota",
+    "retry": "Reintentar configuración"
+  },
   "category": {
     "section": "Sección",
     "sections": {
       "general": "General",
       "routine": "Rutina",
       "event": "Evento"
+    },
+    "overline": "Mis listas",
+    "title": "Categorías",
+    "listLabel": "Categorías",
+    "emptyTitle": "Tu primera lista",
+    "emptyHint": "Crea una categoría para organizar tus tareas.",
+    "disabled": "Las categorías están deshabilitadas por configuración remota.",
+    "count": "{{count}} tareas",
+    "edit": "Editar {{name}}",
+    "new": "Nueva categoría",
+    "retry": "Reintentar",
+    "sheet": {
+      "new": "Nueva categoría",
+      "edit": "Editar categoría",
+      "name": "Nombre",
+      "icon": "Icono",
+      "color": "Color",
+      "section": "Sección",
+      "preview": "Vista previa",
+      "save": "Guardar categoría",
+      "saveChanges": "Guardar cambios",
+      "delete": "Eliminar categoría"
+    }
+  },
+  "notes": {
+    "overline": "Mis notas"
+  },
+  "task": {
+    "complete": "Completar o reabrir {{title}}",
+    "edit": "Editar {{title}}",
+    "delete": "Eliminar {{title}}",
+    "deleteAction": "Eliminar",
+    "duration": "Duración: {{minutes}} min",
+    "reminder": "Aviso: {{minutes}} min antes",
+    "bullet": "Nota",
+    "actions": {
+      "COMPLETE": "Completar",
+      "EXPIRE": "Vencer",
+      "ARCHIVE": "Archivar",
+      "REOPEN": "Reabrir",
+      "RESCHEDULE": "Reprogramar para hoy",
+      "RESTORE": "Restaurar"
     }
   },
   "todo": {
@@ -28,7 +82,30 @@
     "emptyTitle": "No hay tareas para hoy",
     "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
     "emptyAction": "Añadir tarea",
-    "quickAdd": "Añadir tarea"
+    "quickAdd": "Añadir tarea",
+    "retry": "Reintentar",
+    "listLabel": "Tareas",
+    "filterLabel": "Filtrar por categoría",
+    "editor": {
+      "new": "Nueva tarea",
+      "edit": "Editar tarea",
+      "title": "Título",
+      "titleError": "Escribe un título.",
+      "date": "Fecha",
+      "time": "Hora",
+      "duration": "Duración",
+      "custom": "Personalizado",
+      "durationMin": "Duración (min)",
+      "reminder": "Aviso (min antes)",
+      "none": "Sin aviso",
+      "before5": "5 min antes",
+      "before15": "15 min antes",
+      "before30": "30 min antes",
+      "before60": "1 h antes",
+      "reminderHint": "Los avisos requieren plugin push y credenciales del dispositivo.",
+      "category": "Categoría",
+      "uncategorized": "Sin categoría"
+    }
   },
   "tasks": {
     "fab": {

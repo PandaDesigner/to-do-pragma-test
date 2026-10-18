@@ -8,6 +8,7 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { IonContent, IonIcon } from '@ionic/angular/standalone';
+import { TranslatePipe } from '@ngx-translate/core';
 import { createOutline } from 'ionicons/icons';
 import { resolveCategoryIcon } from '../../domain/category-icons';
 import { RemoteConfigService } from '../../core/config/remote-config';
@@ -33,6 +34,7 @@ const VIRTUAL_SCROLL_THRESHOLD = 200;
     EmptyStateComponent,
     ScrollingModule,
     NgTemplateOutlet,
+    TranslatePipe,
   ],
   providers: [ActionFeedback],
   changeDetection: ChangeDetectionStrategy.OnPush,

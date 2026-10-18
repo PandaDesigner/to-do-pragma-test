@@ -5,6 +5,7 @@ import {
   input,
   output,
 } from '@angular/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 export const RAIL_TAB = {
   TODO: 'todo',
@@ -29,35 +30,35 @@ const RAIL_FILLER_HEIGHT = 131;
 export const RAIL_TABS: readonly RailTab[] = [
   {
     id: RAIL_TAB.TODO,
-    label: 'Todo',
+    label: 'rail.todo',
     height: 185,
     disabled: false,
     fill: 'var(--app-category-1)',
   },
   {
     id: RAIL_TAB.ROUTINE,
-    label: 'Routine',
+    label: 'rail.routine',
     height: 126,
     disabled: false,
     fill: 'var(--app-category-2)',
   },
   {
     id: RAIL_TAB.EVENT,
-    label: 'Event',
+    label: 'rail.event',
     height: 132,
     disabled: false,
     fill: 'var(--app-category-3)',
   },
   {
     id: RAIL_TAB.CATEGORY,
-    label: 'Category',
+    label: 'rail.category',
     height: 127,
     disabled: false,
     fill: 'var(--app-category-4)',
   },
   {
     id: RAIL_TAB.MORE,
-    label: 'More',
+    label: 'rail.more',
     height: 111,
     disabled: false,
     fill: 'var(--app-category-5)',
@@ -68,6 +69,7 @@ export const RAIL_TABS: readonly RailTab[] = [
   selector: 'app-side-tab-rail',
   templateUrl: './side-tab-rail.component.html',
   styleUrl: './side-tab-rail.component.scss',
+  imports: [TranslatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SideTabRailComponent {

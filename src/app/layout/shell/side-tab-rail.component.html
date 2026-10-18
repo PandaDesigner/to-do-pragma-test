@@ -1,4 +1,4 @@
-<nav class="rail" role="tablist" aria-label="Secciones">
+<nav class="rail" role="tablist" [attr.aria-label]="'rail.label' | translate">
   @for (tab of visibleTabs(); track tab.id) {
     <button
       type="button"
@@ -12,7 +12,7 @@
       [style.--rail-fill]="tab.fill"
       (click)="choose(tab)"
     >
-      <span>{{ tab.label }}</span>
+      <span>{{ tab.label | translate }}</span>
     </button>
     @if (showsFillerAfter(tab.id)) {
       <div

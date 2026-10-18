@@ -40,7 +40,7 @@ describe('CategoriesPage', () => {
     const label =
       fab.shadowRoot?.querySelector('button')?.getAttribute('aria-label') ??
       fab.getAttribute('aria-label');
-    expect(label).toBe('Nueva categoría');
+    expect(label).toBe('New category');
     expect(icon.icon).toBe(add);
     fab.click();
     expect(categories.sheetRequest()).toEqual({ mode: 'create' });

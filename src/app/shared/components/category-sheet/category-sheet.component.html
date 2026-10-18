@@ -12,7 +12,7 @@
         </h2>
 
         <label class="form-field">
-          <span class="meta">Name</span>
+          <span class="meta">{{ 'category.sheet.name' | translate }}</span>
           <input
             name="name"
             type="text"
@@ -24,7 +24,7 @@
         </label>
 
         <fieldset class="form-field icon-grid">
-          <legend class="meta">Icon</legend>
+          <legend class="meta">{{ 'category.sheet.icon' | translate }}</legend>
           <div class="icon-grid__row">
             @for (entry of icons; track entry.key) {
               <app-icon-option
@@ -39,7 +39,7 @@
         </fieldset>
 
         <fieldset class="form-field color-row">
-          <legend class="meta">Color</legend>
+          <legend class="meta">{{ 'category.sheet.color' | translate }}</legend>
           <div class="color-row__track">
             @for (entry of colors; track entry.key) {
               <app-color-swatch
@@ -54,9 +54,11 @@
         </fieldset>
 
         <fieldset class="form-field section-row">
-          <legend class="meta">Section</legend>
+          <legend class="meta">
+            {{ 'category.sheet.section' | translate }}
+          </legend>
           <div class="section-row__track">
-            @for (entry of sectionLabels; track entry.key) {
+            @for (entry of sectionLabels(); track entry.key) {
               <app-chip
                 [label]="entry.label"
                 [selected]="section() === entry.key"
@@ -67,7 +69,7 @@
         </fieldset>
 
         <div class="category-sheet__preview">
-          <span class="meta">Preview</span>
+          <span class="meta">{{ 'category.sheet.preview' | translate }}</span>
           <app-chip
             [label]="name() || 'Shopping'"
             [colorToken]="
@@ -94,11 +96,16 @@
             [disabled]="!canSave()"
             (click)="submit()"
           >
-            {{ mode() === 'edit' ? 'Save changes' : 'Save category' }}
+            {{
+              (mode() === 'edit'
+                ? 'category.sheet.saveChanges'
+                : 'category.sheet.save'
+              ) | translate
+            }}
           </button>
           @if (mode() === 'edit') {
             <button type="button" class="danger-link" (click)="remove()">
-              Delete category
+              {{ 'category.sheet.delete' | translate }}
             </button>
           }
         </div>

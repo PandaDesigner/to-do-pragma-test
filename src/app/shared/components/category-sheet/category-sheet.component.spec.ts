@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import en from '../../../../assets/i18n/en.json';
 import { InMemoryRepository } from '../../../data/repositories/in-memory-repository';
 import {
   CLOCK,
@@ -21,6 +23,7 @@ async function setup() {
     imports: [CategorySheetComponent],
     providers: [
       provideIonicAngular({}),
+      provideTranslateService({ fallbackLang: 'en' }),
       TaskStore,
       CategoryStore,
       { provide: CATEGORY_REPOSITORY, useValue: repository },
@@ -31,6 +34,9 @@ async function setup() {
       },
     ],
   });
+  const translate = TestBed.inject(TranslateService);
+  translate.setTranslation('en', en);
+  translate.use('en');
   const store = TestBed.inject(CategoryStore);
   const fixture = TestBed.createComponent(CategorySheetComponent);
   fixture.detectChanges();
@@ -231,7 +237,7 @@ describe('CategorySheetComponent', () => {
       (resolve as (v: void) => void)(undefined),
     );
     fixture.detectChanges();
-    expect(fixture.componentInstance.sectionLabels).toHaveLength(3);
+    expect(fixture.componentInstance.sectionLabels()).toHaveLength(3);
     expect(fixture.componentInstance.section()).toBe('routine');
   });
 

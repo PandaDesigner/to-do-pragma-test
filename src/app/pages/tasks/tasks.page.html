@@ -1,8 +1,16 @@
 <ion-content [fullscreen]="false">
   <main class="notebook-page">
     <div class="top-actions">
-      <span class="today-badge">{{ 'todo.today' | translate }}</span>
+      <button type="button" class="today-badge" (click)="focusToday()">
+        {{ 'todo.today' | translate }}
+      </button>
     </div>
+    @if (notesCategory(); as notes) {
+    <app-page-header
+      [overline]="'notes.overline' | translate"
+      [title]="notes.name"
+    />
+    } @else {
     <app-page-header
       [overline]="longDate()"
       [title]="dayTitle()"
@@ -37,8 +45,8 @@
       </button>
       }
     </section>
-    } @if (flags.categoriesEnabled() && availableCategories().length) {
-    <nav class="chips" aria-label="Filtrar por categoría">
+    } } @if (flags.categoriesEnabled() && availableCategories().length) {
+    <nav class="chips" [attr.aria-label]="'todo.filterLabel' | translate">
       <app-chip
         [label]="'todo.all' | translate"
         [selected]="store.categoryId() === undefined"
@@ -57,12 +65,12 @@
     <div class="error-notice" role="alert">
       <p>{{ feedback.error() || store.error() }}</p>
       <button type="button" (click)="retry()" [disabled]="store.busy()">
-        Reintentar
+        {{ 'todo.retry' | translate }}
       </button>
     </div>
     }
     <section
-      aria-label="Tareas"
+      [attr.aria-label]="'todo.listLabel' | translate"
       class="task-list"
       [style.margin-top.px]="
           earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
@@ -91,6 +99,7 @@
         [categoryIcon]="categoryIcons().get(task.categoryId)"
         [categoryColorToken]="categoryColors().get(task.categoryId)"
         [showCategories]="flags.categoriesEnabled()"
+        [variant]="notesCategory() ? 'note' : 'task'"
         [disabled]="store.busy()"
         (taskToggle)="toggleTask($event)"
         (action)="dispatch($event)"
@@ -158,28 +167,39 @@
           class="editor editor-form"
         >
           <h2 id="task-editor-title">
-            {{ editingId() ? 'Editar tarea' : 'Nueva tarea' }}
+            {{ (editingId() ? 'todo.editor.edit' : 'todo.editor.new') |
+            translate }}
           </h2>
           <label class="form-field">
-            <span class="form-field__label">Título</span>
+            <span class="form-field__label"
+              >{{ 'todo.editor.title' | translate }}</span
+            >
             <input formControlName="title" autocomplete="off" maxlength="240" />
           </label>
           @if (form.controls.title.touched && form.controls.title.invalid) {
-          <p class="error" role="alert">Escribe un título.</p>
+          <p class="error" role="alert">
+            {{ 'todo.editor.titleError' | translate }}
+          </p>
           }
           <div class="form-row form-row--two">
             <label class="form-field">
-              <span class="form-field__label">Fecha</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.date' | translate }}</span
+              >
               <input type="date" formControlName="dueDate" required />
             </label>
             <label class="form-field">
-              <span class="form-field__label">Hora</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.time' | translate }}</span
+              >
               <input type="time" formControlName="time" />
             </label>
           </div>
           <div class="form-row form-row--two">
             <label class="form-field">
-              <span class="form-field__label">Duración</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.duration' | translate }}</span
+              >
               <select formControlName="durationPreset">
                 <option [value]="15">15 min</option>
                 <option [value]="30">30 min</option>
@@ -189,12 +209,16 @@
                 <option [value]="90">1 h 30 min</option>
                 <option [value]="105">1 h 45 min</option>
                 <option [value]="120">2 h</option>
-                <option value="custom">Personalizado</option>
+                <option value="custom">
+                  {{ 'todo.editor.custom' | translate }}
+                </option>
               </select>
             </label>
             @if (durationPreset() === 'custom') {
             <label class="form-field">
-              <span class="form-field__label">Duración (min)</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.durationMin' | translate }}</span
+              >
               <input
                 type="number"
                 min="0"
@@ -207,25 +231,41 @@
           </div>
           <div class="form-row">
             <label class="form-field">
-              <span class="form-field__label">Aviso (min antes)</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.reminder' | translate }}</span
+              >
               <select formControlName="reminderMin">
-                <option [value]="0">Sin aviso</option>
-                <option [value]="5">5 min antes</option>
-                <option [value]="15">15 min antes</option>
-                <option [value]="30">30 min antes</option>
-                <option [value]="60">1 h antes</option>
+                <option [value]="0">
+                  {{ 'todo.editor.none' | translate }}
+                </option>
+                <option [value]="5">
+                  {{ 'todo.editor.before5' | translate }}
+                </option>
+                <option [value]="15">
+                  {{ 'todo.editor.before15' | translate }}
+                </option>
+                <option [value]="30">
+                  {{ 'todo.editor.before30' | translate }}
+                </option>
+                <option [value]="60">
+                  {{ 'todo.editor.before60' | translate }}
+                </option>
               </select>
             </label>
             <p class="form-helper">
-              Los avisos requieren plugin push y credenciales del dispositivo.
+              {{ 'todo.editor.reminderHint' | translate }}
             </p>
           </div>
           @if (flags.categoriesEnabled()) {
           <div class="form-row form-row--two">
             <label class="form-field">
-              <span class="form-field__label">Categoría</span>
+              <span class="form-field__label"
+                >{{ 'todo.editor.category' | translate }}</span
+              >
               <select formControlName="categoryId">
-                <option value="">Sin categoría</option>
+                <option value="">
+                  {{ 'todo.editor.uncategorized' | translate }}
+                </option>
                 @for (category of availableCategories(); track category.id) {
                 <option [value]="category.id">{{ category.name }}</option>
                 }

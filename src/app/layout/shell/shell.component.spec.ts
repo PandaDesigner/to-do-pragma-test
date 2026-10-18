@@ -9,6 +9,7 @@ import {
   APP_ROUTE,
   categoriesEnabledGuard,
 } from '../../core/guards/categories-enabled-guard';
+import es from '../../../assets/i18n/es.json';
 import { ShellComponent } from './shell.component';
 import { routes } from '../../app.routes';
 
@@ -21,7 +22,7 @@ describe('Shell and categories guard', () => {
       ],
     });
     const translate = TestBed.inject(TranslateService);
-    translate.setTranslation(APP_LANGUAGE.ES, { settings: { tab: 'Ajustes' } });
+    translate.setTranslation(APP_LANGUAGE.ES, es);
     translate.use(APP_LANGUAGE.ES);
     const fixture = TestBed.createComponent(ShellComponent);
     fixture.detectChanges();
@@ -35,7 +36,7 @@ describe('Shell and categories guard', () => {
     const labels = [...rail.querySelectorAll('[role="tab"]')].map(
       (tab: HTMLElement) => tab.textContent?.trim(),
     );
-    expect(labels).toEqual(['Todo', 'Routine', 'Event', 'Category', 'More']);
+    expect(labels).toEqual(['Todo', 'Rutina', 'Evento', 'Categoría', 'Más']);
     expect(
       (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
         .disabled,

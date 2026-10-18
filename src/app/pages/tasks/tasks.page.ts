@@ -20,6 +20,7 @@ import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
 import { TASK_EVENT, type TaskEvent } from '../../domain/task-state';
+import { CATEGORY_KIND } from '../../domain/category';
 import {
   CATEGORY_SECTION,
   type CategorySection,
@@ -151,6 +152,18 @@ export class TasksPage implements OnInit {
         ]),
       ),
   );
+  readonly notesCategory = computed(() => {
+    const id = this.store.categoryId();
+    if (!id) {
+      return null;
+    }
+    return (
+      this.availableCategories().find(
+        (category) =>
+          category.id === id && category.kind === CATEGORY_KIND.SHOPPING,
+      ) ?? null
+    );
+  });
   readonly dayTitle = computed(() => formatDayTitle(this.clock.today()));
   readonly longDate = computed(() => formatLongDate(this.clock.today()));
   readonly earlierTasks = computed(() =>
@@ -175,6 +188,13 @@ export class TasksPage implements OnInit {
 
   togglePanel(): void {
     this.panelOpen.update((open) => !open);
+  }
+
+  focusToday(): void {
+    this.store.setCategory(undefined);
+    this.store.setStatuses([...VIEW_STATUSES]);
+    this.panelOpen.set(true);
+    this.scrollListToTop();
   }
 
   readonly durationPreset = computed(

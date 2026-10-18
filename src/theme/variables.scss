@@ -13,6 +13,8 @@
   --app-border: #{t.$color-border};
   --app-card-border: #{t.$color-card-border};
   --app-check-empty: #{t.$color-check-empty};
+  // El disco vacío no cambia en oscuro. La tinta del icono tampoco: primary-dark sí se invierte.
+  --app-illustration-ink: #{t.$color-primary-dark};
   --app-accent-link: #{t.$color-accent-link};
   --app-danger: #{t.$color-danger};
   --app-scrim: #{t.$color-scrim};

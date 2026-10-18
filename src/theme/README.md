@@ -24,21 +24,22 @@ Origen único de los tokens visuales de la app. Los consumidores importan solo `
 
 Las variables `--app-*` siguen el mapeo definido en `openspec/changes/theme-foundation/design.md` (tabla Mapeo Figma → src/theme). La copia offline `docs/design.json` es la fuente del listado:
 
-| Variable                | Light                                       | Dark                            | Origen                                           |
-| ----------------------- | ------------------------------------------- | ------------------------------- | ------------------------------------------------ |
-| `--app-primary`         | #4B3F6B                                     | #8B7FC0                         | color/primary                                    |
-| `--app-primary-dark`    | #3A2E5C                                     | #EDEAF5                         | color/primary-dark                               |
-| `--app-text`            | #2E2547                                     | #EDEAF5                         | color/text                                       |
-| `--app-text-muted`      | #6B6580                                     | #6B6580                         | color/text-muted (decisión Pedro 16-oct)         |
-| `--app-surface`         | #FFFFFF                                     | #1E1A2B                         | color/surface                                    |
-| `--app-surface-muted`   | #F2F2F4                                     | #2A2539                         | color/surface-muted                              |
-| `--app-border`          | #E6E4EC                                     | #332D45                         | color/border                                     |
-| `--app-card-border`     | #D9D6E2                                     | #332D45                         | color/card-border                                |
-| `--app-check-empty`     | #E4E1EE                                     | #E4E1EE                         | color/check-empty                                |
-| `--app-accent-link`     | #3AA8E0                                     | #3AA8E0                         | color/accent-link                                |
-| `--app-danger`          | #C5000F                                     | #C5000F                         | color/danger (UI-21)                             |
-| `--app-category-1..5`   | #B8CFA8, #F28B8B, #9FC3CF, #E8E1B8, #C9C9C9 | mismo hex con alfa D9 (--tab-*) | tab/*                                            |
-| `--app-category-filler` | #4B3F6B                                     | #4B3F6BD9                       | tab/filler (independiente del primary en oscuro) |
+| Variable                 | Light                                       | Dark                            | Origen                                                      |
+| ------------------------ | ------------------------------------------- | ------------------------------- | ----------------------------------------------------------- |
+| `--app-primary`          | #4B3F6B                                     | #8B7FC0                         | color/primary                                               |
+| `--app-primary-dark`     | #3A2E5C                                     | #EDEAF5                         | color/primary-dark                                          |
+| `--app-text`             | #2E2547                                     | #EDEAF5                         | color/text                                                  |
+| `--app-text-muted`       | #6B6580                                     | #6B6580                         | color/text-muted (decisión Pedro 16-oct)                    |
+| `--app-surface`          | #FFFFFF                                     | #1E1A2B                         | color/surface                                               |
+| `--app-surface-muted`    | #F2F2F4                                     | #2A2539                         | color/surface-muted                                         |
+| `--app-border`           | #E6E4EC                                     | #332D45                         | color/border                                                |
+| `--app-card-border`      | #D9D6E2                                     | #332D45                         | color/card-border                                           |
+| `--app-check-empty`      | #E4E1EE                                     | #E4E1EE                         | color/check-empty                                           |
+| `--app-illustration-ink` | #3A2E5C                                     | #3A2E5C                         | trazo del clipboard sobre el disco; no sigue a primary-dark |
+| `--app-accent-link`      | #3AA8E0                                     | #3AA8E0                         | color/accent-link                                           |
+| `--app-danger`           | #C5000F                                     | #C5000F                         | color/danger (UI-21)                                        |
+| `--app-category-1..5`    | #B8CFA8, #F28B8B, #9FC3CF, #E8E1B8, #C9C9C9 | mismo hex con alfa D9 (--tab-*) | tab/*                                                       |
+| `--app-category-filler`  | #4B3F6B                                     | #4B3F6BD9                       | tab/filler (independiente del primary en oscuro)            |
 
 FAB (Figma 4:1109), en `_tokens.scss` y consumidos por `app-fab-button`:
 

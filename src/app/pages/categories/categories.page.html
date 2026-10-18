@@ -1,18 +1,21 @@
 <ion-content [scrollY]="!shouldVirtualize()">
   <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
-    <app-page-header overline="Mis listas" title="Categorías" />
+    <app-page-header
+      [overline]="'category.overline' | translate"
+      [title]="'category.title' | translate"
+    />
     @if (flags.categoriesEnabled()) { @if (feedback.error() || store.error()) {
     <div class="error-notice" role="alert">
       <p>{{ feedback.error() || store.error() }}</p>
       <button type="button" (click)="retry()" [disabled]="store.busy()">
-        Reintentar
+        {{ 'category.retry' | translate }}
       </button>
     </div>
     } @if (shouldVirtualize()) {
     <cdk-virtual-scroll-viewport
       [itemSize]="77"
       class="category-viewport"
-      aria-label="Categorías"
+      [attr.aria-label]="'category.listLabel' | translate"
     >
       <ng-container
         *cdkVirtualFor="let category of store.categories(); trackBy: trackById"
@@ -24,7 +27,7 @@
       </ng-container>
     </cdk-virtual-scroll-viewport>
     } @else {
-    <section aria-label="Categorías">
+    <section [attr.aria-label]="'category.listLabel' | translate">
       @for (category of store.categories(); track category.id) {
       <ng-container
         [ngTemplateOutlet]="categoryRow"
@@ -32,13 +35,16 @@
       />
       } @empty {
       <app-empty-state
-        title="Tu primera lista"
-        hint="Crea una categoría para organizar tus tareas."
+        [title]="'category.emptyTitle' | translate"
+        [hint]="'category.emptyHint' | translate"
       />
       }
     </section>
     }
-    <app-fab-button ariaLabel="Nueva categoría" (pressed)="openCreateSheet()" />
+    <app-fab-button
+      [ariaLabel]="'category.new' | translate"
+      (pressed)="openCreateSheet()"
+    />
     <ng-template #categoryRow let-category>
       <article class="category-row">
         <span class="swatch" [attr.data-color]="category.colorToken"
@@ -46,12 +52,15 @@
         /></span>
         <div class="category-copy">
           <strong>{{ category.name }}</strong
-          ><small>{{ taskCounts().get(category.id) || 0 }} tareas</small>
+          ><small
+            >{{ 'category.count' | translate: { count:
+            taskCounts().get(category.id) || 0 } }}</small
+          >
         </div>
         <button
           type="button"
           [disabled]="store.busy()"
-          [attr.aria-label]="'Editar ' + category.name"
+          [attr.aria-label]="'category.edit' | translate: { name: category.name }"
           (click)="openEditSheet(category)"
         >
           <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
@@ -59,7 +68,7 @@
       </article>
     </ng-template>
     } @else {
-    <p>Las categorías están deshabilitadas por configuración remota.</p>
+    <p>{{ 'category.disabled' | translate }}</p>
     }
   </main>
 </ion-content>
