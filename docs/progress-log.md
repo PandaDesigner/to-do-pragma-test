@@ -1,5 +1,6 @@
 # Registro de avance
 
+- 2026-10-18: `regularize-direct-commits` archivado tras el PR #40 (`7b811a8`). Los 18 commits directos quedan trazados (SHEET-90, PAGE-20, SCROLL-01, PAGER-01, ROW-01, DEBUG-01). TODO-12 y SWIPE-02.1 siguen en la spec vigente. La nota de Notion (tarea 3.1) sigue abierta: no hay conector en la sesión.
 - 2026-10-18: `firebase-env-production` archivado tras el PR #39 (`d8d7ba2`). Producción real por `fileReplacements`, intervalo 60000, release con `--require` y CI sin ese flag. RC-07, APK firmado y notas de Notion quedan fuera. Jest 54/477 en `develop`.
 - 2026-10-18: `fix/delivery-functional` cierra gesto, sección por pestaña, filtro de pendientes, paginador filtrado, chip Pendientes, fila única y Remote Config (una lectura, debug en false, 404 sin banner, 500 en toast). Jest 49/442 con cobertura global 94.14 %. Sin capturas. Build con warning de budget en la fila y la página.
 - 2026-10-17: F0 `chore/align-docs` alinea reglas, auditoría, inventario y trazabilidad. `init` y `app-base` se archivan sin pisar specs porque sus deltas difieren del código. `trace:check` pasa para los 15 nodos registrados.
