@@ -219,3 +219,15 @@ pista, así que ambas piezas se leían como una sola línea y no se distinguía 
 - [x] 27.2 Declarar el escenario `DATE-FILTER-02.15` y el requisito `DATE-FILTER-05` en el spec delta
 - [x] 27.3 `fix`: título a `--app-font-size-note-title` y `margin: var(--app-space-24) 0 var(--app-space-4) 0`
 - [x] 27.4 Suite completa (564 tests), lint, stylelint, tipos, `trace:check` y prettier en verde
+
+## 28. Tamaño de los botones de acción
+
+Medido: los tres botones ocupaban 127 px cada uno, un tercio exacto del calendario, con
+`gap: 0`. La fila se leía como una banda continua pegada al borde y los botones, unidos.
+
+- [x] 28.1 `test`: `[DATE-FILTER-02.16]` falla con el ancho a un tercio y `gap: 0`
+- [x] 28.2 Declarar el escenario `DATE-FILTER-02.16` y el requisito `DATE-FILTER-06` en el spec delta
+- [x] 28.3 `fix`: `width: 100px` y `flex: 0 0 auto` en los botones, `gap: var(--app-space-8)` y `justify-content: flex-start` en la fila
+- [x] 28.4 `test`: `[DATE-FILTER-02.14]` pasa a comprobar la alineación con el ancho del calendario, que es lo que sobrevive del reparto por tercios
+- [x] 28.5 Verificar en navegador: los tres en 100 px, huecos de 8 px, sin texto recortado (CANCEL necesita 57 px)
+- [x] 28.6 Suite completa (565 tests), lint, stylelint, `trace:check` y `openspec validate` en verde
