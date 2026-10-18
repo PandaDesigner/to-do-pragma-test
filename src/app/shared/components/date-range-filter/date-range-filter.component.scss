@@ -97,25 +97,25 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  // La fila toma el ancho completo del calendario para que los botones queden
-  // alineados con la rejilla de arriba, pero los botones ya no se estiran para
-  // cubrirla: se quedan en 100 px, alineados al inicio y separados por un hueco.
-  // Antes cada boton tomaba un tercio exacto, 127 px, y la fila se leia como una
-  // banda continua pegada al borde.
+  // La fila toma el ancho completo del calendario y reparte con flex: Quitar se
+  // lleva la mitad y Cancelar y Aplicar un cuarto cada uno. Asi la accion de
+  // limpiar tiene mas presencia sin desplazar a las otras dos.
   gap: var(--app-space-8);
-  justify-content: flex-start;
   width: 100%;
 }
 
 .date-filter__actions ion-button {
-  // Ancho fijo para los tres: es lo que los iguala entre si. Con flex: 1 1 0
-  // median 127 px cada uno y se tocaban; sin ancho, cada uno tomaba lo que
-  // necesitaba su texto y quedaban en 136, 97 y 80 px. 100 px deja aire de sobra
-  // para la etiqueta mas larga, CANCEL, que ocupa 57 px con el padding de Ionic.
-  flex: 0 0 auto;
-  width: 100px;
+  // Basis 0 para repartir por partes iguales y no segun el texto, que hacia que
+  // los tres midieran distinto. grow 1 es la parte que le toca a cada uno.
+  flex: 1 1 0;
   // ion-button aplica 2px de margen a cada lado y 15.4px de padding horizontal
   // en su parte nativa. El margen descuadra los bordes exteriores, asi que se
-  // neutraliza para que el primero y el ultimo caigan en los bordes de la fila.
+  // neutraliza para que el borde de cada boton caiga donde toca.
   margin: 0;
+}
+
+// Quitar se lleva el doble: dos partes de cuatro en vez de una. La accion de
+// limpiar es la mas destructiva de las tres y conviene que pese mas.
+.date-filter__actions ion-button[data-testid='date-filter-clear'] {
+  flex: 2 1 0;
 }
