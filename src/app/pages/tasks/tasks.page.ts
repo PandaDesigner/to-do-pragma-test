@@ -54,6 +54,7 @@ import { EmptyStateComponent } from '../../shared/components/empty-state/empty-s
 import { ChipComponent } from '../../shared/components/chip/chip.component';
 import { FabButtonComponent } from '../../shared/components/fab-button/fab-button.component';
 import { DateRangeFilterComponent } from '../../shared/components/date-range-filter/date-range-filter.component';
+import { SettingsPreferences } from '../../core/settings/settings-preferences';
 import { ActionFeedback } from '../../shared/services/action-feedback';
 import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import { formatDayTitle, formatLongDate } from './day-title';
@@ -114,10 +115,16 @@ export class TasksPage implements OnInit {
   readonly sheetOpen = signal(false);
   readonly dateFilterOpen = signal(false);
   readonly today = computed(() => this.clock.today());
-  // ngx-translate puede exponer currentLang como objeto cuando hay varios
-  // idiomas, asi que se normaliza a texto antes de formatear la fecha.
+  // El idioma con el que se formatea la cabecera.
+  //
+  // Se lee de la señal de SettingsPreferences y no de translate.currentLang:
+  // este ultimo no es una señal, asi que un computed que lo leyera se congelaria
+  // en el idioma del primer render. Tampoco sirve onLangChange, porque la pagina
+  // se crea despues de que el idioma se aplico al arrancar y ese evento ya paso:
+  // tras cargar en espanol la cabecera se quedaba en ingles.
+  private readonly settings = inject(SettingsPreferences);
   readonly locale = computed(() => {
-    const lang: unknown = this.translate.currentLang;
+    const lang: unknown = this.settings.language();
     return typeof lang === 'string' && lang.length > 0 ? lang : 'en';
   });
   readonly panel = PENDING_PANEL;
@@ -171,6 +178,7 @@ export class TasksPage implements OnInit {
         filterTasks(this.store.tasks(), {
           statuses: this.store.statuses(),
           categoryId: this.selectedCategoryId(),
+          dateRange: this.store.dateRange(),
         }),
         this.store.categories(),
         this.section,
@@ -193,7 +201,13 @@ export class TasksPage implements OnInit {
   readonly pageNumbers = computed<readonly number[]>(() =>
     buildPagerNumbers(this.currentPage(), this.totalPages()),
   );
-  readonly sectionLabel = computed(() => 'section.' + this.section);
+  readonly sectionLabel = computed(() => 'category.sections.' + this.section);
+  /**
+   * Titulo de la cabecera. Sin el, Todo, Rutina y Evento muestran la misma
+   * fecha y el usuario no sabe en que seccion esta. Se deriva de la ruta y no
+   * del contenido filtrado, para que tambien la distinga una seccion vacia.
+   */
+  readonly headerTitle = computed(() => this.sectionLabel());
   readonly emptyStateTitle = computed(
     () => 'todo.sections.' + this.section + '.emptyTitle',
   );
