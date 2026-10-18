@@ -1,9 +1,11 @@
+import { readFileSync } from 'node:fs';
 import { TestBed } from '@angular/core/testing';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import en from '../../../../assets/i18n/en.json';
 import { TASK_EVENT } from '../../../domain/task-state';
 import { taskFixture } from '../../../testing/task.fixture';
 import { TaskItemComponent } from './task-item.component';
+import { noteRowState, pendingRowState, taskRowState } from './task-item.state';
 
 describe('TaskItemComponent', () => {
   beforeEach(() => {
@@ -89,6 +91,39 @@ describe('TaskItemComponent', () => {
       event: TASK_EVENT.RESTORE,
     });
     expect(remove).toHaveBeenCalledWith(task.id);
+  });
+
+  it('keeps task, note and pending rows on the same height and switches behavior by state', () => {
+    const fixture = TestBed.createComponent(TaskItemComponent);
+    fixture.componentRef.setInput('task', taskFixture({ title: 'Same size' }));
+    fixture.componentRef.setInput('actions', [TASK_EVENT.COMPLETE]);
+    fixture.componentRef.setInput('categoryName', 'Home');
+    const heights = [taskRowState, noteRowState, pendingRowState].map(
+      (state) => {
+        fixture.componentRef.setInput('state', state);
+        fixture.detectChanges();
+        const row = fixture.nativeElement.querySelector(
+          '.task-row',
+        ) as HTMLElement;
+        expect(row.getAttribute('data-kind')).toBe(state.kind);
+        return getComputedStyle(row).height;
+      },
+    );
+    expect(new Set(heights).size).toBe(1);
+    const styles = readFileSync(
+      'src/app/shared/components/task-item/task-item.component.scss',
+      'utf8',
+    );
+    expect(styles).toContain('height: var(--app-task-row-height)');
+    expect(styles).not.toContain('min-height: 65px');
+    fixture.componentRef.setInput('state', pendingRowState);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('input')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('ion-item-options')).toBeNull();
+    fixture.componentRef.setInput('state', noteRowState);
+    fixture.detectChanges();
+    expect(fixture.nativeElement.querySelector('.note-bullet')).not.toBeNull();
+    expect(fixture.nativeElement.querySelector('.task-meta')).toBeNull();
   });
 
   it('[SWIPE-01.1] the end sliding option removes only when clicked and a note row stays a note', () => {

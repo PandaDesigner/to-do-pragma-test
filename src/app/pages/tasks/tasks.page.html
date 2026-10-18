@@ -35,11 +35,22 @@
         {{ 'todo.pending' | translate }}
       </button>
       @if (panelOpen()) {
-      <ul>
+      <div class="pending-rows">
         @for (task of earlierTasks(); track task.id) {
-        <li>{{ task.title }}</li>
+        <app-task-item
+          [task]="task"
+          [state]="pendingRowState"
+          [actions]="store.actionsFor(task)"
+          [categoryName]="categoryNames().get(task.categoryId)"
+          [categoryIcon]="categoryIcons().get(task.categoryId)"
+          [categoryColorToken]="categoryColors().get(task.categoryId)"
+          [showCategories]="flags.categoriesEnabled()"
+          [disabled]="store.busy()"
+          (taskToggle)="toggleTask($event)"
+          (action)="dispatch($event)"
+        />
         }
-      </ul>
+      </div>
       <button type="button" class="reschedule" (click)="rescheduleEarlier()">
         {{ 'todo.reschedule' | translate }}
       </button>
@@ -51,6 +62,11 @@
         [label]="'todo.all' | translate"
         [selected]="selectedCategoryId() === undefined"
         (choose)="chooseCategory(undefined)"
+      />
+      <app-chip
+        [label]="'todo.pendingChip' | translate"
+        [selected]="pendingSelected()"
+        (choose)="choosePending()"
       />
       @for (category of availableCategories(); track category.id) {
       <app-chip
@@ -99,7 +115,7 @@
         [categoryIcon]="categoryIcons().get(task.categoryId)"
         [categoryColorToken]="categoryColors().get(task.categoryId)"
         [showCategories]="flags.categoriesEnabled()"
-        [variant]="notesCategory() ? 'note' : 'task'"
+        [state]="notesCategory() ? noteRowState : taskRowState"
         [disabled]="store.busy()"
         (taskToggle)="toggleTask($event)"
         (action)="dispatch($event)"

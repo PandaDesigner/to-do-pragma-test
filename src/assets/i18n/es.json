@@ -83,6 +83,7 @@
     "pending": "Tareas pendientes",
     "reschedule": "Reprogramar para hoy",
     "all": "Todas",
+    "pendingChip": "Pendientes",
     "emptyTitle": "No hay tareas para hoy",
     "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
     "emptyAction": "Añadir tarea",

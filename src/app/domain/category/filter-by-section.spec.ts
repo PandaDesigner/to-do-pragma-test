@@ -131,26 +131,25 @@ describe('filterTasksBySection', () => {
     );
   });
 
-  it('[TODO-10.1] keeps only uncategorized tasks on Todo when the catalog is empty', () => {
+  it('returns every task when the catalog is empty', () => {
     const loose: Task = { ...buyBread, id: 'loose', categoryId: null };
     const assigned: Task = { ...buyBread, id: 'assigned', categoryId: 'home' };
+    const stored = [loose, assigned];
     expect(
-      filterTasksBySection(
-        [loose, assigned],
-        [],
-        CATEGORY_SECTION.GENERAL,
-      ).map((task) => task.id),
-    ).toEqual(['loose']);
-  });
-
-  it('[TODO-10.2] returns no routine or event tasks when the catalog is empty', () => {
-    const loose: Task = { ...buyBread, id: 'loose', categoryId: null };
+      filterTasksBySection(stored, [], CATEGORY_SECTION.GENERAL).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
     expect(
-      filterTasksBySection([loose], [], CATEGORY_SECTION.ROUTINE),
-    ).toEqual([]);
-    expect(filterTasksBySection([loose], [], CATEGORY_SECTION.EVENT)).toEqual(
-      [],
-    );
+      filterTasksBySection(stored, [], CATEGORY_SECTION.ROUTINE).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
+    expect(
+      filterTasksBySection(stored, [], CATEGORY_SECTION.EVENT).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
   });
 
   it('ignores a category id that no longer exists in the catalog', () => {

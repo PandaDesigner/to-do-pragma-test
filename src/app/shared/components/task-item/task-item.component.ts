@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  forwardRef,
   inject,
   input,
   output,
@@ -22,8 +23,18 @@ import {
   trashOutline,
 } from 'ionicons/icons';
 import type { Task } from '../../../domain/task';
-import { TASK_EVENT, type TaskEvent } from '../../../domain/task-state';
+import { type TaskEvent } from '../../../domain/task-state';
 import { resolveCategoryIcon, pickValue } from '../../../domain/category-icons';
+import { TaskItemActionsComponent } from './task-item-actions.component';
+import { TaskItemCopyComponent } from './task-item-copy.component';
+import { TaskItemLeadingComponent } from './task-item-leading.component';
+import {
+  noteRowState,
+  TASK_ITEM,
+  taskRowState,
+  type TaskItemContext,
+  type TaskItemState,
+} from './task-item.state';
 
 function mapColorTokenToIndex(token: string): number {
   return pickValue(
@@ -68,13 +79,20 @@ const ACTION_ICON: Record<TaskEvent, string> = {
     IonItemOptions,
     IonItemSliding,
     TranslatePipe,
+    TaskItemLeadingComponent,
+    TaskItemCopyComponent,
+    TaskItemActionsComponent,
+  ],
+  providers: [
+    { provide: TASK_ITEM, useExisting: forwardRef(() => TaskItemComponent) },
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskItemComponent {
+export class TaskItemComponent implements TaskItemContext {
   private readonly translate = inject(TranslateService);
   readonly task = input.required<Task>();
   readonly variant = input<'task' | 'note'>('task');
+  readonly state = input<TaskItemState | null>(null);
   readonly actions = input<readonly TaskEvent[]>([]);
   readonly categoryName = input<string>();
   readonly categoryIcon = input<string>();
@@ -110,22 +128,43 @@ export class TaskItemComponent {
   });
   readonly showCategories = input(true);
   readonly disabled = input(false);
+  readonly presentation = computed(
+    () =>
+      this.state() ?? (this.variant() === 'note' ? noteRowState : taskRowState),
+  );
   readonly taskToggle = output<string>();
   readonly edit = output<Task>();
   readonly remove = output<string>();
   readonly action = output<{ id: string; event: TaskEvent }>();
-  readonly events = TASK_EVENT;
   readonly labels = ACTION_LABEL;
   readonly icons = { createOutline, trashOutline };
   readonly actionIcons = ACTION_ICON;
-  readonly canToggle = computed(
-    () =>
-      this.actions().includes(TASK_EVENT.COMPLETE) ||
-      this.actions().includes(TASK_EVENT.REOPEN),
+  readonly canToggle = computed(() =>
+    this.presentation()
+      .toggleEvents()
+      .some((event) => this.actions().includes(event)),
   );
-  readonly extraActions = computed(() =>
-    this.actions().filter(
-      (event) => event !== TASK_EVENT.COMPLETE && event !== TASK_EVENT.REOPEN,
-    ),
-  );
+  readonly extraActions = computed(() => {
+    if (!this.presentation().showsExtraActions()) {
+      return [];
+    }
+    const toggle = new Set(this.presentation().toggleEvents());
+    return this.actions().filter((event) => !toggle.has(event));
+  });
+
+  emitToggle(id: string): void {
+    this.taskToggle.emit(id);
+  }
+
+  emitEdit(task: Task): void {
+    this.edit.emit(task);
+  }
+
+  emitRemove(id: string): void {
+    this.remove.emit(id);
+  }
+
+  emitAction(event: TaskEvent): void {
+    this.action.emit({ id: this.task().id, event });
+  }
 }

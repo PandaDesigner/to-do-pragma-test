@@ -36,6 +36,11 @@ import type { Category } from '../../domain/category';
 import { TaskStore } from '../../store/task';
 import { CategoryStore } from '../../store/category';
 import { TaskItemComponent } from '../../shared/components/task-item/task-item.component';
+import {
+  noteRowState,
+  pendingRowState,
+  taskRowState,
+} from '../../shared/components/task-item/task-item.state';
 import { PageHeaderComponent } from '../../shared/components/page-header/page-header.component';
 import { EmptyStateComponent } from '../../shared/components/empty-state/empty-state.component';
 import { ChipComponent } from '../../shared/components/chip/chip.component';
@@ -52,6 +57,7 @@ const VIEW_STATUSES = [
   TASK_STATUS.OVERDUE,
   TASK_STATUS.COMPLETED,
 ] as const;
+const PENDING_STATUSES = [TASK_STATUS.PENDING, TASK_STATUS.OVERDUE] as const;
 export const PENDING_PANEL = {
   LEFT: 62,
   TOP: 187,
@@ -93,6 +99,17 @@ export class TasksPage implements OnInit {
   readonly panelOpen = signal(true);
   readonly sheetOpen = signal(false);
   readonly panel = PENDING_PANEL;
+  readonly taskRowState = taskRowState;
+  readonly noteRowState = noteRowState;
+  readonly pendingRowState = pendingRowState;
+  readonly pendingSelected = computed(() => {
+    const statuses = [...this.store.statuses()].sort();
+    const pending = [...PENDING_STATUSES].sort();
+    return (
+      statuses.length === pending.length &&
+      statuses.every((status, index) => status === pending[index])
+    );
+  });
   readonly form = new FormGroup({
     title: new FormControl('', {
       nonNullable: true,
@@ -234,6 +251,13 @@ export class TasksPage implements OnInit {
     this.selectedCategoryId.set(categoryId);
     this.tabPage.set(1);
     this.store.setCategory(categoryId);
+  }
+
+  choosePending(): void {
+    this.tabPage.set(1);
+    this.store.setStatuses(
+      this.pendingSelected() ? [...VIEW_STATUSES] : [...PENDING_STATUSES],
+    );
   }
 
   readonly durationPreset = computed(
@@ -398,6 +422,12 @@ export class TasksPage implements OnInit {
       return false;
     }
     if (!taskBelongsToSection(task, this.section, this.availableCategories())) {
+      return false;
+    }
+    if (
+      this.store.categories().length === 0 &&
+      (this.section !== CATEGORY_SECTION.GENERAL || task.categoryId !== null)
+    ) {
       return false;
     }
     if (this.selectedCategoryId() === null && task.categoryId !== null) {

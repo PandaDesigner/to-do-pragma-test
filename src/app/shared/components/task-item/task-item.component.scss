@@ -5,7 +5,10 @@
   --background: transparent;
   --padding-start: 0;
   --inner-padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
   --border-width: 0;
+  --min-height: var(--app-task-row-height);
 }
 ion-item-option {
   width: var(--app-swipe-action-width);
@@ -21,8 +24,9 @@ ion-item-option {
   display: flex;
   align-items: center;
   gap: var(--app-space-12);
-  min-height: 65px;
-  padding: var(--app-space-12) 0;
+  box-sizing: border-box;
+  height: var(--app-task-row-height);
+  overflow: hidden;
   border-bottom: 1px solid var(--app-border);
 }
 .task-check {
@@ -56,8 +60,8 @@ input:checked {
 .task-title {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
+  -webkit-line-clamp: 1;
+  line-clamp: 1;
   overflow: hidden;
   overflow-wrap: break-word;
   font-size: var(--app-font-size-task-title);
@@ -66,7 +70,7 @@ input:checked {
 }
 .task-meta {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: var(--app-space-8);
   color: var(--app-text-muted);

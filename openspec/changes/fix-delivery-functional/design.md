@@ -3,7 +3,7 @@
 | Responsabilidad | Quién | Por qué | Alternativa descartada |
 | --- | --- | --- | --- |
 | Saber qué sección muestra una página | La página, con la sección de su ruta | El store raíz se queda con la última pestaña cacheada | Reescribir la sección solo en `ionViewWillEnter` |
-| Filtrar sin categorías | `filterTasksBySection` | Es dominio puro | Unificar `section-helpers.ts` (P-05) |
+| Filtrar sin categorías | El panel de pendientes, encima del filtro que ya tenía | La lista conserva `filterTasksBySection` con catálogo vacío | Reemplazar el filtro de la lista |
 | Abrir borrar en la fila | `ion-item-sliding` | Figma 4:1404 y `docs/design.md` | Handler de puntero |
 | Confirmar el borrado | `DeletionConfirmation` | Ya existe | Otro diálogo |
 | Mostrar el flag en pantalla | Nadie | El texto técnico ensucia la demo | Token de modo desarrollo |

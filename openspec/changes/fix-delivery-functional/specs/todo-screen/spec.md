@@ -30,21 +30,34 @@ Una página de tareas MUST filtrar por la sección de su propia ruta. Otra pesta
 - **THEN** Rutina sigue listando solo sus tareas
 - **AND** su chip y su página no cambian
 
-### Requirement: TODO-10 Sin categorías, solo Todo muestra tareas sueltas
+### Requirement: TODO-10 Sin categorías, el filtro de pendientes suma la regla
 
-Si el catálogo está vacío, Todo MUST listar solo tareas con `categoryId === null`. Rutina y Evento MUST quedar vacías. Figma: 4:520.
+Si el catálogo está vacío, la lista MUST conservar el filtro anterior y seguir mostrando las tareas. El panel de pendientes MUST añadir esa condición: en Todo solo entran las abiertas de días anteriores con `categoryId === null`; en Rutina y Evento el panel queda vacío. Figma: 4:440.
 
-#### Scenario: [TODO-10.1] Todo no hereda tareas de otras secciones
+#### Scenario: [TODO-10.1] Todo no mete tareas asignadas en pendientes
 
-- **GIVEN** un catálogo vacío y una tarea suelta más una tarea con categoría, conforme a Figma 4:520
-- **WHEN** se filtra por Todo
-- **THEN** solo aparece la tarea suelta
+- **GIVEN** un catálogo vacío, una tarea suelta y una con categoría, anteriores a hoy, conforme a Figma 4:440
+- **WHEN** se abre Todo
+- **THEN** la lista muestra las dos
+- **AND** el panel de pendientes solo muestra la suelta
 
-#### Scenario: [TODO-10.2] Rutina y Evento quedan vacías sin catálogo
+#### Scenario: [TODO-10.2] Rutina conserva la lista y vacía el panel
 
-- **GIVEN** un catálogo vacío, conforme a Figma 4:520
-- **WHEN** se filtra por Rutina o por Evento
-- **THEN** la lista está vacía
+- **GIVEN** un catálogo vacío y tareas anteriores a hoy, conforme a Figma 4:440
+- **WHEN** se abre Rutina
+- **THEN** la lista sigue mostrando esas tareas
+- **AND** el panel de pendientes queda vacío
+
+### Requirement: TODO-11 El chip Pendientes filtra estados
+
+La fila de chips MUST incluir un tag Pendientes junto a las categorías. Activarlo MUST limitar la lista a pendientes y vencidas sin quitar el chip de categoría. La fila de tarea MUST usar `app-task-item` en la lista, las notas y el panel, con alto `var(--app-task-row-height)`. El estado MUST decidir checkbox, meta y acciones. Figma: 4:440 y 4:973.
+
+#### Scenario: [TODO-11.1] Pendientes se suma al filtro de categoría
+
+- **GIVEN** una categoría con una tarea pendiente y una completada, conforme a Figma 4:973
+- **WHEN** se pulsa el chip Pendientes y después la categoría
+- **THEN** la lista muestra solo la pendiente de esa categoría
+- **AND** al volver a pulsar Pendientes reaparecen ambas
 
 ### Requirement: TSK-19 El paginador usa la lista filtrada
 

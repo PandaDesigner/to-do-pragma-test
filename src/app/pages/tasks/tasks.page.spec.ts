@@ -143,12 +143,68 @@ describe('TasksPage', () => {
       ].map((chip: HTMLElement) => chip.textContent?.trim());
       expect(labels).toEqual([
         'All',
+        'Pending',
         section === CATEGORY_SECTION.ROUTINE
           ? 'Blue category'
           : 'Coral category',
       ]);
     },
   );
+
+  it('[TODO-11.1] the pending chip narrows statuses and keeps the category chip conforme a Figma 4:973', async () => {
+    const { fixture, page, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'home',
+      name: 'Home',
+      kind: 'list',
+      icon: 'list',
+      colorToken: 'my',
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'open',
+        title: 'Open',
+        categoryId: 'home',
+        status: TASK_STATUS.PENDING,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'done',
+        title: 'Done',
+        categoryId: 'home',
+        status: TASK_STATUS.COMPLETED,
+        dueDate: '2026-01-02',
+      }),
+    ]);
+    fixture.detectChanges();
+    const chips = (): HTMLButtonElement[] => [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ];
+    const pending = chips().find((chip) =>
+      chip.textContent?.includes('Pending'),
+    );
+    expect(pending).toBeTruthy();
+    expect(chips().some((chip) => chip.textContent?.includes('Home'))).toBe(
+      true,
+    );
+    pending?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual(['open']);
+    expect(pending?.getAttribute('aria-pressed')).toBe('true');
+    chips()
+      .find((chip) => chip.textContent?.includes('Home'))
+      ?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual(['open']);
+    chips()
+      .find((chip) => chip.textContent?.includes('Pending'))
+      ?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'open',
+      'done',
+    ]);
+  });
 
   it('[TODO-07.3] shows every general category and uncategorized tasks in Todo conforme a Figma 4:440', async () => {
     const { page } = await setupSection();
@@ -168,6 +224,54 @@ describe('TasksPage', () => {
     expect(page.store.visibleTasks().map((task) => task.id)).not.toContain(
       'routine',
     );
+  });
+
+  it('[TODO-10.1] keeps assigned tasks in the list and only loose ones in the pending filter conforme a Figma 4:440', async () => {
+    const { page, tasks, fixture } = await setup();
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'loose',
+        title: 'Loose',
+        categoryId: null,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'assigned',
+        title: 'Assigned',
+        categoryId: 'home',
+        dueDate: '2026-01-01',
+      }),
+    ]);
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'loose',
+      'assigned',
+    ]);
+    expect(page.earlierTasks().map((task) => task.id)).toEqual(['loose']);
+  });
+
+  it('[TODO-10.2] keeps the list on Routine and leaves the pending filter empty conforme a Figma 4:440', async () => {
+    const { page, tasks, fixture } = await setup({
+      routeData: { categorySection: CATEGORY_SECTION.ROUTINE },
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'loose',
+        categoryId: null,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'assigned',
+        categoryId: 'home',
+        dueDate: '2026-01-01',
+      }),
+    ]);
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'loose',
+      'assigned',
+    ]);
+    expect(page.earlierTasks()).toEqual([]);
   });
 
   it('[TODO-07.5] limits the earlier panel to its section conforme a Figma 4:440', async () => {
@@ -318,9 +422,9 @@ describe('TasksPage', () => {
     fixture.detectChanges();
     expect(page.currentPage()).toBe(1);
     expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
-    expect(fixture.nativeElement.querySelectorAll('app-task-item')).toHaveLength(
-      5,
-    );
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(5);
   });
 
   it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {
