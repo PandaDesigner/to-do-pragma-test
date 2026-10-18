@@ -105,6 +105,14 @@ El selector de rango MUST presentarse en un `ion-alert` que monta un calendario 
 - **THEN** el atributo de paleta está presente y toma un valor de paleta o de sistema
 - **AND** si faltara el atributo, ninguna regla por paleta aplicaría y el calendario volvería a los valores por defecto de Ionic
 
+#### Scenario: DATE-FILTER-02.12 La fila de acciones ocupa el ancho del calendario
+
+- **GIVEN** un modal de rango de fechas abierto
+- **WHEN** se comparan los bordes de la fila de acciones con los del calendario
+- **THEN** la fila de acciones mide lo mismo que el calendario
+- **AND** el botón de limpiar empieza en el borde izquierdo de la fila y el de aplicar termina en el borde derecho
+- **AND** los márgenes por defecto del botón no descuadran esos bordes exteriores
+
 ### Requirement: DATE-FILTER-03 Filtro por rango en el store
 
 El store de tareas MUST aceptar un rango de fechas con la misma forma que el resto de sus filtros: aplicar el estado y restablecer la paginación a la página 1. El filtro MUST ser inclusivo en ambos extremos, por el campo de vencimiento, y MUST combinarse por conjunción con el filtro de estados y el de categoría. Figma: 4:440.

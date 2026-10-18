@@ -386,4 +386,36 @@ describe('DateRangeFilterComponent', () => {
     expect(dark?.[1]).toContain('--ion-color-base-rgb: 30, 26, 43');
     expect(light?.[1]).toContain('--ion-color-base-rgb: 255, 255, 255');
   });
+
+  it('[DATE-FILTER-02.12] la fila de acciones se alinea con el ancho del calendario', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const actions = overlay.querySelector(
+      '.date-filter__actions',
+    ) as HTMLElement | null;
+    expect(actions).toBeTruthy();
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const rule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    const body = rule?.[1] ?? '';
+
+    // Los botones no pueden ir pegados al borde derecho: con flex-end el grupo
+    // acaba en 396 contra los 398 del calendario y deja 43px de aire a la
+    // izquierda, con el centro del grupo en 228 frente al 207 del calendario.
+    expect(body).not.toContain('justify-content: flex-end');
+    // Y la fila tiene que repartir los botones a lo ancho del calendario.
+    expect(body).toContain('justify-content: space-between');
+
+    // ion-button mete 2px de margen a cada lado, que descuadran los bordes
+    // exteriores, asi que hay que neutralizarlos en su propia regla.
+    const buttonRule = styles.match(
+      /\.date-filter__actions\s+ion-button\s*\{([^}]*)\}/,
+    );
+    expect(buttonRule).toBeTruthy();
+    expect(buttonRule?.[1]).toContain('margin: 0');
+  });
 });

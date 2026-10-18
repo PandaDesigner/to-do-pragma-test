@@ -160,3 +160,28 @@ proyecto solo define para `--ion-text-color`. El resto cae en los fallbacks clar
 - [x] 22.8 Verificar en navegador: `data-palette="dark"`, fondo `rgb(30,26,43)`, 91 días legibles
 - [x] 22.9 Verificar que el modo claro no se rompió: `data-palette="light"`, fondo blanco
 - [x] 22.10 Suite completa (557 tests), lint, stylelint, formato, tipos, `trace:check` y `openspec validate` en verde
+
+## 23. Alineación de la fila de acciones con el calendario
+
+Medido en navegador: la fila de acciones y el calendario ya medían los mismos 382 px, pero los
+botones dentro no. Con `justify-content: flex-end` el grupo iba de 59 a 396, con 43 px de aire a la
+izquierda y el centro del grupo en 228 frente al 207 del calendario.
+
+- [x] 23.1 `test`: `[DATE-FILTER-02.12]` falla con `flex-end` y exige `space-between`
+- [x] 23.2 Declarar el escenario en el spec delta de `tasks-date-filter`
+- [x] 23.3 `fix`: `justify-content: space-between` en la fila de acciones
+- [x] 23.4 `fix`: neutralizar los 2 px de margen por lado que `ion-button` aplica
+- [x] 23.5 Verificar en navegador: CLEAR FILTER en 16 y APPLY en 398, los bordes exactos del calendario
+- [x] 23.6 Suite completa (558 tests), lint, stylelint, tipos, `trace:check` y `openspec validate` en verde
+
+## 24. Revisión de los tres puntos de la captura
+
+- **Punto 1, calendario más claro**: ya estaba resuelto en el commit `d5d27d8`. Medido tras recargar:
+  `.date-filter__body` y `.date-filter__calendar` comparten `rgb(30, 26, 43)`, y `data-palette="dark"`.
+  La captura del usuario correspondía al bundle anterior.
+- **Punto 2, coherencia con la sección**: resuelto en el mismo commit, con el paso 23.5 además para los
+  bordes horizontales.
+- **Punto 3, botones del tamaño del calendario**: resuelto en la sección 23.
+
+Nota sobre el ancho del body: se pidió ajustarlo por asimetría, pero la medición da 414 con 16 px de
+padding a cada lado y hijos de 382, que cuadra exacto. No había asimetría que corregir.
