@@ -5,6 +5,10 @@
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
+    "ensure:env": "node scripts/ensure-environment.cjs",
+    "pretest": "npm run ensure:env",
+    "prebuild": "npm run ensure:env",
+    "pretypecheck": "npm run ensure:env",
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
