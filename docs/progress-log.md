@@ -1,5 +1,6 @@
 # Registro de avance
 
+- 2026-10-18: `fix/delivery-functional` cierra gesto, sección por pestaña, filtro de pendientes, paginador filtrado, chip Pendientes, fila única y Remote Config (una lectura, debug en false, 404 sin banner, 500 en toast). Jest 49/442 con cobertura global 94.14 %. Sin capturas. Build con warning de budget en la fila y la página.
 - 2026-10-17: F0 `chore/align-docs` alinea reglas, auditoría, inventario y trazabilidad. `init` y `app-base` se archivan sin pisar specs porque sus deltas difieren del código. `trace:check` pasa para los 15 nodos registrados.
 - 2026-10-17: F1 `theme-aliases` fusionado en el PR #9. Ajustes e idioma quedaron en `feature/i18n`.
 - 2026-10-17: F2 `i18n` fusionado en el PR #11. La evidencia está en el archivo. El marco 4:1496 no cumple 2 px: faltan el rail, categorías y depuración. El siguiente change es `todo-screen`.
