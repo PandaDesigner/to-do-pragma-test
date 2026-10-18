@@ -105,6 +105,7 @@ describe('Todo layout regression contracts', () => {
     );
     expect(styles).toMatch(/\.task-scroll\s*\{[^}]*flex:\s*0\s*1\s*60vh;/);
     expect(styles).toMatch(/\.task-scroll\s*\{[^}]*max-height:\s*60vh;/);
+    expect(styles).toMatch(/\.task-scroll\s*\{[^}]*margin-top:\s*20px;/);
     expect(styles).not.toMatch(/\.task-list\s*\{[^}]*overflow-y:\s*auto;/);
     expect(template).toMatch(/<ion-content[^>]*\[scrollY\]="false"/);
     expect(template).toMatch(
