@@ -134,6 +134,42 @@ describe('DateRangeFilterComponent', () => {
     ]);
   });
 
+  it('[DATE-FILTER-02.19] el borrador sobrevive a cerrar y reabrir sin aplicar', async () => {
+    const fixture = await setup();
+    fixture.componentInstance.onOpen();
+    // El usuario elige un rango distinto al filtro aplicado.
+    fixture.componentInstance.select([
+      '2026-01-05T00:00:00',
+      '2026-01-09T00:00:00',
+    ]);
+
+    // Cierra y vuelve a abrir el modal sin pulsar Aplicar.
+    fixture.componentInstance.close();
+    fixture.componentInstance.onOpen();
+
+    expect(fixture.componentInstance.draft()).toEqual([
+      '2026-01-05T00:00:00',
+      '2026-01-09T00:00:00',
+    ]);
+    fixture.detectChanges();
+    expect(datetimeValueOf(fixture)).toEqual([
+      '2026-01-05T00:00:00',
+      '2026-01-09T00:00:00',
+    ]);
+  });
+
+  it('[DATE-FILTER-02.19] Quitar si deja el borrador vacio y se mantiene', async () => {
+    const fixture = await setup();
+    fixture.componentInstance.onOpen();
+    fixture.componentInstance.select([
+      '2026-01-05T00:00:00',
+      '2026-01-09T00:00:00',
+    ]);
+    fixture.componentInstance.clear();
+    fixture.componentInstance.onOpen();
+    expect(fixture.componentInstance.draft()).toEqual([]);
+  });
+
   it('[DATE-FILTER-02.4] un rango vacio o incompleto no emite rango', async () => {
     const fixture = await setup();
     const emitted: unknown[] = [];

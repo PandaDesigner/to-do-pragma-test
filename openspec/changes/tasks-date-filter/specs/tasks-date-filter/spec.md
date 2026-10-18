@@ -225,3 +225,14 @@ Cada pestaña del rail lateral MUST derivar el color de su texto del color de su
 - **AND** las cuatro tintas difieren entre sí
 - **AND** la pestaña activa conserva la tinta de texto
 
+### Requirement: DATE-FILTER-09 Persistencia del borrador del calendario
+
+El calendario MUST conservar la seleccion del usuario al cerrarse y reabrirse el modal, sin exigir que se aplique antes. Al reabrir MUST mostrarse el ultimo borrador elegido, no el filtro aplicado ni el dia de hoy. La conservacion MUST aplicar tanto si el modal se cierra con Cancelar como cerrandolo de otra forma, y MUST alterarse solo cuando el usuario elija dias nuevos o pulse Quitar. Figma: 4:440.
+
+#### Scenario: DATE-FILTER-02.19 El borrador sobrevive al cierre
+
+- **GIVEN** el modal abierto con un rango de dias ya elegido y sin aplicar
+- **WHEN** se cierra el modal y se vuelve a abrir
+- **THEN** el calendario muestra el mismo rango de dias elegido
+- **AND** no se vuelve al filtro aplicado ni al dia de hoy
+
