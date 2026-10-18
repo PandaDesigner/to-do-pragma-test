@@ -276,7 +276,7 @@ Ojo con `npm run build:ios` en esta máquina: el script detecta las dos identida
 
 Para verlo en un iPhone propio con la cuenta personal, ver §3.2: firma en Xcode, Modo de desarrollador activado y caducidad a los 7 días. Para un revisor con Mac, el `.app` del simulador (§3.1) no necesita cuenta.
 
-**No hay ningún enlace de descarga publicado.** Subir el APK a GitHub Releases no está autorizado todavía y no se ha hecho.
+**El APK ya está publicado** en el release [v1.0.0](https://github.com/PandaDesigner/to-do-pragma-test/releases/tag/v1.0.0): [`todo-notebook-v1.0.0.apk`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/todo-notebook-v1.0.0.apk), 8.099.963 bytes, SHA-256 `15216c0468c96863b310472d19879dd39b708abd11ae2b2cef91a753de1d9ef0`, junto a su [`SHA256SUMS`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/SHA256SUMS). El tag apunta al merge del PR #49, ya en `develop`. El release contiene solo esos dos archivos: el `.xcarchive` sin firmar no se publica, porque no es instalable y el APK es el único binario de la entrega.
 
 ### 3.5 Estado de la entrega Android: APK firmado
 

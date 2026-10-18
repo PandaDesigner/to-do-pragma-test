@@ -56,7 +56,7 @@ describe('Firebase delivery docs', () => {
     expect(read('src/assets/i18n/en.json')).not.toContain('virtual scroll');
   });
 
-  it('[DOC-FB-01.7] README states there is no signed IPA and does not promise a download', () => {
+  it('[DOC-FB-01.7] README states there is no signed IPA and links only the real release', () => {
     const readme = read('README.md');
     // The honest statement of what is and is not delivered.
     expect(readme).toContain('No se entrega IPA firmado');
@@ -70,16 +70,60 @@ describe('Firebase delivery docs', () => {
     expect(readme).toContain(
       'platforms/android/app/build/outputs/apk/release/app-release.apk',
     );
-    // Publishing is not authorized, so no download link may be invented.
-    expect(readme).toMatch(/no está autorizado/i);
-    expect(readme).not.toMatch(/https:\/\/[^\s)]*\/releases\/download/);
-    expect(readme).not.toMatch(/https:\/\/[^\s)]*\/releases\/tag/);
+
+    // Since v1.0.0 the APK is actually published, so the README has to carry the
+    // real download URL instead of claiming that publishing is unauthorized.
+    const download =
+      'https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/todo-notebook-v1.0.0.apk';
+    expect(readme).toContain(download);
+    expect(readme).toContain(
+      'https://github.com/PandaDesigner/to-do-pragma-test/releases/tag/v1.0.0',
+    );
+
+    // The intent that outlives the release: a promised download must point at a
+    // real release of this repository. Any other release URL is invented.
+    const promised =
+      readme.match(/https:\/\/[^\s)]*\/releases\/(download|tag)\/[^\s)]*/g) ??
+      [];
+    expect(promised.length).toBeGreaterThan(0);
+    for (const url of promised) {
+      expect(url).toMatch(
+        /^https:\/\/github\.com\/PandaDesigner\/to-do-pragma-test\/releases\/(download|tag)\/v1\.0\.0/,
+      );
+    }
+
+    // The published APK and its checksum must never drift apart in the docs.
+    expect(readme).toContain(
+      '15216c0468c96863b310472d19879dd39b708abd11ae2b2cef91a753de1d9ef0',
+    );
+    expect(readme).toContain('SHA256SUMS');
   });
 
-  it('[DOC-FB-01.8] the delivery guide agrees with the README about the unsigned iOS archive', () => {
+  it('[DOC-FB-01.8] the delivery guide agrees with the README about the unsigned iOS archive and the published APK', () => {
     const guide = read('docs/guia-apk-ipa.md');
     expect(guide).toContain('App.xcarchive');
     expect(guide).toMatch(/sin firmar/i);
+
+    // The guide must point at the same real release the README advertises, and
+    // at no other one.
+    const download =
+      'https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/todo-notebook-v1.0.0.apk';
+    expect(guide).toContain(download);
+    expect(guide).toContain(
+      'https://github.com/PandaDesigner/to-do-pragma-test/releases/tag/v1.0.0',
+    );
+    const promised =
+      guide.match(/https:\/\/[^\s)]*\/releases\/(download|tag)\/[^\s)]*/g) ??
+      [];
+    expect(promised.length).toBeGreaterThan(0);
+    for (const url of promised) {
+      expect(url).toMatch(
+        /^https:\/\/github\.com\/PandaDesigner\/to-do-pragma-test\/releases\/(download|tag)\/v1\.0\.0/,
+      );
+    }
+
+    // The unsigned archive stays out of the release: it is not installable.
+    expect(guide).toMatch(/sin IPA firmado|no hay IPA firmado/i);
   });
 
   it('[DOC-FB-01.6] README OpenSpec status matches the active changes on disk', () => {
