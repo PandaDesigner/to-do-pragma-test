@@ -51,7 +51,7 @@ describe('CategoryStore', () => {
     await store.retry();
   });
 
-  it('persists orphan reassignment before removing a category and clears its active filter', async () => {
+  it('[CATDEL-01] keeps tasks and clears their category when the category is deleted conforme a Figma 4:788', async () => {
     const { repository, taskRepository, store, tasks } = setup();
     await store.upsert(category);
     await taskRepository.save(

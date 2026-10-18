@@ -105,6 +105,21 @@ describe('TaskStore', () => {
     expect(store.error()).toBeNull();
   });
 
+  it('[SET-04] resets the current page after deleting every task', async () => {
+    const { store } = setup();
+    await store.upsertMany(
+      Array.from({ length: 45 }, (_, index) => ({
+        ...future,
+        id: `bulk-${index}`,
+      })),
+    );
+    store.setPage(3);
+    expect(store.pageCount()).toBe(3);
+    await store.removeAll();
+    expect(store.tasks()).toEqual([]);
+    expect(store.pageCount()).toBe(1);
+  });
+
   it('clears only the requested category, retaining all tasks', async () => {
     const { store } = setup();
     await store.upsertMany([

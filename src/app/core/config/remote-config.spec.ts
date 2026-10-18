@@ -29,6 +29,80 @@ describe('RemoteConfigService', () => {
     },
   );
 
+  it('[RC-01] reads both flags with one fetch and times out once', async () => {
+    const fetch = jest.fn(
+      () => new Promise<{ enable_categories: boolean }>(() => undefined),
+    );
+    const service = setup({ fetch });
+    const pending = service.initialize();
+    await jest.advanceTimersByTimeAsync(3000);
+    await pending;
+    expect(fetch).toHaveBeenCalledTimes(1);
+    expect(service.categoriesEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
+    expect(service.error()).toContain('3000');
+  });
+
+  it.each([undefined, false, 'true', 1, null])(
+    '[RC-02] keeps debug actions off for %s',
+    async (value) => {
+      const service = setup({
+        fetch: async () => ({ enable_debug_actions: value }),
+      });
+      expect(service.debugActionsEnabled()).toBe(false);
+      await service.initialize();
+      expect(service.debugActionsEnabled()).toBe(false);
+    },
+  );
+
+  it('[RC-02] enables debug actions only for boolean true', async () => {
+    const service = setup({
+      fetch: async () => ({ enable_debug_actions: true }),
+    });
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(true);
+  });
+
+  it('[RC-02] leaves debug actions off when the fetch fails', async () => {
+    const service = setup({
+      fetch: jest.fn().mockRejectedValue(new Error('offline')),
+    });
+    await service.initialize();
+    expect(service.categoriesEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
+    expect(service.error()).toContain('offline');
+  });
+
+  it('[RC-04] treats HTTP 404 as missing remote config', async () => {
+    const info = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+    const service = setup({
+      fetch: jest
+        .fn()
+        .mockRejectedValue(
+          new Error('Falta la configuración Firebase local (HTTP 404).'),
+        ),
+    });
+    await service.initialize();
+    expect(service.categoriesEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
+    expect(service.error()).toBeNull();
+    expect(info).toHaveBeenCalledTimes(1);
+    info.mockRestore();
+  });
+
+  it('[RC-05] keeps an error when remote config responds with HTTP 500', async () => {
+    const info = jest.spyOn(console, 'info').mockImplementation(() => undefined);
+    const service = setup({
+      fetch: jest.fn().mockRejectedValue(new Error('HTTP 500')),
+    });
+    await service.initialize();
+    expect(service.categoriesEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
+    expect(service.error()).toContain('500');
+    expect(info).not.toHaveBeenCalled();
+    info.mockRestore();
+  });
+
   it('defaults debug actions to true for missing keys', async () => {
     const port = { fetch: async () => ({}) };
     const service = setup(port);

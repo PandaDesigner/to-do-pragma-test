@@ -75,3 +75,87 @@ El paginador MUST contar solo las tareas visibles de esa pestaña. Una sección 
 - **GIVEN** los estilos de la lista, conforme a Figma 4:520
 - **WHEN** se compilan
 - **THEN** el relleno inferior es `calc(var(--app-pager-height) + var(--app-fab-size) + var(--app-space-16))`
+
+### Requirement: RC-01 Remote Config se lee una vez
+
+`RemoteConfigService.initialize` MUST llamar `port.fetch()` una sola vez dentro de `REMOTE_CONFIG_TIMEOUT_MS`. Un timeout MUST dejar `enable_categories` en true y `enable_debug_actions` en false. Figma: 4:1113.
+
+#### Scenario: [RC-01] Una lectura cubre los dos flags
+
+- **GIVEN** un puerto que responde ambos flags, conforme a Figma 4:1113
+- **WHEN** se inicializa la configuración
+- **THEN** `fetch` se llama una vez
+- **AND** un timeout de 3000 ms deja categorías habilitadas y debug apagado
+
+### Requirement: RC-02 El debug nace apagado
+
+`enable_debug_actions` MUST ser false en el valor inicial, si falta, si no es el booleano `true`, o si la lectura falla. MUST NOT encenderse para medir. Figma: 4:1496.
+
+#### Scenario: [RC-02] Solo un true remoto enciende el debug
+
+- **GIVEN** un valor ausente, inválido o un error de lectura, conforme a Figma 4:1496
+- **WHEN** se inicializa
+- **THEN** `debugActionsEnabled` es false
+- **AND** el booleano remoto `true` lo deja en true
+
+### Requirement: RC-03 El puerto declara el default de debug
+
+`defaultConfig` MUST incluir `enable_debug_actions: false` y `enable_categories: true`. El shell MUST NOT mostrar el texto `enable_categories:`. Figma: 4:1113.
+
+#### Scenario: [RC-03] El default de debug es false
+
+- **GIVEN** el puerto de Firebase, conforme a Figma 4:1113
+- **WHEN** prepara `defaultConfig`
+- **THEN** `enable_debug_actions` es false
+- **AND** la pantalla no muestra el banner `enable_categories:`
+
+### Requirement: SET-03 Borrar todas las tareas pide confirmación
+
+El botón de borrar todo MUST usar `DeletionConfirmation`. Si se cancela, MUST NOT borrar. Figma: 4:1496.
+
+#### Scenario: [SET-03] Cancelar no borra las tareas
+
+- **GIVEN** las acciones de debug visibles, conforme a Figma 4:1496
+- **WHEN** se pide borrar todo y se cancela
+- **THEN** no se llama a `removeAllTasks`
+
+### Requirement: SET-04 Borrar todo vuelve a la página 1
+
+`removeAll` MUST vaciar las tareas y dejar la página actual en 1. El tope de dos semillas MUST seguir. Figma: 4:1496.
+
+#### Scenario: [SET-04] La página vuelve a 1
+
+- **GIVEN** la lista en la página 3, conforme a Figma 4:1496
+- **WHEN** se borran todas las tareas
+- **THEN** no quedan tareas y la página es 1
+
+### Requirement: RC-04 Un 404 no es un error de pantalla
+
+Un HTTP 404 MUST dejar categorías en true, debug en false, `error()` en null y un solo `console.info`. MUST NOT importar el SDK de Firebase en el servicio. Figma: 4:1113.
+
+#### Scenario: [RC-04] La ausencia de config no muestra banner
+
+- **GIVEN** un `fetch` que rechaza con HTTP 404, conforme a Figma 4:1113
+- **WHEN** se inicializa
+- **THEN** no hay error y se informa una vez por consola
+
+### Requirement: RC-05 Un 500 es un toast descartable
+
+Un HTTP 500 MUST dejar `error()` con el fallo. El shell MUST mostrar un `ion-toast` descartable con las claves `remoteConfig.error.*` y MUST NOT mostrar un panel fijo. Figma: 4:1496.
+
+#### Scenario: [RC-05] El fallo no tapa el FAB
+
+- **GIVEN** un error HTTP 500, conforme a Figma 4:1496
+- **WHEN** el shell lo recibe
+- **THEN** presenta un toast descartable
+- **AND** no existe `.remote-error`
+
+### Requirement: CATDEL-01 Borrar una categoría suelta sus tareas
+
+Borrar una categoría MUST dejar sus tareas con `categoryId` null y MUST NOT borrarlas. Con el flag apagado, el shell MUST rechazar el borrado. Figma: 4:788.
+
+#### Scenario: [CATDEL-01] Las tareas pasan a Todo
+
+- **GIVEN** una categoría con una tarea, conforme a Figma 4:788
+- **WHEN** se borra la categoría
+- **THEN** la tarea sigue y su `categoryId` es null
