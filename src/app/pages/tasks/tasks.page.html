@@ -21,7 +21,7 @@
     />
     } @else {
     <app-page-header
-      [overline]="longDate()"
+      [overline]="(headerTitle() | translate) + ' · ' + longDate()"
       [title]="dayTitle()"
       [day]="true"
     />
