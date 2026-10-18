@@ -79,6 +79,16 @@
   }
 }
 
+// ion-datetime se auto-limita a max-width: 350px y, al ser flex, se queda
+// pegado a la izquierda de la fila: 0px de holgura a la izquierda y 32 a la
+// derecha, con el centro 16px desviado del de la fila, que mide 382px. Se
+// quita el tope y se centra para que coincida con las acciones de abajo.
+.date-filter__calendar ion-datetime {
+  max-width: none;
+  width: 100%;
+  margin-inline: auto;
+}
+
 .date-filter__actions {
   display: flex;
   flex-wrap: wrap;
