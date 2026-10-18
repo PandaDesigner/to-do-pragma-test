@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 
-### Requirement: APP-09 Páginas tasks y categories con OnPush, paginación y virtual scroll
+### Requirement: APP-09 Páginas tasks y categories con OnPush y trackBy
 
 Las páginas `tasks` y `categories` MUST ser standalone con `OnPush`.
 
