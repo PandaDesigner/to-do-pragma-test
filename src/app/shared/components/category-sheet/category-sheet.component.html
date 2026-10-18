@@ -92,9 +92,6 @@
         </div>
 
         <div class="form-actions">
-          <button type="button" class="sheet-cancel" (click)="dismiss()">
-            {{ 'category.sheet.cancel' | translate }}
-          </button>
           <button
             type="button"
             class="primary primary-action"
@@ -107,6 +104,9 @@
                 : 'category.sheet.save'
               ) | translate
             }}
+          </button>
+          <button type="button" class="sheet-cancel" (click)="dismiss()">
+            {{ 'category.sheet.cancel' | translate }}
           </button>
           @if (mode() === 'edit') {
             <button type="button" class="danger-link" (click)="remove()">
