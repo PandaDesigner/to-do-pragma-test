@@ -201,7 +201,11 @@ main.notebook-page {
   box-sizing: border-box;
   height: var(--app-day-badge-height);
   min-width: var(--app-day-badge-min-width);
-  padding-inline: var(--app-space-4);
+  // A 4 px la etiqueta y el chevron se leian pegados al borde, como una linea
+  // de texto encerrada en un rectangulo en vez de un boton. Con 8 px hay aire
+  // a cada lado y el grupo se sostiene sin que el badge pese mas que el boton
+  // de calendario que tiene al lado, que sigue siendo el elemento dominante.
+  padding-inline: var(--app-space-8);
   border: 1px solid var(--app-accent-link);
   border-radius: var(--app-radius-badge);
   color: var(--app-accent-link);

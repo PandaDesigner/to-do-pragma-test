@@ -49,7 +49,10 @@ $content-page-top: 82px;
 $day-actions-height: 26px;
 // Badge HOY de Figma 4:440: TodayBadge w=63 h=21. Antes ocupaba el ancho libre
 // del grupo de acciones (336 px medidos); estas medidas lo fijan a su caja.
-$day-badge-min-width: 63px;
+// El ancho sube de 63 a 75 px porque con 63 el padding inline de 8 px no cabia:
+// el contenido reachaba 61 px y el min-width lo recortaba, dejando la etiqueta y
+// el chevron pegados al borde. 75 px deja ver el aire en los dos idiomas.
+$day-badge-min-width: 75px;
 $day-badge-height: 21px;
 $day-badge-icon-size: 16px;
 $task-row-height: 65px;

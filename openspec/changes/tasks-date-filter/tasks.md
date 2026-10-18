@@ -256,3 +256,17 @@ texto secundario. El tamaño final es 32 px.
 - [x] 30.4 Verificar en ambos idiomas que la etiqueta no se desborda: "Filtrar por fecha" ocupa 231 px de 382
 - [x] 30.5 Evidencia capturada en oscuro, en español y en inglés
 - [x] 30.6 Suite completa (566 tests), stylelint, `trace:check` y `openspec validate` en verde
+
+## 31. Padding horizontal del botón de hoy
+
+Medido: el badge llevaba 4 px de padding inline y, con eso, el `min-width` de 63 px
+de Figma lo recortaba: el contenido medía 61 px y la etiqueta quedaba pegada al
+borde. Subir solo el padding no cambiaba nada visible.
+
+- [x] 31.1 `test`: `[DATE-FILTER-01.4]` falla con el padding a 4 px
+- [x] 31.2 Declarar el escenario `DATE-FILTER-01.4` y el requisito `DATE-FILTER-07` en el spec delta
+- [x] 31.3 `fix`: `padding-inline` pasa a `--app-space-8`
+- [x] 31.4 `fix`: `$day-badge-min-width` sube de 63 a 75 px para que el padding quepa
+- [x] 31.5 `test`: actualizar `[TODAY-UI-01.3]`, que fijaba los 63 px de Figma como contrato
+- [x] 31.6 Verificar en navegador: 75 px, 8 px de padding, 12 px de aire a la derecha del chevron
+- [x] 31.7 Suite completa (567 tests), stylelint y `openspec validate` en verde

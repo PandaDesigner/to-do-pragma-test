@@ -906,12 +906,16 @@ describe('TasksPage', () => {
     expect(rule).toContain('height: var(--app-day-badge-height)');
     expect(rule).not.toMatch(/(^|\s)height:\s*21px/);
 
-    // Los tokens apuntan a la caja medida en Figma 4:440: w=63 h=21.
+    // Los tokens apuntan a la caja medida en Figma 4:440: w=63 h=21. El alto
+    // sigue igual, pero el ancho se aparta de Figma a proposito: con 63 px el
+    // padding inline de 8 px no cabia, porque el contenido mide 61 px y el
+    // min-width lo recortaba, y la etiqueta y el chevron se leian pegados al
+    // borde. Sube a 75 px para que el aire se vea; ver DATE-FILTER-01.4.
     const tokens = readFileSync(
       join(__dirname, '../../../theme/_tokens.scss'),
       'utf8',
     );
-    expect(tokens).toMatch(/\$day-badge-min-width:\s*63px/);
+    expect(tokens).toMatch(/\$day-badge-min-width:\s*75px/);
     expect(tokens).toMatch(/\$day-badge-height:\s*21px/);
   });
 

@@ -202,3 +202,14 @@ Los botones de acción del modal MUST repartirse el ancho del calendario en prop
 - **THEN** Quitar declara el doble de factor de crecimiento que los otros dos
 - **AND** los otros dos reparten el resto del ancho a partes iguales
 - **AND** ninguna etiqueta se recorta en español ni en inglés
+
+### Requirement: DATE-FILTER-07 Padding horizontal del botón de hoy
+
+El botón rápido de hoy MUST declarar un padding horizontal holgado, mayor que el espaciado mínimo del proyecto, de modo que la etiqueta y el chevron no se lean apretados contra el borde del botón. Elpadding MUST ser suficiente para separar visualmente la etiqueta de la línea del borde en ambos idiomas, y el botón MUST conservar su altura y su objetivo táctil. Figma: 4:440.
+
+#### Scenario: DATE-FILTER-01.4 El botón de hoy declara padding horizontal holgado
+
+- **GIVEN** la pantalla de tareas en cualquiera de los dos idiomas
+- **WHEN** se renderiza el botón de hoy
+- **THEN** su padding inline declara un token de espaciado mayor que el mínimo
+- **AND** la etiqueta y el chevron quedan separados del borde del botón

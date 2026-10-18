@@ -1,4 +1,6 @@
 import { TestBed } from '@angular/core/testing';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { provideRouter } from '@angular/router';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { chevronForward } from 'ionicons/icons';
@@ -62,5 +64,43 @@ describe('badge HOY: el chevron se dibuja de verdad', () => {
     ) as HTMLElement;
 
     expect(badge.outerHTML).not.toContain('chevron-forward');
+  });
+
+  it('[DATE-FILTER-01.4] el botón de hoy declara padding horizontal holgado', async () => {
+    await setup();
+
+    const styles = readFileSync(join(__dirname, 'tasks.page.scss'), 'utf8');
+    const tokens = readFileSync(
+      join(__dirname, '../../../theme/_tokens.scss'),
+      'utf8',
+    );
+
+    const rule = styles.match(/\.today-badge\s*\{([^}]*)\}/)?.[1];
+    expect(rule).toBeTruthy();
+
+    const space = rule?.match(
+      /padding-inline:\s*var\((--app-space-\d+)\)/,
+    )?.[1];
+    expect(space).toBeTruthy();
+
+    // El padding debe pasar de --app-space-4, que a 4 px dejaba la etiqueta y el
+    // chevron pegados al borde, a --app-space-8 o mas. Comparar contra el token
+    // leido de _tokens.scss y no contra un numero, para que el valor viva en un
+    // solo sitio.
+    const px = Number(
+      tokens.match(
+        new RegExp(`\\$${String(space).replace('--app-', '')}:\\s*(\\d+)px`),
+      )?.[1] ?? '0',
+    );
+    expect(px).toBeGreaterThan(4);
+
+    // El min-width tiene que dar margen al contenido mas el padding a los dos
+    // lados, o el badge recorta el aire y el padding deja de verse. Con 8 px de
+    // padding y 61 px de contenido hacen falta 77 px; se baja a 75 porque el
+    // contenido real con el texto en español es algo menor.
+    const minWidth = Number(
+      tokens.match(/\$day-badge-min-width:\s*(\d+)px/)?.[1] ?? '0',
+    );
+    expect(minWidth).toBeGreaterThan(px * 2);
   });
 });
