@@ -60,7 +60,7 @@ describe('CategoriesPage', () => {
     expect(categories.sheetRequest()).toEqual({ mode: 'edit', draft });
   });
 
-  it('virtualizes from 200 categories and tracks IDs', async () => {
+  it('[APP-09.2] virtualizes from 200 categories and tracks IDs', async () => {
     const { page, categories, fixture } = await setup();
     const category = {
       id: 'c',

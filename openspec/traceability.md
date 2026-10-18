@@ -103,6 +103,8 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | SCROLL-01 | SCROLL-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[SCROLL-01.1] | n/a: caracterización, sin captura | local |
 | 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | PAGER-01 | PAGER-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[PAGER-01.1] | n/a: caracterización, sin captura | local |
 | 4:440 | todo-day-panel-open | docs/mocks/todo-day-panel-open.png | ROW-01 | ROW-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[ROW-01.1] | n/a: caracterización, sin captura | local |
+| 4:440 | tasks-page | docs/mocks/todo-day-panel-open.png | APP-09 | APP-09.1 | fix-app-09-spec-align | src/app/pages/tasks/tasks.page.spec.ts:[APP-09.1] | n/a: requisito tecnico de paginacion, sin nodo de Figma | pendiente |
+| 4:788 | categories-list | docs/mocks/categories-list.png | APP-09 | APP-09.2 | fix-app-09-spec-align | src/app/pages/categories/categories.page.spec.ts:[APP-09.2] | n/a: requisito tecnico de virtualizacion, sin nodo de Figma | pendiente |
 | 4:1496 | settings | docs/mocks/todo-panel-closed.png | DEBUG-01 | DEBUG-01.1 | regularize-direct-commits | src/direct-commits.spec.ts:[DEBUG-01.1] | n/a: caracterización, sin captura | local |
 | -- | openspec | -- | SPEC-01 | SPEC-01.1 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.1] | n/a | local |
 | -- | openspec | -- | SPEC-01 | SPEC-01.2 | regularize-direct-commits | src/openspec-ids.spec.ts:[SPEC-01.2] | n/a | local |

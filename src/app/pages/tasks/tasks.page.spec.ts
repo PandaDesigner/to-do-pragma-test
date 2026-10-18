@@ -457,7 +457,7 @@ describe('TasksPage', () => {
     expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
   });
 
-  it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {
+  it('[APP-09.1] adds 5,000 debug tasks to five existing ones and pages them 20 at a time without virtual scroll', async () => {
     const log = jest.spyOn(console, 'info').mockImplementation(() => undefined);
     const { page, tasks, fixture } = await setup();
     await tasks.upsertMany(

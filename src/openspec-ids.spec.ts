@@ -25,11 +25,27 @@ const REQUIREMENT_ID = /^### Requirement: ([A-Z]{2,}(?:-[A-Z0-9]+)+)\b/gm;
 const SCENARIO_ID =
   /^#### Scenario: \[([A-Z]{2,}(?:-[A-Z0-9]+)+(?:\.\d+)?)\]/gm;
 const CITED_ID = /\[([A-Z]{2,}(?:-[A-Z0-9]+)+(?:\.\d+)?)\]/g;
+const DELTA_SECTION = /^## (ADDED|MODIFIED|REMOVED|RENAMED) Requirements$/gm;
 
 function ids(pattern: RegExp, sources: string[]): string[] {
   return sources.flatMap((source) =>
     [...source.matchAll(pattern)].map((match) => match[1]),
   );
+}
+
+// A MODIFIED or REMOVED delta restates ids that already live in openspec/specs.
+// Counting those as new definitions would report every legitimate delta as a
+// duplicate, so only ADDED blocks introduce ids into a change.
+function addedBlocks(source: string): string {
+  const sections = [...source.matchAll(DELTA_SECTION)];
+  return sections
+    .filter((match) => match[1] === 'ADDED')
+    .map((match) => source.slice(match.index))
+    .join('\n');
+}
+
+function definitionsOf(sources: string[]): string[] {
+  return sources.flatMap(addedBlocks);
 }
 
 function duplicates(values: string[]): string[] {
@@ -52,8 +68,18 @@ describe('OpenSpec identifiers', () => {
   const testSources = readTextFiles(resolve(root, 'src'), '.spec.ts');
 
   it('[SPEC-01.1] requirement and scenario ids are unique across specs and active changes', () => {
-    const requirements = ids(REQUIREMENT_ID, specSources);
-    const scenarios = ids(SCENARIO_ID, specSources);
+    const specFiles = readTextFiles(resolve(root, 'openspec/specs'), '.md');
+    const changeFiles = readTextFiles(resolve(root, 'openspec/changes'), '.md');
+    // Un id vive en un solo sitio: en openspec/specs o en un bloque ADDED de un
+    // change. Un delta MODIFIED repite ids ya publicados a propósito.
+    const requirements = [
+      ...ids(REQUIREMENT_ID, specFiles),
+      ...ids(REQUIREMENT_ID, definitionsOf(changeFiles)),
+    ];
+    const scenarios = [
+      ...ids(SCENARIO_ID, specFiles),
+      ...ids(SCENARIO_ID, definitionsOf(changeFiles)),
+    ];
     expect(duplicates(requirements)).toEqual([]);
     expect(duplicates(scenarios)).toEqual([]);
   });
