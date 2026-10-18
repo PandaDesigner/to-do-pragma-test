@@ -1,5 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { AlertController } from '@ionic/angular/standalone';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import en from '../../../assets/i18n/en.json';
 import { DeletionConfirmation } from './deletion-confirmation';
 
 describe('DeletionConfirmation', () => {
@@ -9,8 +11,14 @@ describe('DeletionConfirmation', () => {
     const alert = { present, onDidDismiss };
     const create = jest.fn().mockResolvedValue(alert);
     TestBed.configureTestingModule({
-      providers: [{ provide: AlertController, useValue: { create } }],
+      providers: [
+        provideTranslateService({ fallbackLang: 'en' }),
+        { provide: AlertController, useValue: { create } },
+      ],
     });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation('en', en);
+    translate.use('en');
     return {
       create,
       present,
@@ -19,15 +27,15 @@ describe('DeletionConfirmation', () => {
     };
   }
 
-  it('creates the alert with the destructive and cancel buttons and the title as message', async () => {
+  it('[SWIPE-01.2] creates a translated alert and does not use the title as the whole message', async () => {
     const { service, create } = setup('cancel');
-    await service.confirm('Tarea X');
+    await service.confirm('Finish reports');
     expect(create).toHaveBeenCalledWith({
-      header: '¿Eliminar?',
-      message: 'Tarea X',
+      header: 'Delete task?',
+      message: '“Finish reports” will be permanently deleted.',
       buttons: [
-        { text: 'Cancelar', role: 'cancel' },
-        { text: 'Eliminar', role: 'destructive' },
+        { text: 'Cancel', role: 'cancel' },
+        { text: 'Delete', role: 'destructive' },
       ],
     });
   });

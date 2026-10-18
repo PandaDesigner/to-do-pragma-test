@@ -91,7 +91,7 @@ describe('TaskItemComponent', () => {
     expect(remove).toHaveBeenCalledWith(task.id);
   });
 
-  it('[TODO-10.1] reveals delete after an 80px swipe and keeps the row a note when asked', () => {
+  it('[SWIPE-01.1] the end sliding option removes only when clicked and a note row stays a note', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     const task = taskFixture({ title: 'Cat tower' });
     fixture.componentRef.setInput('task', task);
@@ -99,23 +99,17 @@ describe('TaskItemComponent', () => {
     const remove = jest.fn();
     fixture.componentInstance.remove.subscribe(remove);
     fixture.detectChanges();
-    const item = fixture.componentInstance;
-    expect(fixture.nativeElement.querySelector('input')).toBeNull();
-    expect(fixture.nativeElement.querySelector('.note-bullet')).not.toBeNull();
-    item.onPointerDown({
-      button: 0,
-      pointerId: 1,
-      clientX: 200,
-    } as PointerEvent);
-    item.onPointerMove({ pointerId: 1, clientX: 100 } as PointerEvent);
-    item.onPointerUp({ pointerId: 1 } as PointerEvent);
-    fixture.detectChanges();
-    expect(item.revealed()).toBe(true);
-    const swipe = fixture.nativeElement.querySelector(
-      '.swipe-delete',
-    ) as HTMLButtonElement;
-    expect(swipe.classList.contains('open')).toBe(true);
-    swipe.click();
+    const root = fixture.nativeElement as HTMLElement;
+    expect(root.querySelector('input')).toBeNull();
+    expect(root.querySelector('.note-bullet')).not.toBeNull();
+    expect(root.querySelector('ion-item-sliding')).not.toBeNull();
+    expect(root.querySelector('ion-item-options')?.getAttribute('side')).toBe(
+      'end',
+    );
+    expect(root.querySelector('.swipe-host')).toBeNull();
+    expect(remove).not.toHaveBeenCalled();
+    const option = root.querySelector('ion-item-option') as HTMLElement;
+    option.click();
     expect(remove).toHaveBeenCalledWith(task.id);
   });
 });
