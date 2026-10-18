@@ -481,4 +481,80 @@ describe('DateRangeFilterComponent', () => {
     expect(rule).toBeTruthy();
     expect(rule?.[1]).toContain('gap: 0');
   });
+
+  it('[DATE-FILTER-02.15] el titulo del modal destaca sobre la pista', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+
+    expect(overlay.querySelector('.date-filter__title')).toBeTruthy();
+    expect(overlay.querySelector('.date-filter__hint')).toBeTruthy();
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const typography = readFileSync(
+      join(__dirname, '../../../../theme/_typography.scss'),
+      'utf8',
+    );
+    const tokens = readFileSync(
+      join(__dirname, '../../../../theme/_tokens.scss'),
+      'utf8',
+    );
+
+    const titleRule = styles.match(/\.date-filter__title\s*\{([^}]*)\}/)?.[1];
+    const hintRule = styles.match(/\.date-filter__hint\s*\{([^}]*)\}/)?.[1];
+    const bodyRule = styles.match(/\.date-filter__body\s*\{([^}]*)\}/)?.[1];
+    expect(titleRule).toBeTruthy();
+    expect(hintRule).toBeTruthy();
+    expect(bodyRule).toBeTruthy();
+
+    // El titulo declara un token de tamano propio, que debe escalar por encima
+    // del texto de la pista: con los dos al mismo tamano se leian como una sola
+    // linea y no se distinguia cual de los dos era el titulo.
+    const titleSize = titleRule?.match(/font-size:\s*var\((--[\w-]+)\)/)?.[1];
+    const hintSize = hintRule?.match(/font-size:\s*var\((--[\w-]+)\)/)?.[1];
+    const pxOf = (source: string, token: string): number =>
+      Number(typography.match(new RegExp(`${token}:\\s*(\\d+)px`))?.[1] ?? '0');
+
+    expect(titleSize).toBeTruthy();
+    expect(hintSize).toBeTruthy();
+    expect(pxOf(typography, titleSize as string)).toBeGreaterThan(
+      pxOf(typography, hintSize as string),
+    );
+
+    // La pista no lleva peso explicito, asi que hereda el normal. El titulo no
+    // puede subir de 400 con DM Serif Display, que solo existe en ese peso, y por
+    // eso la jerarquia se comprueba con el tamano y no con el peso.
+    const hintWeight = Number(
+      hintRule?.match(/font-weight:\s*(\d+)/)?.[1] ?? 400,
+    );
+    const titleWeight = Number(
+      titleRule?.match(/font-weight:\s*(\d+)/)?.[1] ?? 400,
+    );
+    expect(titleWeight).toBeGreaterThanOrEqual(hintWeight);
+
+    // Por ultimo se despega del borde superior con mas espacio del que separa al
+    // resto de piezas, para que no se lea pegado al tope del modal.
+    const bodySpace = bodyRule?.match(
+      /padding:\s*var\((--app-space-\d+)\)/,
+    )?.[1];
+    // El margen superior puede venir como margin-top o como el primer valor de
+    // la forma abreviada margin.
+    const titleSpace =
+      titleRule?.match(/margin-top:\s*var\((--app-space-\d+)\)/)?.[1] ??
+      titleRule?.match(/margin:\s*var\((--app-space-\d+)\)/)?.[1];
+    const spaceOf = (token: string): number =>
+      Number(
+        tokens.match(
+          new RegExp(`\\$${token.replace('--app-', '')}:\\s*(\\d+)px`),
+        )?.[1] ?? '0',
+      );
+
+    expect(titleSpace).toBeTruthy();
+    expect(bodySpace).toBeTruthy();
+    expect(spaceOf(titleSpace as string)).toBeGreaterThan(
+      spaceOf(bodySpace as string),
+    );
+  });
 });

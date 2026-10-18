@@ -172,3 +172,14 @@ El botón rápido de hoy MUST fijar el filtro de fecha al día actual, además d
 - **GIVEN** la pantalla de tareas en español
 - **WHEN** se renderiza el botón de hoy
 - **THEN** su etiqueta es la traducción de la clave de hoy, sin ningún glifo de flecha incrustado en el texto
+
+### Requirement: DATE-FILTER-05 Jerarquía visual de la cabecera del modal
+
+La cabecera del modal de rango de fechas MUST presentar el título con una jerarquía visual claramente superior a la de la pista que lo acompaña, de modo que ambas piezas no se confundan entre sí al leerse en conjunto. El título MUST escalar por encima del tamaño de texto de la pista. La separación entre el título y el borde superior del cuerpo MUST ser mayor que el espaciado interno que separa al resto de piezas del modal, para que el título no parezca pegado al borde. El título MUST conservar el peso que le impone su familia tipográfica de display, que solo existe en un único peso. Figma: 4:440.
+
+#### Scenario: DATE-FILTER-02.15 El título del modal destaca sobre la pista
+
+- **GIVEN** el modal de rango de fechas abierto
+- **WHEN** se renderiza su cabecera
+- **THEN** el título declara un tamaño de texto mayor que el de la pista
+- **AND** su separación respecto del borde superior es mayor que el espaciado interno del cuerpo
