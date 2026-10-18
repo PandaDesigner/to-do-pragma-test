@@ -8,21 +8,21 @@
 
 ### Qué hay instalado en el Mac y qué falta
 
-| Herramienta | En el Mac | Estado |
-| --- | --- | --- |
-| JDK | `JAVA_HOME` = Zulu 17.0.20.1. También hay Temurin 17, JDK 23 y JDK 26. | ✅ Es el 17 que pide Gradle 8.14 y CI. **No cambies a 26:** `/usr/libexec/java_home` sin `-v` devuelve 26. |
-| Android SDK | `ANDROID_HOME` = `~/Library/Android/sdk`, con platform `android-36` y build-tools 35.0.0 y 36.0.0. | ✅ |
-| `sdkmanager`, `avdmanager`, `adb`, `emulator` | en el PATH | ✅ |
-| `apksigner` | `~/Library/Android/sdk/build-tools/36.0.0/apksigner`, pero **no está en el PATH** | ⚠️ Usa la ruta completa (abajo). |
-| Gradle | 9.8.1 global; el proyecto usa su wrapper, 8.14.2 | ✅ |
-| AVD (emulador Android) | **ninguno** creado; sí está la imagen `android-35;google_apis;arm64-v8a` | ❌ Crea uno (§1.2) o usa un móvil por USB. |
-| Xcode | 27.0, en `/Volumes/Disco Mac/Applications/Xcode.app` | ✅ |
-| Simuladores iOS | runtimes iOS 18.5 y 26.5 | ✅ No hay ninguno de 375×812 creado (§3.1). |
-| CocoaPods / ios-deploy | 1.16.2 / 1.12.2 | ✅ |
-| Firma iOS | 2 identidades «Apple Development: pandadesigners@yahoo.com», sin provisioning profiles | ⚠️ Es la cuenta gratuita (Personal Team). Ver §3.2 y §4. |
-| Node / npm | Node 26.8.1 y npm 11.19.0 | ⚠️ `.nvmrc` y CI usan **24.15.0**. Funciona, pero para reproducir CI: `nvm use` (en bash o zsh). |
-| `gh` | autenticado como PandaDesigner | ✅ Para descargar artefactos de CI (§5). |
-| Repo | `platforms/android`, `platforms/ios`, `www`, `.env.local` (con las 4 variables) y `pragmadev-appbase.jks` presentes; `build.json` ausente (es lo esperado) | ✅ |
+| Herramienta                                   | En el Mac                                                                                                                                                  | Estado                                                                                                     |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| JDK                                           | `JAVA_HOME` = Zulu 17.0.20.1. También hay Temurin 17, JDK 23 y JDK 26.                                                                                     | ✅ Es el 17 que pide Gradle 8.14 y CI. **No cambies a 26:** `/usr/libexec/java_home` sin `-v` devuelve 26. |
+| Android SDK                                   | `ANDROID_HOME` = `~/Library/Android/sdk`, con platform `android-36` y build-tools 35.0.0 y 36.0.0.                                                         | ✅                                                                                                         |
+| `sdkmanager`, `avdmanager`, `adb`, `emulator` | en el PATH                                                                                                                                                 | ✅                                                                                                         |
+| `apksigner`                                   | `~/Library/Android/sdk/build-tools/36.0.0/apksigner`, pero **no está en el PATH**                                                                          | ⚠️ Usa la ruta completa (abajo).                                                                           |
+| Gradle                                        | 9.8.1 global; el proyecto usa su wrapper, 8.14.2                                                                                                           | ✅                                                                                                         |
+| AVD (emulador Android)                        | **ninguno** creado; sí está la imagen `android-35;google_apis;arm64-v8a`                                                                                   | ❌ Crea uno (§1.2) o usa un móvil por USB.                                                                 |
+| Xcode                                         | 27.0, en `/Volumes/Disco Mac/Applications/Xcode.app`                                                                                                       | ✅                                                                                                         |
+| Simuladores iOS                               | runtimes iOS 18.5 y 26.5                                                                                                                                   | ✅ No hay ninguno de 375×812 creado (§3.1).                                                                |
+| CocoaPods / ios-deploy                        | 1.16.2 / 1.12.2                                                                                                                                            | ✅                                                                                                         |
+| Firma iOS                                     | 2 identidades «Apple Development: pandadesigners@yahoo.com», sin provisioning profiles                                                                     | ⚠️ Es la cuenta gratuita (Personal Team). Ver §3.2 y §4.                                                   |
+| Node / npm                                    | Node 26.8.1 y npm 11.19.0                                                                                                                                  | ⚠️ `.nvmrc` y CI usan **24.15.0**. Funciona, pero para reproducir CI: `nvm use` (en bash o zsh).           |
+| `gh`                                          | autenticado como PandaDesigner                                                                                                                             | ✅ Para descargar artefactos de CI (§5).                                                                   |
+| Repo                                          | `platforms/android`, `platforms/ios`, `www`, `.env.local` (con las 4 variables) y `pragmadev-appbase.jks` presentes; `build.json` ausente (es lo esperado) | ✅                                                                                                         |
 
 Los APK y el AAB que hay ahora en `platforms/android/app/build/outputs/` son del **16-oct** (17:11 y 17:44 los APK, 16:08 el AAB). No llevan nada de lo fusionado hoy: regenéralos antes de entregar.
 
@@ -65,7 +65,7 @@ npm run build:android
 
 ### 1.1 Instalar en un móvil por USB
 
-Activa antes la *Depuración USB* en el móvil.
+Activa antes la _Depuración USB_ en el móvil.
 
 ```bash
 adb devices
@@ -199,11 +199,13 @@ El `.app` del simulador se puede comprimir en zip y entregar a un revisor con Ma
 6. La primera vez, en el iPhone ve a **Ajustes → General → VPN y gestión de dispositivos**, toca tu Apple ID y elige **Confiar**.
 
 Límites de la cuenta gratuita:
+
 - el perfil caduca a los **7 días**: después la app no abre y hay que reinstalarla desde Xcode;
 - como máximo 3 apps instaladas por dispositivo y 10 App IDs por semana;
 - sin push ni otras capacidades de pago.
 
 Los ajustes de firma hechos en Xcode se pierden si borras y vuelves a añadir `platforms/ios`. Para hacerlo desde la terminal, crea un `build.json` local (ignorado por git) a partir de `build.example.json`:
+
 - pon tu Team ID en `ios.debug.developmentTeam`;
 - deja `"packageType": "development"`.
 
@@ -225,7 +227,7 @@ Ojo: el código entre paréntesis del nombre del certificado no es el Team ID.
 
 - Para que un IPA se instale en un iPhone que no es el tuyo, tiene que ir firmado con un perfil **Ad Hoc** (con los UDID registrados), **App Store / TestFlight** o **Enterprise**.
 - Esos perfiles solo los emite el **Apple Developer Program**, que cuesta 99 USD al año. La Personal Team solo firma para los dispositivos que conectas a tu Xcode, y durante 7 días. Por eso falla el export: «No Team Found in Archive» en CI, o «Your team has no devices…».
-- El IPA de `npm run build:ios` va **sin firmar**: no se instala en ningún dispositivo.
+- `npm run build:ios` no entrega un IPA. Sin Team ID en `build.json` deja `platforms/ios/build/Release-iphoneos/App.xcarchive` sin firmar. Ese `.app` no se instala en un iPhone.
 
 Opciones, de la más rápida a la más completa:
 
@@ -234,28 +236,28 @@ Opciones, de la más rápida a la más completa:
    - el `.xcarchive` o `.app` sin firmar del artefacto de CI, como prueba de que compila;
    - el `.app` del simulador en zip, con capturas o vídeo;
    - y explicar en el README que el IPA firmado requiere cuenta de pago.
-2. **Alguien con cuenta de pago:** que te añada a su equipo en App Store Connect (rol Developer) o que firme y exporte el archivo como Ad Hoc o TestFlight. Basta con `App.xcarchive` → Organizer → *Distribute App*.
+2. **Alguien con cuenta de pago:** que te añada a su equipo en App Store Connect (rol Developer) o que firme y exporte el archivo como Ad Hoc o TestFlight. Basta con `App.xcarchive` → Organizer → _Distribute App_.
 3. **Codemagic** u otro CI con macOS: resuelve la **máquina**, no la **cuenta**. Sigue necesitando un certificado y un perfil de una cuenta de pago (o la clave API de App Store Connect). Útil cuando ya tengas la cuenta.
 4. **Darte de alta en el Developer Program.** Después:
    - pon el Team ID en `build.json`, con `"packageType": "ad-hoc"` o `"app-store"` en `ios.release`;
    - ejecuta `npx cordova build ios --release --device`;
    - el IPA sale en `platforms/ios/build/Release-iphoneos/` (o se exporta desde Organizer).
 
-**Aviso sobre `npm run build:ios` en tu Mac:** el script detecta que tienes identidades de firma y entonces lanza `cordova build ios --release --device --buildFlag=CODE_SIGNING_ALLOWED=NO`, que también intenta exportar un IPA. Lo más probable es que ese export falle, porque no hay perfil ni Team ID. No lo he ejecutado (verificación de solo lectura). En CI no hay identidades y hace `xcodebuild archive` sin exportar, que sí funciona. En local, usa §3.1 o §3.2.
+**`npm run build:ios` en este Mac:** hay certificado de firma y no hay `build.json` con Team ID. El script no llama al export (ese paso pedía un provisioning profile y fallaba). Archiva con la firma apagada y deja `App.xcarchive`. El IPA firmado sigue ausente hasta el Developer Program de pago. Para instalar en el iPhone, usa §3.1 o §3.2.
 
 ---
 
 ## 4. Resumen: qué puedes generar hoy en este Mac
 
-| Artefacto | Comando | ¿Funciona en tu Mac? |
-| --- | --- | --- |
-| APK debug | `npm run build:android` | ✅ |
-| APK + AAB release firmados | `npm run ionic:build:android` | ✅ Keystore y `.env.local` presentes; `apksigner` con ruta completa. |
-| App en emulador Android | `npx cordova run android --emulator` | ❌ Falta crear un AVD (§1.2). |
-| App en simulador iOS | `npx cordova emulate ios` | ✅ |
-| App en tu iPhone | Xcode + Personal Team | ✅ Caduca a los 7 días; requiere Modo de desarrollador. |
-| IPA distribuible | n/a | ❌ Necesita el Apple Developer Program de pago (§3.3). |
-| Archivo iOS sin firmar | CI (`ios-unsigned-archive`) | ✅ Desde GitHub Actions. |
+| Artefacto                  | Comando                                                             | ¿Funciona en tu Mac?                                                                                                            |
+| -------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| APK debug                  | `npm run build:android`                                             | ✅                                                                                                                              |
+| APK + AAB release firmados | `npm run ionic:build:android`                                       | ✅ Keystore y `.env.local` presentes; `apksigner` con ruta completa.                                                            |
+| App en emulador Android    | `npx cordova run android --emulator`                                | ❌ Falta crear un AVD (§1.2).                                                                                                   |
+| App en simulador iOS       | `npx cordova emulate ios`                                           | ✅                                                                                                                              |
+| App en tu iPhone           | Xcode + Personal Team                                               | ✅ Caduca a los 7 días; requiere Modo de desarrollador.                                                                         |
+| IPA distribuible           | n/a                                                                 | ❌ Necesita el Apple Developer Program de pago (§3.3).                                                                          |
+| Archive iOS sin firmar     | `npm run build` && `npx cordova prepare ios` && `npm run build:ios` | ✅ `App.xcarchive` en `platforms/ios/build/Release-iphoneos/`. Sin IPA. CI sube el mismo artefacto como `ios-unsigned-archive`. |
 
 ---
 
@@ -263,14 +265,14 @@ Opciones, de la más rápida a la más completa:
 
 El workflow `verify` (`.github/workflows/verify.yml`) se ejecuta en cada push o PR a `develop` y `main`. Sube dos artefactos:
 
-| Artefacto | Job | Contenido |
-| --- | --- | --- |
-| `android-debug-apk` | Cordova Android (debug), ubuntu, JDK 17 | `app-debug.apk`, firmado con la clave de debug |
-| `ios-unsigned-archive` | Cordova iOS (no signing), macos-latest | `App.xcarchive` y el `.app` de `Release-iphoneos`, **sin firmar** |
+| Artefacto              | Job                                     | Contenido                                                         |
+| ---------------------- | --------------------------------------- | ----------------------------------------------------------------- |
+| `android-debug-apk`    | Cordova Android (debug), ubuntu, JDK 17 | `app-debug.apk`, firmado con la clave de debug                    |
+| `ios-unsigned-archive` | Cordova iOS (no signing), macos-latest  | `App.xcarchive` y el `.app` de `Release-iphoneos`, **sin firmar** |
 
 CI **no** genera el APK de release firmado: no hay secretos de keystore en el repo. Eso lo cubre la fila «Firma de release en CI + GitHub Release».
 
-**Desde la web:** *Actions → verify →* el run de `develop` en verde → al final de la página, **Artifacts**. Cada artefacto se descarga como zip y caduca a los 90 días.
+**Desde la web:** _Actions → verify →_ el run de `develop` en verde → al final de la página, **Artifacts**. Cada artefacto se descarga como zip y caduca a los 90 días.
 
 **Con `gh`** (ya autenticado en tu Mac):
 

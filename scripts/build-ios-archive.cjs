@@ -1,20 +1,17 @@
 #!/usr/bin/env node
-// Builds the iOS archive for the `feature/app-base-2` Cordova setup.
-//
-// cordova-ios 8 always runs `xcodebuild -exportArchive` after the archive
-// step when `--device` is passed; that export requires a Team ID and a
-// provisioning profile and fails in CI runners without Apple Developer
-// credentials (`exportArchive No Team Found in Archive`). It detects whether
-// signing identities are present in the keychain:
-//   - If yes (developer machine): delegates to `cordova build ios --release
-//     --device` so the export step produces a signed `.ipa`.
-//   - If no (CI runner): runs `xcodebuild archive` directly, which produces
-//     `App.xcarchive` and `App.app` under
-//     `platforms/ios/build/Release-iphoneos/` without trying to export.
+// cordova-ios 8 runs `xcodebuild -exportArchive` whenever `--device` is set.
+// That export needs a Team ID and a provisioning profile. A Personal Team
+// certificate in the keychain is not that credential, and passing
+// CODE_SIGNING_ALLOWED=NO on the same command still tries the export and fails.
+//   - Team ID in build.json and a signing identity: `cordova build ios
+//     --release --device` (signed IPA).
+//   - Anything else: `xcodebuild archive` with signing disabled. Produces
+//     App.xcarchive and does not export an IPA.
 
 const { spawnSync } = require('node:child_process');
-const { existsSync } = require('node:fs');
+const { existsSync, readFileSync } = require('node:fs');
 const { resolve } = require('node:path');
+const { chooseIosBuild } = require('./ios-build-mode.cjs');
 
 const projectRoot = resolve(__dirname, '..');
 const platformsIos = resolve(projectRoot, 'platforms', 'ios');
@@ -32,21 +29,26 @@ function hasSigningIdentity() {
   return SIGNING_IDENTITY_HASH.test(identityLookup.stdout || '');
 }
 
+function readReleaseTeam() {
+  const buildJson = resolve(projectRoot, 'build.json');
+  if (!existsSync(buildJson)) {
+    return '';
+  }
+  try {
+    const parsed = JSON.parse(readFileSync(buildJson, 'utf8'));
+    return parsed?.ios?.release?.developmentTeam ?? '';
+  } catch {
+    return '';
+  }
+}
+
 function runCordovaBuild() {
   console.log(
-    '[build-ios] signing identity detected — using cordova build ios --release --device',
+    '[build-ios] Team ID and signing identity found — cordova build ios --release --device',
   );
   const cordovaBuild = spawnSync(
     'npx',
-    [
-      '--no-install',
-      'cordova',
-      'build',
-      'ios',
-      '--release',
-      '--device',
-      '--buildFlag=CODE_SIGNING_ALLOWED=NO',
-    ],
+    ['--no-install', 'cordova', 'build', 'ios', '--release', '--device'],
     { stdio: 'inherit', cwd: projectRoot },
   );
   process.exit(cordovaBuild.status ?? 1);
@@ -59,7 +61,7 @@ function runXcodebuildArchive() {
     process.exit(1);
   }
   console.log(
-    '[build-ios] no signing identity — running xcodebuild archive (no export)',
+    '[build-ios] running xcodebuild archive without export. Signed IPA is absent.',
   );
   const archivePath = resolve(
     platformsIos,
@@ -70,15 +72,22 @@ function runXcodebuildArchive() {
   const xcodeArchive = spawnSync(
     'xcodebuild',
     [
-      '-workspace', workspace,
-      '-scheme', 'App',
-      '-configuration', 'Release',
-      '-destination', 'generic/platform=iOS',
-      '-archivePath', archivePath,
+      '-workspace',
+      workspace,
+      '-scheme',
+      'App',
+      '-configuration',
+      'Release',
+      '-destination',
+      'generic/platform=iOS',
+      '-archivePath',
+      archivePath,
       'archive',
       'CODE_SIGNING_ALLOWED=NO',
       'CODE_SIGNING_REQUIRED=NO',
       'CODE_SIGN_IDENTITY=',
+      'CODE_SIGN_STYLE=Manual',
+      'DEVELOPMENT_TEAM=',
     ],
     { stdio: 'inherit', cwd: platformsIos },
   );
@@ -92,8 +101,19 @@ if (!existsSync(platformsIos)) {
   process.exit(1);
 }
 
-if (hasSigningIdentity()) {
+const developmentTeam = readReleaseTeam();
+const hasIdentity = hasSigningIdentity();
+const mode = chooseIosBuild({
+  hasSigningIdentity: hasIdentity,
+  developmentTeam,
+});
+if (mode === 'signed-export') {
   runCordovaBuild();
 } else {
+  if (hasIdentity) {
+    console.log(
+      '[build-ios] a signing certificate is installed, but build.json has no ios.release.developmentTeam. Signed IPA export is skipped.',
+    );
+  }
   runXcodebuildArchive();
 }

@@ -1,201 +1,326 @@
 # Todo Notebook
 
-App de tareas con Ionic 8 + Angular 22 standalone, Cordova (sin Capacitor), `@ngrx/signals` y Firebase Remote Config. `develop` entrega la demo de la prueba: lista de tareas, categorías, feature flag, persistencia local y builds Android e iOS.
+Task app for the Pragma technical test. Ionic 8, Angular 22 standalone, Cordova (no Capacitor), `@ngrx/signals`, and Firebase Remote Config. The delivery branch is `develop`.
 
-## Requisitos
+Repository: https://github.com/PandaDesigner/to-do-pragma-test
 
-- Node.js 24.15.0 LTS (usa `nvm use` con el `.nvmrc` incluido).
+Functional source: `docs/prueba-tecnica.pdf`. Visual source: Figma. Progress board: Notion. Agent protocol: `docs/workflow-mcp.md`.
+
+## Usage
+
+```bash
+nvm use
+npm ci
+npm start
+```
+
+`npm start` and `npm run ionic:serve` run `ng serve` at http://localhost:4200. In the browser, persistence uses the web driver. On a device, it uses `cordova-sqlite-storage` ^7.0.0.
+
+Language follows the device (`es` or `en`) and falls back to English. Files: `src/assets/i18n/{es,en}.json`.
+
+| Tab      | Route            | What it does                                                                               |
+| -------- | ---------------- | ------------------------------------------------------------------------------------------ |
+| Todo     | `/tabs/tasks`    | Tasks in the `general` section. The FAB opens create. An empty list shows the empty state. |
+| Routine  | `/tabs/routine`  | Tasks whose category section is `routine`.                                                 |
+| Event    | `/tabs/event`    | Tasks whose category section is `event`.                                                   |
+| Category | `/tabs/category` | Create and edit categories: name, icon, color, and section.                                |
+| More     | `/tabs/settings` | Language, light/dark theme, and debug actions (including generating 5,000 tasks).          |
+
+`enable_categories` shows or hides the Category tab and enables or disables Routine and Event. `false` hides Category and leaves Routine and Event visible but disabled; tasks stay on Todo. If Remote Config does not answer within 3 s, the flag stays `true`.
+
+Each tab lists the tasks of its section. The task list pages 20 rows. Creating from Routine or Event offers only categories of that section. Creating from Todo offers every category plus the uncategorized option.
+
+## Requirements
+
+- Node.js 24.15.0 LTS (`nvm use` with the included `.nvmrc`).
 - npm 11.
-- JDK 17 (Temurin), exportado en `JAVA_HOME`; obligatorio para `cordova build android` y para Gradle.
-- Android SDK en `ANDROID_HOME` (o `ANDROID_SDK_ROOT`) con `cmdline-tools`, `platform-tools` y `build-tools 36.0.0+`. Acepta las licencias con `yes | sdkmanager --licenses` la primera vez.
-- Xcode 15 o superior con las Command Line Tools (`xcode-select --install`) y la licencia aceptada (`sudo xcodebuild -license accept`).
-- CocoaPods 1.16+ (`sudo gem install cocoapods --no-document`) e `ios-deploy` 1.12+ (`npm i -g ios-deploy`).
-- `cordova-android` y `cordova-ios` ya están como `devDependencies`.
+- JDK 17 (Temurin) exported as `JAVA_HOME`. Required for `cordova build android` and Gradle.
+- Android SDK in `ANDROID_HOME` (or `ANDROID_SDK_ROOT`) with `cmdline-tools`, `platform-tools`, and `build-tools 36.0.0+`. Accept licenses once with `yes | sdkmanager --licenses`.
+- Xcode 15 or newer, Command Line Tools (`xcode-select --install`), and the license accepted (`sudo xcodebuild -license accept`).
+- CocoaPods 1.16+ (`sudo gem install cocoapods --no-document`) and `ios-deploy` 1.12+ (`npm i -g ios-deploy`).
+- `cordova-android` and `cordova-ios` are already `devDependencies`.
 
-### Verificación rápida del entorno
+### Quick environment check
 
 ```bash
 node --version                 # v24.15.0
 java -version                  # openjdk 17
-echo "$ANDROID_HOME"           # apunta a un SDK con build-tools 36
+echo "$ANDROID_HOME"           # SDK with build-tools 36
 xcodebuild -version            # Xcode 15+
 pod --version                  # >= 1.16
-npm run requirements           # cordova requirements --verbose (necesita SDK + Xcode)
+npm run requirements           # cordova requirements --verbose (needs SDK + Xcode)
 ```
 
-## Comandos
+## Commands
 
-| Acción                             | Comando                                     |
-| ---------------------------------- | ------------------------------------------- |
-| Instalar dependencias              | `npm ci`                                    |
-| Arrancar el servidor de desarrollo | `npm run ionic:serve` (también `npm start`) |
-| Ejecutar pruebas                   | `npm test`                                  |
-| Ejecutar pruebas con cobertura     | `npm test -- --coverage`                    |
-| Revisar el código                  | `npm run lint`                              |
-| Comprobar formato                  | `npm run format:check`                      |
-| Aplicar formato                    | `npm run format`                            |
-| Comprobar tipos                    | `npm run typecheck`                         |
-| Generar build de producción        | `npm run build`                             |
-| Generar APK + AAB firmados Android | `npm run ionic:build:android`               |
-| Generar APK debug Android          | `npm run build:android`                     |
-| Generar APK release Android        | `npm run build:android:release`             |
-| Generar IPA no firmado iOS         | `npm run build:ios`                         |
-| Comprobar requisitos Cordova       | `npm run requirements`                      |
-| Restaurar plataformas Cordova      | `npx cordova platform add android` y `ios`  |
-| Resetear `cordova.platforms`       | `npm run clean:platforms`                   |
+| Action                                | Command                                      |
+| ------------------------------------- | -------------------------------------------- |
+| Install dependencies                  | `npm ci`                                     |
+| Start the dev server                  | `npm run ionic:serve` (also `npm start`)     |
+| Run tests                             | `npm test`                                   |
+| Run tests with coverage               | `npm test -- --coverage`                     |
+| Lint                                  | `npm run lint`                               |
+| Check formatting                      | `npm run format:check`                       |
+| Apply formatting                      | `npm run format`                             |
+| Typecheck                             | `npm run typecheck`                          |
+| Production web build                  | `npm run build`                              |
+| Signed Android release APK            | `npm run ionic:build:android`                |
+| Android debug APK                     | `npm run build:android`                      |
+| Android release APK (shell env)       | `npm run build:android:release`              |
+| iOS archive (IPA only with a Team ID) | `npm run build:ios`                          |
+| Cordova requirements                  | `npm run requirements`                       |
+| Restore Cordova platforms             | `npx cordova platform add android` and `ios` |
+| Reset `cordova.platforms`             | `npm run clean:platforms`                    |
 
-## Entrega de la prueba
+## Technical-test delivery
 
-La fuente funcional es `docs/prueba-tecnica.pdf`.
+Functional source: `docs/prueba-tecnica.pdf`.
 
-1. **Versionado.** Repositorio Git. La rama de entrega es `develop`.
-2. **Híbrido con Cordova.** Android e iOS. Cómo compilar está en [Build nativo](#build-nativo). En el navegador: `npm ci` y `npm start`.
-3. **Firebase Remote Config.** El flag `enable_categories` muestra u oculta Routine, Event y My. Si la red falla o tarda más de 3 s, el flag queda en `true`. El valor vivo se ve en el aviso `enable_categories` del shell.
-4. **Rendimiento.** Persistencia con `@Debounce(300)`, virtual scroll desde 200 tareas y OnPush. Detalle en [Optimizaciones](#optimizaciones).
-5. **APK e IPA.** Los comandos están abajo. Un APK firmado y un IPA firmado necesitan keystore y cuenta de Apple Developer en la máquina local. Esos secretos no están en el repo. Sin ellos el build de iOS puede validar el `.app` con `npm run build:ios` (`CODE_SIGNING_ALLOWED=NO`), y ese binario no se instala en un dispositivo.
+1. **Version control.** Git repository. Delivery branch: `develop`.
+2. **Cordova hybrid.** Android and iOS. Build steps are in [Native build](#native-build). Browser: `npm ci` and `npm start`.
+3. **Firebase Remote Config.** `enable_categories` shows or hides Category and enables or disables Routine and Event. If the network fails or takes more than 3 s, the flag stays `true`.
+4. **Performance.** Persistence uses `@Debounce(300)`. The task list pages 20 rows. The category list virtualizes from 200 rows. Pages use OnPush. Detail in [Optimizations](#optimizations).
+5. **APK and IPA.** Signed Android: `npm run ionic:build:android` with the keystore in `.env.local`. iOS: the unsigned archive is already generated locally (see [step 3](#3-ios-unsigned-archive-already-generated-on-this-mac)). A signed IPA needs the paid Apple Developer Program. Those secrets are not in the repo. Longer guide: `docs/guia-apk-ipa.md`.
 
-### Respuestas
+### Answers
 
-- **Desafíos.** Cordova reescribe `cordova.platforms` al añadir una plataforma (`npm run clean:platforms` lo devuelve a `android` e `ios`). El release de Android no puede versionar contraseñas: `scripts/build-android-release.cjs` las toma de `.env.local` y restaura `build.json`. Una cuenta Apple ID gratuita no emite provisioning profile, así que el IPA firmado queda bloqueado sin el Developer Program. TypeScript 6 exige `paths` relativos al `tsconfig`.
-- **Optimización.** Una ráfaga de guardados escribe una sola vez en SQLite. Listas grandes no montan todas las filas: `cdk-virtual-scroll-viewport` entra a partir de 200 tareas. El flag remoto no deja la UI colgada: corta a 3 s y no aplica una respuesta tardía.
-- **Calidad.** Jest con umbrales por capa (global 80 %, dominio 95 %, data y store 90 %), `tsc --noEmit`, ESLint y Prettier. El dominio no importa Angular ni Cordova. Cada escenario de OpenSpec lleva su id en el título del test. La matriz está en `openspec/traceability.md`.
+- **Challenges.** Cordova rewrites `cordova.platforms` when a platform is added (`npm run clean:platforms` puts it back to `android` and `ios`). Android release passwords stay out of git: `scripts/build-android-release.cjs` reads `.env.local` and passes the keystore as CLI flags. A free Apple ID does not issue a distribution provisioning profile, so the signed IPA stays blocked without the Developer Program. TypeScript 6 requires `paths` relative to the `tsconfig`.
+- **Optimization.** A burst of saves writes once. The task list pages 20 rows (`PAGE_SIZE`). The category list uses `cdk-virtual-scroll-viewport` from 200 categories. The remote flag does not hang the UI: it cuts off at 3 s and ignores a late response.
+- **Quality.** Jest thresholds by layer (global 80%, domain 95%, data and store 90%), `tsc --noEmit`, ESLint, and Prettier. Domain does not import Angular or Cordova. Each OpenSpec scenario id is in the test title. The matrix is `openspec/traceability.md`.
 
-## Arquitectura
+## Architecture
 
-Capas: `pages → store → domain ← data`; `core/di` conecta implementaciones. Componentes `shared` solo input/output. SignalStore para el estado. Aliases TypeScript: `@core/*`, `@domain/*`, `@data/*`, `@store/*`, `@pages/*`, `@shared/*`.
+Layers: `pages → store → domain ← data`. `core/di` wires implementations. `shared` components are presentational: input and output only. SignalStore holds state. Aliases: `@core/*`, `@domain/*`, `@data/*`, `@store/*`, `@pages/*`, `@shared/*`.
 
-Patrones clave:
+- **Strategy.** `filterTasks`, `sortTasksByDueDate`, and `filterTasksBySection` are pure functions. `TaskStore` composes them with the active filters.
+- **Sections.** `CategorySection` is `general`, `routine`, or `event`. `/tabs/routine` and `/tabs/event` reuse `TasksPage` and pass the section through `ROUTE_DATA`.
+- **State.** Four classes (`pending`, `completed`, `overdue`, `archived`) in `data/states/`.
+- **Decorator.** `@Debounce(ms)` groups calls per instance. `@LogAction` records the name and arguments.
+- **Repository.** `TaskRepository` and `CategoryRepository` live in `domain/`. Tokens `TASK_REPOSITORY` and `CATEGORY_REPOSITORY` live in `core/di/`.
+- **SignalStore.** `TaskStore` and `CategoryStore` expose state, `refresh`, `upsert`, and `remove`.
 
-- **Strategy**: `filterTasks`, `sortTasksByDueDate` y `filterTasksBySection` son funciones puras en `domain/`; el `TaskStore` las compone con los filtros activos.
-- **Sections**: `CategorySection` en `general`/`routine`/`event`; las pestañas `Routine` y `Event` filtran por la sección. Las rutas `/tabs/routine` y `/tabs/event` comparten `TasksPage` y pasan la sección mediante `ROUTE_DATA`.
-- **State**: cuatro clases (`pending`, `completed`, `overdue`, `archived`) en `data/states/`; la máquina delega en ellas sin tabla de destinos.
-- **Decorator**: `@Debounce(ms)` agrupa llamadas por instancia; `@LogAction` registra nombre y argumentos.
-- **Repository + port**: `TaskRepository` y `CategoryRepository` viven en `domain/`; los tokens Angular `TASK_REPOSITORY` y `CATEGORY_REPOSITORY` viven en `core/di/`.
-- **SignalStore**: `TaskStore` y `CategoryStore` exponen `Signal`, `refresh`, `upsert`, `remove`. `setSection` y `setCategories` sincronizan el filtro por sección.
+## Tabs and sections
 
-## Pestañas y secciones
-
-- Rail lateral con cinco pestañas: `Todo`, `Routine`, `Event`, `My`, `More`. Las dos primeras se ven y se desactivan solo cuando el flag `enable_categories` está en `false`.
-- En `My` se gestionan las categorías. Cada categoría tiene una `section` (`general` por defecto si no se indica) y un `colorToken` que la UI traduce a un color de la paleta. Las tareas asignadas a una categoría de la sección `routine` o `event` solo aparecen en su pestaña; el resto se ve en `Todo`.
-- La creación desde `Routine` o `Event` solo permite categorías de esa sección. Desde `Todo` se ofrece cualquier categoría y la opción `Sin categoría`.
+- Side rail: `Todo`, `Routine`, `Event`, `Category`, `More`. With `enable_categories` set to `false`, Category is hidden and Routine and Event stay visible but disabled.
+- `Category` manages categories. Each category has a `section` (`general` when omitted) and a `colorToken` that the UI maps to the palette. Tasks assigned to a `routine` or `event` category appear only on that tab. The rest stay on `Todo`.
+- Creating from `Routine` or `Event` allows only categories of that section. Creating from `Todo` offers every category and the uncategorized option.
 
 ## Cordova
 
-- Identificador de app: `io.github.pandadesigner.todonotebook`.
-- Plugin: `cordova-sqlite-storage` ^7.0.0. Ya está instalado: dependencia en `package.json`, copia en `plugins/cordova-sqlite-storage` y declaración en `config.xml`. No hace falta volver a correr `cordova plugin add` salvo que se borre `plugins/`.
-- Plataformas: `cordova platform add android` e `ios`; `platforms/` está en `.gitignore`.
+- App id: `io.github.pandadesigner.todonotebook`.
+- Plugin: `cordova-sqlite-storage` ^7.0.0. Already installed: dependency in `package.json`, copy in `plugins/cordova-sqlite-storage`, and declaration in `config.xml`. Do not run `cordova plugin add` again unless `plugins/` is deleted.
+- Platforms: `cordova platform add android` and `ios`. `platforms/` is gitignored.
 
-## Build nativo
+## Native build
 
-### Android (APK firmado + AAB)
+`platforms/` is not in git. Binaries are not in git either. Device install and keystore detail: `docs/guia-apk-ipa.md` and `KEYSTORE.md`.
 
-`build.json` está fuera del repo (ver `.gitignore`); `build.example.json` contiene los placeholders. Los secretos llegan por variables de entorno, nunca commiteadas:
+### 0. One-time setup
 
-- `ANDROID_KEYSTORE_PATH` — ruta al `.jks` (por ejemplo `pragmadev-appbase.jks`).
-- `ANDROID_KEY_ALIAS` — alias dentro del keystore.
-- `ANDROID_KEYSTORE_PASSWORD` — contraseña del keystore.
-- `ANDROID_KEY_ALIAS_PASSWORD` — contraseña del alias (en PKCS12 suele coincidir con la del keystore).
+```bash
+nvm use
+npm ci
+npm run build
+npx cordova platform add android
+npx cordova platform add ios
+npm run clean:platforms
+```
 
-Requisitos:
+`cordova platform add` rewrites `cordova.platforms` in `package.json`. `npm run clean:platforms` restores `android` and `ios` before any commit. If the platform directory already exists, do not add it again. Continue at that platform's step.
 
-1. Generar `pragmadev-appbase.jks` y exportarlo en `.env.local` siguiendo `KEYSTORE.md`.
-2. JDK 17 y `ANDROID_HOME` apuntando a un Android SDK con build-tools 34+.
-3. Ejecutar `npm run ionic:build:android`. Equivale a:
-   ```bash
-   ionic cordova build android --release -- -- \
-     --keystore=$ANDROID_KEYSTORE_PATH \
-     --alias=$ANDROID_KEY_ALIAS \
-     --storePassword=$ANDROID_KEYSTORE_PASSWORD \
-     --password=$ANDROID_KEY_ALIAS_PASSWORD
+Check the machine with `npm run requirements`. You need JDK 17, `ANDROID_HOME` with build-tools 36, and Xcode 15+ with CocoaPods.
+
+### 1. Android debug
+
+```bash
+npm run build:android
+```
+
+That is `ng build`, then `cordova build android --debug`.
+
+Output: `platforms/android/app/build/outputs/apk/debug/app-debug.apk`. It is signed with the Android debug key. Use it to try the app. With USB debugging on:
+
+```bash
+adb install -r platforms/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+### 2. Android release (signed APK)
+
+1. Create `.env.local` at the repo root. Do not commit it. `scripts/build-android-release.cjs` reads these four variables:
+
+   ```dotenv
+   ANDROID_KEYSTORE_PATH=./pragmadev-appbase.jks
+   ANDROID_KEY_ALIAS=pragmadev-appbase
+   ANDROID_KEYSTORE_PASSWORD=<store password>
+   ANDROID_KEY_ALIAS_PASSWORD=<the same value; PKCS12 ignores -keypass>
    ```
-   El script `scripts/build-android-release.cjs` hace lo mismo leyendo `.env.local`, corre `ng build --configuration production`, el build de Cordova y `./gradlew :app:assembleRelease`.
 
-Artefactos:
+   The `.jks` is not versioned either. How to create one, and why not to regenerate a key that is already published, is in `KEYSTORE.md`.
 
-- `platforms/android/app/build/outputs/bundle/release/app-release.aab` (App Bundle para Play Store).
-- `platforms/android/app/build/outputs/apk/release/app-release.apk` (APK firmado para distribución directa).
+2. With the `android` platform already added:
 
-Firma verificada con `apksigner verify --verbose`: APK Signature Scheme v2 OK. El AAB se firma vía `:app:bundleRelease` automáticamente.
+   ```bash
+   npm run ionic:build:android
+   ```
 
-### iOS (IPA)
+   The script runs, in order: `ng build --configuration production`, `ionic cordova build android --release --device` with the keystore as flags, and `./gradlew :app:assembleRelease` inside `platforms/android`.
 
-`cordova-ios 8` genera el workspace con el nombre fijo `App.xcworkspace` dentro de `platforms/ios/`, no a partir del nombre de la app (`Todo Notebook` solo aparece como `CFBundleDisplayName` en el `Info.plist`). Tras `cordova platform add ios`, ábrelo así:
+3. Output: `platforms/android/app/build/outputs/apk/release/app-release.apk`. The script calls `:app:assembleRelease`. It does not call `bundleRelease`, so it does not produce an AAB.
 
-```bash
-open platforms/ios/App.xcworkspace
-```
+4. Check the signature:
 
-El bundle identifier es `io.github.pandadesigner.todonotebook` (de `config.xml`).
+   ```bash
+   "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs \
+     platforms/android/app/build/outputs/apk/release/app-release.apk
+   ```
 
-#### Team ID
+   Expected: `Verifies` and scheme v2. Without `.env.local` or the `.jks`, this step does not produce the signed APK.
 
-El Team ID aparece en el campo `OU` del subject del certificado de firma. Para extraerlo del Llavero:
+`npm run build:android:release` is the other path. It does not read `.env.local`. The four variables must be exported in the shell.
 
-```bash
-security find-certificate -c "Apple Development: tu-correo@dominio" -p \
-  | openssl x509 -noout -subject
-# subject=UID=..., CN=Apple Development: tu-correo@dominio (XXXXXX), OU=TEAM_ID, O=..., C=...
-```
+### 3. iOS unsigned archive (already generated on this Mac)
 
-Copia el valor de `OU=TEAM_ID` a tu `build.json` local (ignorado por git) bajo `ios.debug.developmentTeam` e `ios.release.developmentTeam`. `build.example.json` contiene los placeholders. No commitees el Team ID real ni el `build.json`.
-
-#### Firma automática y limitación de la cuenta Development
-
-Con `automaticProvisioning: true` y `developmentTeam` fijado en `build.json`, Xcode descarga y renueva los provisioning profiles desde tu cuenta Apple sin pasos manuales. Para que funcione, tu cuenta debe estar dada de alta en el [Apple Developer Program](https://developer.apple.com/programs/) (pago, no la Apple ID personal gratuita), tener al menos un dispositivo registrado y el App ID `io.github.pandadesigner.todonotebook` creado en _Certificates, Identifiers & Profiles_.
-
-Si la cuenta es la Apple ID personal sin pago del Developer Program, Xcode puede emitir el certificado `Apple Development` pero **no** crea provisioning profiles para distribución: `ionic cordova build ios --device --release` termina en `** ARCHIVE FAILED **` con `Your team has no devices from which to generate a provisioning profile` y `Xcode couldn't find any iOS App Development provisioning profiles matching 'io.github.pandadesigner.todonotebook'`. En ese caso, o bien te das de alta en el programa de pago, o bien firmas el `.app` manualmente en Xcode con un perfil Apple Distribution / Ad Hoc generado fuera del flujo automático.
-
-#### Build sin firma (CI o equipos sin Apple Developer)
-
-`npm run build:ios` ejecuta `cordova build ios --release --device` y desactiva la firma con `CODE_SIGNING_ALLOWED=NO`, pensado para runners que solo necesitan validar el binario:
-
-- Resultado: `platforms/ios/build/Release-iphoneos/Todo Notebook.app` o `App.xcarchive`. Subible como artefacto en CI.
-- No instalable en un dispositivo sin re-firmar con un provisioning profile válido.
-
-#### Build firmado desde la línea de comandos
-
-Con firma automática y `build.json` local con `developmentTeam` rellenado:
+`npm run build:ios` does not compile the web bundle. Build it and copy it first.
 
 ```bash
-ionic cordova build ios --device --release
-# IPA firmado en platforms/ios/build/Release-iphoneos/Todo Notebook.ipa
-# (o .xcarchive para exportar después desde el Organizer)
+npm run build
+npx cordova prepare ios
+npm run build:ios
 ```
 
-Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcworkspace`, desmarca _Automatically manage signing_ en el target `App` y selecciona tu provisioning profile; exporta el `.ipa` desde el Organizer con _Distribute App → App Store Connect / Ad Hoc_. Si necesitas firma automática en CI con un solo comando, añade _Fastlane match_ con `MATCH_PASSWORD`, `MATCH_GIT_BASIC_AUTHORIZATION` y `MATCH_TYPE` como secretos del repositorio; no versionar certificados ni perfiles.
+The workspace is `platforms/ios/App.xcworkspace` (scheme `App`). The visible name `Todo Notebook` is only `CFBundleDisplayName`.
 
-## Retos
+This Mac has a signing certificate and `build.json` has no `ios.release.developmentTeam`. The script prints that and archives with signing off. The run already finished with `** ARCHIVE SUCCEEDED **`.
 
-1. **`cordova platform add` reescribe `package.json`.** Cada vez que se añade una plataforma, el CLI muta `cordova.platforms` en el manifiesto y rompe el spec INIT-04 (`expect(manifest.cordova?.platforms).toEqual(['android', 'ios'])`). Solución: `npm run clean:platforms` antes de commitear; el helper reescribe el array a la baseline declarada en lugar de vaciarlo, documentado en `scripts/clean-cordova-platforms.cjs`.
-2. **Build Android necesita credenciales locales sin filtrarse a git.** `build.json` versiona placeholders; `scripts/build-android-release.cjs` los sustituye desde `.env.local` solo en tiempo de ejecución y los restaura al final. La primera versión tenía dos bugs (orden del regex y `process.exit` antes del `finally`) que filtraron la contraseña al manifiesto; corregidos.
-3. **TypeScript 6 con alias `paths`.** TS 6 exige que `paths` sean relativos al `tsconfig` (no a `baseUrl`); se retiró `baseUrl` y se declararon tipos Jest/Node explícitamente para evitar contaminar el bundle de la app con `types: []`.
-4. **PKCS12 ignora `-keypass`.** keytool avisa pero acepta; `ANDROID_KEY_PASSWORD` debe ser igual a `ANDROID_KEYSTORE_PASSWORD`. Documentado en `KEYSTORE.md`.
-5. **Cordova 13 + Node 26 reporta vulnerabilidades heredadas** (`tar`, `@grpc/grpc-js`, etc.) que no afectan al bundle web; queda pendiente un cambio dedicado para actualizarlas.
+Generated artifact (local only, `platforms/` is gitignored):
 
-## Optimizaciones
+`platforms/ios/build/Release-iphoneos/App.xcarchive`
 
-- **Persistencia con `@Debounce(300)`**: una ráfaga de `save` produce una sola escritura en SQLite. Con el botón debug que genera 5.000 tareas, el `Repository.persist()` no genera 5.000 writes — se mide en las pruebas de `IonicStorageTaskRepository`.
-- **Virtual scroll desde 200 tareas**: `cdk-virtual-scroll-viewport` renderiza solo el viewport visible. `shouldVirtualize()` decide por umbral. El debug de 5.000 tareas pasa de `@for` a `cdk-virtual-scroll` automáticamente.
-- **OnPush + trackBy en todas las páginas**: evita re-renderizados por referencia y reduce trabajo del change detector. `trackBy: trackById` está en `tasks.page.ts` y `categories.page.ts`.
-- **Filtros y orden puros**: `filterTasks` y `sortTasksByDueDate` no mutan la entrada; los stores los componen sin alocar memoria extra.
-- **Feature flag con timeout**: `RemoteConfigService.isCategoriesEnabled(port, 3000)` corta a 3 s, devuelve `true` por defecto ante fallo de red o timeout, y nunca aplica una respuesta tardía.
+Inside it: `Products/Applications/Todo Notebook.app`, including the web bundle from that run. `codesign` reports the app is not signed at all. There is no `.ipa`. That `.app` does not install on an iPhone.
 
-## Calidad y mantenibilidad
+### 4. Signed iOS IPA
 
-- **Cobertura por capa**: `jest.config.cjs` aplica thresholds por path — global 80%, `src/app/domain/` 95%, `src/app/data/` 90%, `src/app/store/` 90%. El workflow `verify` falla el build si no se cumplen.
-- **LSP y tipado estricto**: `tsc --noEmit` se ejecuta en CI y en el script `typecheck`. Sin `any` salvo en adaptadores de infraestructura explícitamente comentados.
-- **ESLint con `angular-eslint`**: reglas para standalone components, signals y decoradores. El linter pasa en todo el repo.
-- **Prettier con configuración del proyecto**: `npm run format` aplica el formato; `format:check` lo verifica. CI falla si hay drift.
-- **Tests RED→GREEN documentados en `verify-report.md`**: cada tarea de `tasks.md` deja evidencia de qué falla antes, qué pasa después y qué cobertura queda.
-- **Dominio sin Angular ni Cordova**: `src/app/domain/` no importa `@angular/*` ni `cordova-*`. Verificado en revisión de código de cada tarea. Esto permite probar todo el dominio con Jest puro sin `TestBed`.
-- **Contrato `Repository<T>` verificado contra dos implementaciones**: la misma suite de 5 pruebas corre contra InMemory y contra Ionic Storage con almacenamiento simulado. Si añades un nuevo repositorio (por ejemplo, REST), basta con implementar `list/save/remove` y la suite te dice si cumple el contrato.
+This needs the paid [Apple Developer Program](https://developer.apple.com/programs/), a registered device, and the App ID `io.github.pandadesigner.todonotebook`. A free Apple ID can sign in Xcode for a connected iPhone for 7 days (`docs/guia-apk-ipa.md` §3.2). It cannot export a distribution IPA.
 
-## Auditoría de dependencias
+1. Copy `build.example.json` to `build.json`. Do not commit it.
+2. Put the real Team ID (10 characters, the certificate `OU`) in `ios.release.developmentTeam` and `ios.debug.developmentTeam`. A placeholder such as `<TEAM_ID>` does not count.
 
-El comando `npm audit` informa avisos heredados de `tar`, `@grpc/grpc-js`, `basic-ftp`, `braces`, `tmp` y `sprintf-js` (ver `openspec/changes/init/verify-report.md`). No afectan al bundle del navegador pero quedan pendientes de un cambio dedicado.
+   ```bash
+   security find-certificate -c "Apple Development: you@example.com" -p \
+     | openssl x509 -noout -subject
+   ```
 
-## Estado OpenSpec
+3. Build the bundle and run the native build. With a Team ID and a signing identity, `npm run build:ios` runs `npx cordova build ios --release --device`, and that command exports the IPA. Without a Team ID, the same script only archives with signing off:
 
-No hay changes activos. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
+   ```bash
+   npm run build
+   npx cordova prepare ios
+   npm run build:ios
+   ```
 
-Las filas `registro` de F6 siguen abiertas a propósito: anotan nodos de Figma que todavía no tienen escenario. La evidencia visual del sheet de categorías y del pager quedó ausente porque esta máquina no tenía simulador firmado.
+4. Cordova writes the IPA under `platforms/ios/build/`. On this Mac there is no `.ipa`. The Team ID is missing. The artifact from [step 3](#3-ios-unsigned-archive-already-generated-on-this-mac) is the one that exists.
+
+### CI
+
+`.github/workflows/verify.yml` runs types, lint, format, tests with coverage, and the native builds. It uploads the debug APK as `android-debug-apk` and the unsigned iOS archive as `ios-unsigned-archive`. CI does not produce a signed IPA.
+
+## Challenges
+
+1. **`cordova platform add` rewrites `package.json`.** Each add mutates `cordova.platforms` and breaks the spec that expects `['android', 'ios']`. Run `npm run clean:platforms` before committing. The helper is `scripts/clean-cordova-platforms.cjs`.
+2. **Android credentials stay off git.** `scripts/build-android-release.cjs` reads `.env.local` and passes the keystore as CLI flags. The `.jks` and `.env.local` are not committed.
+3. **TypeScript 6 and `paths`.** Aliases are relative to the `tsconfig`. `baseUrl` was removed.
+4. **PKCS12 ignores `-keypass`.** `ANDROID_KEY_ALIAS_PASSWORD` must equal `ANDROID_KEYSTORE_PASSWORD`. See `KEYSTORE.md`.
+5. **iOS without a Team ID.** `cordova-ios` 8 exports an IPA as soon as the build uses `--device`. A Personal Team certificate is not enough and that export fails. `npm run build:ios` archives with signing off. The unsigned `App.xcarchive` above is that result. The IPA stays absent until `build.json` has a real Team ID.
+6. **Cordova 13 inherited audit warnings** (`tar`, `@grpc/grpc-js`, and others) do not enter the web bundle. They wait for a dedicated change.
+
+## Optimizations
+
+- **`@Debounce(300)`.** A burst of `save` produces one SQLite write. The 5,000-task debug button is covered by the `IonicStorageTaskRepository` tests.
+- **Task pager.** `PAGE_SIZE` is 20 in `src/app/domain/pagination.ts`. The task list does not use virtual scroll.
+- **Category virtual scroll from 200 rows.** `shouldVirtualize()` on the category page switches from `@for` to `cdk-virtual-scroll-viewport`.
+- **OnPush and `trackById`.** In `tasks.page.ts` and `categories.page.ts`.
+- **Pure filters.** `filterTasks` and `sortTasksByDueDate` do not mutate their input.
+- **Flag timeout.** `RemoteConfigService.isCategoriesEnabled(port, 3000)` returns `true` on network failure or timeout and drops a late response.
+
+## Quality
+
+- Coverage in `jest.config.cjs`: global 80%, `src/app/domain/` 95%, `src/app/data/` 90%, `src/app/store/` 90%. CI fails if they drop.
+- `npm run typecheck` is `tsc --noEmit`.
+- ESLint (`angular-eslint`) and Prettier. `npm run format:check` runs in CI.
+- `src/app/domain/` does not import `@angular/*` or `cordova-*`.
+- The `Repository<T>` contract runs against the in-memory implementation and against Ionic Storage.
+- `npm run trace:check` and `openspec validate --all --strict` cross-check scenarios, tests, and the matrix.
+
+## Dependency audit
+
+`npm audit` reports inherited warnings from `tar`, `@grpc/grpc-js`, `basic-ftp`, `braces`, `tmp`, and `sprintf-js` (see `openspec/changes/archive/2026-10-17-init/verify-report.md`). They do not affect the browser bundle. A dedicated change is still open for them.
+
+## Design (Figma)
+
+File: https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA
+
+File key `F6ztYiRO9b0xYZA38xSTIA`. Canvas `0:1`. Pages **Tokens & Components** and **Screens** (13 frames at 375×812). The offline copy is in `docs/design.json`, `docs/design.md`, and `docs/mocks/`. The PDF rules functionality. Figma rules the visuals.
+
+Open a node by replacing `:` with `-`: https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-440
+
+| Screen                  | Node                                                                         | Mock                                       |
+| ----------------------- | ---------------------------------------------------------------------------- | ------------------------------------------ |
+| Day with the panel open | [4:440](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-440)   | `docs/mocks/todo-day-panel-open.png`       |
+| Panel closed            | [4:520](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-520)   | `docs/mocks/todo-panel-closed.png`         |
+| Notes / shopping        | [4:617](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-617)   | `docs/mocks/my-notes-shopping.png`         |
+| Completed task          | [4:664](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-664)   | `docs/mocks/todo-completed-task.png`       |
+| Category list           | [4:788](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-788)   | `docs/mocks/categories-list.png`           |
+| Category sheet          | [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869)   | `docs/mocks/categories-form-sheet.png`     |
+| Filter by category      | [4:973](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-973)   | `docs/mocks/todo-filtered-by-category.png` |
+| Empty state             | [4:1062](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1062) | `docs/mocks/todo-empty-state.png`          |
+| Categories flag off     | [4:1113](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1113) | `docs/mocks/todo-categories-flag-off.png`  |
+| New task modal          | [4:1267](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1267) | `docs/mocks/new-task-modal.png`            |
+| Confirm delete          | [4:1404](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1404) | `docs/mocks/todo-swipe-delete-confirm.png` |
+| Settings                | [4:1496](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1496) | `docs/mocks/more-settings.png`             |
+| Dark mode               | [4:1560](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1560) | `docs/mocks/todo-dark-mode.png`            |
+
+The Figma MCP is `https://mcp.figma.com/mcp`, declared in `.pi/mcp.json`.
+
+## Tracking (Notion)
+
+Sign in to the workspace. These URLs are not a public link.
+
+- Project: https://www.notion.so/3fbcb441977381289ce4e197cc5e274b
+- Tasks database: https://www.notion.so/a831b37ad5994d3f82bf40bdc5178af5
+
+| Change                     | Page                                                   |
+| -------------------------- | ------------------------------------------------------ |
+| C0 restructure-specs       | https://www.notion.so/3fbcb44197738101a10cea41102607dd |
+| C0.5 theme-foundation      | https://www.notion.so/3fbcb4419773815db397fe4678dec2f0 |
+| C1 tasks-crud              | https://www.notion.so/3fbcb441977381efa398f06405c4fa40 |
+| C2 categories              | https://www.notion.so/3fbcb441977381f1b398ff3fe1b668a6 |
+| C3 feature-flag-categories | https://www.notion.so/3fbcb44197738190817ee816ac16b092 |
+| C4 performance             | https://www.notion.so/3fbcb4419773812b9151cb4d7b63d299 |
+| C5 quality-ci              | https://www.notion.so/3fbcb441977381188eacc35a2fee6a2e |
+| C6 native-builds           | https://www.notion.so/3fbcb44197738114ae6bdc9eeb915073 |
+| C7 docs-delivery           | https://www.notion.so/3fbcb4419773817e8a53d35d4e0facd2 |
+
+Each OpenSpec change updates only its row: Status, and one line at the end of Note. Rows are not deleted, and Status is never set to Archived. The protocol, with times in America/Bogota, is in `docs/workflow-mcp.md`. The Notion MCP is `https://mcp.notion.com/mcp` and lives in the user config, not in the repo. How to create the internal integration is in `docs/notion-mcp-pi.md`. The token is not versioned. Notion rows were not updated for the local iOS archive.
+
+## What this delivery includes
+
+- Task list with create, edit, complete, delete with confirmation, and the empty state.
+- Categories with a section (`general`, `routine`, `event`), an icon, and a color. The sheet is archived at `openspec/changes/archive/2026-10-17-category-sheet/`.
+- Feature flag `enable_categories` with a 3 s cutoff.
+- Spanish and English, light and dark theme, tokens in `src/theme`.
+- Local persistence. On Android and iOS, SQLite. The plugin is in `package.json`, in `plugins/cordova-sqlite-storage`, and in `config.xml` (`a91be3a`).
+- Local FAB and empty-state icons (`e10bd6b`), in `src/app/shared/icons/app-icons.ts`.
+- In dark mode the empty-state disc stays light and the clipboard ink uses `--app-illustration-ink` (`#3A2E5C`), so the stroke stays visible on that disc.
+- Performance: `@Debounce(300)` on writes, task pages of 20, category virtual scroll from 200 rows, and OnPush.
+- The iOS unsigned archive is already generated on this Mac at `platforms/ios/build/Release-iphoneos/App.xcarchive`. `npm run build:ios` produced it with `** ARCHIVE SUCCEEDED **` and no Team ID. Signed export runs only with a real Team ID. There is no IPA.
+
+## Still open for the test
+
+- Signed IPA. It needs the paid Apple Developer Program and the Team ID in local `build.json`. The unsigned archive is not that binary.
+- Signed release APK. It comes from `npm run ionic:build:android` only when the `.jks` and `.env.local` exist. It is not in git. Without those, the artifact is the debug APK.
+- App screenshots at 375×812 and the delivery video. The Figma mocks are in `docs/mocks/`. The category sheet and the pager do not have those screenshots in the OpenSpec archive.
+- F6 `registro` rows in `openspec/traceability.md` stay open. They record Figma nodes that still have no scenario.
+
+## OpenSpec status
+
+`develop` at `22a7a2d` still has the unarchived change `openspec/changes/finish-remaining-ui/`. Closed ones are in `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`). Current specs are in `openspec/specs/`. The scenario matrix is `openspec/traceability.md`. The merge log is `docs/progress-log.md`.
