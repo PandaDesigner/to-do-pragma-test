@@ -54,7 +54,10 @@ async function loadFirebaseOptions(
 export class FirebaseRemoteConfigPort implements RemoteConfigPort {
   private readonly request = inject(FIREBASE_CONFIG_FETCH);
 
-  async fetch(): Promise<{ enable_categories: boolean }> {
+  async fetch(): Promise<{
+    enable_categories: boolean;
+    enable_debug_actions: boolean;
+  }> {
     const options = await loadFirebaseOptions(this.request);
     const [appSdk, configSdk] = await Promise.all([
       import('firebase/app'),
@@ -69,7 +72,10 @@ export class FirebaseRemoteConfigPort implements RemoteConfigPort {
         .find((candidate) => candidate.name === FIREBASE_APP_NAME) ??
       appSdk.initializeApp(options, FIREBASE_APP_NAME);
     const config = configSdk.getRemoteConfig(app);
-    config.defaultConfig = { [FEATURE_FLAG.CATEGORIES]: true };
+    config.defaultConfig = {
+      [FEATURE_FLAG.CATEGORIES]: true,
+      [FEATURE_FLAG.DEBUG_ACTIONS]: false,
+    };
     config.settings = {
       fetchTimeoutMillis: REMOTE_CONFIG_TIMEOUT_MS,
       minimumFetchIntervalMillis: isDevMode()
@@ -77,12 +83,23 @@ export class FirebaseRemoteConfigPort implements RemoteConfigPort {
         : FETCH_INTERVAL.PRODUCTION,
     };
     await configSdk.fetchAndActivate(config);
-    const value = configSdk.getValue(config, FEATURE_FLAG.CATEGORIES);
     return {
-      [FEATURE_FLAG.CATEGORIES]: !(
-        value.getSource() === 'remote' &&
-        value.asString().trim().toLowerCase() === 'false'
-      ),
+      [FEATURE_FLAG.CATEGORIES]:
+        remoteText(configSdk, config, FEATURE_FLAG.CATEGORIES) !== 'false',
+      [FEATURE_FLAG.DEBUG_ACTIONS]:
+        remoteText(configSdk, config, FEATURE_FLAG.DEBUG_ACTIONS) === 'true',
     };
   }
+}
+
+function remoteText(
+  sdk: typeof import('firebase/remote-config'),
+  config: ReturnType<typeof import('firebase/remote-config').getRemoteConfig>,
+  key: string,
+): string | null {
+  const value = sdk.getValue(config, key);
+  if (value.getSource() !== 'remote') {
+    return null;
+  }
+  return value.asString().trim().toLowerCase();
 }

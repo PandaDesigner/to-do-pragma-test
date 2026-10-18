@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideRouter, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular/standalone';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
 import { APP_LANGUAGE } from '../../core/settings/app-language';
 import { configurePageTesting } from '../../testing/page.fixture';
@@ -15,10 +16,13 @@ import { routes } from '../../app.routes';
 
 describe('Shell and categories guard', () => {
   function setup() {
+    const present = jest.fn().mockResolvedValue(undefined);
+    const create = jest.fn().mockResolvedValue({ present });
     const dependencies = configurePageTesting({
       providers: [
         provideRouter([]),
         provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
+        { provide: ToastController, useValue: { create } },
       ],
     });
     const translate = TestBed.inject(TranslateService);
@@ -26,8 +30,37 @@ describe('Shell and categories guard', () => {
     translate.use(APP_LANGUAGE.ES);
     const fixture = TestBed.createComponent(ShellComponent);
     fixture.detectChanges();
-    return { ...dependencies, fixture, router: TestBed.inject(Router) };
+    return {
+      ...dependencies,
+      fixture,
+      router: TestBed.inject(Router),
+      createToast: create,
+    };
   }
+
+  it('[RC-03] does not render the enable_categories banner conforme a Figma 4:1113', () => {
+    const { fixture } = setup();
+    expect(fixture.nativeElement.textContent).not.toContain(
+      'enable_categories:',
+    );
+  });
+
+  it('[RC-05] presents a dismissible toast and no fixed panel conforme a Figma 4:1496', async () => {
+    const { fixture, remoteError, createToast } = setup();
+    remoteError.set('HTTP 500');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.remote-error')).toBeNull();
+    expect(createToast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        header: expect.any(String),
+        message: expect.any(String),
+        buttons: expect.arrayContaining([
+          expect.objectContaining({ role: 'cancel' }),
+        ]),
+      }),
+    );
+  });
 
   it('[TODO-01.1] shows the five-tab rail and enables Routine and Event', () => {
     const { fixture } = setup();
@@ -105,6 +138,9 @@ describe('Shell and categories guard', () => {
       taskFixture({ id: 'assigned', categoryId: 'c', dueDate: '2026-01-03' }),
       taskFixture({ id: 'unassigned', dueDate: '2026-01-03' }),
     ]);
+    tasks.setCategories([
+      { id: 'c', name: 'C', kind: 'list', colorToken: 'my', icon: 'list' },
+    ]);
     tasks.setCategory('c');
     fixture.detectChanges();
     expect(
@@ -136,18 +172,16 @@ describe('Shell and categories guard', () => {
     expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
   });
 
-  it('shows remote errors and offers a manual retry', () => {
-    const { fixture, remoteError } = setup();
+  it('shows remote errors as a toast and retries from it', async () => {
+    const { fixture, remoteError, createToast } = setup();
     remoteError.set('Sin conexión');
     fixture.detectChanges();
-    expect(
-      fixture.nativeElement.querySelector('[role="status"]').textContent,
-    ).toContain('Sin conexión');
-    (
-      fixture.nativeElement.querySelector(
-        '.remote-error button',
-      ) as HTMLButtonElement
-    ).click();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.remote-error')).toBeNull();
+    const toast = createToast.mock.calls[0]?.[0] as {
+      buttons: { role?: string; handler?: () => void }[];
+    };
+    toast.buttons.find((button) => button.role !== 'cancel')?.handler?.();
     expect(
       TestBed.inject(RemoteConfigService).initialize,
     ).toHaveBeenCalledTimes(1);

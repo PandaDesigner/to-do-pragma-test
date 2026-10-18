@@ -35,11 +35,22 @@
         {{ 'todo.pending' | translate }}
       </button>
       @if (panelOpen()) {
-      <ul>
+      <div class="pending-rows">
         @for (task of earlierTasks(); track task.id) {
-        <li>{{ task.title }}</li>
+        <app-task-item
+          [task]="task"
+          [state]="pendingRowState"
+          [actions]="store.actionsFor(task)"
+          [categoryName]="task.categoryId ? categoryNames().get(task.categoryId) : undefined"
+          [categoryIcon]="task.categoryId ? categoryIcons().get(task.categoryId) : undefined"
+          [categoryColorToken]="task.categoryId ? categoryColors().get(task.categoryId) : undefined"
+          [showCategories]="flags.categoriesEnabled()"
+          [disabled]="store.busy()"
+          (taskToggle)="toggleTask($event)"
+          (action)="dispatch($event)"
+        />
         }
-      </ul>
+      </div>
       <button type="button" class="reschedule" (click)="rescheduleEarlier()">
         {{ 'todo.reschedule' | translate }}
       </button>
@@ -49,15 +60,20 @@
     <nav class="chips" [attr.aria-label]="'todo.filterLabel' | translate">
       <app-chip
         [label]="'todo.all' | translate"
-        [selected]="store.categoryId() === undefined"
-        (choose)="store.setCategory(undefined)"
+        [selected]="selectedCategoryId() === undefined"
+        (choose)="chooseCategory(undefined)"
+      />
+      <app-chip
+        [label]="'todo.pendingChip' | translate"
+        [selected]="pendingSelected()"
+        (choose)="choosePending()"
       />
       @for (category of availableCategories(); track category.id) {
       <app-chip
         [label]="category.name"
         [colorToken]="category.colorToken"
-        [selected]="store.categoryId() === category.id"
-        (choose)="store.setCategory(category.id)"
+        [selected]="selectedCategoryId() === category.id"
+        (choose)="chooseCategory(category.id)"
       />
       }
     </nav>
@@ -76,7 +92,7 @@
           earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
         "
     >
-      @for (task of store.visibleTasks(); track task.id) {
+      @for (task of visibleTasks(); track task.id) {
       <ng-container
         [ngTemplateOutlet]="taskRow"
         [ngTemplateOutletContext]="{ $implicit: task }"
@@ -99,7 +115,7 @@
         [categoryIcon]="categoryIcons().get(task.categoryId)"
         [categoryColorToken]="categoryColors().get(task.categoryId)"
         [showCategories]="flags.categoriesEnabled()"
-        [variant]="notesCategory() ? 'note' : 'task'"
+        [state]="notesCategory() ? noteRowState : taskRowState"
         [disabled]="store.busy()"
         (taskToggle)="toggleTask($event)"
         (action)="dispatch($event)"

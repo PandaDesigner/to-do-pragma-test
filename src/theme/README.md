@@ -43,12 +43,13 @@ Las variables `--app-*` siguen el mapeo definido en `openspec/changes/theme-foun
 
 FAB (Figma 4:1109), en `_tokens.scss` y consumidos por `app-fab-button`:
 
-| Variable                 | Valor | Figma                                                                    |
-| ------------------------ | ----- | ------------------------------------------------------------------------ |
-| `--app-fab-size`         | 68px  | FAB 68x68                                                                |
-| `--app-fab-icon-size`    | 24px  | icon/plus 24                                                             |
-| `--app-fab-inset-end`    | 50px  | TSK-16 (Figma: 15, x 292 en frame 375)                                   |
-| `--app-fab-inset-bottom` | 72px  | TSK-16: `$pager-height` 56 + `$space-16` (Figma: 14, y 730 en frame 812) |
+| Variable                   | Valor | Figma                                                                    |
+| -------------------------- | ----- | ------------------------------------------------------------------------ |
+| `--app-fab-size`           | 68px  | FAB 68x68                                                                |
+| `--app-swipe-action-width` | 80px  | Figma 4:1404, opción Eliminar del swipe                                  |
+| `--app-fab-icon-size`      | 24px  | icon/plus 24                                                             |
+| `--app-fab-inset-end`      | 50px  | TSK-16 (Figma: 15, x 292 en frame 375)                                   |
+| `--app-fab-inset-bottom`   | 72px  | TSK-16: `$pager-height` 56 + `$space-16` (Figma: 14, y 730 en frame 812) |
 
 La posición del FAB se desvía de Figma a propósito (decisión de Pedro, 17-oct, TSK-16): queda a 50 del borde derecho y por encima del pager anclado. Es la misma en todas las páginas, también en Categorías aunque no tenga pager, y vive en los defaults de `app-fab-button`, así que ninguna página la sobrescribe.
 

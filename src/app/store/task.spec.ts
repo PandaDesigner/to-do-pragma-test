@@ -4,7 +4,12 @@ import { InMemoryRepository } from '../data/repositories/in-memory-repository';
 import { TASK_STATUS, type Task, type TaskStatus } from '../domain/task';
 import { TASK_EVENT, InvalidTransitionError } from '../domain/task-state';
 import { taskFixture } from '../testing/task.fixture';
+import type { Category } from '../domain/category';
 import { TaskStore } from './task';
+
+function catalog(id: string): Category {
+  return { id, name: id, kind: 'list', colorToken: 'my', icon: 'list' };
+}
 
 describe('TaskStore', () => {
   function setup() {
@@ -100,6 +105,21 @@ describe('TaskStore', () => {
     expect(store.error()).toBeNull();
   });
 
+  it('[SET-04] resets the current page after deleting every task', async () => {
+    const { store } = setup();
+    await store.upsertMany(
+      Array.from({ length: 45 }, (_, index) => ({
+        ...future,
+        id: `bulk-${index}`,
+      })),
+    );
+    store.setPage(3);
+    expect(store.pageCount()).toBe(3);
+    await store.removeAll();
+    expect(store.tasks()).toEqual([]);
+    expect(store.pageCount()).toBe(1);
+  });
+
   it('clears only the requested category, retaining all tasks', async () => {
     const { store } = setup();
     await store.upsertMany([
@@ -130,6 +150,7 @@ describe('TaskStore', () => {
     });
     await store.upsert(work);
     await store.upsert(home);
+    store.setCategories([catalog('work'), catalog('home')]);
     expect(store.tasks()).toEqual([work, home]);
     expect(await repository.list()).toEqual([work, home]);
 
@@ -165,6 +186,7 @@ describe('TaskStore', () => {
     const { store } = setup();
     const work = { ...future, id: 'work', categoryId: 'work' };
     await store.upsertMany([future, work]);
+    store.setCategories([catalog('work')]);
     store.setCategory('work');
     expect(store.visibleTasks()).toEqual([work]);
     store.setCategory(null);
@@ -268,6 +290,23 @@ describe('TaskStore', () => {
     await store.removeAll();
     expect(store.tasks()).toEqual([]);
     expect(await repository.list()).toEqual([]);
+  });
+
+  it('[TSK-19.2] clamps setPage to the filtered list', async () => {
+    const { store } = setup();
+    await store.upsertMany(
+      Array.from({ length: 25 }, (_, index) =>
+        taskFixture({
+          id: `t-${index}`,
+          dueDate: '2026-02-01',
+          status: index < 5 ? TASK_STATUS.PENDING : TASK_STATUS.COMPLETED,
+        }),
+      ),
+    );
+    store.setStatuses([TASK_STATUS.PENDING]);
+    store.setPage(3);
+    expect(store.pageCount()).toBe(1);
+    expect(store.visibleTasks()).toHaveLength(5);
   });
 
   it('TSK-17.3 setCategory/setStatuses/setSection reset pageCount to 1', async () => {

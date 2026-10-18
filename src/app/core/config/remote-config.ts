@@ -1,45 +1,69 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { REMOTE_CONFIG_PORT } from '../di/tokens';
 import {
-  FEATURE_FLAG,
   REMOTE_CONFIG_TIMEOUT_MS,
   type RemoteConfigPort,
 } from './remote-config-port';
 
-interface FlagResult {
-  enabled: boolean;
+interface FlagRead {
+  categoriesEnabled: boolean;
+  debugActionsEnabled: boolean;
   error: string | null;
 }
 
-async function readFlag(
+function isMissingConfig(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /\b404\b/.test(message);
+}
+
+async function readFlags(
   port: RemoteConfigPort,
-  flag: (typeof FEATURE_FLAG)[keyof typeof FEATURE_FLAG],
-  timeoutMs: number = REMOTE_CONFIG_TIMEOUT_MS,
-): Promise<FlagResult> {
+  timeoutMs: number,
+): Promise<FlagRead> {
   let timer: ReturnType<typeof setTimeout> | undefined;
+  const pending = port.fetch().then(
+    (flags) => ({ ok: true as const, flags }),
+    (error: unknown) => ({ ok: false as const, error }),
+  );
   try {
-    return await Promise.race([
-      Promise.resolve()
-        .then(() => port.fetch())
-        .then((flags) => ({
-          enabled: flags[flag] !== false,
-          error: null,
-        })),
-      new Promise<FlagResult>((resolve) => {
+    const outcome = await Promise.race([
+      pending,
+      new Promise<{ ok: false; error: Error }>((resolve) => {
         timer = setTimeout(
           () =>
             resolve({
-              enabled: true,
-              error: `La configuración remota no respondió en ${timeoutMs} ms. ${flag} sigue habilitado.`,
+              ok: false,
+              error: new Error(
+                `La configuración remota no respondió en ${timeoutMs} ms.`,
+              ),
             }),
           timeoutMs,
         );
       }),
     ]);
+    if (!outcome.ok) {
+      throw outcome.error;
+    }
+    return {
+      categoriesEnabled: outcome.flags.enable_categories !== false,
+      debugActionsEnabled: outcome.flags.enable_debug_actions === true,
+      error: null,
+    };
   } catch (error) {
+    if (isMissingConfig(error)) {
+      console.info(
+        'Remote Config is not configured (HTTP 404). Using defaults.',
+      );
+      return {
+        categoriesEnabled: true,
+        debugActionsEnabled: false,
+        error: null,
+      };
+    }
     const message = error instanceof Error ? error.message : String(error);
     return {
-      enabled: true,
+      categoriesEnabled: true,
+      debugActionsEnabled: false,
       error: `No se pudo consultar la configuración remota: ${message}`,
     };
   } finally {
@@ -51,7 +75,7 @@ async function readFlag(
 export class RemoteConfigService {
   private readonly port = inject(REMOTE_CONFIG_PORT);
   private readonly categoriesState = signal(true);
-  private readonly debugActionsState = signal(true);
+  private readonly debugActionsState = signal(false);
   private readonly errorState = signal<string | null>(null);
   private readonly loadingState = signal(false);
   readonly categoriesEnabled = this.categoriesState.asReadonly();
@@ -59,35 +83,12 @@ export class RemoteConfigService {
   readonly error = this.errorState.asReadonly();
   readonly loading = this.loadingState.asReadonly();
 
-  async isCategoriesEnabled(
-    port: RemoteConfigPort,
-    timeoutMs = REMOTE_CONFIG_TIMEOUT_MS,
-  ): Promise<boolean> {
-    const flagResult = await readFlag(port, FEATURE_FLAG.CATEGORIES, timeoutMs);
-    return flagResult.enabled;
-  }
-
-  async isDebugActionsEnabled(
-    port: RemoteConfigPort,
-    timeoutMs = REMOTE_CONFIG_TIMEOUT_MS,
-  ): Promise<boolean> {
-    const flagResult = await readFlag(
-      port,
-      FEATURE_FLAG.DEBUG_ACTIONS,
-      timeoutMs,
-    );
-    return flagResult.enabled;
-  }
-
-  async initialize(): Promise<void> {
+  async initialize(timeoutMs = REMOTE_CONFIG_TIMEOUT_MS): Promise<void> {
     this.loadingState.set(true);
-    const [categories, debugActions] = await Promise.all([
-      readFlag(this.port, FEATURE_FLAG.CATEGORIES),
-      readFlag(this.port, FEATURE_FLAG.DEBUG_ACTIONS),
-    ]);
-    this.categoriesState.set(categories.enabled);
-    this.debugActionsState.set(debugActions.enabled);
-    this.errorState.set(categories.error ?? debugActions.error);
+    const flags = await readFlags(this.port, timeoutMs);
+    this.categoriesState.set(flags.categoriesEnabled);
+    this.debugActionsState.set(flags.debugActionsEnabled);
+    this.errorState.set(flags.error);
     this.loadingState.set(false);
   }
 }

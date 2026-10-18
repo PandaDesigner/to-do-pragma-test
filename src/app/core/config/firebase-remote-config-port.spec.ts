@@ -60,13 +60,51 @@ describe('FirebaseRemoteConfigPort', () => {
     };
   }
 
+  it('[RC-03] defaults debug actions to false and categories to true', async () => {
+    const { config, port } = setup();
+    jest.mocked(configSdk.getValue).mockImplementation((_remote, key) => ({
+      getSource: () => (key === 'enable_categories' ? 'remote' : 'default'),
+      asString: () => (key === 'enable_categories' ? 'false' : 'false'),
+      asBoolean: () => false,
+      asNumber: () => 0,
+    }));
+    expect(await port.fetch()).toEqual({
+      enable_categories: false,
+      enable_debug_actions: false,
+    });
+    expect(config.defaultConfig).toEqual({
+      enable_categories: true,
+      enable_debug_actions: false,
+    });
+  });
+
+  it('[RC-03] enables debug actions only for an explicit remote true', async () => {
+    const { port } = setup();
+    jest.mocked(configSdk.getValue).mockImplementation((_remote, key) => ({
+      getSource: () => 'remote',
+      asString: () => (key === 'enable_debug_actions' ? 'true' : 'true'),
+      asBoolean: () => true,
+      asNumber: () => 1,
+    }));
+    expect(await port.fetch()).toEqual({
+      enable_categories: true,
+      enable_debug_actions: true,
+    });
+  });
+
   it('loads local options, sets safe defaults and intervals, and reads an explicit remote false', async () => {
     const { request, app, config, port } = setup();
-    expect(await port.fetch()).toEqual({ enable_categories: false });
+    expect(await port.fetch()).toEqual({
+      enable_categories: false,
+      enable_debug_actions: false,
+    });
     expect(request).toHaveBeenCalledWith('assets/firebase-config.json');
     expect(appSdk.initializeApp).toHaveBeenCalledWith(options, 'todo-notebook');
     expect(configSdk.getRemoteConfig).toHaveBeenCalledWith(app);
-    expect(config.defaultConfig).toEqual({ enable_categories: true });
+    expect(config.defaultConfig).toEqual({
+      enable_categories: true,
+      enable_debug_actions: false,
+    });
     expect(config.settings).toEqual({
       fetchTimeoutMillis: 3000,
       minimumFetchIntervalMillis: 60000,
@@ -95,7 +133,12 @@ describe('FirebaseRemoteConfigPort', () => {
         asBoolean: () => false,
         asNumber: () => 0,
       });
-      expect(await port.fetch()).toEqual({ enable_categories: expected });
+      const debug =
+        source === 'remote' && value.trim().toLowerCase() === 'true';
+      expect(await port.fetch()).toEqual({
+        enable_categories: expected,
+        enable_debug_actions: debug,
+      });
       expect(appSdk.initializeApp).not.toHaveBeenCalled();
     },
   );

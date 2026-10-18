@@ -131,6 +131,27 @@ describe('filterTasksBySection', () => {
     );
   });
 
+  it('returns every task when the catalog is empty', () => {
+    const loose: Task = { ...buyBread, id: 'loose', categoryId: null };
+    const assigned: Task = { ...buyBread, id: 'assigned', categoryId: 'home' };
+    const stored = [loose, assigned];
+    expect(
+      filterTasksBySection(stored, [], CATEGORY_SECTION.GENERAL).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
+    expect(
+      filterTasksBySection(stored, [], CATEGORY_SECTION.ROUTINE).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
+    expect(
+      filterTasksBySection(stored, [], CATEGORY_SECTION.EVENT).map(
+        (task) => task.id,
+      ),
+    ).toEqual(['loose', 'assigned']);
+  });
+
   it('ignores a category id that no longer exists in the catalog', () => {
     const stale: Task = { ...run, categoryId: 'deleted' };
     expect(

@@ -1,5 +1,7 @@
+import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import type { EnvironmentProviders, Provider } from '@angular/core';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, provideRouter, Router } from '@angular/router';
 import { CATEGORY_SECTION, type CategorySection } from '../../domain/category';
 import { ROUTE_DATA } from '../../core/di/tokens';
@@ -14,6 +16,32 @@ import { TASK_EVENT } from '../../domain/task-state';
 import en from '../../../assets/i18n/en.json';
 import { add } from 'ionicons/icons';
 import { clipboardCheck } from '../../shared/icons/app-icons';
+
+@Component({
+  selector: 'app-routine-tab-host',
+  imports: [TasksPage],
+  template: '<app-tasks />',
+  providers: [
+    {
+      provide: ROUTE_DATA,
+      useValue: { categorySection: CATEGORY_SECTION.ROUTINE },
+    },
+  ],
+})
+class RoutineTabHostComponent {}
+
+@Component({
+  selector: 'app-event-tab-host',
+  imports: [TasksPage],
+  template: '<app-tasks />',
+  providers: [
+    {
+      provide: ROUTE_DATA,
+      useValue: { categorySection: CATEGORY_SECTION.EVENT },
+    },
+  ],
+})
+class EventTabHostComponent {}
 
 describe('TasksPage', () => {
   async function setup(
@@ -115,12 +143,68 @@ describe('TasksPage', () => {
       ].map((chip: HTMLElement) => chip.textContent?.trim());
       expect(labels).toEqual([
         'All',
+        'Pending',
         section === CATEGORY_SECTION.ROUTINE
           ? 'Blue category'
           : 'Coral category',
       ]);
     },
   );
+
+  it('[TODO-11.1] the pending chip narrows statuses and keeps the category chip conforme a Figma 4:973', async () => {
+    const { fixture, page, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'home',
+      name: 'Home',
+      kind: 'list',
+      icon: 'list',
+      colorToken: 'my',
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'open',
+        title: 'Open',
+        categoryId: 'home',
+        status: TASK_STATUS.PENDING,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'done',
+        title: 'Done',
+        categoryId: 'home',
+        status: TASK_STATUS.COMPLETED,
+        dueDate: '2026-01-02',
+      }),
+    ]);
+    fixture.detectChanges();
+    const chips = (): HTMLButtonElement[] => [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ];
+    const pending = chips().find((chip) =>
+      chip.textContent?.includes('Pending'),
+    );
+    expect(pending).toBeTruthy();
+    expect(chips().some((chip) => chip.textContent?.includes('Home'))).toBe(
+      true,
+    );
+    pending?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual(['open']);
+    expect(pending?.getAttribute('aria-pressed')).toBe('true');
+    chips()
+      .find((chip) => chip.textContent?.includes('Home'))
+      ?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual(['open']);
+    chips()
+      .find((chip) => chip.textContent?.includes('Pending'))
+      ?.click();
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'open',
+      'done',
+    ]);
+  });
 
   it('[TODO-07.3] shows every general category and uncategorized tasks in Todo conforme a Figma 4:440', async () => {
     const { page } = await setupSection();
@@ -142,6 +226,54 @@ describe('TasksPage', () => {
     );
   });
 
+  it('[TODO-10.1] keeps assigned tasks in the list and only loose ones in the pending filter conforme a Figma 4:440', async () => {
+    const { page, tasks, fixture } = await setup();
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'loose',
+        title: 'Loose',
+        categoryId: null,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'assigned',
+        title: 'Assigned',
+        categoryId: 'home',
+        dueDate: '2026-01-01',
+      }),
+    ]);
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'loose',
+      'assigned',
+    ]);
+    expect(page.earlierTasks().map((task) => task.id)).toEqual(['loose']);
+  });
+
+  it('[TODO-10.2] keeps the list on Routine and leaves the pending filter empty conforme a Figma 4:440', async () => {
+    const { page, tasks, fixture } = await setup({
+      routeData: { categorySection: CATEGORY_SECTION.ROUTINE },
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'loose',
+        categoryId: null,
+        dueDate: '2026-01-01',
+      }),
+      taskFixture({
+        id: 'assigned',
+        categoryId: 'home',
+        dueDate: '2026-01-01',
+      }),
+    ]);
+    fixture.detectChanges();
+    expect(page.visibleTasks().map((task) => task.id)).toEqual([
+      'loose',
+      'assigned',
+    ]);
+    expect(page.earlierTasks()).toEqual([]);
+  });
+
   it('[TODO-07.5] limits the earlier panel to its section conforme a Figma 4:440', async () => {
     const { page, tasks } = await setupSection(CATEGORY_SECTION.ROUTINE);
     await tasks.upsertMany([
@@ -152,6 +284,147 @@ describe('TasksPage', () => {
     ]);
     page.store.setStatuses([TASK_STATUS.PENDING, TASK_STATUS.OVERDUE]);
     expect(page.earlierTasks().map((task) => task.id)).toEqual(['r-old']);
+  });
+
+  it('[TODO-09.1] keeps a cached tab on its own section, chip and page conforme a Figma 4:520', async () => {
+    const { tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'r-cat',
+      name: 'Blue category',
+      kind: 'daily',
+      colorToken: 'event',
+      icon: 'list',
+      section: CATEGORY_SECTION.ROUTINE,
+    });
+    await categories.upsert({
+      id: 'e-cat',
+      name: 'Coral category',
+      kind: 'list',
+      colorToken: 'routine',
+      icon: 'list',
+      section: CATEGORY_SECTION.EVENT,
+    });
+    await tasks.upsertMany([
+      taskFixture({
+        id: 'routine-a',
+        title: 'Routine one',
+        categoryId: 'r-cat',
+        dueDate: '2026-02-01',
+      }),
+      taskFixture({
+        id: 'routine-b',
+        title: 'Routine two',
+        categoryId: 'r-cat',
+        dueDate: '2026-02-02',
+      }),
+      taskFixture({
+        id: 'event-a',
+        title: 'Event one',
+        categoryId: 'e-cat',
+        dueDate: '2026-02-03',
+      }),
+      taskFixture({
+        id: 'event-b',
+        title: 'Event two',
+        categoryId: 'e-cat',
+        dueDate: '2026-02-04',
+      }),
+    ]);
+    tasks.setPageSize(1);
+
+    const routine = TestBed.createComponent(RoutineTabHostComponent);
+    const event = TestBed.createComponent(EventTabHostComponent);
+    routine.detectChanges();
+    event.detectChanges();
+    await routine.whenStable();
+    await event.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    routine.detectChanges();
+    event.detectChanges();
+
+    const routinePage = routine.debugElement.query(By.directive(TasksPage))
+      .componentInstance as TasksPage;
+    const eventPage = event.debugElement.query(By.directive(TasksPage))
+      .componentInstance as TasksPage;
+    const titles = (root: HTMLElement): string[] =>
+      [...root.querySelectorAll('.task-title')].map(
+        (node) => node.textContent?.trim() ?? '',
+      );
+
+    expect(titles(routine.nativeElement)).toEqual(['Routine one']);
+    expect(titles(event.nativeElement)).toEqual(['Event one']);
+
+    const coral = [
+      ...event.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) =>
+      chip.textContent?.includes('Coral category'),
+    ) as HTMLButtonElement;
+    coral.click();
+    routine.detectChanges();
+    event.detectChanges();
+    expect(titles(routine.nativeElement)).toEqual(['Routine one']);
+    const routineAll = [
+      ...routine.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) => chip.textContent?.includes('All')) as HTMLButtonElement;
+    expect(routineAll.getAttribute('aria-pressed')).toBe('true');
+
+    eventPage.goToPage(2);
+    routine.detectChanges();
+    expect(routinePage.currentPage()).toBe(1);
+    expect(eventPage.currentPage()).toBe(2);
+    expect(titles(event.nativeElement)).toEqual(['Event two']);
+  });
+
+  it('[TSK-19.1] pages the filtered list and hides the pager when one page remains conforme a Figma 4:520', async () => {
+    const { tasks, categories, fixture, page } = await setup();
+    await categories.upsert({
+      id: 'focus',
+      name: 'Focus',
+      kind: 'list',
+      colorToken: 'my',
+      icon: 'list',
+    });
+    await tasks.upsertMany([
+      ...Array.from({ length: 45 }, (_, index) =>
+        taskFixture({
+          id: `general-${index}`,
+          title: `General ${index}`,
+          categoryId: null,
+          dueDate: '2026-02-01',
+        }),
+      ),
+      ...Array.from({ length: 5 }, (_, index) =>
+        taskFixture({
+          id: `focus-${index}`,
+          title: `Focus ${index}`,
+          categoryId: 'focus',
+          dueDate: '2026-02-02',
+        }),
+      ),
+    ]);
+    const event = TestBed.createComponent(EventTabHostComponent);
+    event.detectChanges();
+    await event.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    event.detectChanges();
+
+    expect(event.nativeElement.querySelector('.pager')).toBeNull();
+    expect(page.totalPages()).toBe(3);
+    expect(fixture.nativeElement.querySelector('.pager')).not.toBeNull();
+
+    page.goToPage(3);
+    fixture.detectChanges();
+    const focus = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) => chip.textContent?.includes('Focus')) as HTMLButtonElement;
+    focus.click();
+    fixture.detectChanges();
+    expect(page.currentPage()).toBe(1);
+    expect(fixture.nativeElement.querySelector('.pager')).toBeNull();
+    expect(
+      fixture.nativeElement.querySelectorAll('app-task-item'),
+    ).toHaveLength(5);
   });
 
   it('adds 5,000 debug tasks to five existing ones and replaces virtual rendering with replacement pagination', async () => {

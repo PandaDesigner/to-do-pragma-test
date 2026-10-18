@@ -17,6 +17,7 @@ import {
 import { SettingsPage } from './settings.page';
 import { DebugTaskSeed } from '../tasks/debug-task-seed';
 import { RemoteConfigService } from '../../core/config/remote-config';
+import { DeletionConfirmation } from '../../shared/services/deletion-confirmation';
 import en from '../../../assets/i18n/en.json';
 import es from '../../../assets/i18n/es.json';
 
@@ -25,6 +26,11 @@ describe('SettingsPage', () => {
     const theme = signal<ThemePreference>(THEME_PREFERENCE.SYSTEM);
     const language = signal<AppLanguage>(APP_LANGUAGE.EN);
     const debugActionsEnabled = signal(options.debugActionsEnabled ?? true);
+    const confirm = jest.fn().mockResolvedValue(true);
+    const seed = {
+      generateFiveThousand: jest.fn().mockResolvedValue(undefined),
+      removeAllTasks: jest.fn().mockResolvedValue(undefined),
+    };
     const preferences = {
       theme: theme.asReadonly(),
       language: language.asReadonly(),
@@ -41,13 +47,8 @@ describe('SettingsPage', () => {
         provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
         { provide: SettingsPreferences, useValue: preferences },
         { provide: SYSTEM_DARK, useValue: false },
-        {
-          provide: DebugTaskSeed,
-          useValue: {
-            generateFiveThousand: jest.fn().mockResolvedValue(undefined),
-            removeAllTasks: jest.fn().mockResolvedValue(undefined),
-          },
-        },
+        { provide: DebugTaskSeed, useValue: seed },
+        { provide: DeletionConfirmation, useValue: { confirm } },
         {
           provide: RemoteConfigService,
           useValue: {
@@ -62,7 +63,7 @@ describe('SettingsPage', () => {
     translate.use(APP_LANGUAGE.EN);
     const fixture = TestBed.createComponent(SettingsPage);
     fixture.detectChanges();
-    return { fixture, preferences };
+    return { fixture, preferences, confirm, seed };
   }
 
   it.each([
@@ -155,6 +156,14 @@ describe('SettingsPage', () => {
     const event = { target: select } as unknown as Event;
     await fixture.componentInstance.setLanguageFromSelect(event);
     expect(preferences.language()).toBe(APP_LANGUAGE.EN);
+  });
+
+  it('[SET-03] asks before deleting every task conforme a Figma 4:1496', async () => {
+    const { fixture, confirm, seed } = setup();
+    confirm.mockResolvedValue(false);
+    await fixture.componentInstance.removeAllTasks();
+    expect(confirm).toHaveBeenCalled();
+    expect(seed.removeAllTasks).not.toHaveBeenCalled();
   });
 
   it('triggers debug seed and deletion when the buttons are pressed', async () => {

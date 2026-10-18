@@ -24,6 +24,13 @@
     "remote": "Remote configuration",
     "retry": "Retry configuration"
   },
+  "remoteConfig": {
+    "error": {
+      "title": "Remote configuration",
+      "message": "The remote configuration could not be loaded.",
+      "dismiss": "Dismiss"
+    }
+  },
   "category": {
     "section": "Section",
     "sections": {
@@ -62,6 +69,10 @@
     "edit": "Edit {{title}}",
     "delete": "Delete {{title}}",
     "deleteAction": "Delete",
+    "deleteTitle": "Delete task?",
+    "deleteMessage": "“{{title}}” will be permanently deleted.",
+    "deleteCancel": "Cancel",
+    "deleteConfirm": "Delete",
     "duration": "Duration: {{minutes}} min",
     "reminder": "Reminder: {{minutes}} min before",
     "bullet": "Note",
@@ -79,6 +90,7 @@
     "pending": "Uncompleted tasks",
     "reschedule": "Reschedule to Today",
     "all": "All",
+    "pendingChip": "Pending",
     "emptyTitle": "No tasks for today",
     "emptyHint": "Tap + or write in the field below to add your first task.",
     "emptyAction": "Add a task",

@@ -11,18 +11,3 @@
     (delete)="onCategoryDelete($event)"
   />
 </div>
-<aside class="remote-status" [attr.aria-label]="'shell.remote' | translate">
-  <small>enable_categories: {{ flags.categoriesEnabled() }}</small>
-  @if (flags.error() || feedback.error()) {
-    <div class="remote-error" role="status">
-      <p>{{ flags.error() || feedback.error() }}</p>
-      <button
-        type="button"
-        (click)="flags.initialize()"
-        [disabled]="flags.loading()"
-      >
-        {{ 'shell.retry' | translate }}
-      </button>
-    </div>
-  }
-</aside>

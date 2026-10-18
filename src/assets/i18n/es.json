@@ -24,6 +24,13 @@
     "remote": "Configuración remota",
     "retry": "Reintentar configuración"
   },
+  "remoteConfig": {
+    "error": {
+      "title": "Configuración remota",
+      "message": "No se pudo cargar la configuración remota.",
+      "dismiss": "Cerrar"
+    }
+  },
   "category": {
     "section": "Sección",
     "sections": {
@@ -62,6 +69,10 @@
     "edit": "Editar {{title}}",
     "delete": "Eliminar {{title}}",
     "deleteAction": "Eliminar",
+    "deleteTitle": "¿Eliminar tarea?",
+    "deleteMessage": "“{{title}}” se eliminará de forma permanente.",
+    "deleteCancel": "Cancelar",
+    "deleteConfirm": "Eliminar",
     "duration": "Duración: {{minutes}} min",
     "reminder": "Aviso: {{minutes}} min antes",
     "bullet": "Nota",
@@ -79,6 +90,7 @@
     "pending": "Tareas pendientes",
     "reschedule": "Reprogramar para hoy",
     "all": "Todas",
+    "pendingChip": "Pendientes",
     "emptyTitle": "No hay tareas para hoy",
     "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
     "emptyAction": "Añadir tarea",
