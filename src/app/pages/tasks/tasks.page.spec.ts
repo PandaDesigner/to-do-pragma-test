@@ -244,8 +244,10 @@ describe('TasksPage', () => {
     expect(titles(routine.nativeElement)).toEqual(['Routine one']);
     expect(titles(event.nativeElement)).toEqual(['Event one']);
 
-    const coral = [...event.nativeElement.querySelectorAll('app-chip button')].find(
-      (chip) => chip.textContent?.includes('Coral category'),
+    const coral = [
+      ...event.nativeElement.querySelectorAll('app-chip button'),
+    ].find((chip) =>
+      chip.textContent?.includes('Coral category'),
     ) as HTMLButtonElement;
     coral.click();
     routine.detectChanges();
