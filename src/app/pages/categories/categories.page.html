@@ -38,11 +38,7 @@
       }
     </section>
     }
-    <ion-fab vertical="bottom" horizontal="end">
-      <ion-fab-button (click)="openCreateSheet()" aria-label="Nueva categoría">
-        +
-      </ion-fab-button>
-    </ion-fab>
+    <app-fab-button ariaLabel="Nueva categoría" (pressed)="openCreateSheet()" />
     <ng-template #categoryRow let-category>
       <article class="category-row">
         <span class="swatch" [attr.data-color]="category.colorToken"

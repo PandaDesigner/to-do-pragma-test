@@ -14,10 +14,19 @@
   color: var(--app-text);
 }
 
+// Figma 4:1099: círculo check-empty de 68 con icon/clipboard 32 en primary-dark.
 .illustration {
-  display: block;
-  border: 1.5px solid var(--app-primary-dark);
-  border-radius: var(--app-radius-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--app-radius-round);
+  background: var(--app-check-empty);
+  color: var(--app-primary-dark);
+
+  ion-icon {
+    width: var(--app-space-32);
+    height: var(--app-space-32);
+  }
 }
 
 h2,

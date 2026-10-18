@@ -5,7 +5,9 @@
       aria-hidden="true"
       [style.width.px]="illustrationSize"
       [style.height.px]="illustrationSize"
-    ></span>
+    >
+      <ion-icon [icon]="illustrationIcon" aria-hidden="true"></ion-icon>
+    </span>
   }
   <h2>{{ title() }}</h2>
   @if (hint()) {

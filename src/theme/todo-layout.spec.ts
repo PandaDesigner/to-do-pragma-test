@@ -71,16 +71,26 @@ describe('Todo layout regression contracts', () => {
     expect(styles).toMatch(/input\s*\{[^}]*padding:\s*0;/);
   });
 
-  it('[TSK-16.1] anchors the FAB at right of the notebook column, never with left', () => {
-    const styles = readAppStyles('pages/tasks/tasks.page.scss');
-    expect(styles).toMatch(/right:\s*50px;/);
-    expect(styles).not.toMatch(/ion-fab\.fab-new-task\s*\{[^}]*left:\s*\d/);
-    expect(styles).toMatch(
-      /bottom:\s*calc\(\s*var\(--app-pager-height\) \+\s*var\(--app-space-16\)\s*\+\s*env\(safe-area-inset-bottom/,
+  it('[TSK-16.1] anchors the shared FAB at right with theme insets, never with left', () => {
+    const styles = readAppStyles(
+      'shared/components/fab-button/fab-button.component.scss',
     );
-    expect(styles).toMatch(/width:\s*var\(--app-fab-size\);/);
-    expect(styles).toMatch(/height:\s*var\(--app-fab-size\);/);
+    expect(styles).toMatch(/right:\s*calc\(\s*var\(--app-fab-inset-end\)/);
+    expect(styles).toMatch(/bottom:\s*calc\(\s*var\(--app-fab-inset-bottom\)/);
+    expect(styles).not.toMatch(/left:\s*\d/);
   });
+
+  it.each([
+    'pages/tasks/tasks.page.scss',
+    'pages/categories/categories.page.scss',
+  ])(
+    '[TSK-16.1] %s uses the same FAB position as every page (no inset override)',
+    (path) => {
+      const styles = readAppStyles(path);
+      expect(styles).not.toMatch(/--app-fab-inset-(end|bottom)\s*:/);
+      expect(styles).not.toMatch(/app-fab-button[^{]*\{[^}]*(right|bottom):/);
+    },
+  );
 
   it('[TSK-18.1] only .task-list scrolls: header and pager stay put', () => {
     const styles = readAppStyles('pages/tasks/tasks.page.scss');
