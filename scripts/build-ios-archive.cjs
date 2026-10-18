@@ -36,6 +36,22 @@ function runCordovaBuild() {
   console.log(
     '[build-ios] signing identity detected — using cordova build ios --release --device',
   );
+  const firebase = spawnSync(
+    'node',
+    ['scripts/ensure-firebase-config.cjs', '--require'],
+    { stdio: 'inherit', cwd: projectRoot },
+  );
+  if (firebase.status !== 0) {
+    process.exit(firebase.status ?? 1);
+  }
+  const web = spawnSync(
+    'npx',
+    ['ng', 'build', '--configuration', 'production'],
+    { stdio: 'inherit', cwd: projectRoot },
+  );
+  if (web.status !== 0) {
+    process.exit(web.status ?? 1);
+  }
   const cordovaBuild = spawnSync(
     'npx',
     [

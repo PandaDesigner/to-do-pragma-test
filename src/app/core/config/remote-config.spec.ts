@@ -4,15 +4,20 @@ import { REMOTE_CONFIG_PORT } from '../di/tokens';
 import { RemoteConfigService } from './remote-config';
 import type { RemoteConfigPort } from './remote-config-port';
 
-describe('RemoteConfigService', () => {
-  const production = environment.production;
+jest.mock('../../../environments/environment', () => ({
+  environment: {
+    production: true,
+    remoteConfigFetchIntervalMs: 60_000,
+  },
+}));
 
+describe('RemoteConfigService', () => {
   beforeEach(() => {
     environment.production = true;
     jest.useFakeTimers();
   });
   afterEach(() => {
-    environment.production = production;
+    environment.production = true;
     jest.useRealTimers();
   });
 
@@ -80,6 +85,20 @@ describe('RemoteConfigService', () => {
     expect(service.debugActionsEnabled()).toBe(true);
     expect(service.categoriesEnabled()).toBe(true);
     info.mockRestore();
+  });
+
+  it('[RC-06.4] applies a newly published value on the next production start', async () => {
+    environment.production = true;
+    const fetch = jest
+      .fn()
+      .mockResolvedValueOnce({ enable_debug_actions: false })
+      .mockResolvedValueOnce({ enable_debug_actions: true });
+    const service = setup({ fetch });
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(false);
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(true);
+    expect(fetch).toHaveBeenCalledTimes(2);
   });
 
   it('[RC-02] enables debug actions only for boolean true', async () => {

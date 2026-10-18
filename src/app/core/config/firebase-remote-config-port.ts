@@ -1,5 +1,6 @@
-import { Injectable, InjectionToken, inject, isDevMode } from '@angular/core';
+import { Injectable, InjectionToken, inject } from '@angular/core';
 import type { FirebaseOptions } from 'firebase/app';
+import { environment } from '../../../environments/environment';
 import {
   FEATURE_FLAG,
   REMOTE_CONFIG_TIMEOUT_MS,
@@ -14,7 +15,6 @@ const REQUIRED_CONFIG_FIELDS = [
   'appId',
   'messagingSenderId',
 ] as const;
-const FETCH_INTERVAL = { DEVELOPMENT: 60_000, PRODUCTION: 3_600_000 } as const;
 
 export const FIREBASE_CONFIG_FETCH = new InjectionToken<typeof fetch>(
   'FIREBASE_CONFIG_FETCH',
@@ -78,9 +78,7 @@ export class FirebaseRemoteConfigPort implements RemoteConfigPort {
     };
     config.settings = {
       fetchTimeoutMillis: REMOTE_CONFIG_TIMEOUT_MS,
-      minimumFetchIntervalMillis: isDevMode()
-        ? FETCH_INTERVAL.DEVELOPMENT
-        : FETCH_INTERVAL.PRODUCTION,
+      minimumFetchIntervalMillis: environment.remoteConfigFetchIntervalMs,
     };
     await configSdk.fetchAndActivate(config);
     return {

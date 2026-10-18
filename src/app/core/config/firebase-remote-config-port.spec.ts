@@ -1,10 +1,20 @@
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { TestBed } from '@angular/core/testing';
 import * as appSdk from 'firebase/app';
 import * as configSdk from 'firebase/remote-config';
+import { environment } from '../../../environments/environment';
 import {
   FirebaseRemoteConfigPort,
   FIREBASE_CONFIG_FETCH,
 } from './firebase-remote-config-port';
+
+jest.mock('../../../environments/environment', () => ({
+  environment: {
+    production: true,
+    remoteConfigFetchIntervalMs: 60_000,
+  },
+}));
 
 jest.mock('firebase/app', () => ({
   initializeApp: jest.fn(),
@@ -109,11 +119,56 @@ describe('FirebaseRemoteConfigPort', () => {
       fetchTimeoutMillis: 3000,
       minimumFetchIntervalMillis: 60000,
     });
+    expect(configSdk.fetchAndActivate).toHaveBeenCalledTimes(1);
     expect(configSdk.fetchAndActivate).toHaveBeenCalledWith(config);
     expect(configSdk.getValue).toHaveBeenCalledWith(
       config,
       'enable_categories',
     );
+  });
+
+  it('[ENV-01.6] reads the build mode from environment, not isDevMode', () => {
+    const portSource = readFileSync(
+      resolve(__dirname, 'firebase-remote-config-port.ts'),
+      'utf8',
+    );
+    const serviceSource = readFileSync(
+      resolve(__dirname, 'remote-config.ts'),
+      'utf8',
+    );
+    expect(portSource).not.toContain('isDevMode');
+    expect(serviceSource).not.toContain('isDevMode');
+    expect(serviceSource).toContain('environment.production');
+  });
+
+  it('[RC-06.1] uses environment.remoteConfigFetchIntervalMs as minimumFetchIntervalMillis', async () => {
+    const { config, port } = setup();
+    await port.fetch();
+    expect(config.settings.minimumFetchIntervalMillis).toBe(
+      environment.remoteConfigFetchIntervalMs,
+    );
+    expect(
+      readFileSync(
+        resolve(__dirname, 'firebase-remote-config-port.ts'),
+        'utf8',
+      ),
+    ).toContain('environment.remoteConfigFetchIntervalMs');
+  });
+
+  it('[RC-06.3] keeps the 3000 ms timeout and safe defaults', async () => {
+    const { config, port } = setup();
+    await port.fetch();
+    expect(config.settings.fetchTimeoutMillis).toBe(3000);
+    expect(config.defaultConfig).toEqual({
+      enable_categories: true,
+      enable_debug_actions: false,
+    });
+  });
+
+  it('[RC-06.5] calls fetchAndActivate exactly once per fetch', async () => {
+    const { port } = setup();
+    await port.fetch();
+    expect(configSdk.fetchAndActivate).toHaveBeenCalledTimes(1);
   });
 
   it.each([

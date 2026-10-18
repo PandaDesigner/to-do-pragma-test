@@ -8,7 +8,7 @@
     "spanish": "Español",
     "english": "English",
     "debug": "Debug",
-    "debugHint": "Crea 5.000 tareas de prueba para medir el rendimiento (virtual scroll).",
+    "debugHint": "Crea 5.000 tareas de prueba.",
     "debugAction": "Generar 5.000 tareas de prueba",
     "debugDelete": "Eliminar todas las tareas"
   },

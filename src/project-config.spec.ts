@@ -14,9 +14,71 @@ const requiredDependencies = [
 const layers = ['core', 'shared', 'layout', 'pages'];
 
 describe('INIT-01 / INIT-02 / INIT-04 project configuration', () => {
-  it('builds without ignored private environment files', () => {
-    expect(readProjectFile('angular.json')).not.toContain(
-      'src/environments/environment',
+  it('[ENV-01.1] production replaces environment.ts with environment.prod.ts', () => {
+    const angular = JSON.parse(readProjectFile('angular.json')) as {
+      projects: {
+        app: {
+          architect: {
+            build: {
+              configurations: {
+                production: {
+                  fileReplacements?: { replace: string; with: string }[];
+                };
+              };
+            };
+          };
+        };
+      };
+    };
+    expect(
+      angular.projects.app.architect.build.configurations.production
+        .fileReplacements,
+    ).toEqual([
+      {
+        replace: 'src/environments/environment.ts',
+        with: 'src/environments/environment.prod.ts',
+      },
+    ]);
+  });
+
+  it('[ENV-01.2] development keeps environment.ts without fileReplacements', () => {
+    const angular = JSON.parse(readProjectFile('angular.json')) as {
+      projects: {
+        app: {
+          architect: {
+            build: {
+              configurations: {
+                development: { fileReplacements?: unknown };
+              };
+            };
+          };
+        };
+      };
+    };
+    expect(
+      angular.projects.app.architect.build.configurations.development,
+    ).not.toHaveProperty('fileReplacements');
+  });
+
+  it('[ENV-01.4] gitignore keeps firebase-config, env files and keystores out of git', () => {
+    const gitignore = readProjectFile('.gitignore');
+    expect(gitignore).toContain('src/assets/firebase-config.json');
+    expect(gitignore).toContain('.env.*');
+    expect(gitignore).toContain('*.keystore');
+  });
+
+  it('[ENV-01.7] CI builds production without copying an environment example', () => {
+    const workflow = readProjectFile('.github/workflows/verify.yml');
+    const manifest = readProjectFile('package.json');
+    const verifyJob = workflow.slice(
+      workflow.indexOf('verify:'),
+      workflow.indexOf('android:'),
+    );
+    expect(verifyJob).toContain('npm run build -- --configuration production');
+    expect(manifest).not.toContain('ensure-environment');
+    expect(manifest).not.toContain('environment.example.ts');
+    expect(readProjectFile('scripts/ionic-build.cjs')).not.toContain(
+      'environment.example.ts',
     );
   });
 
@@ -67,11 +129,5 @@ describe('INIT-01 / INIT-02 / INIT-04 project configuration', () => {
   it.each(layers)('provides the %s layer and alias', (layer) => {
     expect(readProjectFile('tsconfig.json')).toContain(`"@${layer}/*"`);
     expect(existsSync(resolve(__dirname, 'app', layer))).toBe(true);
-  });
-
-  it('provides a credential-free environment example', () => {
-    expect(
-      existsSync(resolve(__dirname, 'environments/environment.example.ts')),
-    ).toBe(true);
   });
 });
