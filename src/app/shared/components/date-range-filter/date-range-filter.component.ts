@@ -31,7 +31,13 @@ export function startOfDay(isoDate: string): string {
 /**
  * Convierte el valor de ion-datetime (ISO con hora) en el rango YYYY-MM-DD
  * que consume el store. Se recorta a la fecha porque el filtro trabaja a
- * resolucion de dia. Un rango con menos de dos dias no se aplica.
+ * resolucion de dia. Un rango con menos de dos dias marcados no se aplica.
+ *
+ * El calendario acumula dias sobre el valor con el que se siembra, asi que con
+ * tres o mas entradas la seleccion ya no cabe en dos. En ese caso se toman los
+ * extremos de todos los dias marcados, para que un dia de mas no descarte el
+ * rango que el usuario acaba de elegir. Con cero, uno o dos dias el
+ * comportamiento es el de siempre.
  */
 export function toDateRange(
   value: readonly string[] | null | undefined,
@@ -39,11 +45,15 @@ export function toDateRange(
   const dates = (value ?? [])
     .map((entry) => entry.slice(0, 10))
     .filter((entry) => /^\d{4}-\d{2}-\d{2}$/.test(entry));
-  const [from, to] = dates;
-  if (!from || !to) {
+  if (dates.length < 2) {
     return null;
   }
-  return from <= to ? { from, to } : { from: to, to: from };
+  if (dates.length === 2) {
+    const [from, to] = dates;
+    return from <= to ? { from, to } : { from: to, to: from };
+  }
+  const ordered = [...dates].sort();
+  return { from: ordered[0], to: ordered[ordered.length - 1] };
 }
 
 /**
