@@ -63,7 +63,11 @@ describe('OpenSpec identifiers', () => {
     const defined = specSources.join('\n');
     // These titles shipped before a Requirement/Scenario header existed.
     // They stay as tests. They are not a second definition of another id.
+    // SPEC-01.* are this file. Archive skips the change that only mentioned them.
     const exceptions = new Set([
+      'SPEC-01.1',
+      'SPEC-01.2',
+      'SPEC-01.3',
       'DATA-SEC-01.1',
       'NAV-SEC-01.1',
       'NAV-SEC-01.2',
@@ -86,7 +90,7 @@ describe('OpenSpec identifiers', () => {
 
   it('[SPEC-01.3] every retroactive scenario is covered by a test', () => {
     const retro = readTextFiles(
-      resolve(root, 'openspec/changes/regularize-direct-commits/specs'),
+      resolve(root, 'openspec/specs/direct-commits'),
       '.md',
     );
     const scenarios = ids(/^#### Scenario: \[([A-Z][A-Z0-9.-]*)\]/gm, retro);
