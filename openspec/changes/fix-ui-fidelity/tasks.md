@@ -13,8 +13,8 @@
 - [x] 2.4 `npm run trace:check`
 - [x] 2.5 `npx openspec validate fix-ui-fidelity --strict` y `npx openspec validate --all --strict`
 - [x] 2.6 Comparación pixel a pixel contra `docs/mocks/` para los tres puntos, registrada en `verify-report.md`
-- [ ] 2.7 Capturas reales en `evidence/` a 375x812 light/dark es/en. Bloqueado en este entorno: sin simulador nativo y sin acceso al navegador del repo. Se documenta el motivo en `verify-report.md`. Ninguna tarea de implementación se marca hecha por esto; las comparaciones de 2.6 son measurements sobre el mock, no capturas del render.
-- [ ] 2.8 Fila de Notion del change. Pendiente: el conector de Notion no está disponible en este entorno.
+- [x] 2.7 Capturas reales en `evidence/`: 10 PNG a 375x812, light/dark es/en, de `today-badge`, `categories-empty` y `categories-sheet`. Capturadas con CDP sobre el build real servido en `localhost:8100` a 375x812. Son de navegador, no de simulador nativo y no son un diff de 2 px.
+- [ ] 2.8 Fila de Notion del change. Bloqueado: el conector de Notion no está disponible en este entorno.
 
 ## 3. Entrega
 
