@@ -1,101 +1,99 @@
-<div
-  class="swipe-host"
-  (pointerdown)="onPointerDown($event)"
-  (pointermove)="onPointerMove($event)"
-  (pointerup)="onPointerUp($event)"
-  (pointercancel)="onPointerUp($event)"
->
-  <article
-    class="task-row"
-    [class.completed]="task().status === 'completed'"
-    [class.note]="variant() === 'note'"
-    [style.transform]="'translateX(' + offset() + 'px)'"
-  >
-    @if (variant() === 'note') {
-      <span class="note-bullet" aria-hidden="true"></span>
-    } @else {
-      <label class="task-check">
-        <input
-          type="checkbox"
-          [checked]="task().status === 'completed'"
-          [disabled]="disabled() || !canToggle()"
-          [attr.aria-label]="
-            'task.complete' | translate: { title: task().title }
-          "
-          [style.--app-category-tint]="resolvedCategoryColor()"
-          (change)="taskToggle.emit(task().id)"
-        />
-      </label>
-    }
-    <div class="task-copy">
-      <strong class="task-title" [attr.title]="task().title">{{
-        task().title
-      }}</strong>
-      @if (variant() !== 'note') {
-        <div class="task-meta" [attr.title]="metaTitle()">
-          <span class="task-due">
-            <span class="task-due__date">{{ task().dueDate }}</span>
-            @if (task().time) {
-              <span class="task-due__time">{{ task().time }}</span>
-            }
-          </span>
-          @if (showCategories() && categoryName()) {
-            <span
-              class="category-dot"
-              [style.--app-category-tint]="resolvedCategoryColor()"
-              [attr.title]="categoryName()"
-              [attr.aria-label]="categoryName()"
-            >
-              @if (resolvedCategoryIcon(); as icon) {
-                <ion-icon
-                  class="category-dot__icon"
-                  [icon]="icon"
-                  aria-hidden="true"
-                ></ion-icon>
+<ion-item-sliding>
+  <ion-item lines="none" class="task-slide" [button]="false">
+    <article
+      class="task-row"
+      [class.completed]="task().status === 'completed'"
+      [class.note]="variant() === 'note'"
+    >
+      @if (variant() === 'note') {
+        <span class="note-bullet" aria-hidden="true"></span>
+      } @else {
+        <label class="task-check">
+          <input
+            type="checkbox"
+            [checked]="task().status === 'completed'"
+            [disabled]="disabled() || !canToggle()"
+            [attr.aria-label]="
+              'task.complete' | translate: { title: task().title }
+            "
+            [style.--app-category-tint]="resolvedCategoryColor()"
+            (change)="taskToggle.emit(task().id)"
+          />
+        </label>
+      }
+      <div class="task-copy">
+        <strong class="task-title" [attr.title]="task().title">{{
+          task().title
+        }}</strong>
+        @if (variant() !== 'note') {
+          <div class="task-meta" [attr.title]="metaTitle()">
+            <span class="task-due">
+              <span class="task-due__date">{{ task().dueDate }}</span>
+              @if (task().time) {
+                <span class="task-due__time">{{ task().time }}</span>
               }
             </span>
-          }
-        </div>
-      }
-    </div>
-    <div class="task-actions">
-      <button
-        type="button"
-        [disabled]="disabled()"
-        [attr.aria-label]="'task.edit' | translate: { title: task().title }"
-        (click)="edit.emit(task())"
-      >
-        <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
-      </button>
-      @for (event of extraActions(); track event) {
+            @if (showCategories() && categoryName()) {
+              <span
+                class="category-dot"
+                [style.--app-category-tint]="resolvedCategoryColor()"
+                [attr.title]="categoryName()"
+                [attr.aria-label]="categoryName()"
+              >
+                @if (resolvedCategoryIcon(); as icon) {
+                  <ion-icon
+                    class="category-dot__icon"
+                    [icon]="icon"
+                    aria-hidden="true"
+                  ></ion-icon>
+                }
+              </span>
+            }
+          </div>
+        }
+      </div>
+      <div class="task-actions">
         <button
           type="button"
           [disabled]="disabled()"
-          [attr.aria-label]="(labels[event] | translate) + ': ' + task().title"
-          (click)="action.emit({ id: task().id, event })"
+          [attr.aria-label]="'task.edit' | translate: { title: task().title }"
+          (click)="edit.emit(task())"
         >
-          <ion-icon [icon]="actionIcons[event]" aria-hidden="true" />
+          <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
         </button>
-      }
-      <button
-        type="button"
-        class="danger"
-        [disabled]="disabled()"
-        [attr.aria-label]="'task.delete' | translate: { title: task().title }"
-        (click)="remove.emit(task().id)"
-      >
-        <ion-icon [icon]="icons.trashOutline" aria-hidden="true" />
-      </button>
-    </div>
-  </article>
-  <button
-    type="button"
-    class="swipe-delete"
-    [class.open]="revealed()"
-    [disabled]="disabled()"
-    [attr.aria-label]="'task.delete' | translate: { title: task().title }"
-    (click)="remove.emit(task().id)"
-  >
-    {{ 'task.deleteAction' | translate }}
-  </button>
-</div>
+        @for (event of extraActions(); track event) {
+          <button
+            type="button"
+            [disabled]="disabled()"
+            [attr.aria-label]="
+              (labels[event] | translate) + ': ' + task().title
+            "
+            (click)="action.emit({ id: task().id, event })"
+          >
+            <ion-icon [icon]="actionIcons[event]" aria-hidden="true" />
+          </button>
+        }
+        <button
+          type="button"
+          class="danger"
+          [disabled]="disabled()"
+          [attr.aria-label]="'task.delete' | translate: { title: task().title }"
+          (click)="remove.emit(task().id)"
+        >
+          <ion-icon [icon]="icons.trashOutline" aria-hidden="true" />
+        </button>
+      </div>
+    </article>
+  </ion-item>
+  <ion-item-options side="end">
+    <ion-item-option
+      color="danger"
+      [disabled]="disabled()"
+      [attr.aria-label]="'task.delete' | translate: { title: task().title }"
+      (click)="remove.emit(task().id)"
+    >
+      <ion-icon [icon]="icons.trashOutline" aria-hidden="true" />
+      {{ 'task.deleteAction' | translate }}
+    </ion-item-option>
+  </ion-item-options>
+</ion-item-sliding>

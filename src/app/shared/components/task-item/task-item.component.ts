@@ -5,9 +5,14 @@ import {
   inject,
   input,
   output,
-  signal,
 } from '@angular/core';
-import { IonIcon } from '@ionic/angular/standalone';
+import {
+  IonIcon,
+  IonItem,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+} from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import {
   archiveOutline,
@@ -43,7 +48,6 @@ const ACTION_LABEL: Record<TaskEvent, string> = {
   RESCHEDULE: 'task.actions.RESCHEDULE',
   RESTORE: 'task.actions.RESTORE',
 };
-const SWIPE_OPEN = -80;
 const ACTION_ICON: Record<TaskEvent, string> = {
   COMPLETE: refreshOutline,
   EXPIRE: calendarOutline,
@@ -57,7 +61,14 @@ const ACTION_ICON: Record<TaskEvent, string> = {
   selector: 'app-task-item',
   templateUrl: './task-item.component.html',
   styleUrl: './task-item.component.scss',
-  imports: [IonIcon, TranslatePipe],
+  imports: [
+    IonIcon,
+    IonItem,
+    IonItemOption,
+    IonItemOptions,
+    IonItemSliding,
+    TranslatePipe,
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemComponent {
@@ -97,11 +108,6 @@ export class TaskItemComponent {
     }
     return parts.join(' · ');
   });
-  readonly offset = signal(0);
-  readonly revealed = signal(false);
-  private pointerId: number | null = null;
-  private origin = 0;
-  private dragging = false;
   readonly showCategories = input(true);
   readonly disabled = input(false);
   readonly taskToggle = output<string>();
@@ -122,40 +128,4 @@ export class TaskItemComponent {
       (event) => event !== TASK_EVENT.COMPLETE && event !== TASK_EVENT.REOPEN,
     ),
   );
-
-  onPointerDown(event: PointerEvent): void {
-    if (this.disabled() || event.button !== 0) {
-      return;
-    }
-    this.pointerId = event.pointerId;
-    this.origin = event.clientX;
-    this.dragging = false;
-  }
-
-  onPointerMove(event: PointerEvent): void {
-    if (this.pointerId !== event.pointerId) {
-      return;
-    }
-    const delta = event.clientX - this.origin;
-    if (!this.dragging && Math.abs(delta) < 8) {
-      return;
-    }
-    this.dragging = true;
-    const base = this.revealed() ? SWIPE_OPEN : 0;
-    this.offset.set(Math.max(-96, Math.min(0, base + delta)));
-  }
-
-  onPointerUp(event: PointerEvent): void {
-    if (this.pointerId !== event.pointerId) {
-      return;
-    }
-    this.pointerId = null;
-    if (!this.dragging) {
-      return;
-    }
-    this.dragging = false;
-    const open = this.offset() <= SWIPE_OPEN;
-    this.revealed.set(open);
-    this.offset.set(open ? SWIPE_OPEN : 0);
-  }
 }

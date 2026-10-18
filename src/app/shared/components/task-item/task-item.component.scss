@@ -1,29 +1,14 @@
 :host {
   display: block;
 }
-.swipe-host {
-  position: relative;
-  overflow: hidden;
+.task-slide {
+  --background: transparent;
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --border-width: 0;
 }
-.task-row {
-  position: relative;
-  z-index: 1;
-  background: var(--app-surface);
-}
-.swipe-delete {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 0;
-  width: 80px;
-  height: 100%;
-  min-height: 65px;
-  background: var(--ion-color-danger);
-  color: var(--app-surface);
-  opacity: 0;
-}
-.swipe-delete.open {
-  opacity: 1;
+ion-item-option {
+  width: var(--app-swipe-action-width);
 }
 .note-bullet {
   width: 8px;
