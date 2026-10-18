@@ -38,7 +38,9 @@ describe('UI-25 Contraste del texto de las pestañas', () => {
       resolve(__dirname, 'variables.scss'),
       'utf8',
     );
-    expect(variables).toMatch(/--app-tab-label:\s*#\{t\.\$color-primary-dark\}/);
+    expect(variables).toMatch(
+      /--app-tab-label:\s*#\{t\.\$color-primary-dark\}/,
+    );
   });
 
   it('[UI-25.2] la marca invertida se reserva a la marca y no se usa para el texto del rail', () => {

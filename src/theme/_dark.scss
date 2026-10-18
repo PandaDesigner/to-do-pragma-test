@@ -21,6 +21,10 @@
   --tab-my: #e8e1b8d9;
   --tab-more: #c9c9c9d9;
   --tab-filler: #4b3f6bd9;
+  // La tinta del texto de las pestañas del rail no es la marca invertida: en
+  // claro es color/primary-dark y en oscuro color/text, para que siga legible
+  // sobre el relleno translucido de su propia pestaña.
+  --app-tab-label: var(--app-text);
   --ion-color-primary: #8b7fc0;
 }
 
