@@ -20,15 +20,15 @@
 
 ## 4. Rango en el store (RED)
 
-- [ ] 4.1 `test(store/task)`: `setDateRange` guarda el rango, restablece `pageCount` a 1 y `filteredTasks` respeta el rango. Escenarios DATE-FILTER-03.1, 03.2
-- [ ] 4.2 Commit `test(store):`
+- [x] 4.1 `test(store/task)`: `setDateRange` guarda el rango, restablece `pageCount` a 1 y `filteredTasks` respeta el rango. Escenarios DATE-FILTER-03.1, 03.2
+- [x] 4.2 Commit `test(store):` (e7ca4ef)
 
 ## 5. Rango en el store (GREEN)
 
-- [ ] 5.1 Estado `dateRange` en `TaskStoreState`, inicial `null`
-- [ ] 5.2 `setDateRange(range)` con `patchState` y `pageCount: 1`
-- [ ] 5.3 `filteredTasks` encadena el rango con los filtros existentes
-- [ ] 5.4 Commit `feat(store):`
+- [x] 5.1 Estado `dateRange` en `TaskStoreState`, inicial `null`
+- [x] 5.2 `setDateRange(range)` con `patchState` y `pageCount: 1`
+- [x] 5.3 `filteredTasks` encadena el rango con los filtros existentes
+- [x] 5.4 Commit `feat(store):`
 
 ## 6. Componente shared del selector (RED)
 

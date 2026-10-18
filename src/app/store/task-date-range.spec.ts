@@ -67,6 +67,7 @@ describe('DATE-FILTER-03 Rango de fechas en el store', () => {
       ),
     );
     await store.refresh();
+    store.setPageSize(4);
     store.setPage(2);
     expect(store.pageCount()).toBe(2);
     store.setDateRange({ from: '2026-02-01', to: '2026-02-02' });

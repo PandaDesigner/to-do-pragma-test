@@ -13,6 +13,7 @@ import {
   filterTasks,
   sortTasksByDueDate,
   TASK_SORT,
+  type TaskDateRange,
 } from '../domain/task-strategy';
 import { filterTasksBySection } from '../domain/category/filter-by-section';
 import { sectionContainsCategory } from './category/section';
@@ -34,6 +35,7 @@ interface TaskStoreState extends OperationStatus {
   categoryId: string | null | undefined;
   categories: readonly Category[];
   section: CategorySection;
+  dateRange: TaskDateRange | null;
   pageSize: number;
   pageCount: number;
 }
@@ -46,6 +48,7 @@ const initialState: TaskStoreState = {
   categoryId: undefined,
   categories: [],
   section: CATEGORY_SECTION.GENERAL,
+  dateRange: null,
   pageSize: TASK_PAGE_SIZE,
   pageCount: 1,
   busy: false,
@@ -62,6 +65,7 @@ export const TaskStore = signalStore(
           filterTasks(store.tasks(), {
             statuses: store.statuses(),
             categoryId: store.categoryId(),
+            dateRange: store.dateRange(),
           }),
           store.categories(),
           store.section(),
@@ -187,6 +191,9 @@ export const TaskStore = signalStore(
         },
         setSection(section: CategorySection): void {
           patchState(store, { section, categoryId: undefined, pageCount: 1 });
+        },
+        setDateRange(range: TaskDateRange | null): void {
+          patchState(store, { dateRange: range, pageCount: 1 });
         },
         loadMore(): void {
           this.setPage(store.pageCount() + 1);
