@@ -1,9 +1,17 @@
 import { Injectable, inject, signal } from '@angular/core';
+import { environment } from '../../../environments/environment';
 import { REMOTE_CONFIG_PORT } from '../di/tokens';
 import {
   REMOTE_CONFIG_TIMEOUT_MS,
   type RemoteConfigPort,
 } from './remote-config-port';
+
+function resolveDebugActions(remoteValue: unknown): boolean {
+  if (!environment.production) {
+    return true;
+  }
+  return remoteValue === true;
+}
 
 interface FlagRead {
   categoriesEnabled: boolean;
@@ -46,7 +54,9 @@ async function readFlags(
     }
     return {
       categoriesEnabled: outcome.flags.enable_categories !== false,
-      debugActionsEnabled: outcome.flags.enable_debug_actions === true,
+      debugActionsEnabled: resolveDebugActions(
+        outcome.flags.enable_debug_actions,
+      ),
       error: null,
     };
   } catch (error) {
@@ -56,14 +66,14 @@ async function readFlags(
       );
       return {
         categoriesEnabled: true,
-        debugActionsEnabled: false,
+        debugActionsEnabled: resolveDebugActions(undefined),
         error: null,
       };
     }
     const message = error instanceof Error ? error.message : String(error);
     return {
       categoriesEnabled: true,
-      debugActionsEnabled: false,
+      debugActionsEnabled: resolveDebugActions(undefined),
       error: `No se pudo consultar la configuración remota: ${message}`,
     };
   } finally {
@@ -75,7 +85,7 @@ async function readFlags(
 export class RemoteConfigService {
   private readonly port = inject(REMOTE_CONFIG_PORT);
   private readonly categoriesState = signal(true);
-  private readonly debugActionsState = signal(false);
+  private readonly debugActionsState = signal(resolveDebugActions(undefined));
   private readonly errorState = signal<string | null>(null);
   private readonly loadingState = signal(false);
   readonly categoriesEnabled = this.categoriesState.asReadonly();

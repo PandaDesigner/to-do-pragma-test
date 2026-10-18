@@ -1,11 +1,20 @@
 import { TestBed } from '@angular/core/testing';
+import { environment } from '../../../environments/environment';
 import { REMOTE_CONFIG_PORT } from '../di/tokens';
 import { RemoteConfigService } from './remote-config';
 import type { RemoteConfigPort } from './remote-config-port';
 
 describe('RemoteConfigService', () => {
-  beforeEach(() => jest.useFakeTimers());
-  afterEach(() => jest.useRealTimers());
+  const production = environment.production;
+
+  beforeEach(() => {
+    environment.production = true;
+    jest.useFakeTimers();
+  });
+  afterEach(() => {
+    environment.production = production;
+    jest.useRealTimers();
+  });
 
   function setup(port: RemoteConfigPort) {
     TestBed.configureTestingModule({
@@ -55,6 +64,23 @@ describe('RemoteConfigService', () => {
       expect(service.debugActionsEnabled()).toBe(false);
     },
   );
+
+  it('enables debug actions in a development build', async () => {
+    environment.production = false;
+    const info = jest
+      .spyOn(console, 'info')
+      .mockImplementation(() => undefined);
+    const service = setup({
+      fetch: async () => {
+        throw new Error('Falta la configuración Firebase local (HTTP 404).');
+      },
+    });
+    expect(service.debugActionsEnabled()).toBe(true);
+    await service.initialize();
+    expect(service.debugActionsEnabled()).toBe(true);
+    expect(service.categoriesEnabled()).toBe(true);
+    info.mockRestore();
+  });
 
   it('[RC-02] enables debug actions only for boolean true', async () => {
     const service = setup({
