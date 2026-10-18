@@ -94,6 +94,7 @@ URL de un nodo: `https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-4
 | C6 native-builds           | No (iconos y splash ya definidos)                         | 3fbcb44197738114ae6bdc9eeb915073 |
 | C7 docs-delivery           | **Sí** (capturas para el README)                          | 3fbcb4419773817e8a53d35d4e0facd2 |
 | fix-ui-fidelity            | **Sí** (empty state, sheet, badge HOY)                    | 3fdcb44197738178aa3bc47f035f60ce |
+| fix-qc-audit-findings     | **Sí** (filtro por rango, `lang`, secciones, cabecera)      | 3fdcb441977381658727fb5d86177859 |
 
 ### Reglas de actualización
 
