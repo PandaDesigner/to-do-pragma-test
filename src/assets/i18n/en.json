@@ -43,6 +43,7 @@
     "listLabel": "Categories",
     "emptyTitle": "Your first list",
     "emptyHint": "Create a category to organize your tasks.",
+    "emptyAction": "Create a category",
     "disabled": "Categories are disabled by remote configuration.",
     "count": "{{count}} tasks",
     "edit": "Edit {{name}}",
@@ -87,7 +88,7 @@
     }
   },
   "todo": {
-    "today": "TODAY ›",
+    "today": "TODAY",
     "pending": "Uncompleted tasks",
     "reschedule": "Reschedule to Today",
     "all": "All",

@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import {
   IonContent,
+  IonIcon,
   IonInfiniteScroll,
   IonInfiniteScrollContent,
   IonModal,
@@ -78,6 +79,7 @@ export const PENDING_PANEL = {
   styleUrl: './tasks.page.scss',
   imports: [
     IonContent,
+    IonIcon,
     IonInfiniteScroll,
     IonInfiniteScrollContent,
     IonModal,

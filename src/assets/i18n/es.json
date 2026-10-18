@@ -43,6 +43,7 @@
     "listLabel": "Categorías",
     "emptyTitle": "Tu primera lista",
     "emptyHint": "Crea una categoría para organizar tus tareas.",
+    "emptyAction": "Crear categoría",
     "disabled": "Las categorías están deshabilitadas por configuración remota.",
     "count": "{{count}} tareas",
     "edit": "Editar {{name}}",
@@ -87,7 +88,7 @@
     }
   },
   "todo": {
-    "today": "HOY ›",
+    "today": "HOY",
     "pending": "Tareas pendientes",
     "reschedule": "Reprogramar para hoy",
     "all": "Todas",

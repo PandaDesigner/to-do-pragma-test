@@ -37,6 +37,9 @@
       <app-empty-state
         [title]="'category.emptyTitle' | translate"
         [hint]="'category.emptyHint' | translate"
+        [actionLabel]="'category.emptyAction' | translate"
+        [illustrated]="true"
+        (action)="openCreateSheet()"
       />
       }
     </section>

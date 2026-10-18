@@ -196,7 +196,7 @@ main.notebook-page {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 63px;
+  min-width: 63px;
   height: 21px;
   border: 1px solid var(--app-accent-link);
   border-radius: var(--app-radius-badge);
@@ -204,6 +204,10 @@ main.notebook-page {
   font-size: var(--app-font-size-badge);
   font-weight: 600;
   letter-spacing: 0.4px;
+}
+
+.today-badge ion-icon {
+  font-size: 12px;
 }
 
 .pending-panel {

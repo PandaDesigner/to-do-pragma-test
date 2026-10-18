@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { join } from 'node:path';
 import en from '../../../../assets/i18n/en.json';
 import { InMemoryRepository } from '../../../data/repositories/in-memory-repository';
 import {
@@ -391,6 +392,61 @@ describe('CategorySheetComponent', () => {
       'primary',
     ]) {
       expect(component.fillColor(key as never)).toMatch(/var\(--app-category-/);
+    }
+  });
+
+  it('[SHEET-UI-01.1] keeps the primary action first in the form actions', async () => {
+    const { store, fixture } = await setup();
+    store.openCategorySheet({ mode: 'create' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    const modal = [...document.querySelectorAll('ion-modal')].at(-1);
+    const actions = modal?.querySelectorAll('.form-actions > button');
+    expect(actions?.length).toBeGreaterThan(0);
+    expect(actions?.[0].classList).toContain('primary-action');
+    // Figma 4:869 compone un unico boton de accion de 327x50 en y=730 y no
+    // registra Cancel ni Delete, asi que el orden del DOM no se altera.
+    expect(actions?.[0].textContent.trim()).toBe('Save category');
+  });
+
+  it('[SHEET-UI-01.2] orders the Edit actions as save, cancel, delete', async () => {
+    const { store, fixture } = await setup();
+    store.openCategorySheet({ mode: 'edit', draft });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    await new Promise<void>((resolve) => setTimeout(resolve, 0));
+    fixture.detectChanges();
+    const modal = [...document.querySelectorAll('ion-modal')].at(-1);
+    const actions = [
+      ...(modal?.querySelectorAll('.form-actions > button') ?? []),
+    ];
+    expect(actions.map((button) => button.className)).toEqual([
+      'primary primary-action',
+      'sheet-cancel',
+      'danger-link',
+    ]);
+    expect(actions.map((button) => button.textContent?.trim())).toEqual([
+      'Save changes',
+      'Cancel',
+      'Delete category',
+    ]);
+  });
+
+  it('[SHEET-UI-01.3] keeps the form actions styles free of order-dependent selectors', async () => {
+    const { readFileSync } = require('node:fs') as {
+      readFileSync: (path: string, encoding: string) => string;
+    };
+    const scss = readFileSync(
+      join(__dirname, 'category-sheet.component.scss'),
+      'utf8',
+    );
+    const actions = scss.slice(scss.indexOf('.form-actions'));
+    expect(actions).toMatch(/display:\s*flex/);
+    expect(actions).toMatch(/flex-direction:\s*column/);
+    for (const selector of [':first-child', ':last-child', ':nth-', '>']) {
+      expect(scss).not.toContain(selector);
     }
   });
 });

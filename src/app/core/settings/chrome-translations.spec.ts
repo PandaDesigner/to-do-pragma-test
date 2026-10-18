@@ -82,4 +82,16 @@ describe('Chrome translations', () => {
       prefixes.flatMap((prefix) => keysUnder(english, prefix)).sort(),
     );
   });
+
+  it('[TODAY-UI-01.2] keeps the chevron out of the translatable label', () => {
+    expect(spanish['todo.today']).toBe('HOY');
+    expect(english['todo.today']).toBe('TODAY');
+    expect(spanish['todo.today']).not.toContain('›');
+    expect(english['todo.today']).not.toContain('›');
+  });
+
+  it('[CAT-UI-01.1] resolves the empty state action label in both locales', () => {
+    expect(spanish['category.emptyAction']).toEqual(expect.any(String));
+    expect(english['category.emptyAction']).toEqual(expect.any(String));
+  });
 });
