@@ -1,0 +1,24 @@
+## 1. Comportamiento
+
+- [x] 1.1 Empty state de Categories con ilustración y CTA, con `[CAT-UI-01.1]`, `[CAT-UI-01.2]` y `[CAT-UI-01.3]` en `categories.page.spec.ts`
+- [x] 1.2 Chevron del badge HOY como `ion-icon` y `›` fuera de la traducción, con `[TODAY-UI-01.1]`, `[TODAY-UI-01.2]`, `[TODAY-UI-01.3]` y `[TODAY-UI-01.4]` en `tasks.page.spec.ts` y `chrome-translations.spec.ts`
+- [x] 1.3 Trazabilidad con escenario real para `4:440`, `4:520` y `4:1062`, con `[TRACE-UI-01.1]`
+- [ ] 1.4 Orden de los botones del sheet: **no implementado a propósito**. `docs/mocks/categories-form-sheet.png` y `docs/design.json` 4:869 muestran un único botón de acción en `y=730` y ningún Cancel ni Delete en ese nodo. Evidencia en `design.md`. La fila 4:869 sigue como `registro`.
+
+## 2. Verificación
+
+- [x] 2.1 `npm test` con cobertura; umbrales intactos (80 global, 95 domain, 90 data/store/shared)
+- [x] 2.2 `npm run lint`, `npm run lint:styles` y `npm run format:check`
+- [x] 2.3 `npm run typecheck`
+- [x] 2.4 `npm run trace:check`
+- [x] 2.5 `npx openspec validate fix-ui-fidelity --strict` y `npx openspec validate --all --strict`
+- [x] 2.6 Comparación pixel a pixel contra `docs/mocks/` para los tres puntos, registrada en `verify-report.md`
+- [ ] 2.7 Capturas reales en `evidence/` a 375x812 light/dark es/en. Bloqueado en este entorno: sin simulador nativo y sin acceso al navegador del repo. Se documenta el motivo en `verify-report.md`. Ninguna tarea de implementación se marca hecha por esto; las comparaciones de 2.6 son measurements sobre el mock, no capturas del render.
+- [ ] 2.8 Fila de Notion del change. Pendiente: el conector de Notion no está disponible en este entorno.
+
+## 3. Entrega
+
+- [x] 3.1 PR a `develop` con sección Reutilización
+- [ ] 3.2 Merge con merge commit y borrado de rama
+- [ ] 3.3 `chore/archive-fix-ui-fidelity`, `openspec archive`, PR propio, checks y merge
+- [ ] 3.4 Línea en `docs/progress-log.md`
