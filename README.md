@@ -50,14 +50,14 @@ La fuente funcional es `docs/prueba-tecnica.pdf`.
 
 1. **Versionado.** Repositorio Git. La rama de entrega es `develop`.
 2. **Híbrido con Cordova.** Android e iOS. Cómo compilar está en [Build nativo](#build-nativo). En el navegador: `npm ci` y `npm start`.
-3. **Firebase Remote Config.** El flag `enable_categories` muestra u oculta Routine, Event y My. Si la red falla o tarda más de 3 s, el flag queda en `true`. El valor vivo se ve en el aviso `enable_categories` del shell.
-4. **Rendimiento.** Persistencia con `@Debounce(300)`, virtual scroll desde 200 tareas y OnPush. Detalle en [Optimizaciones](#optimizaciones).
+3. **Firebase Remote Config.** El flag `enable_categories` queda en `true` salvo que el valor remoto sea el booleano `false` o el texto `false`. Un HTTP 404 o un corte a los 3 s también lo dejan en `true`. El shell no muestra el valor del flag. Con el flag en `false`, `Routine` y `Event` siguen visibles y deshabilitadas, y `My` se oculta.
+4. **Rendimiento.** Persistencia con `@Debounce(300)` y OnPush. La lista de tareas pagina de a 20 (`PAGE_SIZE` en `src/app/domain/pagination.ts`). Detalle en [Optimizaciones](#optimizaciones).
 5. **APK e IPA.** Los comandos están abajo. Un APK firmado y un IPA firmado necesitan keystore y cuenta de Apple Developer en la máquina local. Esos secretos no están en el repo. Sin ellos el build de iOS puede validar el `.app` con `npm run build:ios` (`CODE_SIGNING_ALLOWED=NO`), y ese binario no se instala en un dispositivo.
 
 ### Respuestas
 
 - **Desafíos.** Cordova reescribe `cordova.platforms` al añadir una plataforma (`npm run clean:platforms` lo devuelve a `android` e `ios`). El release de Android no puede versionar contraseñas: `scripts/build-android-release.cjs` las toma de `.env.local` y restaura `build.json`. Una cuenta Apple ID gratuita no emite provisioning profile, así que el IPA firmado queda bloqueado sin el Developer Program. TypeScript 6 exige `paths` relativos al `tsconfig`.
-- **Optimización.** Una ráfaga de guardados escribe una sola vez en SQLite. Listas grandes no montan todas las filas: `cdk-virtual-scroll-viewport` entra a partir de 200 tareas. El flag remoto no deja la UI colgada: corta a 3 s y no aplica una respuesta tardía.
+- **Optimización.** Una ráfaga de guardados escribe una sola vez en SQLite. La lista de tareas muestra una página de 20 filas; el scroll infinito pide la página siguiente y el paginador muestra como máximo 3 números. El flag remoto no deja la UI colgada: corta a 3 s y no aplica una respuesta tardía.
 - **Calidad.** Jest con umbrales por capa (global 80 %, dominio 95 %, data y store 90 %), `tsc --noEmit`, ESLint y Prettier. El dominio no importa Angular ni Cordova. Cada escenario de OpenSpec lleva su id en el título del test. La matriz está en `openspec/traceability.md`.
 
 ## Arquitectura
@@ -75,7 +75,7 @@ Patrones clave:
 
 ## Pestañas y secciones
 
-- Rail lateral con cinco pestañas: `Todo`, `Routine`, `Event`, `My`, `More`. Las dos primeras se ven y se desactivan solo cuando el flag `enable_categories` está en `false`.
+- Rail lateral con cinco pestañas: `Todo`, `Routine`, `Event`, `My`, `More`. Con `enable_categories` en `false`, `Routine` y `Event` siguen visibles y deshabilitadas, y `My` se oculta. No hay un aviso con el valor del flag.
 - En `My` se gestionan las categorías. Cada categoría tiene una `section` (`general` por defecto si no se indica) y un `colorToken` que la UI traduce a un color de la paleta. Las tareas asignadas a una categoría de la sección `routine` o `event` solo aparecen en su pestaña; el resto se ve en `Todo`.
 - La creación desde `Routine` o `Event` solo permite categorías de esa sección. Desde `Todo` se ofrece cualquier categoría y la opción `Sin categoría`.
 
@@ -175,7 +175,7 @@ Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcwo
 ## Optimizaciones
 
 - **Persistencia con `@Debounce(300)`**: una ráfaga de `save` produce una sola escritura en SQLite. Con el botón debug que genera 5.000 tareas, el `Repository.persist()` no genera 5.000 writes — se mide en las pruebas de `IonicStorageTaskRepository`.
-- **Virtual scroll desde 200 tareas**: `cdk-virtual-scroll-viewport` renderiza solo el viewport visible. `shouldVirtualize()` decide por umbral. El debug de 5.000 tareas pasa de `@for` a `cdk-virtual-scroll` automáticamente.
+- **Lista de tareas en páginas de 20**: `visibleTasks` es la página actual. El pozo `.task-scroll` (máximo 60vh) incluye un scroll infinito que avanza una página. Si hay más de una página, el paginador muestra anterior, como máximo 3 números y siguiente. La lista de tareas no usa `cdk-virtual-scroll-viewport`. El debug de 5.000 tareas sigue disponible en desarrollo y no cambia ese modo de lista.
 - **OnPush + trackBy en todas las páginas**: evita re-renderizados por referencia y reduce trabajo del change detector. `trackBy: trackById` está en `tasks.page.ts` y `categories.page.ts`.
 - **Filtros y orden puros**: `filterTasks` y `sortTasksByDueDate` no mutan la entrada; los stores los componen sin alocar memoria extra.
 - **Feature flag con timeout**: `RemoteConfigService.isCategoriesEnabled(port, 3000)` corta a 3 s, devuelve `true` por defecto ante fallo de red o timeout, y nunca aplica una respuesta tardía.
