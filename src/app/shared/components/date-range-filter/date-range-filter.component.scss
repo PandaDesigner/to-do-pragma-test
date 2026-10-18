@@ -7,6 +7,10 @@
   flex-direction: column;
   gap: var(--app-space-12);
   height: 100%;
+  // Sin min-height: 0, un hijo con flex: 1 1 auto hace crecer el contenedor
+  // hasta la altura de su contenido en vez de recortarlo. Las acciones se
+  // quedaban 306px por debajo del viewport y no había forma de aplicarlas.
+  min-height: 0;
   box-sizing: border-box;
   padding: var(--app-space-16);
   background: var(--app-surface);
@@ -30,6 +34,9 @@
 .date-filter__calendar {
   flex: 1 1 auto;
   min-height: 0;
+  // Recorta el calendario si el breakpoint deja menos espacio del que pide el
+  // alto fijo, en vez de empujar las acciones fuera del modal.
+  max-height: 330px;
   overflow: hidden;
 }
 
