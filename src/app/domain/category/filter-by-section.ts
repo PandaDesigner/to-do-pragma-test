@@ -30,7 +30,10 @@ export function filterTasksBySection(
   section: CategorySection,
 ): Task[] {
   if (categories.length === 0) {
-    return [...tasks];
+    if (section !== CATEGORY_SECTION.GENERAL) {
+      return [];
+    }
+    return tasks.filter((task) => task.categoryId === null);
   }
   if (section === CATEGORY_SECTION.GENERAL) {
     const generalCategoryIds = new Set(
