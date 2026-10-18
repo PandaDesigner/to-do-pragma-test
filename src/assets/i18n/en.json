@@ -106,7 +106,7 @@
       "hint": "Pick the start and the end date.",
       "apply": "Apply",
       "cancel": "Cancel",
-      "clear": "Clear filter"
+      "clear": "Clear"
     },
     "editor": {
       "new": "New task",

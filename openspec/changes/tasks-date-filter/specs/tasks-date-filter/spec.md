@@ -120,6 +120,14 @@ El selector de rango MUST presentarse en un `ion-alert` que monta un calendario 
 - **THEN** el calendario no queda desplazado lateralmente respecto a la fila
 - **AND** su holgura a la izquierda y a la derecha es la misma
 
+#### Scenario: DATE-FILTER-02.14 Los tres botones reparten el ancho del calendario
+
+- **GIVEN** un modal de rango de fechas abierto
+- **WHEN** se miden los tres botones de la fila de acciones
+- **THEN** los tres miden lo mismo, un tercio del ancho del calendario
+- **AND** ninguno queda más ancho que los otros por su texto
+- **AND** no queda hueco entre ellos ni fuera de sus extremos
+
 ### Requirement: DATE-FILTER-03 Filtro por rango en el store
 
 El store de tareas MUST aceptar un rango de fechas con la misma forma que el resto de sus filtros: aplicar el estado y restablecer la paginación a la página 1. El filtro MUST ser inclusivo en ambos extremos, por el campo de vencimiento, y MUST combinarse por conjunción con el filtro de estados y el de categoría. Figma: 4:440.

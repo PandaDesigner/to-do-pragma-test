@@ -197,3 +197,15 @@ frente al 207 de la fila, que mide 382.
 - [x] 25.3 `fix`: `max-width: none` y `width: 100%` con `margin-inline: auto` en el calendario
 - [x] 25.4 Verificar en navegador: calendario, fila y acciones los tres en 382 px, centro 207, holgura 0 a cada lado
 - [x] 25.5 Suite completa (559 tests), lint, stylelint, tipos, `trace:check` y `openspec validate` en verde
+
+## 26. Anchos iguales en los tres botones
+
+Medido: los botones ocupaban la fila completa pero con anchos desiguales, 136, 97 y 80 px, porque
+cada uno tomaba lo que necesitaba su texto.
+
+- [x] 26.1 `test`: `[DATE-FILTER-02.14]` falla sin `flex: 1 1 0` y `gap: 0`
+- [x] 26.2 Declarar el escenario en el spec delta de `tasks-date-filter`
+- [x] 26.3 `fix`: `flex: 1 1 0` y `min-width: 0` en los botones, `gap: 0` en la fila
+- [x] 26.4 `fix`: acortar la etiqueta `todo.dateFilter.clear` a "CLEAR" / "Quitar", porque el texto largo flotaba en un botón de 127 px
+- [x] 26.5 Verificar en navegador: los tres en 127 px, contiguos de 16 a 398, sin huecos
+- [x] 26.6 Suite completa (560 tests), lint, stylelint, tipos, `trace:check` y `openspec validate` en verde

@@ -106,7 +106,7 @@
       "hint": "Elige la fecha inicial y la final.",
       "apply": "Aplicar",
       "cancel": "Cancelar",
-      "clear": "Quitar filtro"
+      "clear": "Quitar"
     },
     "editor": {
       "new": "Nueva tarea",

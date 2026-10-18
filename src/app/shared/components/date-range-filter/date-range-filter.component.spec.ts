@@ -407,8 +407,6 @@ describe('DateRangeFilterComponent', () => {
     // acaba en 396 contra los 398 del calendario y deja 43px de aire a la
     // izquierda, con el centro del grupo en 228 frente al 207 del calendario.
     expect(body).not.toContain('justify-content: flex-end');
-    // Y la fila tiene que repartir los botones a lo ancho del calendario.
-    expect(body).toContain('justify-content: space-between');
 
     // ion-button mete 2px de margen a cada lado, que descuadran los bordes
     // exteriores, asi que hay que neutralizarlos en su propia regla.
@@ -448,5 +446,39 @@ describe('DateRangeFilterComponent', () => {
     expect(body).toContain('max-width: none');
     expect(body).toContain('width: 100%');
     expect(body).toContain('margin-inline: auto');
+  });
+
+  it('[DATE-FILTER-02.14] los tres botones reparten el ancho del calendario', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const actions = overlay.querySelector(
+      '.date-filter__actions',
+    ) as HTMLElement | null;
+    expect(actions).toBeTruthy();
+
+    // Los botones miden ahora 136, 97 y 80 px, porque cada uno toma lo que
+    // necesita su texto. Hay que igualarlos a un tercio del calendario y
+    // repartirlos sin hueco: 382 / 3 = 127.33, tres de 127 con un resto de 1 px.
+    const buttons = [...(actions?.querySelectorAll('ion-button') ?? [])];
+    expect(buttons.length).toBe(3);
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    // Cada boton ocupa un tercio exacto del ancho del calendario: basis 0 para
+    // repartir por igual y no segun el texto, con min-width: 0 para que el texto
+    // largo de Quitar no impida encogerse.
+    const buttonRule = styles.match(
+      /\.date-filter__actions\s+ion-button\s*\{([^}]*)\}/,
+    );
+    expect(buttonRule).toBeTruthy();
+    expect(buttonRule?.[1]).toContain('flex: 1 1 0');
+    expect(buttonRule?.[1]).toContain('min-width: 0');
+
+    // Y la fila no deja huecos entre ellos.
+    const rule = styles.match(/\.date-filter__actions\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    expect(rule?.[1]).toContain('gap: 0');
   });
 });
