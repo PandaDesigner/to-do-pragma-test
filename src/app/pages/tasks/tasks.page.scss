@@ -117,8 +117,9 @@ main.notebook-page {
 
 .task-scroll {
   position: relative;
-  flex: 1 1 auto;
-  height: 0;
+  flex: 0 1 60vw;
+  width: 100%;
+  max-height: 60vw;
   min-height: 0;
 }
 
