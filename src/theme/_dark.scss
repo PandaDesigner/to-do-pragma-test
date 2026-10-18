@@ -29,6 +29,8 @@
   // claro es color/primary-dark y en oscuro color/text, para que siga legible
   // sobre el relleno translucido de su propia pestaña.
   --app-tab-label: var(--app-text);
+  --app-rail-ink-mix: 45%;
+  --app-rail-ink-base: #0b0a12;
   --ion-color-primary: #8b7fc0;
 }
 
