@@ -213,3 +213,15 @@ El botón rápido de hoy MUST declarar un padding horizontal holgado, mayor que 
 - **WHEN** se renderiza el botón de hoy
 - **THEN** su padding inline declara un token de espaciado mayor que el mínimo
 - **AND** la etiqueta y el chevron quedan separados del borde del botón
+### Requirement: DATE-FILTER-08 Tinta propia por categoría en el rail
+
+Cada pestaña del rail lateral MUST derivar el color de su texto del color de su propio fondo, de modo que la etiqueta se lea como una versión oscurecida del color de la categoría en lugar de un tono neutro común a todas. El derivado MUST obtenerse por mezcla del propio relleno, MUST diferir entre categorías y MUST alcanzar contraste suficiente contra su fondo en claro y en oscuro. La pestaña activa MUST conservar la tinta de texto sobre su fondo de superficie. Figma: 4:440.
+
+#### Scenario: DATE-FILTER-02.18 Cada pestaña del rail usa la tinta de su categoría
+
+- **GIVEN** la pantalla de tareas con el rail lateral visible
+- **WHEN** se renderizan las pestañas de categoría
+- **THEN** cada texto toma su color del relleno de su propia pestaña y no de un token común
+- **AND** las cuatro tintas difieren entre sí
+- **AND** la pestaña activa conserva la tinta de texto
+

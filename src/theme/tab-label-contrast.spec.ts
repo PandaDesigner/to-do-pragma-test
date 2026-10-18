@@ -20,9 +20,11 @@ function railRule(): string {
 }
 
 describe('UI-25 Contraste del texto de las pestañas', () => {
-  it('[UI-25.2] la tinta de las pestañas usa un token propio, no la marca invertida', () => {
-    expect(railRule()).toContain('color: var(--app-tab-label)');
-    expect(railRule()).not.toContain('color: var(--app-primary-dark)');
+  it('[UI-25.2] la tinta de las pestañas no se toma de la marca invertida', () => {
+    // La tinta por categoría (DATE-FILTER-02.18) sustituye al token común,
+    // pero el rail sigue sin depender de --app-primary-dark.
+    expect(railRule()).not.toContain('--app-primary-dark');
+    expect(railRule()).not.toMatch(/color:\s*var\(--app-primary-dark\)/);
   });
 
   it('[UI-25.2] la paleta oscura invierte la tinta de las pestañas a la tinta de texto', () => {
@@ -48,5 +50,24 @@ describe('UI-25 Contraste del texto de las pestañas', () => {
     // El rail ya no debe depender de --app-primary-dark para su texto.
     expect(railRule()).not.toContain('--app-primary-dark');
     expect(css).toMatch(/--app-primary-dark:\s*#edeaf5/);
+  });
+});
+
+describe('DATE-FILTER-02.18 Tinta propia por categoría en el rail', () => {
+  it('[DATE-FILTER-02.18] la tinta de cada pestaña se deriva de su propio relleno', () => {
+    expect(railRule()).toMatch(/color:\s*color-mix\(/);
+    expect(railRule()).toContain('--rail-fill');
+    expect(railRule()).not.toMatch(/color:\s*var\(--app-tab-label\)/);
+  });
+
+  it('[DATE-FILTER-02.18] la tinta activa se queda con la de superficie', () => {
+    const scss = readFileSync(
+      resolve(__dirname, '../app/layout/shell/side-tab-rail.component.scss'),
+      'utf8',
+    );
+    const start = scss.indexOf('.rail-tab.active {');
+    const active = scss.slice(start, scss.indexOf('}', start));
+    expect(active).toMatch(/color:\s*var\(--app-text\)/);
+    expect(active).not.toContain('color-mix');
   });
 });
