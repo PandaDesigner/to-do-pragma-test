@@ -9,8 +9,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { IonIcon } from '@ionic/angular/standalone';
-import { TranslatePipe } from '@ngx-translate/core';
 import { TASK_ITEM } from './task-item.state';
+
+export function taskTitleTail(title: string): string {
+  const word = title.trim().split(/\s+/).filter(Boolean).at(-1) ?? '';
+  return `...${word.slice(-3)}`;
+}
 
 @Component({
   selector: 'app-task-item-copy',
@@ -23,7 +27,7 @@ import { TASK_ITEM } from './task-item.state';
       >
         <span #titleText class="task-title__text">{{ item.task().title }}</span>
         @if (titleOverflow()) {
-          <span class="task-title__more">… {{ 'task.more' | translate }}</span>
+          <span class="task-title__end">{{ titleTail() }}</span>
         }
       </strong>
       @if (item.presentation().showsMeta()) {
@@ -55,7 +59,7 @@ import { TASK_ITEM } from './task-item.state';
     </div>
   `,
   styleUrl: './task-item.component.scss',
-  imports: [IonIcon, TranslatePipe],
+  imports: [IonIcon],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemCopyComponent {
@@ -69,6 +73,10 @@ export class TaskItemCopyComponent {
       this.item.task().title;
       queueMicrotask(() => this.syncTitleOverflow());
     });
+  }
+
+  titleTail(): string {
+    return taskTitleTail(this.item.task().title);
   }
 
   syncTitleOverflow(): void {

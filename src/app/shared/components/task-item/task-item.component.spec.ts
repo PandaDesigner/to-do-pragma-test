@@ -126,6 +126,9 @@ describe('TaskItemComponent', () => {
     expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*min-width:\s*0;/);
     expect(styles).toMatch(/app-task-item-copy\s*\{[^}]*overflow:\s*hidden;/);
     expect(styles).toMatch(
+      /\.completed \.task-title__text\s*\{[^}]*text-decoration:\s*line-through;/,
+    );
+    expect(styles).toMatch(
       /\.task-title__text\s*\{[^}]*white-space:\s*nowrap;/,
     );
     expect(styles).toMatch(
@@ -157,15 +160,15 @@ describe('TaskItemComponent', () => {
     expect(fixture.nativeElement.querySelector('.task-meta')).toBeNull();
   });
 
-  it('keeps the copy column fixed and shows more only when the title overflows', () => {
+  it('keeps the copy column fixed and ends an overflow title with the last three letters', () => {
     const fixture = TestBed.createComponent(TaskItemComponent);
     fixture.componentRef.setInput('task', taskFixture({ title: 'Hi' }));
     fixture.detectChanges();
-    expect(fixture.nativeElement.querySelector('.task-title__more')).toBeNull();
+    expect(fixture.nativeElement.querySelector('.task-title__end')).toBeNull();
 
     fixture.componentRef.setInput(
       'task',
-      taskFixture({ title: 'A'.repeat(180) }),
+      taskFixture({ title: `Buy milk at the market${'A'.repeat(80)}` }),
     );
     fixture.detectChanges();
     const text = fixture.nativeElement.querySelector(
@@ -186,10 +189,19 @@ describe('TaskItemComponent', () => {
     fixture.detectChanges();
     expect(
       fixture.nativeElement
-        .querySelector('.task-title__more')
+        .querySelector('.task-title__end')
         ?.textContent?.trim(),
-    ).toBe('… more');
-    expect(text.textContent?.trim()).toBe('A'.repeat(180));
+    ).toBe(`...${'A'.repeat(3)}`);
+    expect(fixture.nativeElement.textContent).not.toContain('more');
+
+    fixture.componentRef.setInput(
+      'task',
+      taskFixture({ status: 'completed', title: 'Done task' }),
+    );
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('.completed .task-title__text'),
+    ).not.toBeNull();
   });
 
   it('[SWIPE-01.1] the end sliding option removes only when clicked and a note row stays a note', () => {

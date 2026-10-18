@@ -77,7 +77,6 @@
     "duration": "Duración: {{minutes}} min",
     "reminder": "Aviso: {{minutes}} min antes",
     "bullet": "Nota",
-    "more": "más",
     "actions": {
       "COMPLETE": "Completar",
       "EXPIRE": "Vencer",
