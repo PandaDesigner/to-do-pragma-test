@@ -1,6 +1,7 @@
 name: verify
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [develop, main]
   push:
@@ -78,6 +79,17 @@ jobs:
           name: android-debug-apk
           path: platforms/android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+      - name: Upload debug APK to Appetize
+        if: ${{ ((github.event_name == 'push' && github.ref == 'refs/heads/main') || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')) && env.APPETIZE_API_TOKEN != '' }}
+        env:
+          APPETIZE_API_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
+        uses: appetizeio/github-action-appetize@v1.1.0
+        with:
+          apiToken: ${{ env.APPETIZE_API_TOKEN }}
+          publicKey: ${{ secrets.APPETIZE_PUBLIC_KEY }}
+          appFile: platforms/android/app/build/outputs/apk/debug/app-debug.apk
+          platform: android
+          note: ${{ github.ref_name }} @ ${{ github.sha }}
 
   ios:
     name: Cordova iOS (no signing)
