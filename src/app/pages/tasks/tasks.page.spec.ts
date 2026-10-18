@@ -874,14 +874,19 @@ describe('TasksPage', () => {
     expect(saved.reminderMin).toBe(30);
   });
 
-  it('[TODAY-UI-01.1] paints the chevron as an ion-icon beside the label', async () => {
-    const { fixture } = await setup();
+  it('[TODAY-UI-01.1] paints the chevron as a registered ion-icon beside the label', async () => {
+    const { fixture, page } = await setup();
     const badge = fixture.nativeElement.querySelector(
       '.today-badge',
     ) as HTMLElement;
     const icon = badge.querySelector('ion-icon');
     expect(icon).not.toBeNull();
-    expect(icon?.getAttribute('name')).toBe('chevron-forward');
+    // El icono se pasa por [icon] con el SVG importado, no por name. Un
+    // atributo name sin addIcons deja el nodo en el DOM pero no dibuja nada,
+    // así que comprobar el atributo daba verde con la pantalla rota.
+    expect(icon?.hasAttribute('name')).toBe(false);
+    expect(page.icons.chevronForward).toBeDefined();
+    expect((icon as { icon?: unknown }).icon).toBe(page.icons.chevronForward);
     // El icono debe ser hermano del texto, no parte de la cadena traducible,
     // para que el gap del flex separe ambos nodos.
     expect(icon?.parentElement).toBe(badge);

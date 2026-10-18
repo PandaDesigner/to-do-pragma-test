@@ -3,7 +3,7 @@
     <div class="top-actions">
       <button type="button" class="today-badge" (click)="focusToday()">
         {{ 'todo.today' | translate }}
-        <ion-icon name="chevron-forward" aria-hidden="true"></ion-icon>
+        <ion-icon [icon]="icons.chevronForward" aria-hidden="true"></ion-icon>
       </button>
       <button
         type="button"

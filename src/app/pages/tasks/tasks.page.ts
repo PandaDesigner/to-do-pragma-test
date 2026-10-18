@@ -22,7 +22,7 @@ import {
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { calendarOutline } from 'ionicons/icons';
+import { calendarOutline, chevronForward } from 'ionicons/icons';
 import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
@@ -121,6 +121,11 @@ export class TasksPage implements OnInit {
     return typeof lang === 'string' && lang.length > 0 ? lang : 'en';
   });
   readonly panel = PENDING_PANEL;
+  // Un solo objeto con los dos iconos de la pantalla: el chevron del badge HOY
+  // y el calendario del filtro de rango. Declararlos por separado hacia que la
+  // segunda declaracion pisara a la primera y el calendario se quedara sin
+  // dibujar al abrir el filtro.
+  readonly icons = { chevronForward, calendarOutline };
   readonly taskRowState = taskRowState;
   readonly noteRowState = noteRowState;
   readonly pendingRowState = pendingRowState;
@@ -254,7 +259,6 @@ export class TasksPage implements OnInit {
     this.store.tasks().filter((task) => this.isEarlierOpenTask(task)),
   );
   readonly trackById = (_index: number, task: Task): string => task.id;
-  readonly icons = { calendarOutline };
 
   ngOnInit(): void {
     this.store.setSection(this.section);
