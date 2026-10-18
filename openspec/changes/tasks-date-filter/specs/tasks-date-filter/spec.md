@@ -69,6 +69,42 @@ El selector de rango MUST presentarse en un `ion-alert` que monta un calendario 
 - **AND** el calendario no supera el alto solicitado
 - **AND** las acciones permanecen dentro del área visible
 
+#### Scenario: DATE-FILTER-02.7 El calendario toma la superficie y el texto de la paleta del proyecto
+
+- **GIVEN** un modal de rango de fechas abierto en modo oscuro
+- **WHEN** se renderiza el calendario
+- **THEN** su superficie y su texto provienen de los tokens del proyecto y no de los valores por defecto de Ionic
+- **AND** el calendario no aparece como un bloque blanco dentro del modal oscuro
+
+#### Scenario: DATE-FILTER-02.8 El calendario expone su propia superficie translucida
+
+- **GIVEN** un modal de rango de fechas abierto
+- **WHEN** el calendario dibuja los rellenos translúcidos, como el anillo del día seleccionado
+- **THEN** el calendario declara el rgb de la superficie de la paleta activa
+- **AND** esos rellenos no proceden de la superficie por defecto de Ionic
+
+#### Scenario: DATE-FILTER-02.9 Los días atenuados cumplen contraste AA en las dos paletas
+
+- **GIVEN** un modal de rango de fechas abierto
+- **WHEN** se muestran los días adyacentes del calendario
+- **THEN** su tono supera el 4.5:1 de contraste AA sobre la superficie de la paleta activa
+- **AND** el tono se define por paleta, porque un valor único no alcanza AA en ambas
+
+#### Scenario: DATE-FILTER-02.10 La paleta se aplica por atributo y no por contexto de host
+
+- **GIVEN** un componente de `shared` dentro del modal
+- **WHEN** la clase de paleta está en `html`, un ancestro externo
+- **THEN** el componente expone la paleta activa como atributo en el calendario
+- **AND** las reglas por paleta seleccionan por ese atributo
+- **AND** el caso sin clase explícita sigue la preferencia del sistema operativo
+
+#### Scenario: DATE-FILTER-02.11 El calendario recibe siempre la paleta activa
+
+- **GIVEN** un modal de rango de fechas abierto
+- **WHEN** se renderiza el calendario
+- **THEN** el atributo de paleta está presente y toma un valor de paleta o de sistema
+- **AND** si faltara el atributo, ninguna regla por paleta aplicaría y el calendario volvería a los valores por defecto de Ionic
+
 ### Requirement: DATE-FILTER-03 Filtro por rango en el store
 
 El store de tareas MUST aceptar un rango de fechas con la misma forma que el resto de sus filtros: aplicar el estado y restablecer la paginación a la página 1. El filtro MUST ser inclusivo en ambos extremos, por el campo de vencimiento, y MUST combinarse por conjunción con el filtro de estados y el de categoría. Figma: 4:440.

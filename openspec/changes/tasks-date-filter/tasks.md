@@ -142,3 +142,21 @@ comprobaban presencia en el DOM, no posición respecto al área visible.
 - [x] 21.5 `fix`: añadir `min-height: 0` al cuerpo y `max-height: 330px` al calendario
 - [x] 21.6 Verificar en navegador: los tres botones dentro del viewport (`top: 570`, `bottom: 606`, viewport 915)
 - [x] 21.7 Suite completa, lint, formato, tipos, `trace:check` y `openspec validate --all --strict` en verde
+
+## 22. Corrección del calendario en modo oscuro
+
+Detectado en revisión visual: en oscuro el calendario se veía como un bloque blanco dentro del
+modal y los días se perdían. Causa medida: `ion-datetime` fija `background: rgb(255,255,255)` y
+consume el sistema de steps de Ionic (`--ion-color-base`, `--ion-color-step-100/300/500/650`), que el
+proyecto solo define para `--ion-text-color`. El resto cae en los fallbacks claros de Ionic.
+
+- [x] 22.1 `test`: `[DATE-FILTER-02.7]` y `[DATE-FILTER-02.8]` en rojo
+- [x] 22.2 `test`: `[DATE-FILTER-02.9]` fija los contrastes AA de los días atenuados por paleta
+- [x] 22.3 `test`: `[DATE-FILTER-02.10]` y `[DATE-FILTER-02.11]` cubren la aplicación de la paleta
+- [x] 22.4 Declarar los cinco escenarios en el spec delta de `tasks-date-filter`
+- [x] 22.5 `fix`: mapear los steps de Ionic a los tokens del proyecto en `.date-filter__calendar`
+- [x] 22.6 `fix`: token `--app-calendar-adjacent` por paleta, con AA verificado (5.93:1 y 5.22:1)
+- [x] 22.7 `fix`: aplicar la paleta por atributo `data-palette`, con `MutationObserver` sobre `<html>`
+- [x] 22.8 Verificar en navegador: `data-palette="dark"`, fondo `rgb(30,26,43)`, 91 días legibles
+- [x] 22.9 Verificar que el modo claro no se rompió: `data-palette="light"`, fondo blanco
+- [x] 22.10 Suite completa (557 tests), lint, stylelint, formato, tipos, `trace:check` y `openspec validate` en verde

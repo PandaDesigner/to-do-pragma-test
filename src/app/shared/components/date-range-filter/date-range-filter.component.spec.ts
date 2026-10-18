@@ -263,4 +263,127 @@ describe('DateRangeFilterComponent', () => {
     expect(calendarRule).toBeTruthy();
     expect(calendarRule?.[1]).toContain('max-height: 330px');
   });
+
+  // ion-datetime no expone variables propias: su SCSS interno consume el
+  // sistema de steps de Ionic, que el proyecto solo define para
+  // --ion-text-color. Sin mapear los demas, el calendario cae a los fallbacks
+  // blancos de Ionic y queda blanco puro dentro de un modal oscuro.
+  it('[DATE-FILTER-02.7] el calendario toma la superficie y el texto de la paleta del proyecto', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const calendar = overlay.querySelector(
+      '.date-filter__calendar',
+    ) as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const rule = styles.match(/\.date-filter__calendar\s*\{([^}]*)\}/);
+    expect(rule).toBeTruthy();
+    const body = rule?.[1] ?? '';
+
+    // Superficie: el calendario no puede quedarse en blanco de Ionic.
+    expect(body).toContain('--ion-color-step-100');
+    expect(body).toContain('--ion-color-step-300');
+    expect(body).toContain('--ion-color-step-650');
+    expect(body).toContain('--ion-text-color');
+    // Y debe tomar los tokens del proyecto, no valores sueltos.
+    expect(body).toContain('var(--app-surface)');
+    expect(body).toContain('var(--app-text)');
+  });
+
+  it('[DATE-FILTER-02.8] los dias atenuados del calendario mantienen contraste AA en oscuro', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const rule = styles.match(/\.date-filter__calendar\s*\{([^}]*)\}/);
+    const body = rule?.[1] ?? '';
+
+    // Los dias adyacentes se dibujan con opacidad reducida sobre el fondo. Si
+    // el texto atenuado se compone sobre una superficie clara y el modal es
+    // oscuro, el resultado queda ilegible: 1.65:1 medido en pantalla.
+    expect(body).toContain('--ion-color-step-650');
+    // Los dias adyacentes se dibujan con step-500, no con el color base. El
+    // calendario debe definir tambien el rgb de la superficie, que alimenta los
+    // rellenos translucidos como el anillo del dia seleccionado: sin el, ese
+    // relleno sale del blanco de Ionics y se ve como un halo claro en oscuro.
+    const perPalette = `${styles.match(/\.date-filter__calendar\[data-palette='dark'\]\s*\{([^}]*)\}/)?.[1] ?? ''}${styles.match(/\.date-filter__calendar\[data-palette='light'\],\s*\.date-filter__calendar\[data-palette='system'\]\s*\{([^}]*)\}/)?.[1] ?? ''}`;
+    expect(perPalette).toContain('--ion-color-base-rgb');
+    expect(perPalette).toContain('--ion-color-step-500');
+  });
+
+  it('[DATE-FILTER-02.10] las reglas por paleta no dependen de :host-context', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    // :host-context(html.ion-palette-dark) no funciona: Angular lo compila como
+    // html.ion-palette-dark[_nghost] .date-filter__calendar, que exige la
+    // clase en el propio elemento del componente, y la clase de paleta vive en
+    // <html>. Se verifico en navegador que la regla no llegaba a aplicarse.
+    // El componente expone la paleta como atributo y el SCSS selecciona por
+    // atributo, que si llega.
+    expect(styles).not.toContain(':host-context');
+    expect(styles).toContain(".date-filter__calendar[data-palette='dark']");
+    expect(styles).toContain(".date-filter__calendar[data-palette='light']");
+    // Y el caso system, cuando la clase no esta y decide el SO.
+    expect(styles).toContain(".date-filter__calendar[data-palette='system']");
+    expect(styles).toContain('prefers-color-scheme: dark');
+  });
+
+  it('[DATE-FILTER-02.11] el calendario recibe la paleta activa como atributo', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const calendar = overlay.querySelector(
+      '.date-filter__calendar',
+    ) as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    // El atributo tiene que existir siempre: si falta, ninguna regla por
+    // paleta aplica y el calendario vuelve a los fallbacks claros de Ionic.
+    const palette = calendar?.getAttribute('data-palette');
+    expect(palette).toBeTruthy();
+    expect(['dark', 'light', 'system']).toContain(palette);
+  });
+
+  it('[DATE-FILTER-02.9] los dias atenuados cumplen AA en las dos paletas', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+
+    // Valores verificados: 5.93:1 en oscuro sobre #1e1a2b y 5.22:1 en claro
+    // sobre #ffffff. Un valor unico no sirve, porque el mismo gris da 5.93:1 en
+    // una paleta y 2.86:1 en la otra.
+    const dark = styles.match(
+      /\.date-filter__calendar\[data-palette='dark'\]\s*\{([^}]*)\}/,
+    );
+    const light = styles.match(
+      /\.date-filter__calendar\[data-palette='light'\],\s*\.date-filter__calendar\[data-palette='system'\]\s*\{([^}]*)\}/,
+    );
+    expect(dark).toBeTruthy();
+    expect(light).toBeTruthy();
+    // El tono de los dias atenuados llega por token, no como hex suelto: hay una
+    // regla de stylelint que prohibe los hex en el componente. El token cambia
+    // de valor segun la paleta, --app-calendar-adjacent, porque un gris unico
+    // da 5.93:1 en oscuro y 2.86:1 en claro.
+    expect(dark?.[1]).toContain(
+      '--ion-color-step-500: var(--app-calendar-adjacent)',
+    );
+    expect(light?.[1]).toContain(
+      '--ion-color-step-500: var(--app-calendar-adjacent)',
+    );
+
+    // Y el rgb de la superficie de cada paleta, que no puede ser el mismo.
+    expect(dark?.[1]).toContain('--ion-color-base-rgb: 30, 26, 43');
+    expect(light?.[1]).toContain('--ion-color-base-rgb: 255, 255, 255');
+  });
 });
