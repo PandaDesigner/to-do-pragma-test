@@ -28,7 +28,7 @@ import { clipboardCheck } from '../../shared/icons/app-icons';
     },
   ],
 })
-class RoutineTabHost {}
+class RoutineTabHostComponent {}
 
 @Component({
   selector: 'app-event-tab-host',
@@ -41,7 +41,7 @@ class RoutineTabHost {}
     },
   ],
 })
-class EventTabHost {}
+class EventTabHostComponent {}
 
 describe('TasksPage', () => {
   async function setup(
@@ -332,8 +332,8 @@ describe('TasksPage', () => {
     ]);
     tasks.setPageSize(1);
 
-    const routine = TestBed.createComponent(RoutineTabHost);
-    const event = TestBed.createComponent(EventTabHost);
+    const routine = TestBed.createComponent(RoutineTabHostComponent);
+    const event = TestBed.createComponent(EventTabHostComponent);
     routine.detectChanges();
     event.detectChanges();
     await routine.whenStable();
@@ -402,7 +402,7 @@ describe('TasksPage', () => {
         }),
       ),
     ]);
-    const event = TestBed.createComponent(EventTabHost);
+    const event = TestBed.createComponent(EventTabHostComponent);
     event.detectChanges();
     await event.whenStable();
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
