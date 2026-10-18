@@ -10,9 +10,7 @@ import {
 } from './date-range-filter.component';
 
 describe('DateRangeFilterComponent', () => {
-  async function setup(): Promise<
-    ComponentFixture<DateRangeFilterComponent>
-  > {
+  async function setup(): Promise<ComponentFixture<DateRangeFilterComponent>> {
     await TestBed.configureTestingModule({
       imports: [DateRangeFilterComponent],
       providers: [
@@ -55,11 +53,11 @@ describe('DateRangeFilterComponent', () => {
 
   function datetimeOf(
     fixture: ComponentFixture<DateRangeFilterComponent>,
-  ): (HTMLElement & {
+  ): HTMLElement & {
     showDefaultTitle?: boolean;
     multiple?: boolean;
     presentation?: string;
-  }) {
+  } {
     const element = overlayOf(fixture).querySelector('ion-datetime');
     if (!element) {
       throw new Error('El overlay no monta el calendario');
@@ -86,12 +84,12 @@ describe('DateRangeFilterComponent', () => {
     const fixture = await setup();
     expect(overlayOf(fixture)).toBeTruthy();
     expect(datetimeOf(fixture)).toBeTruthy();
-    expect(fixture.nativeElement.innerHTML + overlayOf(fixture).innerHTML).not.toContain(
-      'contentInputs',
-    );
-    expect(fixture.nativeElement.innerHTML + overlayOf(fixture).innerHTML).not.toContain(
-      'content-inputs',
-    );
+    expect(
+      fixture.nativeElement.innerHTML + overlayOf(fixture).innerHTML,
+    ).not.toContain('contentInputs');
+    expect(
+      fixture.nativeElement.innerHTML + overlayOf(fixture).innerHTML,
+    ).not.toContain('content-inputs');
   });
 
   it('[DATE-FILTER-02.2] el calendario desactiva el titulo por defecto, declara alto explicito y es un rango', async () => {
@@ -100,7 +98,9 @@ describe('DateRangeFilterComponent', () => {
     expect(datetime.showDefaultTitle).toBe(false);
     expect(datetime.multiple).toBe(true);
     expect(datetime.presentation).toBe('date');
-    const host = datetime.closest('.date-filter__calendar') as HTMLElement | null;
+    const host = datetime.closest(
+      '.date-filter__calendar',
+    ) as HTMLElement | null;
     expect(host).toBeTruthy();
     expect(host?.style.height).toBe(`${DATE_FILTER_HEIGHT}px`);
   });
@@ -206,8 +206,8 @@ describe('DateRangeFilterComponent', () => {
     expect(toDateRange([])).toBeNull();
     expect(toDateRange(['solo-una'])).toBeNull();
     expect(toDateRange(['2026-06-01T00:00:00'])).toBeNull();
-    expect(
-      toDateRange(['2026-06-01T00:00:00', '2026-06-02T00:00:00']),
-    ).toEqual({ from: '2026-06-01', to: '2026-06-02' });
+    expect(toDateRange(['2026-06-01T00:00:00', '2026-06-02T00:00:00'])).toEqual(
+      { from: '2026-06-01', to: '2026-06-02' },
+    );
   });
 });

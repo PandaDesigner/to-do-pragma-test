@@ -114,6 +114,8 @@ describe('DATE-FILTER-03 Rango de fechas en el store', () => {
     await store.refresh();
     store.setDateRange({ from: '2026-01-01', to: '2026-01-05' });
     store.setStatuses([TASK_STATUS.PENDING]);
-    expect(store.filteredTasks().map((task) => task.id)).toEqual(['pending-in']);
+    expect(store.filteredTasks().map((task) => task.id)).toEqual([
+      'pending-in',
+    ]);
   });
 });

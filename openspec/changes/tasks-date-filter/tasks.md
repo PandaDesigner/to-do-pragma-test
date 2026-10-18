@@ -46,56 +46,56 @@
 
 ## 8. Grupo de filtro en la pantalla de tareas (RED)
 
-- [ ] 8.1 `test(tasks.page)`: `.top-actions` expone HOY y el botón de calendario, el icono se pasa por `[icon]` desde `icons`, ningún icono usa `name`, y el botón de calendario abre el selector. Escenarios DATE-FILTER-01.1, 01.2, 01.3
-- [ ] 8.2 `test(tasks.page)`: `focusToday()` fija el rango a hoy y conserva categoría, estados y panel. Escenarios DATE-FILTER-04.1, 04.2
-- [ ] 8.3 Commit `test(tasks):`
+- [x] 8.1 `test(tasks.page)`: `.top-actions` expone HOY y el botón de calendario, el icono se pasa por `[icon]` desde `icons`, ningún icono usa `name`, y el botón de calendario abre el selector. Escenarios DATE-FILTER-01.1, 01.2, 01.3
+- [x] 8.2 `test(tasks.page)`: `focusToday()` fija el rango a hoy y conserva categoría, estados y panel. Escenarios DATE-FILTER-04.1, 04.2
+- [x] 8.3 Commit `test(tasks):`
 
 ## 9. Grupo de filtro en la pantalla de tareas (GREEN)
 
-- [ ] 9.1 Importar `calendarOutline` de `ionicons/icons` y exponer `readonly icons`
-- [ ] 9.2 Botón de calendario al lado del badge, con `aria-label` traducido
-- [ ] 9.3 Montar `app-date-range-filter` y conectar su salida con `setDateRange`
-- [ ] 9.4 `focusToday()` añade `setDateRange({ from: today, to: today })` sin romper lo demás
-- [ ] 9.5 Commit `feat(tasks):`
+- [x] 9.1 Importar `calendarOutline` de `ionicons/icons` y exponer `readonly icons`
+- [x] 9.2 Botón de calendario al lado del badge, con `aria-label` traducido
+- [x] 9.3 Montar `app-date-range-filter` y conectar su salida con `setDateRange`
+- [x] 9.4 `focusToday()` añade `setDateRange({ from: today, to: today })` sin romper lo demás
+- [x] 9.5 Commit `feat(tasks):`
 
 ## 10. Reducción del badge HOY (RED)
 
-- [ ] 10.1 `test(theme)`: el badge se dimensiona por su contenido y no por el ancho disponible del grupo. Escenario TODO-01.4
-- [ ] 10.2 Commit `test(theme):`
+- [x] 10.1 `test(theme)`: el badge se dimensiona por su contenido y no por el ancho disponible del grupo. Escenario TODO-01.4
+- [x] 10.2 Commit `test(theme):`
 
 ## 11. Reducción del badge HOY (GREEN)
 
-- [ ] 11.1 `.today-badge` con `flex: 0 0 auto`, alto 21 y ancho mínimo 63, todo con tokens
-- [ ] 11.2 `.top-actions` con separación entre el badge y el icono
-- [ ] 11.3 Commit `feat(theme):`
+- [x] 11.1 `.today-badge` con `flex: 0 0 auto`, alto 21 y ancho mínimo 63, todo con tokens
+- [x] 11.2 `.top-actions` con separación entre el badge y el icono
+- [x] 11.3 Commit `feat(theme):`
 
 ## 12. Localización del título del día (RED)
 
-- [ ] 12.1 `test(day-title)`: el nombre del día y del mes salen en español y en inglés, y una fecha inválida se rechaza. Escenario TODO-01.3
-- [ ] 12.2 Commit `test(i18n):`
+- [x] 12.1 `test(day-title)`: el nombre del día y del mes salen en español y en inglés, y una fecha inválida se rechaza. Escenario TODO-01.3
+- [x] 12.2 Commit `test(i18n):`
 
 ## 13. Localización del título del día (GREEN)
 
-- [ ] 13.1 `formatDayTitle` y `formatLongDate` reciben el idioma y usan `Intl.DateTimeFormat`
-- [ ] 13.2 Se conservan `parseLocalIsoDate` en hora local y el respaldo a inglés
-- [ ] 13.3 `TasksPage` pasa el idioma activo, leído de `TranslateService`
-- [ ] 13.4 Commit `feat(i18n):`
+- [x] 13.1 `formatDayTitle` y `formatLongDate` reciben el idioma y usan `Intl.DateTimeFormat`
+- [x] 13.2 Se conservan `parseLocalIsoDate` en hora local y el respaldo a inglés
+- [x] 13.3 `TasksPage` pasa el idioma activo, leído de `TranslateService`
+- [x] 13.4 Commit `feat(i18n):`
 
 ## 14. Contraste del rail en oscuro (RED)
 
-- [ ] 14.1 `test(theme)`: `--app-tab-label` se invierte en la paleta oscura a la tinta de texto y `.rail-tab` lo consume. Escenario UI-25.2
-- [ ] 14.2 Commit `test(theme):`
+- [x] 14.1 `test(theme)`: `--app-tab-label` se invierte en la paleta oscura a la tinta de texto y `.rail-tab` lo consume. Escenario UI-25.2
+- [x] 14.2 Commit `test(theme):`
 
 ## 15. Contraste del rail en oscuro (GREEN)
 
-- [ ] 15.1 `--app-tab-label` en `dark-palette` apuntando a la tinta de texto
-- [ ] 15.2 `.rail-tab` consume `var(--app-tab-label)`
-- [ ] 15.3 Commit `fix(theme):`
+- [x] 15.1 `--app-tab-label` en `dark-palette` apuntando a la tinta de texto
+- [x] 15.2 `.rail-tab` consume `var(--app-tab-label)`
+- [x] 15.3 Commit `fix(theme):`
 
 ## 16. Traducciones
 
-- [ ] 16.1 Claves del alert y del botón de calendario en `es.json` y `en.json`
-- [ ] 16.2 Commit `feat(i18n):`
+- [x] 16.1 Claves del alert y del botón de calendario en `es.json` y `en.json`
+- [x] 16.2 Commit `feat(i18n):`
 
 ## 17. Trazabilidad y verificación
 

@@ -108,7 +108,7 @@ describe('DATE-FILTER-01 Grupo de filtro por fecha', () => {
     expect(page.tabPage()).toBe(1);
   });
 
-  it('[DATE-FILTER-01.1] el badge se dimensiona por su contenido y no por el ancho del grupo', () => {
+  it('[TODO-01.4] el badge mide su caja de Figma y no la del grupo de acciones', () => {
     const rule = ruleOf('.today-badge {');
     expect(rule).toContain('flex: 0 0 auto');
     expect(rule).not.toMatch(/(^|\s)flex:\s*1\s*;/);
