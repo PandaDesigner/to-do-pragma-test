@@ -12,6 +12,7 @@ main.notebook-page {
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  gap: var(--app-space-8);
   min-height: var(--app-day-actions-height);
   padding-inline-end: var(--app-content-inset-end);
   margin-bottom: var(--app-space-8);
@@ -194,10 +195,13 @@ main.notebook-page {
 
 .today-badge {
   display: inline-flex;
+  flex: 0 0 auto;
   align-items: center;
   justify-content: center;
-  min-width: 63px;
-  height: 21px;
+  box-sizing: border-box;
+  height: var(--app-day-badge-height);
+  min-width: var(--app-day-badge-min-width);
+  padding-inline: var(--app-space-4);
   border: 1px solid var(--app-accent-link);
   border-radius: var(--app-radius-badge);
   color: var(--app-accent-link);
@@ -208,6 +212,26 @@ main.notebook-page {
 
 .today-badge ion-icon {
   font-size: 12px;
+}
+
+.date-filter-trigger {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--app-touch-target);
+  height: var(--app-touch-target);
+  padding: 0;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-button);
+  background: var(--app-surface);
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.date-filter-trigger ion-icon {
+  font-size: var(--app-day-badge-icon-size);
 }
 
 .pending-panel {
