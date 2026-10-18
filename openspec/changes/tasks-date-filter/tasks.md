@@ -9,14 +9,14 @@
 
 ## 2. Filtro por fecha en el dominio (RED)
 
-- [ ] 2.1 `test(task-strategy)`: `filterTasks` acepta `dateRange`, es inclusivo en ambos extremos, sin rango no filtra, y combina con estados y categoría. Escenarios DATE-FILTER-03.1, 03.3, 03.4
-- [ ] 2.2 Commit `test(domain):`
+- [x] 2.1 `test(task-strategy)`: `filterTasks` acepta `dateRange`, es inclusivo en ambos extremos, sin rango no filtra, y combina con estados y categoría. Escenarios DATE-FILTER-03.1, 03.3, 03.4
+- [x] 2.2 Commit `test(domain):` (d59e756)
 
 ## 3. Filtro por fecha en el dominio (GREEN)
 
-- [ ] 3.1 `TaskFilter` acepta `dateRange` opcional
-- [ ] 3.2 `filterTasks` aplica el rango por `dueDate` con comparación de string
-- [ ] 3.3 Commit `feat(domain):`
+- [x] 3.1 `TaskFilter` acepta `dateRange` opcional
+- [x] 3.2 `filterTasks` aplica el rango por `dueDate` con comparación de string
+- [x] 3.3 Commit `feat(domain):`
 
 ## 4. Rango en el store (RED)
 

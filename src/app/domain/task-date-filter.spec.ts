@@ -51,10 +51,11 @@ describe('DATE-FILTER-03 Filtro por rango de fechas', () => {
 
   it('[DATE-FILTER-03.4] el rango se combina por conjuncion con estados y categoria', () => {
     const tasks = [
-      taskFixture({ id: 'todo', dueDate: '2026-01-12' }),
+      taskFixture({ id: 'todo', dueDate: '2026-01-12', categoryId: 'cat-1' }),
       taskFixture({
         id: 'done',
         dueDate: '2026-01-12',
+        categoryId: 'cat-1',
         status: TASK_STATUS.COMPLETED,
       }),
       taskFixture({
