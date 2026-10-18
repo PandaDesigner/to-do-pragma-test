@@ -418,4 +418,35 @@ describe('DateRangeFilterComponent', () => {
     expect(buttonRule).toBeTruthy();
     expect(buttonRule?.[1]).toContain('margin: 0');
   });
+
+  it('[DATE-FILTER-02.13] el calendario queda centrado en la fila', async () => {
+    const fixture = await setup();
+    const overlay = overlayOf(fixture);
+    const calendar = overlay.querySelector(
+      '.date-filter__calendar',
+    ) as HTMLElement | null;
+    const datetime = calendar?.querySelector(
+      'ion-datetime',
+    ) as HTMLElement | null;
+    expect(calendar).toBeTruthy();
+    expect(datetime).toBeTruthy();
+
+    const styles = readFileSync(
+      join(__dirname, 'date-range-filter.component.scss'),
+      'utf8',
+    );
+    const rule = styles.match(
+      /\.date-filter__calendar\s+ion-datetime\s*\{([^}]*)\}/,
+    );
+    expect(rule).toBeTruthy();
+    const body = rule?.[1] ?? '';
+
+    // ion-datetime se auto-limita a max-width: 350px y, al ser flex, se queda
+    // pegado a la izquierda: 0px de holgura a la izquierda y 32 a la derecha,
+    // con el centro 16px desviado del de la fila. Hay que quitar el tope y
+    // centrarlo.
+    expect(body).toContain('max-width: none');
+    expect(body).toContain('width: 100%');
+    expect(body).toContain('margin-inline: auto');
+  });
 });

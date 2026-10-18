@@ -185,3 +185,15 @@ izquierda y el centro del grupo en 228 frente al 207 del calendario.
 
 Nota sobre el ancho del body: se pidió ajustarlo por asimetría, pero la medición da 414 con 16 px de
 padding a cada lado y hijos de 382, que cuadra exacto. No había asimetría que corregir.
+
+## 25. Centrado del calendario
+
+Medido: el `ion-datetime` se auto-limita a `max-width: 350px` y, al ser `display: flex`, se quedaba
+pegado a la izquierda. Quedaban 0 px de holgura a la izquierda y 32 a la derecha, con el centro en 191
+frente al 207 de la fila, que mide 382.
+
+- [x] 25.1 `test`: `[DATE-FILTER-02.13]` falla sin las reglas de centrado
+- [x] 25.2 Declarar el escenario en el spec delta de `tasks-date-filter`
+- [x] 25.3 `fix`: `max-width: none` y `width: 100%` con `margin-inline: auto` en el calendario
+- [x] 25.4 Verificar en navegador: calendario, fila y acciones los tres en 382 px, centro 207, holgura 0 a cada lado
+- [x] 25.5 Suite completa (559 tests), lint, stylelint, tipos, `trace:check` y `openspec validate` en verde
