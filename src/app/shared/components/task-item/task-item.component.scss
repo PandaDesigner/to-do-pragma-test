@@ -27,6 +27,7 @@ ion-item-option {
   align-items: center;
   gap: var(--app-space-12);
   box-sizing: border-box;
+  width: 100%;
   height: var(--app-task-row-height);
   max-height: var(--app-task-row-height);
   min-height: 0;
@@ -108,6 +109,10 @@ input:checked {
 .category-dot__icon {
   width: 14px;
   height: 14px;
+}
+app-task-item-actions {
+  margin-inline-start: auto;
+  flex: 0 0 auto;
 }
 .task-actions {
   display: flex;

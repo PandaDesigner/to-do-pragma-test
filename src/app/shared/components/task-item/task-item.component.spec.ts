@@ -117,6 +117,10 @@ describe('TaskItemComponent', () => {
     );
     expect(styles).toContain('height: var(--app-task-row-height)');
     expect(styles).toContain('max-height: var(--app-task-row-height)');
+    expect(styles).toMatch(/\.task-row\s*\{[^}]*width:\s*100%;/);
+    expect(styles).toMatch(
+      /app-task-item-actions\s*\{[^}]*margin-inline-start:\s*auto;/,
+    );
     expect(styles).toMatch(/\.task-title\s*\{[^}]*white-space:\s*nowrap;/);
     expect(styles).toMatch(/\.task-title\s*\{[^}]*text-overflow:\s*ellipsis;/);
     expect(styles).not.toContain('min-height: 65px');
