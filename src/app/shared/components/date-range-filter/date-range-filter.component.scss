@@ -1,0 +1,42 @@
+:host {
+  display: contents;
+}
+
+.date-filter__body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-12);
+  height: 100%;
+  box-sizing: border-box;
+  padding: var(--app-space-16);
+  background: var(--app-surface);
+  color: var(--app-text);
+}
+
+.date-filter__title {
+  margin: 0;
+  color: var(--app-primary-dark);
+  font-family: var(--app-font-display);
+  font-size: var(--app-font-size-panel-title);
+  font-weight: 400;
+}
+
+.date-filter__hint {
+  margin: 0;
+  font-size: var(--app-font-size-meta);
+  color: var(--app-text-muted);
+}
+
+.date-filter__calendar {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.date-filter__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--app-space-8);
+}

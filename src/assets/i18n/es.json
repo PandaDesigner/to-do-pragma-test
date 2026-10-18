@@ -100,6 +100,14 @@
     "retry": "Reintentar",
     "listLabel": "Tareas",
     "filterLabel": "Filtrar por categoría",
+    "dateFilter": {
+      "open": "Filtrar por fecha",
+      "title": "Filtrar por fecha",
+      "hint": "Elige la fecha inicial y la final.",
+      "apply": "Aplicar",
+      "cancel": "Cancelar",
+      "clear": "Quitar filtro"
+    },
     "editor": {
       "new": "Nueva tarea",
       "edit": "Editar tarea",

@@ -32,17 +32,17 @@
 
 ## 6. Componente shared del selector (RED)
 
-- [ ] 6.1 `test(date-range-filter)`: el calendario se monta por `template` del overlay y no declara `contentInputs`, declara título desactivado y alto explícito, es rango, e inicializa a hoy. Escenarios DATE-FILTER-02.1, 02.2, 02.3, 02.4
-- [ ] 6.2 Commit `test(ui):`
+- [x] 6.1 `test(date-range-filter)`: el calendario se monta por `template` del overlay y no declara `contentInputs`, declara título desactivado y alto explícito, es rango, e inicializa a hoy. Escenarios DATE-FILTER-02.1, 02.2, 02.3, 02.4
+- [x] 6.2 Commit `test(ui):` (a6923d2)
 
 ## 7. Componente shared del selector (GREEN)
 
-- [ ] 7.1 `DateRangeFilterComponent` presentacional: `isOpen`, `today`, `initialRange` por input; `rangeChange`, `dismiss` por output
-- [ ] 7.2 `ion-modal` con `ion-datetime` en modo rango, `showDefaultTitle` desactivado y alto explícito
-- [ ] 7.3 Un rango vacío no emite rango
-- [ ] 7.4 Estilos solo con `var(--app-*)`
-- [ ] 7.5 Exportar desde `src/app/shared/index.ts`
-- [ ] 7.6 Commit `feat(shared):`
+- [x] 7.1 `DateRangeFilterComponent` presentacional: `isOpen`, `today`, `initialRange` por input; `rangeChange`, `dismiss` por output
+- [x] 7.2 `ion-modal` con `ion-datetime` en modo rango, `showDefaultTitle` desactivado y alto explícito
+- [x] 7.3 Un rango vacío no emite rango
+- [x] 7.4 Estilos solo con `var(--app-*)`
+- [x] 7.5 Exportar desde `src/app/shared/index.ts` — **omitido**: el barrel `shared/index.ts` está vacío (`export {}`) en `develop` y ningún componente actual se exporta por ahí. Se importa por ruta, como hacen `TaskItemComponent` y `PageHeaderComponent`. Anotado aquí para no perderlo.
+- [x] 7.6 Commit `feat(shared):`
 
 ## 8. Grupo de filtro en la pantalla de tareas (RED)
 
