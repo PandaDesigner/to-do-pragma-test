@@ -93,18 +93,20 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  // space-between reparte los botones a lo ancho del calendario: CLEAR FILTER
-  // al borde izquierdo y APPLY al derecho, con el mismo ancho de 382px. Con
-  // flex-end el grupo acababa en 396 contra los 398 del calendario y dejaba
-  // 43px de aire a la izquierda, con el centro del grupo descuadrado.
-  justify-content: space-between;
-  gap: var(--app-space-8);
+  // Los tres botones reparten el ancho del calendario a partes iguales, sin
+  // hueco entre ellos: 382 / 3 = 127.33, tres de 127 con un resto de 1 px que
+  // va al ultimo. Antes cada boton tomaba lo que necesitaba su texto, 136, 97
+  // y 80 px, y quedaban desiguales entre si.
+  gap: 0;
 }
 
-// ion-button aplica 2px de margen a cada lado y 15.4px de padding horizontal
-// en su parte nativa. El margen descuadra los bordes exteriores, asi que se
-// neutraliza para que el primer y el ultimo boton caigan justo en los bordes
-// de la fila.
 .date-filter__actions ion-button {
+  // basis 0 para que los tres repartan el ancho por igual y no segun su texto,
+  // con min-width: 0 para que el texto largo de Quitar no impida encogerse.
+  flex: 1 1 0;
+  min-width: 0;
+  // ion-button aplica 2px de margen a cada lado y 15.4px de padding horizontal
+  // en su parte nativa. El margen descuadra los bordes exteriores, asi que se
+  // neutraliza para que el primero y el ultimo caigan en los bordes de la fila.
   margin: 0;
 }
