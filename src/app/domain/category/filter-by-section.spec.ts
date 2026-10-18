@@ -131,6 +131,28 @@ describe('filterTasksBySection', () => {
     );
   });
 
+  it('[TODO-10.1] keeps only uncategorized tasks on Todo when the catalog is empty', () => {
+    const loose: Task = { ...buyBread, id: 'loose', categoryId: null };
+    const assigned: Task = { ...buyBread, id: 'assigned', categoryId: 'home' };
+    expect(
+      filterTasksBySection(
+        [loose, assigned],
+        [],
+        CATEGORY_SECTION.GENERAL,
+      ).map((task) => task.id),
+    ).toEqual(['loose']);
+  });
+
+  it('[TODO-10.2] returns no routine or event tasks when the catalog is empty', () => {
+    const loose: Task = { ...buyBread, id: 'loose', categoryId: null };
+    expect(
+      filterTasksBySection([loose], [], CATEGORY_SECTION.ROUTINE),
+    ).toEqual([]);
+    expect(filterTasksBySection([loose], [], CATEGORY_SECTION.EVENT)).toEqual(
+      [],
+    );
+  });
+
   it('ignores a category id that no longer exists in the catalog', () => {
     const stale: Task = { ...run, categoryId: 'deleted' };
     expect(

@@ -29,3 +29,19 @@ Una página de tareas MUST filtrar por la sección de su propia ruta. Otra pesta
 - **WHEN** Evento queda activa y elige un chip o una página
 - **THEN** Rutina sigue listando solo sus tareas
 - **AND** su chip y su página no cambian
+
+### Requirement: TODO-10 Sin categorías, solo Todo muestra tareas sueltas
+
+Si el catálogo está vacío, Todo MUST listar solo tareas con `categoryId === null`. Rutina y Evento MUST quedar vacías. Figma: 4:520.
+
+#### Scenario: [TODO-10.1] Todo no hereda tareas de otras secciones
+
+- **GIVEN** un catálogo vacío y una tarea suelta más una tarea con categoría, conforme a Figma 4:520
+- **WHEN** se filtra por Todo
+- **THEN** solo aparece la tarea suelta
+
+#### Scenario: [TODO-10.2] Rutina y Evento quedan vacías sin catálogo
+
+- **GIVEN** un catálogo vacío, conforme a Figma 4:520
+- **WHEN** se filtra por Rutina o por Evento
+- **THEN** la lista está vacía
