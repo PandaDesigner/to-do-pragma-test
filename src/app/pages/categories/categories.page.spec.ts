@@ -134,4 +134,43 @@ describe('CategoriesPage', () => {
     await page.retry();
     expect(retry).toHaveBeenCalled();
   });
+
+  it('[CAT-UI-01.1] renders the empty state with illustration and action label', async () => {
+    const { fixture } = await setup();
+    const empty = fixture.nativeElement.querySelector(
+      'app-empty-state',
+    ) as HTMLElement & { illustrated?: unknown };
+    expect(empty).not.toBeNull();
+    expect(empty.illustrated).toBe(true);
+    const illustration = empty.querySelector('.illustration ion-icon');
+    expect(illustration).not.toBeNull();
+    const button = empty.querySelector('button');
+    expect(button).not.toBeNull();
+    expect(button.textContent.trim()).toBe('Create a category');
+  });
+
+  it('[CAT-UI-01.2] opens the sheet in Create mode from the empty state action', async () => {
+    const { fixture, categories } = await setup();
+    const button = fixture.nativeElement.querySelector(
+      'app-empty-state button',
+    ) as HTMLButtonElement;
+    expect(button).not.toBeNull();
+    button.click();
+    fixture.detectChanges();
+    expect(categories.sheetRequest()).toEqual({ mode: 'create' });
+  });
+
+  it('[CAT-UI-01.3] keeps the shared illustration and CTA defaults measured on 4:1062', async () => {
+    const { fixture } = await setup();
+    const empty = fixture.nativeElement.querySelector(
+      'app-empty-state .illustration',
+    ) as HTMLElement;
+    expect(empty.style.width).toBe('68px');
+    expect(empty.style.height).toBe('68px');
+    const button = fixture.nativeElement.querySelector(
+      'app-empty-state button',
+    ) as HTMLElement;
+    expect(button.style.width).toBe('239px');
+    expect(button.style.height).toBe('50px');
+  });
 });

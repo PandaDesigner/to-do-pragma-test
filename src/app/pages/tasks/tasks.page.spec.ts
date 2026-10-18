@@ -871,4 +871,61 @@ describe('TasksPage', () => {
     expect(saved.durationMin).toBe(60);
     expect(saved.reminderMin).toBe(30);
   });
+
+  it('[TODAY-UI-01.1] paints the chevron as an ion-icon beside the label', async () => {
+    const { fixture } = await setup();
+    const badge = fixture.nativeElement.querySelector(
+      '.today-badge',
+    ) as HTMLElement;
+    const icon = badge.querySelector('ion-icon');
+    expect(icon).not.toBeNull();
+    expect(icon.getAttribute('name')).toBe('chevron-forward');
+    // El icono debe ser hermano del texto, no parte de la cadena traducible,
+    // para que el gap del flex separe ambos nodos.
+    expect(icon.parentElement).toBe(badge);
+    expect(badge.textContent).not.toContain('›');
+    expect(badge.textContent.trim()).toBe('TODAY');
+  });
+
+  it('[TODAY-UI-01.3] keeps 63px as a minimum width instead of a fixed width', async () => {
+    const { fixture } = await setup();
+    const badge = fixture.nativeElement.querySelector(
+      '.today-badge',
+    ) as HTMLElement;
+    const styles = badge.ownerDocument.defaultView!.getComputedStyle(badge);
+    expect(styles.minWidth).toBe('63px');
+    expect(styles.width).not.toBe('63px');
+  });
+
+  it('[TODAY-UI-01.4] still resets the view after the chevron became an icon', async () => {
+    const { fixture, page, tasks, categories } = await setup();
+    await categories.upsert({
+      id: 'shopping',
+      name: 'Shopping',
+      kind: 'shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+    });
+    await tasks.upsert(
+      taskFixture({
+        id: 'groceries',
+        title: 'Buy groceries',
+        categoryId: 'shopping',
+        dueDate: '2026-01-01',
+      }),
+    );
+    fixture.detectChanges();
+    const chips = [
+      ...fixture.nativeElement.querySelectorAll('app-chip button'),
+    ] as HTMLButtonElement[];
+    chips.find((chip) => chip.textContent?.includes('Shopping'))?.click();
+    page.panelOpen.set(false);
+    fixture.detectChanges();
+    (
+      fixture.nativeElement.querySelector('.today-badge') as HTMLButtonElement
+    ).click();
+    fixture.detectChanges();
+    expect(tasks.categoryId()).toBeUndefined();
+    expect(page.panelOpen()).toBe(true);
+  });
 });

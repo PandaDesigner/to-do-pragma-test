@@ -2,8 +2,8 @@
 
 - [x] 1.1 Empty state de Categories con ilustración y CTA, con `[CAT-UI-01.1]`, `[CAT-UI-01.2]` y `[CAT-UI-01.3]` en `categories.page.spec.ts`
 - [x] 1.2 Chevron del badge HOY como `ion-icon` y `›` fuera de la traducción, con `[TODAY-UI-01.1]`, `[TODAY-UI-01.2]`, `[TODAY-UI-01.3]` y `[TODAY-UI-01.4]` en `tasks.page.spec.ts` y `chrome-translations.spec.ts`
-- [x] 1.3 Trazabilidad con escenario real para `4:440`, `4:520` y `4:1062`, con `[TRACE-UI-01.1]`
-- [ ] 1.4 Orden de los botones del sheet: **no implementado a propósito**. `docs/mocks/categories-form-sheet.png` y `docs/design.json` 4:869 muestran un único botón de acción en `y=730` y ningún Cancel ni Delete en ese nodo. Evidencia en `design.md`. La fila 4:869 sigue como `registro`.
+- [x] 1.3 Orden de las acciones del sheet: primario antes que cancelar, con `[SHEET-UI-01.1]`, `[SHEET-UI-01.2]` y `[SHEET-UI-01.3]`. Solo se reordena el DOM; el SCSS no se toca.
+- [x] 1.4 Trazabilidad con escenario real para `4:440`, `4:520`, `4:869` y `4:1062`, con `[TRACE-UI-01.1]`
 
 ## 2. Verificación
 

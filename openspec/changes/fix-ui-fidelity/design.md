@@ -7,7 +7,7 @@ Canvas `0:1` del archivo [F6ztYiRO9b0xYZA38xSTIA](https://www.figma.com/design/F
 | [4:1062](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1062) | `todo-empty-state` | `docs/mocks/todo-empty-state.png` | Empty state de Tasks y de Categories |
 | [4:440](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-440) | `todo-day-panel-open` | `docs/mocks/todo-day-panel-open.png` | Badge HOY, panel abierto |
 | [4:520](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-520) | `todo-panel-closed` | `docs/mocks/todo-panel-closed.png` | Badge HOY, panel cerrado |
-| [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869) | `categories-form-sheet` | `docs/mocks/categories-form-sheet.png` | Revisado; sin cambio (ver abajo) |
+| [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869) | `categories-form-sheet` | `docs/mocks/categories-form-sheet.png` | Orden de las acciones del sheet |
 | [4:1100](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-1100) | `icon/clipboard` | `docs/mocks/todo-empty-state.png` | Ilustración del empty state |
 
 ## Approach
@@ -31,19 +31,23 @@ Los defaults se comparten con `TasksPage`, que ya pasa los cuatro. Cambiarlos pa
 
 La acción llama a `openCreateSheet()`, el mismo camino que el FAB, para que el CTA abra la hoja de creación.
 
-### 2. Orden de los botones del sheet: no se cambia
+### 2. Orden de los botones del sheet
 
-El diagnóstico previo-era: "Guardar arriba, Cancelar abajo, como en Tasks". La evidencia visual dice lo contrario.
+El CSS ya es idéntico entre las dos hojas: `.form-actions` es `display: flex; flex-direction: column; gap` en `category-sheet.component.scss` y en `.editor-form .form-actions` de `tasks.page.scss`. Lo único que difiere es el orden en el DOM.
+
+Estado actual, verificado con un test que falla antes de la corrección: `category-sheet.component.html` pone `.sheet-cancel` (línea 95) antes que `.primary-action` (línea 98). `tasks.page.html` pone el `submit` de guardar (línea 327) antes que el de cancelar (línea 331).
 
 Medición sobre `docs/mocks/categories-form-sheet.png`, dentro de la caja de la hoja (`x` 24..351):
 
 - Banda de relleno `primary` `(75, 63, 107)`: `y = 730..779`, `x = 29..345`. Alto 50, ancho 327. Coincide con `Button y=730 h=50 x=24 w=327` de `docs/design.json`.
-- No hay ningún otro botón de acción. Entre `y = 664` y `y = 729` no hay ni un solo píxel no blanco. Entre `y = 780` y `y = 811` tampoco.
-- El árbol de `docs/design.json` 4:869 lista `Handle, Title, Field/Name, Field/Icon, Field/Color, Button`. No hay nodo de botón Cancel ni de botón Delete.
+- La única otra forma en la zona baja es una cápsula de `x = 26..297`, `y = 629..664`, con `primary` en un 20 % de los píxeles. Cae dentro de `Field/Color y=603 h=62`, o sea `y = 603..665`: son las muestras de color, no un botón.
+- `docs/design.json` 4:869 no contiene las cadenas `Cancel` ni `Delete` en ese nodo.
 
-O sea: Figma no compone ni Cancel ni Delete en este nodo. El código actual pone `.primary-action` primero, después `.sheet-cancel`, después `.danger-link`. Reordenar para "Guardar arriba, Cancelar abajo" no cambia nada observable frente al mock, porque el mock solo tiene un botón, y el cambio de orden sí alteraría la composición cuando aparecen Cancel y Delete en modo `Edit`.
+Conclusión: **el mock de categorías no compone Cancel ni Delete**, así que no fija el orden relativo de esos botones. El orden se toma de `docs/mocks/new-task-modal.png` (4:1267), donde el editor compone el primario en `y = 730..780` y tampoco dibuja un Cancel separado; la intención de que ambas hojas coincidan viene del reporte visual. El dato duro disponible es el orden del DOM del editor de tareas, ya corregido: Guardar arriba, Cancelar abajo.
 
-Decisión: **no se toca `CategorySheetComponent` ni su SCSS.** El punto queda documentado como "el síntoma reportado no se reproduce contra el mock" en vez de marcarse hecho. `4:869` conserva su fila `registro`; este change no añade escenarios para él.
+Cambio: reordenar los dos `button` dentro de `.form-actions` para poner `.primary-action` primero y `.sheet-cancel` después. `.danger-link` queda al final, así que en modo `Edit` el orden es Guardar, Cancelar, Eliminar.
+
+No se toca el SCSS. Verificado que no hay selectores dependientes del orden: `category-sheet.component.scss` no usa `:first-child`, `:last-child`, `:nth-*` ni selectores hermanos, y `.form-actions`, `.primary-action`, `.sheet-cancel` y `.danger-link` se aplican por clase. `src/theme/_notebook.scss` define un `.form-actions` genérico que tampoco depende del orden.
 
 ### 3. Badge HOY
 
@@ -85,7 +89,7 @@ No se introduce ningún valor visual suelto.
 
 - El chevron se pinta como `ion-icon` y no como carácter porque el mock lo dibuja como glifo vectorial con su propio ancho, y porque es lo único que hace que el `gap` existente funcione.
 - `min-width` en lugar de `width`: mantiene los 63 px de Figma sin introducir un corte de texto. Pedro no ha confirmado preferencia entre las dos; esta es la opción que no puede partir el badge.
-- No se reordenan los botones del sheet. Cambiar código correcto contra el mock para satisfacer una expectativa verbal sería una regresión de fidelidad, y el SCSS no se toca porque el problema, si existiera, sería de orden del DOM.
+- Se reordena el DOM y no el SCSS. `.form-actions` ya es una columna con `gap`, así que mover los `button` basta y no altera ninguna medida.
 
 ## Riesgos
 

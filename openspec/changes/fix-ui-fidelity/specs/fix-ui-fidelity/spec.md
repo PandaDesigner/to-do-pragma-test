@@ -60,17 +60,29 @@ El badge de hoy MUST renderizar el chevron como un `ion-icon chevron-forward` he
 - **WHEN** se pulsa el badge de hoy con el chevron como icono
 - **THEN** el filtro se limpia y el panel de pendientes se reabre, igual que antes del cambio.
 
-### Requirement: FID-03 El orden de los botones del sheet de categorías se deja intacto
+### Requirement: FID-03 El botón primario del sheet va antes que Cancelar
 
-El `CategorySheetComponent` MUST NOT reordenar sus acciones en este change. Figma 4:869 compone un único botón de acción de 327 por 50 en `y=730` y no registra botones Cancel ni Delete en ese nodo, de modo que el orden actual del DOM no se aparta del mock. La fila de `4:869` en `openspec/traceability.md` MUST conservar su estado `registro`. Figma: [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869).
+El bloque `.form-actions` de `CategorySheetComponent` MUST presentar el botón primario antes que el de cancelar, igual que el editor de tareas. En modo `Edit` el orden MUST ser Guardar, Cancelar, Eliminar. El cambio MUST ser solo de orden en el DOM: `category-sheet.component.scss` MUST NOT modificarse y `.form-actions` MUST conservar `display: flex` con `flex-direction: column`. Figma: [4:869](https://www.figma.com/design/F6ztYiRO9b0xYZA38xSTIA?node-id=4-869).
 
-#### Scenario: [SHEET-UI-01.1] El botón primario sigue siendo el primero en el DOM
+#### Scenario: [SHEET-UI-01.1] El botón primario va primero en las acciones
 
-- **GIVEN** `CategorySheetComponent` abierto
+- **GIVEN** `CategorySheetComponent` abierto en modo `Create`, conforme a Figma 4:869
 - **WHEN** se inspecciona `.form-actions`
-- **THEN** el primer hijo es `.primary-action`
-- **AND** el SCSS de `.form-actions` conserva `display: flex` y `flex-direction: column`
-- **AND** no se ha modificado `category-sheet.component.scss`.
+- **THEN** el primer botón es `.primary-action` y su texto es "Save category"
+- **AND** el botón de cancelar aparece después.
+
+#### Scenario: [SHEET-UI-01.2] En modo Edit el orden es Guardar, Cancelar, Eliminar
+
+- **GIVEN** `CategorySheetComponent` abierto en modo `Edit`
+- **WHEN** se inspecciona `.form-actions`
+- **THEN** el orden de las acciones es `.primary-action`, `.sheet-cancel` y `.danger-link`.
+
+#### Scenario: [SHEET-UI-01.3] El SCSS del sheet no cambia
+
+- **GIVEN** el bloque `.form-actions` del sheet
+- **WHEN** se revisa su hoja de estilo
+- **THEN** conserva `display: flex` y `flex-direction: column`
+- **AND** `category-sheet.component.scss` no introduce selectores dependientes del orden como `:first-child`, `:last-child` o `:nth-child`.
 
 ### Requirement: FID-04 La fila 4:1062 deja de ser solo registro
 
