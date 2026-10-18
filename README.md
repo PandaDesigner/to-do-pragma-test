@@ -130,7 +130,7 @@ El APK empaqueta el bundle de producción vigente: `assets/www/main-JXVYDPZH.js`
 
 El AAB se firma vía `:app:bundleRelease` automáticamente.
 
-Todavía **no hay enlace de descarga publicado**: cargar el APK en GitHub Releases no está autorizado en esta fase. Ver [Publicación pendiente](#publicación-pendiente).
+El APK está publicado en el release [v1.0.0](https://github.com/PandaDesigner/to-do-pragma-test/releases/tag/v1.0.0). Descarga directa: [`todo-notebook-v1.0.0.apk`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/todo-notebook-v1.0.0.apk), con su [`SHA256SUMS`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/SHA256SUMS). El enlace no es a un IPA: **no hay IPA firmado**, y el motivo es la falta de Apple Developer Program, no una entrega pendiente. Ver [iOS](#ios-ipa-no-firmado-por-decision-de-entrega).
 
 ### iOS (IPA: no firmado, por decisión de entrega)
 
@@ -186,9 +186,16 @@ xcrun simctl install booted "platforms/ios/build/Debug-iphonesimulator/Todo Note
 xcrun simctl launch booted io.github.pandadesigner.todonotebook
 ```
 
-#### Publicación pendiente
+#### Release publicado
 
-No hay ningún enlace de descarga publicado. **Publicar el APK y cualquier otro artefacto en GitHub Releases no está autorizado todavía** y no se ha hecho. Cuando se autorice, el APK firmado es `platforms/android/app/build/outputs/apk/release/app-release.apk`.
+El APK firmado está publicado en [v1.0.0](https://github.com/PandaDesigner/to-do-pragma-test/releases/tag/v1.0.0):
+
+- [`todo-notebook-v1.0.0.apk`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/todo-notebook-v1.0.0.apk) — 8.099.963 bytes, SHA-256 `15216c0468c96863b310472d19879dd39b708abd11ae2b2cef91a753de1d9ef0`
+- [`SHA256SUMS`](https://github.com/PandaDesigner/to-do-pragma-test/releases/download/v1.0.0/SHA256SUMS) — el mismo hash del APK renombrado
+
+El tag `v1.0.0` apunta al commit de merge del PR #49, que ya está en `develop`. El release publica solo esos dos archivos: no hay fuentes, ni el `.xcarchive`, ni claves ni certificados, ni `firebase-config.json`, ni ningún secreto. El APK local sigue siendo `platforms/android/app/build/outputs/apk/release/app-release.apk`.
+
+**Lo único que no hay es el IPA firmado**, por la razón ya explicada en [iOS](#ios-ipa-no-firmado-por-decision-de-entrega): la cuenta es un Apple ID gratuito sin Apple Developer Program, así que no existe perfil de distribución. El `.xcarchive` sin firmar sigue disponible en el repositorio, en `platforms/ios/build/Release-iphoneos/App.xcarchive`, y no se publica como artefacto de instalación.
 
 #### Team ID
 
