@@ -37,6 +37,13 @@ function loadEnv(filePath) {
   return entries;
 }
 
+function ensureReleaseFirebaseConfig() {
+  return spawnSync('node', ['scripts/ensure-firebase-config.cjs', '--require'], {
+    stdio: 'inherit',
+    cwd: projectRoot,
+  });
+}
+
 function runWebBuild() {
   return spawnSync('npx', ['ng', 'build', '--configuration', 'production'], {
     stdio: 'inherit',
@@ -77,6 +84,11 @@ const missing = REQUIRED_ENV_VARS.filter((name) => !env[name]);
 if (missing.length > 0) {
   console.error(`Missing in ${envFile}: ${missing.join(', ')}`);
   process.exit(1);
+}
+
+const firebase = ensureReleaseFirebaseConfig();
+if (firebase.status !== 0) {
+  process.exit(firebase.status ?? 1);
 }
 
 const web = runWebBuild();

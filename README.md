@@ -194,8 +194,27 @@ Para Apple Distribution o Ad Hoc con perfil manual, abre `platforms/ios/App.xcwo
 
 El comando `npm audit` informa avisos heredados de `tar`, `@grpc/grpc-js`, `basic-ftp`, `braces`, `tmp` y `sprintf-js` (ver `openspec/changes/init/verify-report.md`). No afectan al bundle del navegador pero quedan pendientes de un cambio dedicado.
 
+## Firebase y Remote Config
+
+El proyecto de Firebase es `to-do-pragma`. Remote Config se lee una vez al arrancar. En producción el intervalo mínimo es `remoteConfigFetchIntervalMs` (60 000 ms). `ng serve` usa el entorno de desarrollo y muestra las acciones de debug. La build `--configuration production` las deja apagadas salvo que el valor remoto sea el booleano `true`.
+
+| Parámetro            | Tipo    | Valor por defecto |
+| -------------------- | ------- | ----------------- |
+| enable_debug_actions | BOOLEAN | false             |
+| enable_categories    | BOOLEAN | true              |
+
+La app busca `src/assets/firebase-config.json`. Ese archivo está en `.gitignore`. Para una máquina local:
+
+```bash
+cp src/assets/firebase-config.example.json src/assets/firebase-config.json
+```
+
+Completá los campos públicos desde la consola de Firebase. No commitees el JSON. Un release sin ese archivo puede generarlo si existen `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID` y `FIREBASE_MESSAGING_SENDER_ID`. `FIREBASE_AUTH_DOMAIN` y `FIREBASE_STORAGE_BUCKET` son opcionales. En CI esos secretos también son opcionales: sin el archivo, la verificación sigue y Remote Config usa los valores por defecto (`enable_categories` queda en true).
+
+Para la demo, abrí https://console.firebase.google.com/project/to-do-pragma/config, cambiá el parámetro, pulsá Publicar cambios, esperá `remoteConfigFetchIntervalMs` y reiniciá la app.
+
 ## Estado OpenSpec
 
-No hay changes activos. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
+Changes activos: `finish-remaining-ui`, `fix-delivery-functional`, `firebase-env-production`. Los cerrados están en `openspec/changes/archive/` (`init`, `app-base`, `theme-foundation`, `theme-aliases`, `i18n`, `todo-screen`, `tasks-crud`, `fix-tasks-fab-pager-layout`, `category-sheet`). Las specs vigentes están en `openspec/specs/`. La matriz de escenarios está en `openspec/traceability.md`.
 
 Las filas `registro` de F6 siguen abiertas a propósito: anotan nodos de Figma que todavía no tienen escenario. La evidencia visual del sheet de categorías y del pager quedó ausente porque esta máquina no tenía simulador firmado.

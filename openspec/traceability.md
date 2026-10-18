@@ -68,3 +68,28 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | 4:1496 | settings | docs/mocks/todo-panel-closed.png | SET-03 | SET-03 | fix-delivery-functional | src/app/pages/settings/settings.page.spec.ts:[SET-03] | ausente: sin captura en esta sesión | pendiente |
 | 4:1496 | settings | docs/mocks/todo-panel-closed.png | SET-04 | SET-04 | fix-delivery-functional | src/app/store/task.spec.ts:[SET-04] | ausente: sin captura en esta sesión | pendiente |
 | 4:788 | categories-list | docs/mocks/categories-list.png | CATDEL-01 | CATDEL-01 | fix-delivery-functional | src/app/store/category.spec.ts:[CATDEL-01] | ausente: sin captura en esta sesión | pendiente |
+| -- | build | -- | ENV-01 | ENV-01.1 | firebase-env-production | src/project-config.spec.ts:[ENV-01.1] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.2 | firebase-env-production | src/project-config.spec.ts:[ENV-01.2] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.3 | firebase-env-production | src/environments/environment.spec.ts:[ENV-01.3] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.4 | firebase-env-production | src/project-config.spec.ts:[ENV-01.4] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.5 | firebase-env-production | src/build-scripts.spec.ts:[ENV-01.5] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.6 | firebase-env-production | src/app/core/config/firebase-remote-config-port.spec.ts:[ENV-01.6] | n/a | local |
+| -- | build | -- | ENV-01 | ENV-01.7 | firebase-env-production | src/project-config.spec.ts:[ENV-01.7] | n/a | local |
+| -- | remote-config | -- | RC-06 | RC-06.1 | firebase-env-production | src/app/core/config/firebase-remote-config-port.spec.ts:[RC-06.1] | n/a | local |
+| -- | remote-config | -- | RC-06 | RC-06.2 | firebase-env-production | src/environments/environment.spec.ts:[RC-06.2] | n/a | local |
+| -- | remote-config | -- | RC-06 | RC-06.3 | firebase-env-production | src/app/core/config/firebase-remote-config-port.spec.ts:[RC-06.3] | n/a | local |
+| -- | remote-config | -- | RC-06 | RC-06.4 | firebase-env-production | src/app/core/config/remote-config.spec.ts:[RC-06.4] | n/a | local |
+| -- | remote-config | -- | RC-06 | RC-06.5 | firebase-env-production | src/app/core/config/firebase-remote-config-port.spec.ts:[RC-06.5] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.1 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.1] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.2 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.2] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.3 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.3] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.4 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.4] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.5 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.5] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.6 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.6] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.7 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.7] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.1 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.1] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.2 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.2] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.3 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.3] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.4 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.4] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.5 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.5] | n/a | local |
+| -- | readme | -- | DOC-FB-01 | DOC-FB-01.6 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.6] | n/a | local |

@@ -16,6 +16,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: node scripts/ensure-firebase-config.cjs
       - run: npm test -- --coverage
       - run: npm run lint
       - run: npm run lint:styles
@@ -49,6 +50,7 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('platforms/android/gradle/wrapper/gradle-wrapper.properties', 'platforms/android/build.gradle', 'platforms/android/app/build.gradle') }}
           restore-keys: gradle-${{ runner.os }}-
       - run: npm ci
+      - run: node scripts/ensure-firebase-config.cjs
       - name: Build web bundle
         # cordova platform add requires www/ to recognise the project root.
         run: npm run build
@@ -76,6 +78,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
+      - run: node scripts/ensure-firebase-config.cjs
       - name: Install CocoaPods
         run: sudo gem install cocoapods --no-document
       - name: Build web bundle
