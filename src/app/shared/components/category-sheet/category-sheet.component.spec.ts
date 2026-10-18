@@ -37,6 +37,8 @@ async function setup() {
   const translate = TestBed.inject(TranslateService);
   translate.setTranslation('en', en);
   translate.use('en');
+  // jsdom leaves shadowRoot.activeElement null, so the sheet handle focus trap recurses.
+  jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation(() => undefined);
   const store = TestBed.inject(CategoryStore);
   const fixture = TestBed.createComponent(CategorySheetComponent);
   fixture.detectChanges();
@@ -56,6 +58,10 @@ const draft: Category = {
 };
 
 describe('CategorySheetComponent', () => {
+  afterEach(() => {
+    document.querySelectorAll('ion-modal').forEach((modal) => modal.remove());
+  });
+
   it('[SHEET-01.1] shows "New category" title in Create mode without Delete conforme a Figma 4:869', async () => {
     const { store, fixture } = await setup();
     store.openCategorySheet({ mode: 'create' });
@@ -212,6 +218,34 @@ describe('CategorySheetComponent', () => {
     fixture.componentInstance.remove();
     expect(remove).toHaveBeenCalledWith('c1');
     expect(store.sheetRequest()).toBeNull();
+  });
+
+  it('[SHEET-05.5] cancels a new category without saving conforme a Figma 4:869', async () => {
+    const { store, fixture } = await setup();
+    store.openCategorySheet({ mode: 'create' });
+    fixture.detectChanges();
+    await fixture.whenStable();
+    fixture.detectChanges();
+    fixture.componentInstance.onName('Compras');
+    const save = jest.spyOn(fixture.componentInstance.save, 'emit');
+    const modal = [...document.querySelectorAll('ion-modal')].at(-1) as
+      | (HTMLElement & { initialBreakpoint?: number; breakpoints?: number[] })
+      | undefined;
+    const cancel = [...(modal?.querySelectorAll('button') ?? [])].find(
+      (button) => button.textContent?.trim() === 'Cancel',
+    );
+    expect(modal).toBeTruthy();
+    expect(modal?.initialBreakpoint).toBe(0.25);
+    expect(modal?.breakpoints).toEqual([0, 0.25, 0.5, 0.75]);
+    expect(modal.getAttribute('handlebehavior')).toBe('cycle');
+    expect(cancel).toBeTruthy();
+    const dismiss = jest.spyOn(fixture.componentInstance, 'dismiss');
+    cancel!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+    expect(dismiss).toHaveBeenCalled();
+    expect(save).not.toHaveBeenCalled();
+    expect(store.sheetRequest()).toBeNull();
+    expect(fixture.componentInstance.name()).toBe('');
   });
 
   it('[SHEET-05.4] guards delete in Create mode without an editing id conforme a Figma 4:869', async () => {

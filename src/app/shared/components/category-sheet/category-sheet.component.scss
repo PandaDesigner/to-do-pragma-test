@@ -20,15 +20,6 @@
   min-height: 487px;
 }
 
-.category-sheet__handle {
-  display: block;
-  width: 36px;
-  height: 5px;
-  border-radius: var(--app-radius-pill);
-  background: var(--app-border);
-  align-self: center;
-}
-
 .category-sheet__title {
   margin: 0;
 }
@@ -105,6 +96,17 @@
 .primary-action[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.sheet-cancel {
+  align-self: center;
+  min-height: var(--app-touch-target);
+  background: transparent;
+  border: none;
+  color: var(--app-text);
+  font: 600 14px/normal var(--app-font-body);
+  cursor: pointer;
+  padding: var(--app-space-8) var(--app-space-12);
 }
 
 .danger-link {

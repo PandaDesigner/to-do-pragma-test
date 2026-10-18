@@ -1,12 +1,14 @@
 <ion-modal
   [isOpen]="isOpen()"
+  [initialBreakpoint]="0.25"
+  [breakpoints]="[0, 0.25, 0.5, 0.75]"
+  handleBehavior="cycle"
   (didDismiss)="dismiss()"
   aria-labelledby="category-sheet-title"
 >
   <ng-template>
     <ion-content>
       <section class="category-sheet">
-        <span class="category-sheet__handle" aria-hidden="true"></span>
         <h2 id="category-sheet-title" class="title category-sheet__title">
           {{ title() }}
         </h2>
@@ -90,6 +92,9 @@
         </div>
 
         <div class="form-actions">
+          <button type="button" class="sheet-cancel" (click)="dismiss()">
+            {{ 'category.sheet.cancel' | translate }}
+          </button>
           <button
             type="button"
             class="primary primary-action"
