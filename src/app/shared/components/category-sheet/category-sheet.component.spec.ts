@@ -38,7 +38,9 @@ async function setup() {
   translate.setTranslation('en', en);
   translate.use('en');
   // jsdom leaves shadowRoot.activeElement null, so the sheet handle focus trap recurses.
-  jest.spyOn(HTMLElement.prototype, 'focus').mockImplementation(() => undefined);
+  jest
+    .spyOn(HTMLElement.prototype, 'focus')
+    .mockImplementation(() => undefined);
   const store = TestBed.inject(CategoryStore);
   const fixture = TestBed.createComponent(CategorySheetComponent);
   fixture.detectChanges();
@@ -237,7 +239,7 @@ describe('CategorySheetComponent', () => {
     expect(modal).toBeTruthy();
     expect(modal?.initialBreakpoint).toBe(0.9);
     expect(modal?.breakpoints).toEqual([0, 0.5, 0.9]);
-    expect(modal.getAttribute('handlebehavior')).toBe('cycle');
+    expect(modal?.getAttribute('handlebehavior')).toBe('cycle');
     expect(cancel).toBeTruthy();
     const dismiss = jest.spyOn(fixture.componentInstance, 'dismiss');
     cancel!.dispatchEvent(new MouseEvent('click', { bubbles: true }));
