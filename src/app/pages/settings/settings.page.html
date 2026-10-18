@@ -1,0 +1,58 @@
+<ion-content>
+  <main class="notebook-page">
+    <app-page-header
+      [overline]="'settings.overline' | translate"
+      [title]="'settings.title' | translate"
+    />
+    <section
+      class="settings-list"
+      [attr.aria-label]="'settings.title' | translate"
+    >
+      <label class="setting-row">
+        <span>{{ 'settings.darkMode' | translate }}</span>
+        <ion-toggle
+          [checked]="darkEnabled()"
+          (ionChange)="setDarkFromToggle($event)"
+          [attr.aria-label]="'settings.darkMode' | translate"
+        />
+      </label>
+      <label class="setting-row">
+        <span>{{ 'settings.language' | translate }}</span>
+        <select
+          [formControl]="languageControl"
+          (change)="setLanguageFromSelect($event)"
+          [attr.aria-label]="'settings.language' | translate"
+        >
+          <option [value]="languages.ES">
+            {{ 'settings.spanish' | translate }}
+          </option>
+          <option [value]="languages.EN">
+            {{ 'settings.english' | translate }}
+          </option>
+        </select>
+      </label>
+    </section>
+    @if (flags.debugActionsEnabled()) {
+    <section class="debug" aria-label="Debug">
+      <h2>{{ 'settings.debug' | translate }}</h2>
+      <p>{{ 'settings.debugHint' | translate }}</p>
+      <button
+        type="button"
+        data-testid="generate-tasks"
+        [disabled]="debugSeedExhausted()"
+        (click)="generateFiveThousand()"
+      >
+        {{ 'settings.debugAction' | translate }}
+      </button>
+      <button
+        type="button"
+        class="danger"
+        data-testid="delete-tasks"
+        (click)="removeAllTasks()"
+      >
+        {{ 'settings.debugDelete' | translate }}
+      </button>
+    </section>
+    }
+  </main>
+</ion-content>

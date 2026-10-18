@@ -1,0 +1,13 @@
+<div class="shell">
+  <app-side-tab-rail
+    [active]="activeTab()"
+    [showMy]="flags.categoriesEnabled()"
+    [sectionsEnabled]="flags.categoriesEnabled()"
+    (selected)="openTab($event)"
+  />
+  <ion-router-outlet />
+  <app-category-sheet
+    (save)="onCategorySave($event)"
+    (delete)="onCategoryDelete($event)"
+  />
+</div>

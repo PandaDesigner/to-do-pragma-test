@@ -1,5 +1,16 @@
 node_modules/
+/todo-notebook-init/
+/.claude/
+/.codex/
+/.cursor/
+/.opencode/
+/.pi/
+/.trae/
+/.vscode/
+/.idea/
 .angular/
+.ionic/
+out-tsc/
 coverage/
 dist/
 www/
@@ -8,11 +19,15 @@ plugins/
 .env
 .env.*
 !.env.example
-src/environments/environment.ts
-src/environments/environment.prod.ts
+src/assets/firebase-config.json
 *.keystore
 *.jks
 *.p12
 *.mobileprovision
+pragmadev.jks
+pragmadev-appbase.jks
+build.json
 *.log
 .DS_Store
+# Local AI runtime state
+.atl/

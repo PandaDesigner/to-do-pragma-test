@@ -1,0 +1,95 @@
+@use 'tokens' as t;
+
+// Paleta Figma 4:440 y 4:1560 expuesta como variables --app-* y --ion-*. El
+// partial tokens no emite CSS; este archivo es el único punto de salida.
+:root {
+  --app-primary: #{t.$color-primary};
+  --app-primary-dark: #{t.$color-primary-dark};
+  --app-on-primary: #{t.$color-on-primary};
+  --app-text: #{t.$color-text};
+  --app-text-muted: #{t.$color-text-muted};
+  // Tono de los dias adyacentes del calendario. Solo lo consume el filtro de
+  // rango de fechas, que lo necesita por paleta: el mismo gris no alcanza AA
+  // en las dos.
+  --app-calendar-adjacent: #{t.$color-calendar-adjacent-light};
+  --app-surface: #{t.$color-surface};
+  --app-surface-muted: #{t.$color-surface-muted};
+  --app-border: #{t.$color-border};
+  --app-card-border: #{t.$color-card-border};
+  --app-check-empty: #{t.$color-check-empty};
+  // El disco vacío no cambia en oscuro. La tinta del icono tampoco: primary-dark sí se invierte.
+  --app-illustration-ink: #{t.$color-primary-dark};
+  --app-accent-link: #{t.$color-accent-link};
+  --app-danger: #{t.$color-danger};
+  --app-scrim: #{t.$color-scrim};
+
+  --app-space-4: #{t.$space-4};
+  --app-space-8: #{t.$space-8};
+  --app-space-12: #{t.$space-12};
+  --app-space-16: #{t.$space-16};
+  --app-space-24: #{t.$space-24};
+  --app-space-32: #{t.$space-32};
+  --app-content-inset-start: #{t.$content-inset-start};
+  --app-content-inset-end: #{t.$content-inset-end};
+  --app-content-day-top: #{t.$content-day-top};
+  --app-content-page-top: #{t.$content-page-top};
+  --app-day-actions-height: #{t.$day-actions-height};
+  --app-day-badge-min-width: #{t.$day-badge-min-width};
+  --app-day-badge-height: #{t.$day-badge-height};
+  --app-day-badge-icon-size: #{t.$day-badge-icon-size};
+  --app-task-row-height: #{t.$task-row-height};
+  --app-chip-height: #{t.$chip-height};
+  --app-chip-selected-height: #{t.$chip-selected-height};
+  --app-touch-target: #{t.$touch-target};
+  --app-pager-height: #{t.$pager-height};
+  --app-fab-size: #{t.$fab-size};
+  --app-swipe-action-width: #{t.$swipe-action-width};
+  --app-fab-icon-size: #{t.$fab-icon-size};
+  --app-fab-inset-end: #{t.$fab-inset-end};
+  --app-fab-inset-bottom: #{t.$fab-inset-bottom};
+
+  --app-radius-badge: #{t.$radius-badge};
+  --app-radius-checkbox: #{t.$radius-checkbox};
+  --app-radius-button: #{t.$radius-button};
+  --app-radius-tab: #{t.$radius-tab};
+  --app-radius-card: #{t.$radius-card};
+  --app-radius-input: #{t.$radius-input};
+  --app-radius-accent-underline: #{t.$radius-accent-underline};
+  --app-radius-round: 50%;
+  --app-radius-pill: #{t.$radius-pill};
+
+  --app-stroke-checkbox: #{t.$stroke-checkbox};
+  --app-stroke-divider: #{t.$stroke-divider};
+
+  // Aliases históricos de tokens tab/* mientras no se hayan migrado los
+  // consumidores finales; se eliminan al cerrar la migración.
+  --tab-todo: #{t.$tab-todo};
+  --tab-routine: #{t.$tab-routine};
+  --tab-event: #{t.$tab-event};
+  --tab-my: #{t.$tab-my};
+  --tab-more: #{t.$tab-more};
+  --tab-filler: #{t.$tab-filler};
+  --app-category-1: #{t.$tab-todo};
+  --app-category-2: #{t.$tab-routine};
+  --app-category-3: #{t.$tab-event};
+  --app-category-4: #{t.$tab-my};
+  --app-category-5: #{t.$tab-more};
+  --app-category-filler: #{t.$tab-filler};
+  --app-tab-label: #{t.$color-primary-dark};
+  --app-rail-ink-mix: 45%;
+  --app-rail-ink-base: #{t.$color-rail-ink};
+  --app-shadow-card: 0 4px 16px 0 #{t.$shadow-card-color};
+  --app-shadow-fab: 0 8px 10px #{t.$shadow-fab-color};
+  --ion-backdrop-color: #{t.$color-scrim};
+
+  // Puente Ionic: primary, danger y referencias a surface y text.
+  --ion-color-primary: #{t.$color-primary};
+  --ion-color-primary-rgb: #{t.$primary-rgb};
+  --ion-color-primary-contrast: #{t.$color-on-primary};
+  --ion-color-primary-shade: #{t.$primary-shade};
+  --ion-color-primary-tint: #{t.$primary-tint};
+  --ion-color-danger: #{t.$color-danger};
+  --ion-background-color: var(--app-surface);
+  --ion-text-color: var(--app-text);
+  --ion-font-family: var(--app-font-body);
+}

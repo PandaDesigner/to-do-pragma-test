@@ -1,0 +1,154 @@
+{
+  "settings": {
+    "overline": "Ajustes",
+    "title": "Más",
+    "tab": "Ajustes",
+    "darkMode": "Modo oscuro",
+    "language": "Idioma",
+    "spanish": "Español",
+    "english": "English",
+    "debug": "Debug",
+    "debugHint": "Crea 5.000 tareas de prueba.",
+    "debugAction": "Generar 5.000 tareas de prueba",
+    "debugDelete": "Eliminar todas las tareas"
+  },
+  "rail": {
+    "label": "Secciones",
+    "todo": "Todo",
+    "routine": "Rutina",
+    "event": "Evento",
+    "category": "Categoría",
+    "more": "Más"
+  },
+  "shell": {
+    "remote": "Configuración remota",
+    "retry": "Reintentar configuración"
+  },
+  "remoteConfig": {
+    "error": {
+      "title": "Configuración remota",
+      "message": "No se pudo cargar la configuración remota.",
+      "dismiss": "Cerrar"
+    }
+  },
+  "category": {
+    "section": "Sección",
+    "sections": {
+      "general": "General",
+      "routine": "Rutina",
+      "event": "Evento"
+    },
+    "overline": "Mis listas",
+    "title": "Categorías",
+    "listLabel": "Categorías",
+    "emptyTitle": "Tu primera lista",
+    "emptyHint": "Crea una categoría para organizar tus tareas.",
+    "emptyAction": "Crear categoría",
+    "disabled": "Las categorías están deshabilitadas por configuración remota.",
+    "count": "{{count}} tareas",
+    "edit": "Editar {{name}}",
+    "new": "Nueva categoría",
+    "retry": "Reintentar",
+    "sheet": {
+      "new": "Nueva categoría",
+      "edit": "Editar categoría",
+      "name": "Nombre",
+      "icon": "Icono",
+      "color": "Color",
+      "section": "Sección",
+      "preview": "Vista previa",
+      "cancel": "Cancelar",
+      "save": "Guardar categoría",
+      "saveChanges": "Guardar cambios",
+      "delete": "Eliminar categoría"
+    }
+  },
+  "notes": {
+    "overline": "Mis notas"
+  },
+  "task": {
+    "complete": "Completar o reabrir {{title}}",
+    "edit": "Editar {{title}}",
+    "delete": "Eliminar {{title}}",
+    "deleteAction": "Eliminar",
+    "deleteTitle": "¿Eliminar tarea?",
+    "deleteMessage": "“{{title}}” se eliminará de forma permanente.",
+    "deleteCancel": "Cancelar",
+    "deleteConfirm": "Eliminar",
+    "duration": "Duración: {{minutes}} min",
+    "reminder": "Aviso: {{minutes}} min antes",
+    "bullet": "Nota",
+    "actions": {
+      "COMPLETE": "Completar",
+      "EXPIRE": "Vencer",
+      "ARCHIVE": "Archivar",
+      "REOPEN": "Reabrir",
+      "RESCHEDULE": "Reprogramar para hoy",
+      "RESTORE": "Restaurar"
+    }
+  },
+  "todo": {
+    "today": "HOY",
+    "pending": "Tareas pendientes",
+    "reschedule": "Reprogramar para hoy",
+    "all": "Todas",
+    "pendingChip": "Pendientes",
+    "emptyTitle": "No hay tareas para hoy",
+    "emptyHint": "Pulsa + o escribe abajo para añadir la primera tarea.",
+    "emptyAction": "Añadir tarea",
+    "quickAdd": "Añadir tarea",
+    "retry": "Reintentar",
+    "listLabel": "Tareas",
+    "filterLabel": "Filtrar por categoría",
+    "dateFilter": {
+      "open": "Filtrar por fecha",
+      "title": "Filtrar por fecha",
+      "hint": "Elige la fecha inicial y la final.",
+      "apply": "Aplicar",
+      "cancel": "Cancelar",
+      "clear": "Quitar"
+    },
+    "editor": {
+      "new": "Nueva tarea",
+      "edit": "Editar tarea",
+      "title": "Título",
+      "titleError": "Escribe un título.",
+      "date": "Fecha",
+      "time": "Hora",
+      "duration": "Duración",
+      "custom": "Personalizado",
+      "durationMin": "Duración (min)",
+      "duration15": "15 min",
+      "duration30": "30 min",
+      "duration45": "45 min",
+      "duration60": "1 h",
+      "duration75": "1 h 15 min",
+      "duration90": "1 h 30 min",
+      "duration105": "1 h 45 min",
+      "duration120": "2 h",
+      "save": "Guardar tarea",
+      "saveChanges": "Guardar cambios",
+      "newCategory": "Crear categoría",
+      "cancel": "Cancelar",
+      "reminder": "Aviso (min antes)",
+      "none": "Sin aviso",
+      "before5": "5 min antes",
+      "before15": "15 min antes",
+      "before30": "30 min antes",
+      "before60": "1 h antes",
+      "reminderHint": "Los avisos requieren plugin push y credenciales del dispositivo.",
+      "category": "Categoría",
+      "uncategorized": "Sin categoría"
+    }
+  },
+  "tasks": {
+    "fab": {
+      "new": "Nueva tarea"
+    },
+    "pager": {
+      "label": "Paginación de tareas",
+      "prev": "Página anterior",
+      "next": "Página siguiente"
+    }
+  }
+}

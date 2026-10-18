@@ -1,0 +1,26 @@
+<section class="empty-state">
+  @if (illustrated()) {
+    <span
+      class="illustration"
+      aria-hidden="true"
+      [style.width.px]="illustrationSize"
+      [style.height.px]="illustrationSize"
+    >
+      <ion-icon [icon]="illustrationIcon" aria-hidden="true"></ion-icon>
+    </span>
+  }
+  <h2>{{ title() }}</h2>
+  @if (hint()) {
+    <p>{{ hint() }}</p>
+  }
+  @if (actionLabel()) {
+    <button
+      type="button"
+      [style.width.px]="actionWidth"
+      [style.height.px]="actionHeight"
+      (click)="action.emit()"
+    >
+      {{ actionLabel() }}
+    </button>
+  }
+</section>

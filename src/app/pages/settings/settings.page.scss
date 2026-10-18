@@ -1,0 +1,25 @@
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--app-space-16);
+  padding-inline-end: var(--app-content-inset-end);
+  min-height: 77px;
+  border-bottom: 1px solid var(--app-border);
+  color: var(--app-text);
+}
+
+.debug {
+  padding-inline-end: var(--app-content-inset-end);
+}
+
+.setting-row select {
+  width: auto;
+  max-width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-button);
+  background: var(--app-surface);
+  color: var(--app-text);
+  padding: 8px;
+}

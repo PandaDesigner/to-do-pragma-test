@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.shell {
+  --app-rail-width: 27px;
+
+  display: flex;
+  height: 100%;
+  min-height: 0;
+}
+
+ion-router-outlet {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+}

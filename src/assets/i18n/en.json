@@ -1,0 +1,154 @@
+{
+  "settings": {
+    "overline": "Settings",
+    "title": "More",
+    "tab": "Settings",
+    "darkMode": "Dark mode",
+    "language": "Language",
+    "spanish": "Español",
+    "english": "English",
+    "debug": "Debug",
+    "debugHint": "Create 5,000 test tasks.",
+    "debugAction": "Generate 5,000 test tasks",
+    "debugDelete": "Delete all tasks"
+  },
+  "rail": {
+    "label": "Sections",
+    "todo": "Todo",
+    "routine": "Routine",
+    "event": "Event",
+    "category": "Category",
+    "more": "More"
+  },
+  "shell": {
+    "remote": "Remote configuration",
+    "retry": "Retry configuration"
+  },
+  "remoteConfig": {
+    "error": {
+      "title": "Remote configuration",
+      "message": "The remote configuration could not be loaded.",
+      "dismiss": "Dismiss"
+    }
+  },
+  "category": {
+    "section": "Section",
+    "sections": {
+      "general": "General",
+      "routine": "Routine",
+      "event": "Event"
+    },
+    "overline": "My lists",
+    "title": "Categories",
+    "listLabel": "Categories",
+    "emptyTitle": "Your first list",
+    "emptyHint": "Create a category to organize your tasks.",
+    "emptyAction": "Create a category",
+    "disabled": "Categories are disabled by remote configuration.",
+    "count": "{{count}} tasks",
+    "edit": "Edit {{name}}",
+    "new": "New category",
+    "retry": "Retry",
+    "sheet": {
+      "new": "New category",
+      "edit": "Edit category",
+      "name": "Name",
+      "icon": "Icon",
+      "color": "Color",
+      "section": "Section",
+      "preview": "Preview",
+      "cancel": "Cancel",
+      "save": "Save category",
+      "saveChanges": "Save changes",
+      "delete": "Delete category"
+    }
+  },
+  "notes": {
+    "overline": "My notes"
+  },
+  "task": {
+    "complete": "Complete or reopen {{title}}",
+    "edit": "Edit {{title}}",
+    "delete": "Delete {{title}}",
+    "deleteAction": "Delete",
+    "deleteTitle": "Delete task?",
+    "deleteMessage": "“{{title}}” will be permanently deleted.",
+    "deleteCancel": "Cancel",
+    "deleteConfirm": "Delete",
+    "duration": "Duration: {{minutes}} min",
+    "reminder": "Reminder: {{minutes}} min before",
+    "bullet": "Note",
+    "actions": {
+      "COMPLETE": "Complete",
+      "EXPIRE": "Expire",
+      "ARCHIVE": "Archive",
+      "REOPEN": "Reopen",
+      "RESCHEDULE": "Reschedule to today",
+      "RESTORE": "Restore"
+    }
+  },
+  "todo": {
+    "today": "TODAY",
+    "pending": "Uncompleted tasks",
+    "reschedule": "Reschedule to Today",
+    "all": "All",
+    "pendingChip": "Pending",
+    "emptyTitle": "No tasks for today",
+    "emptyHint": "Tap + or write in the field below to add your first task.",
+    "emptyAction": "Add a task",
+    "quickAdd": "Add task",
+    "retry": "Retry",
+    "listLabel": "Tasks",
+    "filterLabel": "Filter by category",
+    "dateFilter": {
+      "open": "Filter by date",
+      "title": "Filter by date",
+      "hint": "Pick the start and the end date.",
+      "apply": "Apply",
+      "cancel": "Cancel",
+      "clear": "Clear"
+    },
+    "editor": {
+      "new": "New task",
+      "edit": "Edit task",
+      "title": "Title",
+      "titleError": "Write a title.",
+      "date": "Date",
+      "time": "Time",
+      "duration": "Duration",
+      "custom": "Custom",
+      "durationMin": "Duration (min)",
+      "duration15": "15 min",
+      "duration30": "30 min",
+      "duration45": "45 min",
+      "duration60": "1 h",
+      "duration75": "1 h 15 min",
+      "duration90": "1 h 30 min",
+      "duration105": "1 h 45 min",
+      "duration120": "2 h",
+      "save": "Save task",
+      "saveChanges": "Save changes",
+      "newCategory": "Create category",
+      "cancel": "Cancel",
+      "reminder": "Reminder (min before)",
+      "none": "No reminder",
+      "before5": "5 min before",
+      "before15": "15 min before",
+      "before30": "30 min before",
+      "before60": "1 h before",
+      "reminderHint": "Reminders need a push plugin and device credentials.",
+      "category": "Category",
+      "uncategorized": "No category"
+    }
+  },
+  "tasks": {
+    "fab": {
+      "new": "New task"
+    },
+    "pager": {
+      "label": "Task pagination",
+      "prev": "Previous page",
+      "next": "Next page"
+    }
+  }
+}

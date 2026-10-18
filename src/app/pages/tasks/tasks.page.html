@@ -1,0 +1,355 @@
+<ion-content [fullscreen]="false" [scrollY]="false">
+  <main class="notebook-page">
+    <div class="top-actions">
+      <button type="button" class="today-badge" (click)="focusToday()">
+        {{ 'todo.today' | translate }}
+        <ion-icon [icon]="icons.chevronForward" aria-hidden="true"></ion-icon>
+      </button>
+      <button
+        type="button"
+        class="date-filter-trigger"
+        [attr.aria-label]="'todo.dateFilter.open' | translate"
+        (click)="openDateFilter()"
+      >
+        <ion-icon [icon]="icons.calendarOutline" aria-hidden="true"></ion-icon>
+      </button>
+    </div>
+    @if (notesCategory(); as notes) {
+    <app-page-header
+      [overline]="'notes.overline' | translate"
+      [title]="notes.name"
+    />
+    } @else {
+    <app-page-header
+      [overline]="(headerTitle() | translate) + ' · ' + longDate()"
+      [title]="dayTitle()"
+      [day]="true"
+    />
+    @if (earlierTasks().length) {
+    <section
+      class="pending-panel"
+      [class.closed]="!panelOpen()"
+      [style.left.px]="panel.LEFT"
+      [style.top.px]="panel.TOP"
+      [style.width.px]="panel.WIDTH"
+      [style.height.px]="panelOpen() ? null : panel.CLOSED_HEIGHT"
+    >
+      <button
+        type="button"
+        class="panel-header"
+        [style.height.px]="panel.HEADER_HEIGHT"
+        [attr.aria-expanded]="panelOpen()"
+        (click)="togglePanel()"
+      >
+        {{ 'todo.pending' | translate }}
+      </button>
+      @if (panelOpen()) {
+      <div class="pending-rows">
+        @for (task of earlierTasks(); track task.id) {
+        <app-task-item
+          [task]="task"
+          [state]="pendingRowState"
+          [actions]="store.actionsFor(task)"
+          [categoryName]="task.categoryId ? categoryNames().get(task.categoryId) : undefined"
+          [categoryIcon]="task.categoryId ? categoryIcons().get(task.categoryId) : undefined"
+          [categoryColorToken]="task.categoryId ? categoryColors().get(task.categoryId) : undefined"
+          [showCategories]="flags.categoriesEnabled()"
+          [disabled]="store.busy()"
+          (taskToggle)="toggleTask($event)"
+          (action)="dispatch($event)"
+        />
+        }
+      </div>
+      <button type="button" class="reschedule" (click)="rescheduleEarlier()">
+        {{ 'todo.reschedule' | translate }}
+      </button>
+      }
+    </section>
+    } } @if (flags.categoriesEnabled() && availableCategories().length) {
+    <nav class="chips" [attr.aria-label]="'todo.filterLabel' | translate">
+      <app-chip
+        [label]="'todo.all' | translate"
+        [selected]="selectedCategoryId() === undefined"
+        (choose)="chooseCategory(undefined)"
+      />
+      <app-chip
+        [label]="'todo.pendingChip' | translate"
+        [selected]="pendingSelected()"
+        (choose)="choosePending()"
+      />
+      @for (category of availableCategories(); track category.id) {
+      <app-chip
+        [label]="category.name"
+        [colorToken]="category.colorToken"
+        [selected]="selectedCategoryId() === category.id"
+        (choose)="chooseCategory(category.id)"
+      />
+      }
+    </nav>
+    } @if (feedback.error() || store.error()) {
+    <div class="error-notice" role="alert">
+      <p>{{ feedback.error() || store.error() }}</p>
+      <button type="button" (click)="retry()" [disabled]="store.busy()">
+        {{ 'todo.retry' | translate }}
+      </button>
+    </div>
+    }
+    <div class="task-scroll">
+      <ion-content>
+        <section
+          [attr.aria-label]="'todo.listLabel' | translate"
+          class="task-list"
+          [style.margin-top.px]="
+              earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
+            "
+        >
+          @for (task of visibleTasks(); track task.id) {
+          <ng-container
+            [ngTemplateOutlet]="taskRow"
+            [ngTemplateOutletContext]="{ $implicit: task }"
+          />
+          } @empty {
+          <app-empty-state
+            [title]="'todo.emptyTitle' | translate"
+            [hint]="'todo.emptyHint' | translate"
+            [actionLabel]="'todo.emptyAction' | translate"
+            [illustrated]="true"
+            (action)="openSheet()"
+          />
+          }
+        </section>
+        <ion-infinite-scroll
+          [disabled]="!hasMore()"
+          (ionInfinite)="loadMore($event)"
+        >
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </div>
+    @if (totalPages() > 1) {
+    <nav class="pager" [attr.aria-label]="'tasks.pager.label' | translate">
+      <button
+        type="button"
+        class="pager__btn"
+        [disabled]="currentPage() === 1"
+        (click)="goToPage(currentPage() - 1)"
+        [attr.aria-label]="'tasks.pager.prev' | translate"
+      >
+        ‹
+      </button>
+      @for (item of pageNumbers(); track item) {
+      <button
+        type="button"
+        class="pager__btn"
+        [class.pager__btn--active]="item === currentPage()"
+        (click)="goToPage(item)"
+        [attr.aria-current]="item === currentPage() ? 'page' : null"
+      >
+        {{ item }}
+      </button>
+      }
+      <button
+        type="button"
+        class="pager__btn"
+        [disabled]="currentPage() === totalPages()"
+        (click)="goToPage(currentPage() + 1)"
+        [attr.aria-label]="'tasks.pager.next' | translate"
+      >
+        ›
+      </button>
+    </nav>
+    }
+    <ng-template #taskRow let-task>
+      <app-task-item
+        [task]="task"
+        [actions]="store.actionsFor(task)"
+        [categoryName]="categoryNames().get(task.categoryId)"
+        [categoryIcon]="categoryIcons().get(task.categoryId)"
+        [categoryColorToken]="categoryColors().get(task.categoryId)"
+        [showCategories]="flags.categoriesEnabled()"
+        [state]="notesCategory() ? noteRowState : taskRowState"
+        [disabled]="store.busy()"
+        (taskToggle)="toggleTask($event)"
+        (action)="dispatch($event)"
+        (edit)="editTask($event)"
+        (remove)="removeTask($event)"
+      />
+    </ng-template>
+  </main>
+</ion-content>
+
+<app-fab-button
+  [ariaLabel]="'tasks.fab.new' | translate"
+  (pressed)="openSheet()"
+/>
+<app-date-range-filter
+  [isOpen]="dateFilterOpen()"
+  [today]="today()"
+  [initialRange]="store.dateRange()"
+  (rangeChange)="applyDateRange($event)"
+  (dismiss)="closeDateFilter()"
+/>
+<ion-modal
+  [isOpen]="sheetOpen()"
+  [initialBreakpoint]="0.9"
+  [breakpoints]="[0, 0.5, 0.9]"
+  handleBehavior="cycle"
+  (didDismiss)="closeSheet()"
+  aria-labelledby="task-editor-title"
+>
+  <ng-template>
+    <ion-content>
+      <section class="notebook-page task-editor">
+        @if (feedback.error()) {
+        <p class="error-notice" role="alert">{{ feedback.error() }}</p>
+        }
+        <form
+          [formGroup]="form"
+          (ngSubmit)="saveTask()"
+          class="editor editor-form"
+        >
+          <h2 id="task-editor-title">
+            {{ (editingId() ? 'todo.editor.edit' : 'todo.editor.new') |
+            translate }}
+          </h2>
+          <label class="form-field">
+            <span class="form-field__label"
+              >{{ 'todo.editor.title' | translate }}</span
+            >
+            <input formControlName="title" autocomplete="off" maxlength="240" />
+          </label>
+          @if (form.controls.title.touched && form.controls.title.invalid) {
+          <p class="error" role="alert">
+            {{ 'todo.editor.titleError' | translate }}
+          </p>
+          }
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.date' | translate }}</span
+              >
+              <input type="date" formControlName="dueDate" required />
+            </label>
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.time' | translate }}</span
+              >
+              <input type="time" formControlName="time" />
+            </label>
+          </div>
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.duration' | translate }}</span
+              >
+              <select formControlName="durationPreset">
+                <option [value]="15">
+                  {{ 'todo.editor.duration15' | translate }}
+                </option>
+                <option [value]="30">
+                  {{ 'todo.editor.duration30' | translate }}
+                </option>
+                <option [value]="45">
+                  {{ 'todo.editor.duration45' | translate }}
+                </option>
+                <option [value]="60">
+                  {{ 'todo.editor.duration60' | translate }}
+                </option>
+                <option [value]="75">
+                  {{ 'todo.editor.duration75' | translate }}
+                </option>
+                <option [value]="90">
+                  {{ 'todo.editor.duration90' | translate }}
+                </option>
+                <option [value]="105">
+                  {{ 'todo.editor.duration105' | translate }}
+                </option>
+                <option [value]="120">
+                  {{ 'todo.editor.duration120' | translate }}
+                </option>
+                <option value="custom">
+                  {{ 'todo.editor.custom' | translate }}
+                </option>
+              </select>
+            </label>
+            @if (durationPreset() === 'custom') {
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.durationMin' | translate }}</span
+              >
+              <input
+                type="number"
+                min="0"
+                step="1"
+                inputmode="numeric"
+                formControlName="durationMin"
+              />
+            </label>
+            }
+          </div>
+          <div class="form-row">
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.reminder' | translate }}</span
+              >
+              <select formControlName="reminderMin">
+                <option [value]="0">
+                  {{ 'todo.editor.none' | translate }}
+                </option>
+                <option [value]="5">
+                  {{ 'todo.editor.before5' | translate }}
+                </option>
+                <option [value]="15">
+                  {{ 'todo.editor.before15' | translate }}
+                </option>
+                <option [value]="30">
+                  {{ 'todo.editor.before30' | translate }}
+                </option>
+                <option [value]="60">
+                  {{ 'todo.editor.before60' | translate }}
+                </option>
+              </select>
+            </label>
+            <p class="form-helper">
+              {{ 'todo.editor.reminderHint' | translate }}
+            </p>
+          </div>
+          @if (flags.categoriesEnabled()) {
+          <div class="form-row form-row--two">
+            <label class="form-field">
+              <span class="form-field__label"
+                >{{ 'todo.editor.category' | translate }}</span
+              >
+              <select formControlName="categoryId">
+                <option value="">
+                  {{ 'todo.editor.uncategorized' | translate }}
+                </option>
+                @for (category of availableCategories(); track category.id) {
+                <option [value]="category.id">{{ category.name }}</option>
+                }
+              </select>
+            </label>
+          </div>
+          } @if (flags.categoriesEnabled()) {
+          <button
+            type="button"
+            class="link form-link"
+            (click)="openCategorySheet()"
+          >
+            {{ 'todo.editor.newCategory' | translate }}
+          </button>
+          }
+          <div class="form-actions">
+            <button type="submit" class="primary" [disabled]="store.busy()">
+              {{ (editingId() ? 'todo.editor.saveChanges' : 'todo.editor.save' )
+              | translate }}
+            </button>
+            <button type="button" (click)="closeSheet()">
+              {{ 'todo.editor.cancel' | translate }}
+            </button>
+          </div>
+        </form>
+      </section>
+    </ion-content>
+  </ng-template>
+</ion-modal>

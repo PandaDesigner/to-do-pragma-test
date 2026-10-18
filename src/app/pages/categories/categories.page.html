@@ -1,0 +1,77 @@
+<ion-content [scrollY]="!shouldVirtualize()">
+  <main class="notebook-page" [class.virtualized]="shouldVirtualize()">
+    <app-page-header
+      [overline]="'category.overline' | translate"
+      [title]="'category.title' | translate"
+    />
+    @if (flags.categoriesEnabled()) { @if (feedback.error() || store.error()) {
+    <div class="error-notice" role="alert">
+      <p>{{ feedback.error() || store.error() }}</p>
+      <button type="button" (click)="retry()" [disabled]="store.busy()">
+        {{ 'category.retry' | translate }}
+      </button>
+    </div>
+    } @if (shouldVirtualize()) {
+    <cdk-virtual-scroll-viewport
+      [itemSize]="77"
+      class="category-viewport"
+      [attr.aria-label]="'category.listLabel' | translate"
+    >
+      <ng-container
+        *cdkVirtualFor="let category of store.categories(); trackBy: trackById"
+      >
+        <ng-container
+          [ngTemplateOutlet]="categoryRow"
+          [ngTemplateOutletContext]="{ $implicit: category }"
+        />
+      </ng-container>
+    </cdk-virtual-scroll-viewport>
+    } @else {
+    <section [attr.aria-label]="'category.listLabel' | translate">
+      @for (category of store.categories(); track category.id) {
+      <ng-container
+        [ngTemplateOutlet]="categoryRow"
+        [ngTemplateOutletContext]="{ $implicit: category }"
+      />
+      } @empty {
+      <app-empty-state
+        [title]="'category.emptyTitle' | translate"
+        [hint]="'category.emptyHint' | translate"
+        [actionLabel]="'category.emptyAction' | translate"
+        [illustrated]="true"
+        (action)="openCreateSheet()"
+      />
+      }
+    </section>
+    }
+    <app-fab-button
+      [ariaLabel]="'category.new' | translate"
+      (pressed)="openCreateSheet()"
+    />
+    <ng-template #categoryRow let-category>
+      <article class="category-row">
+        <span class="swatch" [attr.data-color]="category.colorToken"
+          ><ion-icon [icon]="iconFor(category)" aria-hidden="true"
+        /></span>
+        <div class="category-copy">
+          <strong>{{ category.name }}</strong
+          ><small
+            >{{ 'category.count' | translate: { count:
+            taskCounts().get(category.id) || 0 } }}</small
+          >
+        </div>
+        <button
+          type="button"
+          [disabled]="store.busy()"
+          [attr.aria-label]="'category.edit' | translate: { name: category.name }"
+          (click)="openEditSheet(category)"
+        >
+          <ion-icon [icon]="icons.createOutline" aria-hidden="true" />
+        </button>
+      </article>
+    </ng-template>
+    } @else {
+    <p>{{ 'category.disabled' | translate }}</p>
+    }
+  </main>
+</ion-content>

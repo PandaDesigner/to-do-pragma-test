@@ -1,0 +1,5 @@
+{
+  "name": "todo-notebook",
+  "integrations": { "cordova": {} },
+  "type": "angular-standalone"
+}

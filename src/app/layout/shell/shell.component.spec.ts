@@ -1,0 +1,272 @@
+import { TestBed } from '@angular/core/testing';
+import { provideRouter, Router } from '@angular/router';
+import { ToastController } from '@ionic/angular/standalone';
+import { provideTranslateService, TranslateService } from '@ngx-translate/core';
+import { APP_LANGUAGE } from '../../core/settings/app-language';
+import { configurePageTesting } from '../../testing/page.fixture';
+import { taskFixture } from '../../testing/task.fixture';
+import { RemoteConfigService } from '../../core/config/remote-config';
+import {
+  APP_ROUTE,
+  categoriesEnabledGuard,
+} from '../../core/guards/categories-enabled-guard';
+import es from '../../../assets/i18n/es.json';
+import { ShellComponent } from './shell.component';
+import { routes } from '../../app.routes';
+
+describe('Shell and categories guard', () => {
+  function setup() {
+    const present = jest.fn().mockResolvedValue(undefined);
+    const create = jest.fn().mockResolvedValue({ present });
+    const dependencies = configurePageTesting({
+      providers: [
+        provideRouter([]),
+        provideTranslateService({ fallbackLang: APP_LANGUAGE.EN }),
+        { provide: ToastController, useValue: { create } },
+      ],
+    });
+    const translate = TestBed.inject(TranslateService);
+    translate.setTranslation(APP_LANGUAGE.ES, es);
+    translate.use(APP_LANGUAGE.ES);
+    const fixture = TestBed.createComponent(ShellComponent);
+    fixture.detectChanges();
+    return {
+      ...dependencies,
+      fixture,
+      router: TestBed.inject(Router),
+      createToast: create,
+      translate,
+    };
+  }
+
+  it('[RC-03] does not render the enable_categories banner conforme a Figma 4:1113', () => {
+    const { fixture } = setup();
+    expect(fixture.nativeElement.textContent).not.toContain(
+      'enable_categories:',
+    );
+  });
+
+  it('[RC-05] presents a dismissible toast and no fixed panel conforme a Figma 4:1496', async () => {
+    const { fixture, remoteError, createToast } = setup();
+    remoteError.set('HTTP 500');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.remote-error')).toBeNull();
+    expect(createToast).toHaveBeenCalledWith(
+      expect.objectContaining({
+        header: expect.any(String),
+        message: expect.any(String),
+        buttons: expect.arrayContaining([
+          expect.objectContaining({ role: 'cancel' }),
+        ]),
+      }),
+    );
+  });
+
+  it('[TODO-01.1] shows the five-tab rail and enables Routine and Event', () => {
+    const { fixture } = setup();
+    const rail = fixture.nativeElement.querySelector('[role="tablist"]');
+    expect(rail).not.toBeNull();
+    const labels = [...rail.querySelectorAll('[role="tab"]')].map(
+      (tab: HTMLElement) => tab.textContent?.trim(),
+    );
+    expect(labels).toEqual(['Todo', 'Rutina', 'Evento', 'Categoría', 'Más']);
+    expect(
+      (rail.querySelector('[data-tab="routine"]') as HTMLButtonElement)
+        .disabled,
+    ).toBe(false);
+    expect(
+      (rail.querySelector('[data-tab="event"]') as HTMLButtonElement).disabled,
+    ).toBe(false);
+  });
+
+  it('[I18N-01.3] reads the rail labels from the locale files conforme a Figma 4:440', () => {
+    const { fixture, translate } = setup();
+    const rail = fixture.nativeElement.querySelector('[role="tablist"]');
+    const labels = [...rail.querySelectorAll('[role="tab"]')].map(
+      (tab: HTMLElement) => tab.textContent?.trim(),
+    );
+    expect(labels).toEqual(['Todo', 'Rutina', 'Evento', 'Categoría', 'Más']);
+    expect(translate.instant('rail.todo')).toBe('Todo');
+    expect(translate.instant('rail.category')).toBe('Categoría');
+  });
+
+  it.each([
+    ['routine', '/tabs/routine'],
+    ['event', '/tabs/event'],
+  ])(
+    '[TODO-07.1] navigates %s to its section route conforme a Figma 4:440',
+    (tab, path) => {
+      const { fixture, router } = setup();
+      const navigate = jest
+        .spyOn(router, 'navigateByUrl')
+        .mockResolvedValue(true);
+      (
+        fixture.nativeElement.querySelector(
+          '[data-tab="' + tab + '"]',
+        ) as HTMLButtonElement
+      ).click();
+      expect(navigate).toHaveBeenCalledWith(path);
+    },
+  );
+
+  it('[TODO-08.2] guards direct Routine/Event routes conforme a Figma 4:440', () => {
+    const children = routes.find((route) => route.path === 'tabs')?.children;
+    for (const path of ['routine', 'event']) {
+      const route = children?.find((route) => route.path === path);
+      expect(route?.data?.['categorySection']).toBe(path);
+      expect(route?.canMatch).toContain(categoriesEnabledGuard);
+    }
+  });
+
+  it.each(['/tabs/routine', '/tabs/event'])(
+    '[TODO-08.1] redirects %s and disables section tabs when categories turn off conforme a Figma 4:440',
+    async (path) => {
+      const { fixture, enabled, router } = setup();
+      jest.spyOn(router, 'url', 'get').mockReturnValue(path);
+      const navigate = jest
+        .spyOn(router, 'navigateByUrl')
+        .mockResolvedValue(true);
+      enabled.set(false);
+      fixture.detectChanges();
+      await new Promise<void>((resolve) => setTimeout(resolve, 0));
+      fixture.detectChanges();
+      expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
+      for (const tab of ['routine', 'event']) {
+        expect(
+          (
+            fixture.nativeElement.querySelector(
+              '[data-tab="' + tab + '"]',
+            ) as HTMLButtonElement
+          ).disabled,
+        ).toBe(true);
+      }
+    },
+  );
+
+  it('renders both tabs, then hides categories and clears only the category filter', async () => {
+    const { fixture, enabled, tasks } = setup();
+    await tasks.upsertMany([
+      taskFixture({ id: 'assigned', categoryId: 'c', dueDate: '2026-01-03' }),
+      taskFixture({ id: 'unassigned', dueDate: '2026-01-03' }),
+    ]);
+    tasks.setCategories([
+      { id: 'c', name: 'C', kind: 'list', colorToken: 'my', icon: 'list' },
+    ]);
+    tasks.setCategory('c');
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('[data-tab="category"]'),
+    ).not.toBeNull();
+    expect(tasks.visibleTasks()).toHaveLength(1);
+    enabled.set(false);
+    fixture.detectChanges();
+    expect(
+      fixture.nativeElement.querySelector('[data-tab="category"]'),
+    ).toBeNull();
+    expect(
+      fixture.nativeElement.querySelector('[data-tab="todo"]'),
+    ).not.toBeNull();
+    expect(tasks.categoryId()).toBeUndefined();
+    expect(tasks.visibleTasks()).toHaveLength(2);
+    expect(tasks.tasks()[0].categoryId).toBe('c');
+  });
+
+  it('redirects an open categories route when a refreshed flag becomes false', async () => {
+    const { fixture, enabled, router } = setup();
+    jest.spyOn(router, 'url', 'get').mockReturnValue(APP_ROUTE.CATEGORIES);
+    const navigate = jest
+      .spyOn(router, 'navigateByUrl')
+      .mockResolvedValue(true);
+    enabled.set(false);
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(navigate).toHaveBeenCalledWith(APP_ROUTE.TASKS);
+  });
+
+  it('shows remote errors as a toast and retries from it', async () => {
+    const { fixture, remoteError, createToast } = setup();
+    remoteError.set('Sin conexión');
+    fixture.detectChanges();
+    await fixture.whenStable();
+    expect(fixture.nativeElement.querySelector('.remote-error')).toBeNull();
+    const toast = createToast.mock.calls[0]?.[0] as {
+      buttons: { role?: string; handler?: () => void }[];
+    };
+    toast.buttons.find((button) => button.role !== 'cancel')?.handler?.();
+    expect(
+      TestBed.inject(RemoteConfigService).initialize,
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('permits categories only while enabled and redirects direct navigation otherwise', () => {
+    const { enabled, router } = setup();
+    expect(TestBed.runInInjectionContext(categoriesEnabledGuard)).toBe(true);
+    enabled.set(false);
+    const denied = TestBed.runInInjectionContext(categoriesEnabledGuard);
+    expect(denied).not.toBe(true);
+    if (denied !== true) {
+      expect(router.serializeUrl(denied)).toBe(APP_ROUTE.TASKS);
+    }
+  });
+
+  it('persists new categories via onCategorySave and assigns an id when missing', async () => {
+    const { categories, fixture } = setup();
+    const shell = fixture.componentInstance;
+    await shell.onCategorySave({
+      id: '',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    } as never);
+    const saved = categories
+      .categories()
+      .find((category) => category.name === 'Shopping');
+    expect(saved?.id).toBeTruthy();
+    expect(saved?.icon).toBe('cart');
+  });
+
+  it('blocks onCategorySave when the categories flag is off', async () => {
+    const { categories, enabled, fixture } = setup();
+    enabled.set(false);
+    const shell = fixture.componentInstance;
+    await shell.onCategorySave({
+      id: '',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    } as never);
+    expect(categories.categories()).toEqual([]);
+  });
+
+  it('removes categories via onCategoryDelete', async () => {
+    const { categories, fixture } = setup();
+    await categories.upsert({
+      id: 'c1',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    });
+    const shell = fixture.componentInstance;
+    await shell.onCategoryDelete('c1');
+    expect(categories.categories()).toEqual([]);
+  });
+
+  it('blocks onCategoryDelete when the categories flag is off', async () => {
+    const { categories, enabled, fixture } = setup();
+    await categories.upsert({
+      id: 'c1',
+      name: 'Shopping',
+      icon: 'cart',
+      colorToken: 'routine',
+      kind: 'list',
+    });
+    enabled.set(false);
+    const shell = fixture.componentInstance;
+    await shell.onCategoryDelete('c1');
+    expect(categories.categories()).toHaveLength(1);
+  });
+});

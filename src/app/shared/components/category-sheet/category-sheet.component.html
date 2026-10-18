@@ -1,0 +1,120 @@
+<ion-modal
+  [isOpen]="isOpen()"
+  [initialBreakpoint]="0.9"
+  [breakpoints]="[0, 0.5, 0.9]"
+  handleBehavior="cycle"
+  (didDismiss)="dismiss()"
+  aria-labelledby="category-sheet-title"
+>
+  <ng-template>
+    <ion-content>
+      <section class="category-sheet">
+        <h2 id="category-sheet-title" class="title category-sheet__title">
+          {{ title() }}
+        </h2>
+
+        <label class="form-field">
+          <span class="meta">{{ 'category.sheet.name' | translate }}</span>
+          <input
+            name="name"
+            type="text"
+            [value]="name()"
+            (input)="onName($any($event.target).value)"
+            autocomplete="off"
+            maxlength="120"
+          />
+        </label>
+
+        <fieldset class="form-field icon-grid">
+          <legend class="meta">{{ 'category.sheet.icon' | translate }}</legend>
+          <div class="icon-grid__row">
+            @for (entry of icons; track entry.key) {
+              <app-icon-option
+                [icon]="entry.key"
+                [iconName]="entry.icon"
+                [label]="entry.label"
+                [selected]="icon() === entry.key"
+                (choose)="chooseIcon(entry.key)"
+              />
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="form-field color-row">
+          <legend class="meta">{{ 'category.sheet.color' | translate }}</legend>
+          <div class="color-row__track">
+            @for (entry of colors; track entry.key) {
+              <app-color-swatch
+                [colorToken]="entry.token"
+                [fillColor]="fillColor(entry.key)"
+                [ariaLabel]="entry.key"
+                [selected]="colorToken() === entry.key"
+                (choose)="chooseColor(entry.key)"
+              />
+            }
+          </div>
+        </fieldset>
+
+        <fieldset class="form-field section-row">
+          <legend class="meta">
+            {{ 'category.sheet.section' | translate }}
+          </legend>
+          <div class="section-row__track">
+            @for (entry of sectionLabels(); track entry.key) {
+              <app-chip
+                [label]="entry.label"
+                [selected]="section() === entry.key"
+                (choose)="chooseSection(entry.key)"
+              />
+            }
+          </div>
+        </fieldset>
+
+        <div class="category-sheet__preview">
+          <span class="meta">{{ 'category.sheet.preview' | translate }}</span>
+          <app-chip
+            [label]="name() || 'Shopping'"
+            [colorToken]="
+              colorToken() === 'primary'
+                ? 'primary'
+                : colorToken() === 'more-gray'
+                  ? 'more'
+                  : colorToken()
+            "
+            [selected]="false"
+          >
+            <ion-icon
+              appChipIcon
+              [icon]="selectedIconName()"
+              aria-hidden="true"
+            ></ion-icon>
+          </app-chip>
+        </div>
+
+        <div class="form-actions">
+          <button
+            type="button"
+            class="primary primary-action"
+            [disabled]="!canSave()"
+            (click)="submit()"
+          >
+            {{
+              (mode() === 'edit'
+                ? 'category.sheet.saveChanges'
+                : 'category.sheet.save'
+              ) | translate
+            }}
+          </button>
+          <button type="button" class="sheet-cancel" (click)="dismiss()">
+            {{ 'category.sheet.cancel' | translate }}
+          </button>
+          @if (mode() === 'edit') {
+            <button type="button" class="danger-link" (click)="remove()">
+              {{ 'category.sheet.delete' | translate }}
+            </button>
+          }
+        </div>
+      </section>
+    </ion-content>
+  </ng-template>
+</ion-modal>

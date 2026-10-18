@@ -1,0 +1,126 @@
+@use 'tokens' as t;
+
+// Tipografías locales (Cordova offline). Procedencia y licencia en
+// src/assets/fonts/README-fonts.md. Tamaño, peso y tracking coinciden
+// con Figma 4:440/4:788/4:1267.
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-Regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-SemiBold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/Inter-Bold.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'DM Serif Display';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/DMSerifDisplay-Regular.woff2') format('woff2');
+}
+
+:root {
+  // Familias
+  --app-font-body:
+    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui,
+    sans-serif;
+  --app-font-display: 'DM Serif Display', Georgia, serif;
+
+  // Tamaños tipográficos (Figma 4:440/4:788/4:1267)
+  --app-font-size-badge: 11px;
+  --app-font-size-tab: 13px;
+  --app-font-size-body: 14px;
+  --app-font-size-meta: 14px;
+  --app-font-size-button: 14px;
+  --app-font-size-overline: 15px;
+  --app-font-size-panel-title: 15px;
+  --app-font-size-note-title: 16px;
+  --app-font-size-task-title: 17px;
+  --app-font-size-title: 36px;
+  --app-font-size-date: 38px;
+  // Titulo de display del modal de rango de fechas. Se probaron 48 px y se veia
+  // demasiado grande: 48 px hacia que el modal pareciera un cartel y dejaba la
+  // pista y el calendario como texto secundario. A 32 px mantiene la jerarquia
+  // sobre la pista de 14 px y deja margen de sobra: la etiqueta mas larga de
+  // los dos idiomas, "Filtrar por fecha", ocupa 231 px de los 382 disponibles.
+  --app-font-size-modal-title: 32px;
+}
+
+ion-app {
+  // DM Serif Display solo existe en 400: no sintetizar negrita.
+  font-family: var(--app-font-body);
+}
+
+.overline,
+h2,
+.title,
+h1,
+.task-title,
+.note-title {
+  // Figma: lineHeight 100% (normal) en los once estilos. Se deja
+  // `normal` para que el navegador aplique el alto según la fuente y
+  // el tamaño sin inventar píxeles.
+  line-height: normal;
+}
+
+.overline {
+  font: 600 15px/normal var(--app-font-body);
+}
+
+.title {
+  font: 400 36px/normal var(--app-font-display);
+  letter-spacing: 0;
+}
+
+.date {
+  font: 400 38px/normal var(--app-font-display);
+  letter-spacing: -0.3px;
+}
+
+.task-title {
+  font: 700 17px/normal var(--app-font-body);
+}
+
+.note-title {
+  font: 700 16px/normal var(--app-font-body);
+}
+
+.body,
+.meta,
+.muted {
+  font: 400 14px/normal var(--app-font-body);
+}
+
+.panel-title {
+  font: 600 15px/normal var(--app-font-body);
+}
+
+.button {
+  font: 600 14px/normal var(--app-font-body);
+}
+
+.tab {
+  font: 600 13px/normal var(--app-font-body);
+}
+
+.badge {
+  font: 600 11px/normal var(--app-font-body);
+  letter-spacing: 0.4px;
+}

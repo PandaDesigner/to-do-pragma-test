@@ -1,0 +1,256 @@
+main.notebook-page {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
+  padding-top: var(--app-content-day-top);
+  padding-bottom: calc(var(--app-pager-height) + 15px);
+}
+
+.top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--app-space-8);
+  min-height: var(--app-day-actions-height);
+  padding-inline-end: var(--app-content-inset-end);
+  margin-bottom: var(--app-space-8);
+}
+
+.task-editor {
+  padding: var(--app-space-24);
+}
+
+.editor-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-16);
+}
+
+.editor-form .form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-8);
+  font-size: var(--app-font-size-meta);
+  font-weight: 600;
+  color: var(--app-text);
+}
+
+.editor-form .form-field__label {
+  color: var(--app-text-muted);
+  font-weight: 600;
+}
+
+.editor-form input,
+.editor-form select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 var(--app-space-12);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-input);
+  background: var(--app-surface);
+  color: var(--app-text);
+  font-size: var(--app-font-size-body);
+  box-sizing: border-box;
+}
+
+.editor-form .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--app-space-12);
+}
+
+.editor-form .form-link {
+  align-self: flex-start;
+  padding: 0;
+  background: transparent;
+  border: none;
+  color: var(--app-accent-link);
+  font: 600 var(--app-font-size-meta)/normal var(--app-font-body);
+}
+
+.editor-form .form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-12);
+}
+
+.editor-form .form-actions .primary {
+  width: 100%;
+  min-height: 50px;
+}
+
+.editor-form .form-helper {
+  margin: 0;
+  font-size: var(--app-font-size-tab);
+  color: var(--app-text-muted);
+}
+
+.editor-form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%236b6580' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right var(--app-space-12) center;
+  background-size: 12px 8px;
+  padding-right: var(--app-space-32);
+}
+
+.task-editor .editor {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+}
+
+.task-editor h2 {
+  margin-bottom: var(--app-space-24);
+  color: var(--app-primary-dark);
+  font-family: var(--app-font-display);
+  font-size: var(--app-font-size-title);
+  font-weight: 400;
+}
+
+.task-viewport {
+  height: auto;
+  min-height: 0;
+  flex: 1;
+}
+
+.task-scroll {
+  position: relative;
+  flex: 0 1 60vh;
+  width: 100%;
+  max-height: 60vh;
+  min-height: 0;
+  margin-top: 20px;
+}
+
+.task-scroll ion-content {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+
+.task-list {
+  min-height: 0;
+  padding-bottom: calc(
+    var(--app-pager-height) + var(--app-fab-size) + var(--app-space-16)
+  );
+}
+
+.pager {
+  position: fixed;
+  right: 0;
+  bottom: env(safe-area-inset-bottom, 0px);
+  left: var(--app-rail-width);
+  z-index: 3;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--app-space-8);
+  box-sizing: border-box;
+  height: var(--app-pager-height);
+  max-height: var(--app-pager-height);
+  margin-bottom: 15px;
+  padding: 0 var(--app-space-8);
+  overflow: hidden;
+  background: var(--app-surface);
+}
+
+.pager__btn {
+  display: inline-flex;
+  flex: 0 0 var(--app-touch-target);
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--app-touch-target);
+  height: var(--app-touch-target);
+  padding: 0;
+  border: 0;
+  border-radius: var(--app-radius-input);
+  background: transparent;
+  color: var(--app-text);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pager__btn--active {
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--app-space-8);
+}
+
+.today-badge {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: var(--app-day-badge-height);
+  min-width: var(--app-day-badge-min-width);
+  // A 4 px la etiqueta y el chevron se leian pegados al borde, como una linea
+  // de texto encerrada en un rectangulo en vez de un boton. Con 8 px hay aire
+  // a cada lado y el grupo se sostiene sin que el badge pese mas que el boton
+  // de calendario que tiene al lado, que sigue siendo el elemento dominante.
+  padding-inline: var(--app-space-8);
+  border: 1px solid var(--app-accent-link);
+  border-radius: var(--app-radius-badge);
+  color: var(--app-accent-link);
+  font-size: var(--app-font-size-badge);
+  font-weight: 600;
+  letter-spacing: 0.4px;
+}
+
+.today-badge ion-icon {
+  font-size: 12px;
+}
+
+.date-filter-trigger {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: var(--app-touch-target);
+  height: var(--app-touch-target);
+  padding: 0;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-button);
+  background: var(--app-surface);
+  color: var(--app-text);
+  cursor: pointer;
+}
+
+.date-filter-trigger ion-icon {
+  font-size: var(--app-day-badge-icon-size);
+}
+
+.pending-panel {
+  position: absolute;
+  margin-left: calc(0px - var(--app-rail-width));
+  z-index: 2;
+  border: 1px solid var(--app-card-border);
+  border-radius: var(--app-radius-card);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow-card);
+}
+
+.panel-header,
+.reschedule {
+  border: 0;
+  background: transparent;
+  color: var(--app-text);
+}

@@ -1,0 +1,120 @@
+:host {
+  display: contents;
+}
+
+.category-sheet {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 375px;
+  margin: 0 auto;
+  padding: 24px 8px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-16);
+  background: var(--app-surface);
+  border-top-left-radius: var(--app-radius-card);
+  border-top-right-radius: var(--app-radius-card);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  box-shadow: var(--app-shadow-card);
+  min-height: 487px;
+}
+
+.category-sheet__title {
+  margin: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-8);
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.form-field legend {
+  padding: 0;
+}
+
+.form-field input {
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  padding: 0 var(--app-space-12);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-input);
+  background: var(--app-surface-muted);
+  color: var(--app-text);
+  font: 400 14px/normal var(--app-font-body);
+}
+
+.icon-grid__row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--app-space-8);
+}
+
+.color-row__track {
+  display: flex;
+  gap: var(--app-space-12);
+  flex-wrap: wrap;
+}
+
+.section-row__track {
+  display: flex;
+  gap: var(--app-space-8);
+  flex-wrap: wrap;
+}
+
+.category-sheet__preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-8);
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--app-space-12);
+  margin-top: var(--app-space-16);
+}
+
+.primary-action {
+  width: 100%;
+  height: 50px;
+  min-height: 50px;
+  border-radius: var(--app-radius-button);
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  border: none;
+  font: 600 14px/normal var(--app-font-body);
+  cursor: pointer;
+}
+
+.primary-action[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sheet-cancel {
+  align-self: center;
+  min-height: var(--app-touch-target);
+  background: transparent;
+  border: none;
+  color: var(--app-text);
+  font: 600 14px/normal var(--app-font-body);
+  cursor: pointer;
+  padding: var(--app-space-8) var(--app-space-12);
+}
+
+.danger-link {
+  align-self: center;
+  background: transparent;
+  border: none;
+  color: var(--app-danger);
+  font: 600 14px/normal var(--app-font-body);
+  cursor: pointer;
+  padding: var(--app-space-8) var(--app-space-12);
+}

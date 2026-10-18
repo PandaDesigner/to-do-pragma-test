@@ -1,0 +1,48 @@
+:host {
+  --app-empty-copy-width: 240px;
+
+  display: block;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--app-space-16);
+  padding-inline-end: var(--app-space-24);
+  color: var(--app-text);
+}
+
+// Figma 4:1099: círculo check-empty de 68 con icon/clipboard 32 en primary-dark.
+.illustration {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--app-radius-round);
+  background: var(--app-check-empty);
+  color: var(--app-illustration-ink);
+
+  ion-icon {
+    width: var(--app-space-32);
+    height: var(--app-space-32);
+  }
+}
+
+h2,
+p {
+  margin: 0;
+}
+
+p {
+  max-width: min(100%, var(--app-empty-copy-width));
+}
+
+button {
+  border: 0;
+  border-radius: var(--app-radius-button);
+  background: var(--app-primary);
+  color: var(--app-on-primary);
+  font-size: var(--app-font-size-button);
+  font-weight: 600;
+}

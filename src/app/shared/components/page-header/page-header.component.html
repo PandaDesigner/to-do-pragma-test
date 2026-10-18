@@ -1,0 +1,6 @@
+<header class="page-header">
+  @if (overline()) {
+    <p class="overline">{{ overline() }}</p>
+  }
+  <h1 [class.date]="day()">{{ title() }}</h1>
+</header>

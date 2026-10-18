@@ -1,0 +1,27 @@
+// Figma 4:1109: 68x68, color/primary, icon/plus 24 on-primary, shadow/fab.
+// Posición única para todas las páginas (TSK-16): --app-fab-inset-end 50 y
+// --app-fab-inset-bottom 72 (pager + 16), ver src/theme/README.md.
+ion-fab {
+  position: fixed;
+  right: calc(var(--app-fab-inset-end) + env(safe-area-inset-right, 0px));
+  bottom: calc(var(--app-fab-inset-bottom) + env(safe-area-inset-bottom, 0px));
+}
+
+ion-fab-button {
+  width: var(--app-fab-size);
+  height: var(--app-fab-size);
+  margin: 0;
+  --border-radius: var(--app-radius-round);
+  --background: var(--app-primary);
+  --background-activated: var(--app-primary);
+  --background-focused: var(--app-primary);
+  --background-hover: var(--app-primary);
+  --color: var(--app-on-primary);
+  --box-shadow: var(--app-shadow-fab);
+}
+
+ion-icon {
+  width: var(--app-fab-icon-size);
+  height: var(--app-fab-icon-size);
+  color: var(--app-on-primary);
+}
