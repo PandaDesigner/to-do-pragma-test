@@ -16,6 +16,14 @@ $color-accent-link: #3aa8e0;
 $color-danger: #c5000f;
 $color-scrim: #00000066;
 
+// Tono de los dias adyacentes del calendario de rango de fechas. Va aparte de
+// $color-text-muted porque ese da 3.07:1 en la paleta oscura y 4.47:1 en la
+// clara, ambos por debajo del 4.5:1 de AA. Estos dos dan 5.93:1 en oscuro sobre
+// #1e1a2b y 5.22:1 en claro sobre #ffffff, y siguen notandose mas apagados que
+// el texto normal.
+$color-calendar-adjacent-dark: #9a97a4;
+$color-calendar-adjacent-light: #6e6a7d;
+
 $tab-todo: #b8cfa8;
 $tab-routine: #f28b8b;
 $tab-event: #9fc3cf;

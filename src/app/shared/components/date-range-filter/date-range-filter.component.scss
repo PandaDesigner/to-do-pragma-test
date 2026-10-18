@@ -38,6 +38,45 @@
   // alto fijo, en vez de empujar las acciones fuera del modal.
   max-height: 330px;
   overflow: hidden;
+
+  // ion-datetime no expone variables propias: su CSS interno consume el
+  // sistema de steps de Ionic. El proyecto solo define --ion-text-color, asi
+  // que el resto cae en los fallbacks claros de Ionic y el calendario queda
+  // blanco puro dentro de un modal oscuro. Se mapea aqui para que tome la
+  // paleta del proyecto, en claro y en oscuro.
+  --ion-color-step-100: var(--app-surface);
+  --ion-color-step-300: var(--app-surface-muted);
+  --ion-color-step-650: var(--app-text);
+  --ion-text-color: var(--app-text);
+}
+
+// Los dias adyacentes se tiñen con step-500 y ese tono necesita un valor por
+// paleta: uno fijo no funciona. El --app-text-muted oscuro da 3.07:1 sobre
+// #1e1a2b y el claro 4.47:1 sobre #ffffff, ambos por debajo del 4.5:1 de AA.
+// Estos dos valores dan 5.93:1 en oscuro y 5.22:1 en claro, y siguen
+// distinguendose del texto normal por su tono apagado.
+// El componente lee la clase de paleta de <html> y la expone como atributo en
+// .date-filter__calendar. No se puede resolver por contexto de host: Angular
+// compila el contexto de host exigiendo la clase en el propio elemento del
+// componente, y la clase vive en <html>, un ancestro externo. Con el atributo
+// la regla aplica siempre, y 'system' cubre el caso en que la clase no esta y
+// decide la preferencia del sistema.
+.date-filter__calendar[data-palette='dark'] {
+  --ion-color-base-rgb: 30, 26, 43;
+  --ion-color-step-500: var(--app-calendar-adjacent);
+}
+
+.date-filter__calendar[data-palette='light'],
+.date-filter__calendar[data-palette='system'] {
+  --ion-color-base-rgb: 255, 255, 255;
+  --ion-color-step-500: var(--app-calendar-adjacent);
+}
+
+@media (prefers-color-scheme: dark) {
+  .date-filter__calendar[data-palette='system'] {
+    --ion-color-base-rgb: 30, 26, 43;
+    --ion-color-step-500: var(--app-calendar-adjacent);
+  }
 }
 
 .date-filter__actions {

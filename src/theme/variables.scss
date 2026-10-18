@@ -8,6 +8,10 @@
   --app-on-primary: #{t.$color-on-primary};
   --app-text: #{t.$color-text};
   --app-text-muted: #{t.$color-text-muted};
+  // Tono de los dias adyacentes del calendario. Solo lo consume el filtro de
+  // rango de fechas, que lo necesita por paleta: el mismo gris no alcanza AA
+  // en las dos.
+  --app-calendar-adjacent: #{t.$color-calendar-adjacent-light};
   --app-surface: #{t.$color-surface};
   --app-surface-muted: #{t.$color-surface-muted};
   --app-border: #{t.$color-border};

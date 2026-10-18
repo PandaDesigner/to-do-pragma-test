@@ -13,6 +13,10 @@ import {
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
 import type { TaskDateRange } from '../../../domain/task-strategy';
+import {
+  DARK_PALETTE_CLASS,
+  LIGHT_PALETTE_CLASS,
+} from '../../../../theme/theme-preference';
 
 /**
  * Altura explicita del calendario. El overlay dimensiona a sus hijos y el
@@ -63,6 +67,35 @@ export class DateRangeFilterComponent {
 
   readonly height = DATE_FILTER_HEIGHT;
   readonly draft = signal<string[]>([]);
+
+  /**
+   * Paleta activa segun la clase que applyThemePreference deja en <html>.
+   *
+   * ion-datetime no expone variables propias: su CSS interno consume el
+   * sistema de steps de Ionic, que cae en los fallbacks claros si no se mapea.
+   * Ese mapeo no puede hacerse con :host-context(), porque Angular compila
+   * :host-context(html.ion-palette-dark) como html.ion-palette-dark[_nghost]
+   * .selector, que exige la clase en el propio elemento del componente, y la
+   * clase vive en <html>, un ancestro externo. Por eso el componente lee la
+   * clase y la expone como atributo, y el SCSS selecciona por atributo.
+   */
+  readonly palette = signal<'dark' | 'light' | 'system'>('system');
+
+  constructor() {
+    if (typeof document !== 'undefined') {
+      const root = document.documentElement;
+      const sync = (): void => {
+        const dark = root.classList.contains(DARK_PALETTE_CLASS);
+        const light = root.classList.contains(LIGHT_PALETTE_CLASS);
+        this.palette.set(dark ? 'dark' : light ? 'light' : 'system');
+      };
+      sync();
+      new MutationObserver(sync).observe(root, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+    }
+  }
 
   onOpen(): void {
     const range = this.initialRange();
