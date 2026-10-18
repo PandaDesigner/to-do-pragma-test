@@ -56,7 +56,7 @@ describe('Firebase delivery docs', () => {
     expect(read('src/assets/i18n/en.json')).not.toContain('virtual scroll');
   });
 
-  it('[DOC-FB-01.6] README OpenSpec status names every active change', () => {
+  it('[DOC-FB-01.6] README OpenSpec status matches the active changes on disk', () => {
     const changes = readdirSync(resolve(root, 'openspec/changes'), {
       withFileTypes: true,
     })
@@ -64,9 +64,13 @@ describe('Firebase delivery docs', () => {
       .map((entry) => entry.name);
     const readme = read('README.md');
     const start = readme.indexOf('## Estado OpenSpec');
+    expect(start).toBeGreaterThanOrEqual(0);
     const next = readme.indexOf('\n## ', start + 1);
     const section = readme.slice(start, next === -1 ? undefined : next);
-    expect(changes.length).toBeGreaterThan(0);
+    // WIP=1 allows zero active changes between changes. The README has to say so
+    // instead of naming a change that is already archived.
+    const saysNone = section.includes('Changes activos: ninguno');
+    expect(saysNone).toBe(changes.length === 0);
     for (const name of changes) {
       expect(section).toContain(name);
     }
