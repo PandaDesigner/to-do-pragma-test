@@ -419,7 +419,9 @@ describe('CategorySheetComponent', () => {
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
     fixture.detectChanges();
     const modal = [...document.querySelectorAll('ion-modal')].at(-1);
-    const actions = [...(modal?.querySelectorAll('.form-actions > button') ?? [])];
+    const actions = [
+      ...(modal?.querySelectorAll('.form-actions > button') ?? []),
+    ];
     expect(actions.map((button) => button.className)).toEqual([
       'primary primary-action',
       'sheet-cancel',

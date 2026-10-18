@@ -881,19 +881,16 @@ describe('TasksPage', () => {
     ) as HTMLElement;
     const icon = badge.querySelector('ion-icon');
     expect(icon).not.toBeNull();
-    expect(icon.getAttribute('name')).toBe('chevron-forward');
+    expect(icon?.getAttribute('name')).toBe('chevron-forward');
     // El icono debe ser hermano del texto, no parte de la cadena traducible,
     // para que el gap del flex separe ambos nodos.
-    expect(icon.parentElement).toBe(badge);
+    expect(icon?.parentElement).toBe(badge);
     expect(badge.textContent).not.toContain('›');
-    expect(badge.textContent.trim()).toBe('TODAY');
+    expect(badge.textContent?.trim()).toBe('TODAY');
   });
 
   it('[TODAY-UI-01.3] keeps 63px as a minimum width instead of a fixed width', async () => {
-    const scss = readFileSync(
-      join(__dirname, 'tasks.page.scss'),
-      'utf8',
-    );
+    const scss = readFileSync(join(__dirname, 'tasks.page.scss'), 'utf8');
     const rule = scss.slice(
       scss.indexOf('.today-badge {'),
       scss.indexOf('}', scss.indexOf('.today-badge {')),

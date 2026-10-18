@@ -139,9 +139,7 @@ describe('CategoriesPage', () => {
 
   it('[CAT-UI-01.1] renders the empty state with illustration and action label', async () => {
     const { fixture } = await setup();
-    const host = fixture.debugElement.query(
-      By.directive(EmptyStateComponent),
-    );
+    const host = fixture.debugElement.query(By.directive(EmptyStateComponent));
     expect(host).not.toBeNull();
     expect(host.componentInstance.illustrated()).toBe(true);
     expect(host.componentInstance.actionLabel()).toBe('Create a category');
@@ -152,7 +150,7 @@ describe('CategoriesPage', () => {
     expect(illustration).not.toBeNull();
     const button = empty.querySelector('button');
     expect(button).not.toBeNull();
-    expect(button.textContent.trim()).toBe('Create a category');
+    expect(button?.textContent?.trim()).toBe('Create a category');
   });
 
   it('[CAT-UI-01.2] opens the sheet in Create mode from the empty state action', async () => {

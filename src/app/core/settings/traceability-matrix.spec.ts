@@ -41,8 +41,8 @@ describe('Trazabilidad de fix-ui-fidelity', () => {
   );
 
   it('[TRACE-UI-01.1] da a 4:1062 una fila de escenario además de la de registro', () => {
-    const rows = MATRIX.split('\n').filter(
-      (line) => line.startsWith('| 4:1062 |'),
+    const rows = MATRIX.split('\n').filter((line) =>
+      line.startsWith('| 4:1062 |'),
     );
     expect(rows.length).toBeGreaterThan(1);
     expect(rows.some((row) => row.split('|')[5].trim() === 'registro')).toBe(
@@ -52,10 +52,14 @@ describe('Trazabilidad de fix-ui-fidelity', () => {
 
   it('[TRACE-UI-01.1] comprueba que el checker de trazabilidad sigue pasando', () => {
     const { execFileSync } = require('node:child_process') as {
-      execFileSync: (file: string, args: string[], cwd: string) => string;
+      execFileSync: (
+        file: string,
+        args: string[],
+        options: { cwd: string },
+      ) => string;
     };
     expect(() =>
-      execFileSync('node', ['scripts/trace-check.mjs'], process.cwd()),
+      execFileSync('node', ['scripts/trace-check.mjs'], { cwd: process.cwd() }),
     ).not.toThrow();
   });
 });
