@@ -170,6 +170,27 @@ describe('DateRangeFilterComponent', () => {
     expect(fixture.componentInstance.draft()).toEqual([]);
   });
 
+  it('[QC-03.1] el rango aplicado empieza en el dia que se marco', () => {
+    // El borrador se siembra en [hoy, hoy] y el calendario anade el dia elegido.
+    expect(
+      toDateRange(['2026-10-18T00:00:00', '2026-10-18T00:00:00', '2026-10-25']),
+    ).toEqual({ from: '2026-10-18', to: '2026-10-25' });
+  });
+
+  it('[QC-03.2] el rango cubre el primer y el ultimo dia marcados', () => {
+    expect(toDateRange(['2026-10-20', '2026-10-22', '2026-10-25'])).toEqual({
+      from: '2026-10-20',
+      to: '2026-10-25',
+    });
+  });
+
+  it('[QC-03.3] el rango se invierte si los dias llegan desordenados', () => {
+    expect(toDateRange(['2026-10-25', '2026-10-20'])).toEqual({
+      from: '2026-10-20',
+      to: '2026-10-25',
+    });
+  });
+
   it('[DATE-FILTER-02.4] un rango vacio o incompleto no emite rango', async () => {
     const fixture = await setup();
     const emitted: unknown[] = [];

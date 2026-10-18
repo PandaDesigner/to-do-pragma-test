@@ -5,6 +5,7 @@ import {
 } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideIonicAngular } from '@ionic/angular/standalone';
+import { Storage } from '@ionic/storage-angular';
 import {
   CLOCK,
   CREATE_ID,
@@ -50,6 +51,15 @@ export function configurePageTesting({
         },
       },
       { provide: DeletionConfirmation, useValue: { confirm } },
+      // SettingsPreferences lee el idioma visible de aqui y lo persiste en
+      // Storage, asi que cualquier pagina que lo inyecte lo necesita.
+      {
+        provide: Storage,
+        useValue: {
+          get: jest.fn().mockResolvedValue(null),
+          set: jest.fn().mockResolvedValue(undefined),
+        },
+      },
       ...providers,
     ],
   });
