@@ -9,8 +9,15 @@
 
 - [x] 2.1 `TODAY-UI-01.2`, `01.3` y `01.4` siguen en verde: no se tocaron traducción ni estilos del badge
 - [x] 2.2 `today-badge-render.spec.ts` con los tres escenarios del render
-- [ ] 2.3 `npm test` con cobertura; umbrales intactos
-- [ ] 2.4 `npm run lint`, `lint:styles`, `format:check` y `typecheck`
-- [ ] 2.5 `npm run trace:check` y `npx openspec validate --all --strict`
-- [ ] 2.6 Evidencia visual: el chevron pintado dentro del badge, light y dark
-- [ ] 2.7 Fila de Notion del change
+- [x] 2.3 `npm test` con cobertura; umbrales intactos. 57 suites, 515 tests, 0 fallos
+- [x] 2.4 `npm run lint`, `lint:styles`, `format:check` y `typecheck`. Los cuatro en verde
+- [x] 2.5 `npm run trace:check` y `npx openspec validate --all --strict`. EXIT=0 y 18/18
+- [x] 2.6 Evidencia visual: el chevron pintado dentro del badge, light y dark, 375x812
+- [x] 2.7 Fila de Notion del change: `3fdcb44197738192a2fbc8be37c68a2b`, Status = In progress
+
+## 3. Entrega
+
+- [x] 3.1 PR a `develop` con sección Reutilización. https://github.com/PandaDesigner/to-do-pragma-test/pull/54
+- [ ] 3.2 Merge con merge commit y borrado de rama
+- [ ] 3.3 `chore/archive-fix-chevron-icon-binding`, `openspec archive`, PR propio, checks y merge
+- [ ] 3.4 Línea en `docs/progress-log.md`
