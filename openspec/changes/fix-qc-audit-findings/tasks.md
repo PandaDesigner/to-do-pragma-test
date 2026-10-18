@@ -3,7 +3,7 @@
 ## 1. Specs y trazabilidad
 
 - [x] 1.1 Registrar `QC-01` a `QC-04` en `openspec/traceability.md` cuando exista cada test
-- [ ] 1.2 Anadir las cuatro filas con su test y evidencia al cerrar el change
+- [x] 1.2 Anadir las cuatro filas con su test y evidencia al cerrar el change
 
 ## 2. QC-01 El filtro por rango acota la lista
 
@@ -36,6 +36,6 @@
 - [x] 6.1 `npm test` en verde con cobertura
 - [x] 6.2 `npm run lint`, `lint:styles` y formato limpios
 - [x] 6.3 `npm run trace:check` y `openspec validate --all --strict` en verde
-- [ ] 6.4 Repetir los cinco flujos en la app con los cuatro arreglos aplicados
-- [ ] 6.5 Capturar evidencia visual de la cabecera por sección
-- [ ] 6.6 Escribir `verify-report.md`
+- [x] 6.4 Repetir los cinco flujos en la app con los cuatro arreglos aplicados
+- [x] 6.5 Capturar evidencia visual de la cabecera por sección
+- [x] 6.6 Escribir `verify-report.md`
