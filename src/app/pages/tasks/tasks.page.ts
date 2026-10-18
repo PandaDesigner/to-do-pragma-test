@@ -22,6 +22,7 @@ import {
   IonModal,
 } from '@ionic/angular/standalone';
 import { TranslatePipe } from '@ngx-translate/core';
+import { chevronForward } from 'ionicons/icons';
 import { CLOCK, CREATE_ID, ROUTE_DATA } from '../../core/di/tokens';
 import { RemoteConfigService } from '../../core/config/remote-config';
 import { TASK_STATUS, type Task } from '../../domain/task';
@@ -108,6 +109,7 @@ export class TasksPage implements OnInit {
   readonly panelOpen = signal(true);
   readonly sheetOpen = signal(false);
   readonly panel = PENDING_PANEL;
+  readonly icons = { chevronForward };
   readonly taskRowState = taskRowState;
   readonly noteRowState = noteRowState;
   readonly pendingRowState = pendingRowState;
