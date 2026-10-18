@@ -1,8 +1,11 @@
 main.notebook-page {
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0;
   padding-top: var(--app-content-day-top);
+  padding-bottom: var(--app-pager-height);
 }
 
 .top-actions {
@@ -112,8 +115,20 @@ main.notebook-page {
   flex: 1;
 }
 
-.task-list {
+.task-scroll {
+  position: relative;
   flex: 1 1 auto;
+  height: 0;
+  min-height: 0;
+}
+
+.task-scroll ion-content {
+  position: absolute;
+  inset: 0;
+  height: auto;
+}
+
+.task-list {
   min-height: 0;
   padding-bottom: calc(
     var(--app-pager-height) + var(--app-fab-size) + var(--app-space-16)

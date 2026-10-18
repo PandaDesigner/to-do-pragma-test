@@ -1,4 +1,4 @@
-<ion-content [fullscreen]="false">
+<ion-content [fullscreen]="false" [scrollY]="false">
   <main class="notebook-page">
     <div class="top-actions">
       <button type="button" class="today-badge" (click)="focusToday()">
@@ -85,28 +85,38 @@
       </button>
     </div>
     }
-    <section
-      [attr.aria-label]="'todo.listLabel' | translate"
-      class="task-list"
-      [style.margin-top.px]="
-          earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
-        "
-    >
-      @for (task of visibleTasks(); track task.id) {
-      <ng-container
-        [ngTemplateOutlet]="taskRow"
-        [ngTemplateOutletContext]="{ $implicit: task }"
-      />
-      } @empty {
-      <app-empty-state
-        [title]="'todo.emptyTitle' | translate"
-        [hint]="'todo.emptyHint' | translate"
-        [actionLabel]="'todo.emptyAction' | translate"
-        [illustrated]="true"
-        (action)="openSheet()"
-      />
-      }
-    </section>
+    <div class="task-scroll">
+      <ion-content>
+        <section
+          [attr.aria-label]="'todo.listLabel' | translate"
+          class="task-list"
+          [style.margin-top.px]="
+              earlierTasks().length && !panelOpen() ? panel.LIST_GAP : null
+            "
+        >
+          @for (task of visibleTasks(); track task.id) {
+          <ng-container
+            [ngTemplateOutlet]="taskRow"
+            [ngTemplateOutletContext]="{ $implicit: task }"
+          />
+          } @empty {
+          <app-empty-state
+            [title]="'todo.emptyTitle' | translate"
+            [hint]="'todo.emptyHint' | translate"
+            [actionLabel]="'todo.emptyAction' | translate"
+            [illustrated]="true"
+            (action)="openSheet()"
+          />
+          }
+        </section>
+        <ion-infinite-scroll
+          [disabled]="!hasMore()"
+          (ionInfinite)="loadMore($event)"
+        >
+          <ion-infinite-scroll-content></ion-infinite-scroll-content>
+        </ion-infinite-scroll>
+      </ion-content>
+    </div>
     <ng-template #taskRow let-task>
       <app-task-item
         [task]="task"
@@ -124,12 +134,6 @@
       />
     </ng-template>
   </main>
-  <ion-infinite-scroll
-    [disabled]="!hasMore()"
-    (ionInfinite)="loadMore($event)"
-  >
-    <ion-infinite-scroll-content></ion-infinite-scroll-content>
-  </ion-infinite-scroll>
 </ion-content>
 
 <app-fab-button
