@@ -266,7 +266,7 @@ El comando `npm audit` informa avisos heredados de `tar`, `@grpc/grpc-js`, `basi
 
 ## Firebase y Remote Config
 
-El proyecto de Firebase es `to-do-pragma`. Remote Config se lee una vez al arrancar. En producción el intervalo mínimo es `remoteConfigFetchIntervalMs` (60 000 ms). `ng serve` usa el entorno de desarrollo y muestra las acciones de debug. La build `--configuration production` las deja apagadas salvo que el valor remoto sea el booleano `true`.
+El proyecto de Firebase es `to-do-pragma`. Remote Config se lee una vez al arrancar. En producción el intervalo mínimo es `remoteConfigFetchIntervalMs` (60 000 ms). `ng serve` y `npm run build:android` usan el entorno de desarrollo y muestran las acciones de debug. La build `--configuration production` las deja apagadas salvo que el valor remoto sea el booleano `true`.
 
 | Parámetro            | Tipo    | Valor por defecto |
 | -------------------- | ------- | ----------------- |
