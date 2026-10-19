@@ -30,21 +30,23 @@ describe('release build scripts', () => {
     const ios = read('scripts/build-ios-archive.cjs');
     const workflow = read('.github/workflows/verify.yml');
     expect(release).toMatch(
-      /ensure-firebase-config\.cjs --require && ng build --configuration production/,
+      /ensure-firebase-config\.cjs --require --sync && ng build --configuration production/,
     );
     const androidRequire = android.indexOf('ensure-firebase-config.cjs');
     const androidBuild = android.indexOf("'--configuration', 'production'");
     expect(androidRequire).toBeGreaterThan(-1);
     expect(androidRequire).toBeLessThan(androidBuild);
     expect(android).toContain('--require');
+    expect(android).toContain('--sync');
     const signing = ios.slice(ios.indexOf('function runCordovaBuild'));
     expect(signing).toContain('ensure-firebase-config.cjs');
     expect(signing).toContain('--require');
+    expect(signing).toContain('--sync');
     expect(signing.indexOf('--require')).toBeLessThan(
       signing.indexOf("'--configuration', 'production'"),
     );
     expect(workflow).toContain('node scripts/ensure-firebase-config.cjs');
-    expect(workflow).not.toContain('ensure-firebase-config.cjs --require');
+    expect(workflow).toContain('ensure-firebase-config.cjs --require --sync');
   });
 });
 
@@ -57,6 +59,7 @@ describe('ensureFirebaseConfig', () => {
         root: string;
         env: Record<string, string | undefined>;
         require?: boolean;
+        sync?: boolean;
         log?: {
           stdout?: (line: string) => void;
           stderr?: (line: string) => void;
@@ -140,6 +143,31 @@ describe('ensureFirebaseConfig', () => {
     });
     expect(result.code).toBe(0);
     expect(readFileSync(target, 'utf8')).toBe('{"apiKey":"keep-me"}');
+  });
+
+  it('[FBCFG-01.8] sync overwrites an existing config with the defined variables', () => {
+    const directory = sandbox();
+    const target = join(directory, 'src/assets/firebase-config.json');
+    mkdirSync(join(directory, 'src/assets'), { recursive: true });
+    writeFileSync(target, '{"projectId":"stale-project"}');
+    const result = load().ensureFirebaseConfig({
+      root: directory,
+      env: {
+        FIREBASE_API_KEY: 'current-key',
+        FIREBASE_PROJECT_ID: 'current-project',
+        FIREBASE_APP_ID: 'current-app',
+        FIREBASE_MESSAGING_SENDER_ID: 'current-sender',
+      },
+      require: true,
+      sync: true,
+    });
+    expect(result.code).toBe(0);
+    expect(JSON.parse(readFileSync(target, 'utf8'))).toMatchObject({
+      apiKey: 'current-key',
+      projectId: 'current-project',
+      appId: 'current-app',
+      messagingSenderId: 'current-sender',
+    });
   });
 
   it('[FBCFG-01.4] warns and succeeds without --require', () => {

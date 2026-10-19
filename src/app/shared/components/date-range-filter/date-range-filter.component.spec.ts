@@ -345,6 +345,11 @@ describe('DateRangeFilterComponent', () => {
     expect(body).toContain('--ion-color-step-100');
     expect(body).toContain('--ion-color-step-300');
     expect(body).toContain('--ion-color-step-650');
+    // Ionic iOS consume step-300 para los dias adyacentes; debe ser el tono
+    // contrastante de la paleta y no la superficie muted del calendario.
+    expect(body).toContain(
+      '--ion-color-step-300: var(--app-calendar-adjacent)',
+    );
     expect(body).toContain('--ion-text-color');
     // Y debe tomar los tokens del proyecto, no valores sueltos.
     expect(body).toContain('var(--app-surface)');

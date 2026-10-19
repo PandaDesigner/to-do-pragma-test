@@ -49,7 +49,10 @@
   // blanco puro dentro de un modal oscuro. Se mapea aqui para que tome la
   // paleta del proyecto, en claro y en oscuro.
   --ion-color-step-100: var(--app-surface);
-  --ion-color-step-300: var(--app-surface-muted);
+  // iOS mode usa step-300 para los dias adyacentes y los encabezados de la
+  // semana. Si queda apuntando a la superficie muted, las fechas se vuelven
+  // casi invisibles sobre el fondo oscuro en Safari/Cordova iOS.
+  --ion-color-step-300: var(--app-calendar-adjacent);
   --ion-color-step-650: var(--app-text);
   --ion-text-color: var(--app-text);
 }
