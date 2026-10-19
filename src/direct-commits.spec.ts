@@ -54,10 +54,9 @@ describe('direct commits kept as they landed', () => {
     );
   });
 
-  it('[DEBUG-01.1] a development build still enables debug actions conforme a Figma 4:1496', () => {
-    const development = read('src/environments/environment.ts');
+  it('[DEBUG-01.1] Remote Config controls debug actions in every build conforme a Figma 4:1496', () => {
     const service = read('src/app/core/config/remote-config.ts');
-    expect(development).toMatch(/production:\s*false/);
-    expect(service).toContain('if (!environment.production)');
+    expect(service).toContain('return remoteValue === true');
+    expect(service).not.toContain('if (!environment.production)');
   });
 });

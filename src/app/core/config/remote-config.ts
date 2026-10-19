@@ -1,15 +1,13 @@
 import { Injectable, inject, signal } from '@angular/core';
-import { environment } from '../../../environments/environment';
 import { REMOTE_CONFIG_PORT } from '../di/tokens';
 import {
   REMOTE_CONFIG_TIMEOUT_MS,
   type RemoteConfigPort,
 } from './remote-config-port';
 
+// El flag remoto manda en todos los builds. Antes una build de desarrollo
+// encendia los debug actions siempre, ignorando Remote Config.
 function resolveDebugActions(remoteValue: unknown): boolean {
-  if (!environment.production) {
-    return true;
-  }
   return remoteValue === true;
 }
 
