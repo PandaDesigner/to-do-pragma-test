@@ -138,7 +138,10 @@ describe('FirebaseRemoteConfigPort', () => {
     );
     expect(portSource).not.toContain('isDevMode');
     expect(serviceSource).not.toContain('isDevMode');
-    expect(serviceSource).toContain('environment.production');
+    // El intervalo de Remote Config es la única lectura del entorno en este
+    // módulo. El flag de debug lo decide Firebase, no `environment.production`.
+    expect(portSource).toContain('environment.remoteConfigFetchIntervalMs');
+    expect(serviceSource).not.toContain('environment');
   });
 
   it('[RC-06.1] uses environment.remoteConfigFetchIntervalMs as minimumFetchIntervalMillis', async () => {
