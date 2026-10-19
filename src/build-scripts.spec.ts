@@ -50,6 +50,18 @@ describe('release build scripts', () => {
   });
 });
 
+describe('debug Android build script', () => {
+  it('[ENV-01.6] builds the Angular bundle with the development configuration', () => {
+    const manifest = JSON.parse(read('package.json')) as {
+      scripts: Record<string, string>;
+    };
+
+    expect(manifest.scripts['build:android']).toContain(
+      'ng build --configuration development',
+    );
+  });
+});
+
 describe('ensureFirebaseConfig', () => {
   const sentinel = 'SENTINEL-FIREBASE-VALUE-DO-NOT-PRINT';
 
