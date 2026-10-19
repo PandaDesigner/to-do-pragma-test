@@ -70,7 +70,7 @@ describe('RemoteConfigService', () => {
     },
   );
 
-  it('enables debug actions in a development build', async () => {
+  it('[RC-02] keeps debug actions off in a development build when Remote Config is false', async () => {
     environment.production = false;
     const info = jest
       .spyOn(console, 'info')
@@ -80,9 +80,9 @@ describe('RemoteConfigService', () => {
         throw new Error('Falta la configuración Firebase local (HTTP 404).');
       },
     });
-    expect(service.debugActionsEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
     await service.initialize();
-    expect(service.debugActionsEnabled()).toBe(true);
+    expect(service.debugActionsEnabled()).toBe(false);
     expect(service.categoriesEnabled()).toBe(true);
     info.mockRestore();
   });
