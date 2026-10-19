@@ -38,7 +38,7 @@ function runCordovaBuild() {
   );
   const firebase = spawnSync(
     'node',
-    ['scripts/ensure-firebase-config.cjs', '--require'],
+    ['scripts/ensure-firebase-config.cjs', '--require', '--sync'],
     { stdio: 'inherit', cwd: projectRoot },
   );
   if (firebase.status !== 0) {
@@ -86,11 +86,16 @@ function runXcodebuildArchive() {
   const xcodeArchive = spawnSync(
     'xcodebuild',
     [
-      '-workspace', workspace,
-      '-scheme', 'App',
-      '-configuration', 'Release',
-      '-destination', 'generic/platform=iOS',
-      '-archivePath', archivePath,
+      '-workspace',
+      workspace,
+      '-scheme',
+      'App',
+      '-configuration',
+      'Release',
+      '-destination',
+      'generic/platform=iOS',
+      '-archivePath',
+      archivePath,
       'archive',
       'CODE_SIGNING_ALLOWED=NO',
       'CODE_SIGNING_REQUIRED=NO',

@@ -29,5 +29,6 @@ pragmadev-appbase.jks
 build.json
 *.log
 .DS_Store
+.local-tools/
 # Local AI runtime state
 .atl/
