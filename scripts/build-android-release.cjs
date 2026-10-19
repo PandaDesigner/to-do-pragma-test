@@ -38,10 +38,14 @@ function loadEnv(filePath) {
 }
 
 function ensureReleaseFirebaseConfig() {
-  return spawnSync('node', ['scripts/ensure-firebase-config.cjs', '--require'], {
-    stdio: 'inherit',
-    cwd: projectRoot,
-  });
+  return spawnSync(
+    'node',
+    ['scripts/ensure-firebase-config.cjs', '--require', '--sync'],
+    {
+      stdio: 'inherit',
+      cwd: projectRoot,
+    },
+  );
 }
 
 function runWebBuild() {

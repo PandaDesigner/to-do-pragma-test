@@ -17,7 +17,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: node scripts/ensure-firebase-config.cjs
+      - run: node scripts/ensure-firebase-config.cjs --require --sync
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
@@ -58,7 +58,7 @@ jobs:
           key: gradle-${{ runner.os }}-${{ hashFiles('platforms/android/gradle/wrapper/gradle-wrapper.properties', 'platforms/android/build.gradle', 'platforms/android/app/build.gradle') }}
           restore-keys: gradle-${{ runner.os }}-
       - run: npm ci
-      - run: node scripts/ensure-firebase-config.cjs
+      - run: node scripts/ensure-firebase-config.cjs --require --sync
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
@@ -92,7 +92,7 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - run: node scripts/ensure-firebase-config.cjs
+      - run: node scripts/ensure-firebase-config.cjs --require --sync
         env:
           FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}

@@ -5,7 +5,7 @@ TBD - created by archiving change firebase-env-production. Update Purpose after 
 ## Requirements
 ### Requirement: FBCFG-01 La config de Firebase se exige solo en release
 
-`ensureFirebaseConfig` MUST dejar intacto un `src/assets/firebase-config.json` existente. Si no existe y están las variables obligatorias `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_MESSAGING_SENDER_ID` y `FIREBASE_APP_ID`, MUST crear el JSON con esos campos y salir con código 0. Si faltan variables, MUST salir con código 1 y nombrar solo las claves ausentes, sin imprimir valores. Con `--require` y sin archivo ni variables, MUST salir con código 1 y nombrar la ruta, `firebase-config.example.json` y las variables `FIREBASE_*`. Sin `--require`, MUST salir con código 0 y avisar que la app usará los valores por defecto. La salida MUST NOT contener los valores de las variables. Los scripts de release MUST ejecutar `ensure-firebase-config` con `--require` antes de `ng build --configuration production`.
+`ensureFirebaseConfig` MUST dejar intacto un `src/assets/firebase-config.json` existente salvo que se invoque con `--sync`. Si no existe, o se invoca `--sync`, y están las variables obligatorias `FIREBASE_API_KEY`, `FIREBASE_PROJECT_ID`, `FIREBASE_MESSAGING_SENDER_ID` y `FIREBASE_APP_ID`, MUST crear o actualizar el JSON con esos campos y salir con código 0. La ejecución CLI MUST tomar `.env.local` como fallback y priorizar variables de entorno explícitas. Si faltan variables, MUST salir con código 1 y nombrar solo las claves ausentes, sin imprimir valores. Con `--require` y sin archivo ni variables, MUST salir con código 1 y nombrar la ruta, `firebase-config.example.json` y las variables `FIREBASE_*`. Sin `--require`, MUST salir con código 0 y avisar que la app usará los valores por defecto. La salida MUST NOT contener los valores de las variables. Los scripts de build MUST sincronizar la configuración antes de compilar; los scripts de release MUST exigirla con `--require` antes de `ng build --configuration production`.
 
 #### Scenario: [FBCFG-01.1] La build de release falla sin la config
 
@@ -55,4 +55,12 @@ TBD - created by archiving change firebase-env-production. Update Purpose after 
 - **WHEN** se ejecuta ensure-firebase-config con `--require`
 - **THEN** termina con código 1
 - **AND** el mensaje nombra `FIREBASE_PROJECT_ID`, `FIREBASE_APP_ID` y `FIREBASE_MESSAGING_SENDER_ID` sin mostrar el valor de `FIREBASE_API_KEY`
+
+#### Scenario: [FBCFG-01.8] La build sincroniza una config existente con el valor definido
+
+- **GIVEN** un `firebase-config.json` existente con valores antiguos
+- **AND** variables `FIREBASE_*` con los valores actuales
+- **WHEN** se ejecuta ensure-firebase-config con `--sync`
+- **THEN** el archivo se actualiza con los valores definidos
+- **AND** las builds locales y CI invocan el modo `--sync` antes de compilar
 

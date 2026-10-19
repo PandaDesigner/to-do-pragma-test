@@ -124,6 +124,7 @@ Matriz inicial de F0. `registro` anota un nodo de Figma sin escenario todavía. 
 | -- | firebase-config | -- | FBCFG-01 | FBCFG-01.5 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.5] | n/a | local |
 | -- | firebase-config | -- | FBCFG-01 | FBCFG-01.6 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.6] | n/a | local |
 | -- | firebase-config | -- | FBCFG-01 | FBCFG-01.7 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.7] | n/a | local |
+| -- | firebase-config | -- | FBCFG-01 | FBCFG-01.8 | firebase-env-production | src/build-scripts.spec.ts:[FBCFG-01.8] | n/a | local |
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.1 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.1] | n/a | local |
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.2 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.2] | n/a | local |
 | -- | readme | -- | DOC-FB-01 | DOC-FB-01.3 | firebase-env-production | src/delivery-docs.spec.ts:[DOC-FB-01.3] | n/a | local |

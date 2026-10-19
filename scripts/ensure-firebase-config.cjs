@@ -1,5 +1,10 @@
 #!/usr/bin/env node
-const { existsSync, mkdirSync, writeFileSync } = require('node:fs');
+const {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} = require('node:fs');
 const { dirname, join, resolve } = require('node:path');
 
 const CONFIG_RELATIVE = 'src/assets/firebase-config.json';
@@ -11,9 +16,35 @@ const REQUIRED_ENV = [
   'FIREBASE_MESSAGING_SENDER_ID',
 ];
 
-function ensureFirebaseConfig({ root, env, require: required = false, log = {} }) {
+function readEnvFile(root) {
+  const file = join(root, '.env.local');
+  if (!existsSync(file)) {
+    return {};
+  }
+  return Object.fromEntries(
+    readFileSync(file, 'utf8')
+      .split(/\r?\n/)
+      .filter((line) => line.trim() && !line.trim().startsWith('#'))
+      .map((line) => {
+        const separator = line.indexOf('=');
+        return [
+          line.slice(0, separator).trim(),
+          line.slice(separator + 1).trim(),
+        ];
+      })
+      .filter(([key]) => key),
+  );
+}
+
+function ensureFirebaseConfig({
+  root,
+  env,
+  require: required = false,
+  sync = false,
+  log = {},
+}) {
   const target = join(root, CONFIG_RELATIVE);
-  if (existsSync(target)) {
+  if (existsSync(target) && !sync) {
     return { code: 0 };
   }
   const missing = REQUIRED_ENV.filter((key) => !env[key]);
@@ -52,10 +83,12 @@ function ensureFirebaseConfig({ root, env, require: required = false, log = {} }
 }
 
 if (require.main === module) {
+  const fileEnv = readEnvFile(resolve(__dirname, '..'));
   const result = ensureFirebaseConfig({
     root: resolve(__dirname, '..'),
-    env: process.env,
+    env: { ...fileEnv, ...process.env },
     require: process.argv.includes('--require'),
+    sync: process.argv.includes('--sync'),
     log: {
       stdout: (line) => console.log(line),
       stderr: (line) => console.error(line),
